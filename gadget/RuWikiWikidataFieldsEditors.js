@@ -6,41 +6,37 @@ var ruWikiWikidataFieldsEditors_Texts = {
 	},
 };
 
-function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
+/**
+ * @class
+ */
+var RuWikiWikidataSnakValueEditor = function( dataType ) {
 
 	if ( typeof dataType === 'undefined' ) {
 		throw new Error( "DataType is not specified" );
 	}
 
-	var valueEditor = {
-		elements: [],
-		parent: null,
-		hide: function() {
-			$.each( this.elements, function( index, item ) {
-				item.hide();
-			} );
-		},
-		show: function() {
-			$.each( this.elements, function( index, item ) {
-				item.show();
-			} );
-		},
+	this.elements = [];
+	this.parent = null;
 
-		hasValue: function() {
-		},
-		removeValue: function() {
-		},
+	this.hide = function() {
+		$.each( this.elements, function( index, item ) {
+			item.hide();
+		} );
+	};
+	this.show = function() {
+		$.each( this.elements, function( index, item ) {
+			item.show();
+		} );
+	};
 
-		getDataValue: function() {
-		},
-		setDataValue: function() {
-		},
+	this.hasValue = undefined;
+	this.removeValue = undefined;
 
-		getAsLabel: function() {
-			return $( '<span>undefined label</span>' );
-		},
-		getAsLabel: function() {
-		},
+	this.getDataValue = undefined;
+	this.setDataValue = undefined;
+
+	this.getAsLabel = function() {
+		return $( '<span>undefined label</span>' );
 	};
 
 	var changeF = function() {
@@ -49,17 +45,17 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 
 	if ( dataType === 'string' ) {
 		var input = $( '<input type="text" class="ruwiki-wikidata-string">' );
-		valueEditor.elements.push( input );
-		valueEditor.setDataValue = function( datavalue ) {
+		this.elements.push( input );
+		this.setDataValue = function( datavalue ) {
 			input.val( datavalue.value );
 		};
-		valueEditor.hasValue = function() {
+		this.hasValue = function() {
 			return !$.isEmpty( input.val() );
 		};
-		valueEditor.removeValue = function() {
+		this.removeValue = function() {
 			input.val( '' );
 		};
-		valueEditor.getDataValue = function() {
+		this.getDataValue = function() {
 			if ( !this.hasValue() ) {
 				throw new Error( 'No value' );
 			}
@@ -68,7 +64,7 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 				value: input.val(),
 			};
 		};
-		valueEditor.getAsLabel = function() {
+		this.getAsLabel = function() {
 			return $( '<span></span>' ).text( input.val() );
 		};
 
@@ -81,7 +77,7 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 			var abc = 'ёйцукенгшщзхъфывапролджэячсмитьбю';
 			abc = abc + abc.toUpperCase();
 			var patterns = [];
-			var map = [];
+			var map = {};
 			for ( var i = 0; i < abc.length; i++ ) {
 				var c = abc.charAt( i );
 				var e = encodeURIComponent( c );
@@ -101,7 +97,7 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 			var abc = 'ёйцукенгшщзхъфывапролджэячсмитьбю';
 			abc = abc + abc.toUpperCase();
 			var patterns = [];
-			var map = [];
+			var map = {};
 			for ( var i = 0; i < abc.length; i++ ) {
 				var c = abc.charAt( i );
 				var e = encodeURIComponent( c );
@@ -118,19 +114,19 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 		};
 
 		var input = $( '<input type="url" class="ruwiki-wikidata-url">' );
-		valueEditor.elements.push( input );
-		valueEditor.setDataValue = function( datavalue ) {
+		this.elements.push( input );
+		this.setDataValue = function( datavalue ) {
 			input.val( decode( datavalue.value ) );
 		};
 
-		valueEditor.hasValue = function() {
+		this.hasValue = function() {
 			return !$.isEmpty( input.val() );
 		};
-		valueEditor.removeValue = function() {
+		this.removeValue = function() {
 			input.val( '' );
 		};
 
-		valueEditor.getDataValue = function() {
+		this.getDataValue = function() {
 			if ( !this.hasValue() ) {
 				throw new Error( 'No value' );
 			}
@@ -140,7 +136,7 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 				value: encode( input.val() ),
 			};
 		};
-		valueEditor.getAsLabel = function() {
+		this.getAsLabel = function() {
 			return $( '<span></span>' ).text( input.val() );
 		};
 
@@ -164,16 +160,16 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 			} );
 		};
 
-		valueEditor.hasValue = function() {
+		this.hasValue = function() {
 			return !$.isEmpty( input.data( 'value-entity-id' ) );
 		};
-		valueEditor.removeValue = function() {
+		this.removeValue = function() {
 			input.val( '' );
 			input.data( 'value-entity-id', '' );
 			input.data( 'value-entity-label', '' );
 		};
 
-		valueEditor.getDataValue = function() {
+		this.getDataValue = function() {
 			if ( !this.hasValue() ) {
 				throw new Error( 'No value' );
 			}
@@ -188,7 +184,7 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 			datavalue.type = 'wikibase-entityid';
 			return datavalue;
 		};
-		valueEditor.getAsLabel = function() {
+		this.getAsLabel = function() {
 			var entityId = input.data( 'value-entity-id' );
 			if ( $.isEmpty( entityId ) ) {
 				return $( '<span></span>' );
@@ -243,7 +239,7 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 			var id = input.data( 'value-entity-id' );
 			var label = input.data( 'value-entity-label' );
 
-			if ( typeof ( id ) === "undefined" || typeof ( label ) === "undefined" ) {
+			if ( typeof id === "undefined" || typeof label === "undefined" ) {
 				input.val( '' );
 				input.removeData( 'value-entity-id' );
 				input.removeData( 'value-entity-label' );
@@ -273,16 +269,14 @@ function ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType ) {
 		input.keyup( changeF );
 
 	} else {
-		valueEditor.elements.push( $( '<b>Unknown type: ' + dataType + '</b>' ) );
-		valueEditor.getAsLabel = function() {
+		this.elements.push( $( '<b>Unknown type: ' + dataType + '</b>' ) );
+		this.getAsLabel = function() {
 			return $( '<i>Unknown type: ' + dataType + '</i>' );
 		};
 	}
+};
 
-	return valueEditor;
-}
-
-ruWikiWikidataFieldsEditors_createSnakEditor = function( dataType ) {
+var RuWikiWikidataSnakEditor = function( dataType ) {
 	if ( typeof dataType === 'undefined' ) {
 		throw new Error( "DataType is not specified" );
 	}
@@ -292,140 +286,140 @@ ruWikiWikidataFieldsEditors_createSnakEditor = function( dataType ) {
 	selectSnakType.append( '<option value="novalue">' + ruWikiWikidataFieldsEditors_Texts.snakTypes.novalue + '</option>' );
 	selectSnakType.append( '<option value="somevalue">' + ruWikiWikidataFieldsEditors_Texts.snakTypes.somevalue + '</option>' );
 
-	var editor = {
-		snakTypeMode: null,
-		snakTypeSelect: selectSnakType,
-		valueEditor: null,
-		// JQuery parent element
-		parent: null,
-		hiddenBehindLabel: false,
+	this.snakTypeMode = null;
+	this.snakTypeSelect = selectSnakType;
+	this.valueEditor = null;
 
-		appendTo: function( parent ) {
-			this.parent = parent;
-			this.parent.append( selectSnakType );
-			if ( this.valueEditor !== null ) {
-				$.each( this.valueEditor.elements, function( index, item ) {
-					parent.append( item );
-				} );
-			}
-		},
+	// JQuery parent element
+	this.parent = null;
+	this.hiddenBehindLabel = false;
 
-		hideBehindLabel: function() {
-			// assuming valueEditor is not null and parent is set
-			if ( this.parent === null )
-				throw new Error( "parent is not set yet to hide behind label" );
-			if ( this.valueEditor === null )
-				throw new Error( "valueEditor is not set yet to hide behind label" );
-
-			var label = $( '<span></span>' );
-			label.css( 'cursor', 'pointer' );
-
-			if ( this.snakTypeMode === 'value' ) {
-				label.append( this.valueEditor.getAsLabel() );
-			} else {
-				label.text( selectSnakType.find( 'option:selected' ).text() );
-			}
-
-			selectSnakType.before( label );
-			selectSnakType.hide();
-			this.valueEditor.hide();
-
-			editor = this;
-			editor.hiddenBehindLabel = true;
-			label.click( function() {
-				label.remove();
-				selectSnakType.show();
-				if ( editor.snakTypeMode === 'value' ) {
-					editor.valueEditor.show();
-				}
-				editor.hiddenBehindLabel = false;
+	this.appendTo = function( parent ) {
+		this.parent = parent;
+		this.parent.append( selectSnakType );
+		if ( this.valueEditor !== null ) {
+			$.each( this.valueEditor.elements, function( index, item ) {
+				parent.append( item );
 			} );
+		}
+	};
 
-			return label;
-		},
+	this.hideBehindLabel = function() {
+		// assuming valueEditor is not null and parent is set
+		if ( this.parent === null )
+			throw new Error( "parent is not set yet to hide behind label" );
+		if ( this.valueEditor === null )
+			throw new Error( "valueEditor is not set yet to hide behind label" );
 
-		switchToSnakType: function( snakType ) {
-			if ( this.valueEditor !== null ) {
-				this.valueEditor.hide();
+		var label = $( '<span></span>' );
+		label.css( 'cursor', 'pointer' );
+
+		if ( this.snakTypeMode === 'value' ) {
+			label.append( this.valueEditor.getAsLabel() );
+		} else {
+			label.text( selectSnakType.find( 'option:selected' ).text() );
+		}
+
+		selectSnakType.before( label );
+		selectSnakType.hide();
+		this.valueEditor.hide();
+
+		editor = this;
+		editor.hiddenBehindLabel = true;
+		label.click( function() {
+			label.remove();
+			selectSnakType.show();
+			if ( editor.snakTypeMode === 'value' ) {
+				editor.valueEditor.show();
 			}
-			this.elements = [];
-			this.snakTypeMode = snakType;
+			editor.hiddenBehindLabel = false;
+		} );
 
-			var _this = this;
-			if ( snakType === 'value' ) {
-				if ( this.valueEditor === null ) {
-					this.valueEditor = ruWikiWikidataFieldsEditors_createSnakValueEditor( dataType );
-					if ( this.parent !== null ) {
-						var parent = this.parent;
-						$.each( this.valueEditor.elements, function( index, item ) {
-							parent.append( item );
-						} );
-					}
-					$( this.valueEditor ).change( function() {
-						$( _this ).change();
+		return label;
+	};
+
+	this.switchToSnakType = function( snakType ) {
+		if ( this.valueEditor !== null ) {
+			this.valueEditor.hide();
+		}
+		this.elements = [];
+		this.snakTypeMode = snakType;
+
+		var _this = this;
+		if ( snakType === 'value' ) {
+			if ( this.valueEditor === null ) {
+				this.valueEditor = new RuWikiWikidataSnakValueEditor( dataType );
+				if ( this.parent !== null ) {
+					var parent = this.parent;
+					$.each( this.valueEditor.elements, function( index, item ) {
+						parent.append( item );
 					} );
 				}
-				this.valueEditor.show();
-			}
-
-			selectSnakType.val( snakType );
-			$( this ).change();
-		},
-
-		hasValue: function() {
-			return this.valueEditor.hasValue();
-		},
-
-		getDataValue: function() {
-			return this.valueEditor.getDataValue();
-		},
-
-		removeValue: function() {
-			this.valueEditor.removeValue();
-		},
-
-		setDataValue: function( datavalue ) {
-			this.valueEditor.setDataValue( datavalue );
-			$( this ).change();
-		},
-
-		load: function( snak ) {
-			this.switchToSnakType( snak.snaktype );
-			if ( snak.snaktype === 'value' ) {
-				this.setDataValue( snak.datavalue );
-			}
-		},
-
-		remove: function() {
-			if ( this.valueEditor !== null ) {
-				$.each( this.valueEditor.elements, function( index, item ) {
-					item.remove();
+				$( this.valueEditor ).change( function() {
+					$( _this ).change();
 				} );
 			}
-			selectSnakType.remove();
-			this.valueEditor = null;
-			this.parent = null;
-		},
-	};
-	editor.switchToSnakType( 'value' );
+			this.valueEditor.show();
+		}
 
+		selectSnakType.val( snakType );
+		$( this ).change();
+	};
+
+	this.hasValue = function() {
+		return this.valueEditor.hasValue();
+	};
+
+	this.getDataValue = function() {
+		return this.valueEditor.getDataValue();
+	};
+
+	this.removeValue = function() {
+		this.valueEditor.removeValue();
+	};
+
+	this.setDataValue = function( datavalue ) {
+		this.valueEditor.setDataValue( datavalue );
+		$( this ).change();
+	};
+
+	this.load = function( snak ) {
+		this.switchToSnakType( snak.snaktype );
+		if ( snak.snaktype === 'value' ) {
+			this.setDataValue( snak.datavalue );
+		}
+	};
+
+	this.remove = function() {
+		if ( this.valueEditor !== null ) {
+			$.each( this.valueEditor.elements, function( index, item ) {
+				item.remove();
+			} );
+		}
+		selectSnakType.remove();
+		this.valueEditor = null;
+		this.parent = null;
+	};
+
+	this.switchToSnakType( 'value' );
+
+	var editor = this;
 	selectSnakType.change( function( eventObject ) {
 		var selectedValue = selectSnakType.val();
 		if ( editor.snakTypeMode !== selectedValue ) {
 			editor.switchToSnakType( selectedValue );
 		}
 	} );
-
-	return editor;
 };
 
 /**
  * Returns the array of claims for specified definition from entity
  * 
- * @param definition,
+ * @param definition
  *            see #ruWikiWikidataFieldsEditors_createEditor
- * @param entity
+ * @param claims
  *            Wikidata entity JSON
+ * @return Array.<Claim>
  */
 function ruWikiWikidataFieldsEditors_filterClaims( definition, claims ) {
 	var isPropertyEditor = /^P\d+$/i.test( definition.code );
@@ -436,23 +430,20 @@ function ruWikiWikidataFieldsEditors_filterClaims( definition, claims ) {
 	}
 
 	/* Main property ID */
+	/** @type {string} */
 	var propertyId;
 	/* Required property value */
 	var propertyValue;
-	/* Qualifier property to edit */
-	var qualifierPropertyId;
 
 	if ( isPropertyEditor ) {
 		var test = definition.code.match( /^P(\d+)$/i );
 		propertyId = 'P' + test[1];
 		propertyValue = undefined;
-		qualifierPropertyId = undefined;
 	}
 	if ( isQualifierEditor ) {
 		var test = definition.code.match( /^P(\d+)\[Q(\d+)\]\/P(\d+)$/i );
 		propertyId = 'P' + test[1];
 		propertyValue = 'Q' + test[2];
-		qualifierPropertyId = 'P' + test[3];
 	}
 
 	if ( typeof claims === 'undefined' || typeof claims[propertyId] === 'undefined' ) {
@@ -532,6 +523,7 @@ function ruWikiWikidataFieldsEditors_filterClaims( definition, claims ) {
  * <li><tt>getDataValue( )</tt> -- return current value JSON  
  * <li><tt>setDataValue( value )</tt> -- updates current value JSON  
  * </ul>
+ * @return FieldEditor
  */
 function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 
@@ -618,7 +610,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 	var beforeInputCell = $( '<td></td>' ).appendTo( row1 );
 	var inputCell = $( '<td></td>' ).appendTo( row1 );
 
-	var editor = ruWikiWikidataFieldsEditors_createSnakEditor( definition.datatype );
+	var editor = new RuWikiWikidataSnakEditor( definition.datatype );
 	editor.snakTypeSelect.hide();
 
 	/* TBODY */
@@ -970,7 +962,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 
 				// do we have qualifier input already?
 				if ( this.editor == null ) {
-					this.editor = ruWikiWikidataFieldsEditors_createSnakEditor( datatype );
+					this.editor = new RuWikiWikidataSnakEditor( datatype );
 					this.editor.property = property;
 					this.editor.appendTo( qualifierEditCell );
 				} else {
@@ -978,7 +970,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 						// leave as it is
 					} else {
 						this.editor.remove();
-						this.editor = ruWikiWikidataFieldsEditors_createSnakEditor( definition.dataType );
+						this.editor = new RuWikiWikidataSnakEditor( definition.dataType );
 						this.editor.property == property;
 						this.editor.appendTo( qualifierEditCell );
 					}
