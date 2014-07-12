@@ -1,60 +1,61 @@
 /**
  * Wikidata labels cache using local user storage (i.e. client-side)
  */
-ruWikiWikidataLabelsCache = {
+var WEF_LabelsCache = function() {
 
-	URL_PREFIX: '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json',
-	MAX_ITEMS_PER_REQUEST: 50,
+	/** @private */
+	var URL_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
+	/** @private */
+	var MAX_ITEMS_PER_REQUEST = 50;
 
-	cache: {},
-	queue: [],
+	/** @private */
+	var cache = {};
+	/** @private */
+	var queue = [];
 
 	/** Functions to be called after new items received from Wikidata */
-	listeners: [],
+	var listeners = [];
 
-	clearCacheAndRequeue: function() {
-		var cache = this.cache;
-		var queue = this.queue;
+	this.clearCacheAndRequeue = function() {
 		$.each( cache, function( key, item ) {
 			delete localStorage['vlsergey-d-label-' + key];
 			delete cache[key];
 			queue.push( key );
 		} );
-	},
+	};
 
 	/** Return cached value */
-	get: function( key ) {
+	this.get = function( key ) {
 		if ( !/^[PQ]\d+$/.test( key ) ) {
 			throw new Error( "Incorrect key: " + key );
 		}
 
-		var cached = this.cache[key];
+		var cached = cache[key];
 		if ( typeof ( cached ) !== 'undefined' ) {
 			return cached;
 		}
 
 		var localCached = localStorage['vlsergey-d-label-' + key];
-		if ( this.isValid( localCached ) ) {
-			this.cache[key] = localCached;
+		if ( isValid( localCached ) ) {
+			cache[key] = localCached;
 			return localCached;
 		}
 
 		return key;
-	},
+	};
 
 	/** Return cached value or queue values to be received from Wikidata */
-	getOrQueue: function( key, listener ) {
+	this.getOrQueue = function( key, listener ) {
 		if ( !/^[PQ]\d+$/.test( key ) ) {
 			throw new Error( "Incorrect key: " + key );
 		}
 
-		var _this = this;
-		var queue = this.queue;
+		var get = this.get;
 
-		var cached = _this.get( key );
-		if ( !this.isValid( cached ) || cached === key ) {
-			this.listeners.push( function() {
-				var fromNewCache = _this.get( key );
+		var cached = get( key );
+		if ( !isValid( cached ) || cached === key ) {
+			listeners.push( function() {
+				var fromNewCache = get( key );
 				if ( typeof ( fromNewCache ) !== 'undefined' ) {
 					listener( fromNewCache );
 				}
@@ -65,33 +66,46 @@ ruWikiWikidataLabelsCache = {
 		// call listener even if got from cache
 		listener( cached );
 		return cached;
-	},
+	};
 
-	isValid: function( value ) {
+	/** @private */
+	var isValid = function( value ) {
 		return typeof ( value ) !== "undefined" && value !== null && value.length !== 0;
-	},
+	};
+
+	/**
+	 * Notify listeners
+	 * 
+	 * @private
+	 */
+	var onUpdate = function() {
+		$.each( listeners, function( index, listener ) {
+			try {
+				listener();
+			} catch ( err ) {
+				mw.warn( 'Exception during labels-update listener call' );
+			}
+		} );
+	};
 
 	/** Receive values from Wikidata, if any queued */
-	receiveLabels: function() {
-
-		var _this = this;
-		var cache = this.cache;
+	this.receiveLabels = function() {
 
 		var languages = [ wgUserLanguage, wgContentLanguage, 'en' ];
 		var languagesString = encodeURIComponent( wgUserLanguage + '|' + wgContentLanguage + '|en' );
 
 		// remove already known
-		this.queue = jQuery.grep( this.queue, function( value ) {
-			return !_this.isValid( cache[value] );
+		queue = jQuery.grep( queue, function( value ) {
+			return !isValid( cache[value] );
 		} );
 
 		var gotFromCache = [];
 		var idsToQuery = [];
 
-		$.each( this.queue, function( index, key ) {
+		$.each( queue, function( index, key ) {
 			var cached = localStorage['vlsergey-d-label-' + key];
-			if ( _this.isValid( cached ) ) {
-				_this.cache[key] = cached;
+			if ( isValid( cached ) ) {
+				cache[key] = cached;
 				gotFromCache.push( key );
 			} else {
 				idsToQuery.push( key );
@@ -118,40 +132,31 @@ ruWikiWikidataLabelsCache = {
 					}
 				}
 			} );
-			_this.onUpdate();
+			onUpdate();
 		};
 
 		var total = idsToQuery.length;
-		for ( var i = 0; i < total; i += this.MAX_ITEMS_PER_REQUEST ) {
+		for ( var i = 0; i < total; i += MAX_ITEMS_PER_REQUEST ) {
 			var idsString = '';
-			for ( var k = i; k < i + this.MAX_ITEMS_PER_REQUEST && k < total; k++ ) {
+			for ( var k = i; k < i + MAX_ITEMS_PER_REQUEST && k < total; k++ ) {
 				if ( k != i ) {
 					idsString = idsString + '|';
 				}
 				idsString = idsString + idsToQuery[k];
 			}
 			$.ajax( {
-				url: _this.URL_PREFIX + '&action=wbgetentities&props=labels&languages=' + languagesString + '&ids=' + encodeURIComponent( idsString ),
+				url: URL_PREFIX + '&action=wbgetentities&props=labels&languages=' + languagesString + '&ids=' + encodeURIComponent( idsString ),
 				dataType: 'json',
 				success: ajaxResultFunction,
 			} );
 		}
-		this.queue = jQuery.grep( this.queue, function( value ) {
+		queue = jQuery.grep( queue, function( value ) {
 			return idsToQuery.indexOf( value ) === -1;
 		} );
 		if ( gotFromCache.length > 0 ) {
-			_this.onUpdate();
+			onUpdate();
 		}
-	},
+	};
 
-	/** Notify listeners */
-	onUpdate: function() {
-		$.each( this.listeners, function( index, listener ) {
-			try {
-				listener();
-			} catch ( err ) {
-				mw.warn( 'Exception during labels-update listener call' )
-			}
-		} );
-	}
 };
+var wef_LabelsCache = new WEF_LabelsCache();

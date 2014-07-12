@@ -9,7 +9,7 @@ var ruWikiWikidataFieldsEditors_Texts = {
 /**
  * @class
  */
-var RuWikiWikidataSnakValueEditor = function( dataType ) {
+var WEF_SnakValueEditor = function( dataType ) {
 
 	if ( typeof dataType === 'undefined' ) {
 		throw new Error( "DataType is not specified" );
@@ -152,7 +152,7 @@ var RuWikiWikidataSnakValueEditor = function( dataType ) {
 			input.data( 'value-entity-label', '' );
 			input.val( '(' + entityId + ')' );
 
-			ruWikiWikidataLabelsCache.getOrQueue( entityId, function( label ) {
+			wef_LabelsCache.getOrQueue( entityId, function( label ) {
 				if ( input.data( 'value-entity-id' ) === entityId ) {
 					input.data( 'value-entity-label', label );
 					input.val( label + ' (' + entityId + ')' );
@@ -191,7 +191,7 @@ var RuWikiWikidataSnakValueEditor = function( dataType ) {
 			}
 			var result = $( '<span></span>' );
 			result.text( '(' + entityId + ')' );
-			ruWikiWikidataLabelsCache.getOrQueue( entityId, function( label ) {
+			wef_LabelsCache.getOrQueue( entityId, function( label ) {
 				result.text( label + ' (' + entityId + ')' );
 			} );
 			return result;
@@ -276,7 +276,7 @@ var RuWikiWikidataSnakValueEditor = function( dataType ) {
 	}
 };
 
-var RuWikiWikidataSnakEditor = function( dataType ) {
+var WEF_SnakEditor = function( dataType ) {
 	if ( typeof dataType === 'undefined' ) {
 		throw new Error( "DataType is not specified" );
 	}
@@ -348,7 +348,7 @@ var RuWikiWikidataSnakEditor = function( dataType ) {
 		var _this = this;
 		if ( snakType === 'value' ) {
 			if ( this.valueEditor === null ) {
-				this.valueEditor = new RuWikiWikidataSnakValueEditor( dataType );
+				this.valueEditor = new WEF_SnakValueEditor( dataType );
 				if ( this.parent !== null ) {
 					var parent = this.parent;
 					$.each( this.valueEditor.elements, function( index, item ) {
@@ -416,12 +416,12 @@ var RuWikiWikidataSnakEditor = function( dataType ) {
  * Returns the array of claims for specified definition from entity
  * 
  * @param definition
- *            see #ruWikiWikidataFieldsEditors_createEditor
+ *            see #WEF_PropertyEditor
  * @param claims
  *            Wikidata entity JSON
  * @return Array.<Claim>
  */
-function ruWikiWikidataFieldsEditors_filterClaims( definition, claims ) {
+function WEF_filterClaims( definition, claims ) {
 	var isPropertyEditor = /^P\d+$/i.test( definition.code );
 	var isQualifierEditor = /^P\d+\[Q\d+\]\/P\d+$/i.test( definition.code );
 
@@ -523,9 +523,10 @@ function ruWikiWikidataFieldsEditors_filterClaims( definition, claims ) {
  * <li><tt>getDataValue( )</tt> -- return current value JSON  
  * <li><tt>setDataValue( value )</tt> -- updates current value JSON  
  * </ul>
- * @return FieldEditor
+ * @param definition {Definition} property definition
+ * @class
  */
-function ruWikiWikidataFieldsEditors_createEditor( definition ) {
+var WEF_PropertyEditor = function( definition ) {
 
 	var getLabel = function() {
 		var label = $( '<label></label>' );
@@ -538,7 +539,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 			}
 
 			if ( typeof ( definition.label ) !== "undefined" ) {
-				newLabel += ruWikiWikidataLabelsCache.get( definition.label );
+				newLabel += wef_LabelsCache.get( definition.label );
 			}
 
 			if ( typeof ( definition.labelQualifier ) !== "undefined" ) {
@@ -548,11 +549,11 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 						if ( index !== 0 ) {
 							newLabel += ', ';
 						}
-						newLabel += ruWikiWikidataLabelsCache.get( qualifier );
+						newLabel += wef_LabelsCache.get( qualifier );
 					} );
 					newLabel += ')';
 				} else {
-					newLabel += ' (' + ruWikiWikidataLabelsCache.get( definition.labelQualifier ) + ')';
+					newLabel += ' (' + wef_LabelsCache.get( definition.labelQualifier ) + ')';
 				}
 			}
 
@@ -560,15 +561,15 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 		};
 
 		if ( typeof ( definition.label ) !== "undefined" ) {
-			ruWikiWikidataLabelsCache.getOrQueue( definition.label, updateLabel );
+			wef_LabelsCache.getOrQueue( definition.label, updateLabel );
 		}
 		if ( typeof ( definition.labelQualifier ) !== "undefined" ) {
 			if ( $.isArray( definition.labelQualifier ) ) {
 				$.each( definition.labelQualifier, function( index, qualifier ) {
-					ruWikiWikidataLabelsCache.getOrQueue( qualifier, updateLabel );
+					wef_LabelsCache.getOrQueue( qualifier, updateLabel );
 				} );
 			} else {
-				ruWikiWikidataLabelsCache.getOrQueue( definition.labelQualifier, updateLabel );
+				wef_LabelsCache.getOrQueue( definition.labelQualifier, updateLabel );
 			}
 		}
 
@@ -578,10 +579,6 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 
 	var isPropertyEditor = /^P\d+$/i.test( definition.code );
 	var isQualifierEditor = /^P\d+\[Q\d+\]\/P\d+$/i.test( definition.code );
-
-	if ( !isPropertyEditor && !isQualifierEditor ) {
-		throw new Error( "Unsupported code: " + definition.code );
-	}
 
 	/* Main property ID */
 	var propertyId;
@@ -595,32 +592,33 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 		propertyId = 'P' + test[1];
 		propertyValue = undefined;
 		qualifierPropertyId = undefined;
-	}
-	if ( isQualifierEditor ) {
+	} else if ( isQualifierEditor ) {
 		var test = definition.code.match( /^P(\d+)\[Q(\d+)\]\/P(\d+)$/i );
 		propertyId = 'P' + test[1];
 		propertyValue = 'Q' + test[2];
 		qualifierPropertyId = 'P' + test[3];
+	} else {
+		throw new Error( "Unsupported code: " + definition.code );
 	}
 
-	var tbody = $( '<tbody></tbody>' );
-	var row1 = $( '<tr></tr>' ).appendTo( tbody );
+	this.tbody = $( '<tbody></tbody>' );
+	var row1 = $( '<tr></tr>' ).appendTo( this.tbody );
 	var flagCell = $( '<th></th>' ).appendTo( row1 );
 	var labelCell = $( '<th></th>' ).css( 'text-align', 'left' ).appendTo( row1 );
 	var beforeInputCell = $( '<td></td>' ).appendTo( row1 );
 	var inputCell = $( '<td></td>' ).appendTo( row1 );
 
-	var editor = new RuWikiWikidataSnakEditor( definition.datatype );
+	var editor = new WEF_SnakEditor( definition.datatype );
 	editor.snakTypeSelect.hide();
 
 	/* TBODY */
-	var hide = function() {
-		tbody.hide();
+	this.hide = function() {
+		this.tbody.hide();
 	};
-	var show = function() {
-		tbody.show();
+	this.show = function() {
+		this.tbody.show();
 	};
-	var afterAppend = function() {
+	this.afterAppend = function() {
 		editor.appendTo( inputCell );
 
 		// set aucomplete if defined
@@ -647,97 +645,90 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 	labelCell.append( labelToDisplay );
 	labelCell.append( labelPlaceholder );
 
-	var hideLabel = function( placeholderText ) {
+	this.hideLabel = function( placeholderText ) {
 		if ( typeof placeholderText === 'string' ) {
 			labelPlaceholder.text( placeholderText );
 		}
 		labelToDisplay.hide();
 		labelPlaceholder.show();
 	};
-	var showLabel = function() {
+	this.showLabel = function() {
 		labelToDisplay.show();
 		labelPlaceholder.hide();
 	};
 
-	var row2 = $( '<tr></tr>' ).appendTo( tbody );
+	var row2 = $( '<tr></tr>' ).appendTo( this.tbody );
 	$( '<td style="padding: 0px;"></td>' ).appendTo( row2 );
 	var bottomContentCell = $( '<td colspan="100" style="padding: 0px;"></td>' ).appendTo( row2 );
 	var bottomContentTable = $( '<table></table>' ).appendTo( bottomContentCell );
 
-	var result = {
-		disabled: false,
-		tbody: tbody,
-		afterAppend: afterAppend,
-		hide: hide,
-		show: show,
-		hideLabel: hideLabel,
-		showLabel: showLabel,
+	var disabled = false;
 
-		qualifiers: [],
-		removedQualifiersHashes: [],
-		addQualifier: function() {
-		},
-
-		definition: definition,
-		'wikidata-claim': null,
-		'wikidata-snak': null,
-
-		hasValue: function() {
-			return editor.hasValue();
-		},
-		removeValue: function() {
-			editor.removeValue();
-		},
-		getDataValue: function() {
-			return editor.getDataValue();
-		},
-		setDataValue: function( datavalue ) {
-			editor.setDataValue( datavalue );
-		},
-
-		getSnakValue: function() {
-			if ( editor.snakTypeMode === 'value' && !this.hasValue() ) {
-				throw new Error( 'no value' );
-			}
-
-			var snak = {};
-			snak.snaktype = editor.snakTypeMode;
-
-			if ( isPropertyEditor ) {
-				snak.property = propertyId;
-			}
-			if ( isQualifierEditor ) {
-				snak.property = qualifierPropertyId;
-				if ( this['wikidata-snak'] !== null ) {
-					snak.hash = this['wikidata-snak'].hash;
-				}
-			}
-
-			snak.datatype = definition.datatype;
-			if ( editor.snakTypeMode === 'value' ) {
-				snak.datavalue = this.getDataValue();
-			}
-
-			return snak;
-		},
+	this.qualifiers = [];
+	this.removedQualifiersHashes = [];
+	this.addQualifier = function() {
 	};
 
+	this.definition = definition;
+	this['wikidata-claim'] = null;
+	this['wikidata-snak'] = null;
+
+	this.hasValue = function() {
+		return editor.hasValue();
+	};
+	this.removeValue = function() {
+		editor.removeValue();
+	};
+	this.getDataValue = function() {
+		return editor.getDataValue();
+	};
+	this.setDataValue = function( datavalue ) {
+		editor.setDataValue( datavalue );
+	};
+
+	this.getSnakValue = function() {
+		if ( editor.snakTypeMode === 'value' && !this.hasValue() ) {
+			throw new Error( 'no value' );
+		}
+
+		var snak = {};
+		snak.snaktype = editor.snakTypeMode;
+
+		if ( isPropertyEditor ) {
+			snak.property = propertyId;
+		}
+		if ( isQualifierEditor ) {
+			snak.property = qualifierPropertyId;
+			if ( this['wikidata-snak'] !== null ) {
+				snak.hash = this['wikidata-snak'].hash;
+			}
+		}
+
+		snak.datatype = definition.datatype;
+		if ( editor.snakTypeMode === 'value' ) {
+			snak.datavalue = this.getDataValue();
+		}
+
+		return snak;
+	};
+
+	var propertyEditor = this;
+
 	$( editor ).change( function() {
-		$( result ).change();
+		$( propertyEditor ).change();
 	} );
 
-	result.load = function( claim ) {
+	this.load = function( claim ) {
 
-		result['wikidata-claim'] = claim;
+		propertyEditor['wikidata-claim'] = claim;
 
 		if ( isPropertyEditor ) {
 			// load property main snak
-			result['wikidata-snak'] = claim.mainsnak;
+			propertyEditor['wikidata-snak'] = claim.mainsnak;
 			if ( claim.mainsnak ) {
 				editor.load( claim.mainsnak );
 			}
-		}
-		if ( isQualifierEditor ) {
+		} else if ( isQualifierEditor ) {
 			/*
 			 * since it's loading time, we assume there is qualifier with
 			 * specified value
@@ -751,11 +742,11 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 			}
 
 			var qualifier = qualifiers[0];
-			result['wikidata-snak'] = qualifier;
+			propertyEditor['wikidata-snak'] = qualifier;
 			editor.load( qualifier );
 		}
 
-		result['wikidata-old-value'] = this.hasValue() ? JSON.stringify( this.getSnakValue() ) : null;
+		propertyEditor['wikidata-old-value'] = this.hasValue() ? JSON.stringify( this.getSnakValue() ) : null;
 
 		if ( typeof claim.qualifiers !== 'undefined' ) {
 			$.each( claim.qualifiers, function( property, qualifiers ) {
@@ -764,15 +755,15 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 				}
 
 				$.each( qualifiers, function( index, qualifier ) {
-					var qualifierHolder = result.addQualifier();
+					var qualifierHolder = propertyEditor.addQualifier();
 					qualifierHolder.load( qualifier );
 				} );
 			} );
 		}
 	};
 
-	result.updates = function( updates ) {
-		if ( result.disabled ) {
+	this.updates = function( updates ) {
+		if ( this.disabled ) {
 			return;
 		}
 
@@ -794,9 +785,9 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 		var hasValue = editor.snakTypeMode !== 'value' || editor.hasValue();
 		var newSnak = hasValue ? this.getSnakValue() : null;
 
-		var oldClaim = result['wikidata-claim'];
-		var oldSnak = result['wikidata-snak'];
-		var oldSnakStr = result['wikidata-old-value'];
+		var oldClaim = this['wikidata-claim'];
+		var oldSnak = this['wikidata-snak'];
+		var oldSnakStr = this['wikidata-old-value'];
 
 		if ( !hasValue ) {
 			if ( oldClaim != null ) {
@@ -859,8 +850,8 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 			needToUpdate = needToUpdate || ( JSON.stringify( newSnak ) !== oldSnakStr );
 
 			// save qualifiers
-			$.each( result.qualifiers, function( index, qualifierHolder ) {
-				if ( result.editor === null ) {
+			$.each( propertyEditor.qualifiers, function( index, qualifierHolder ) {
+				if ( propertyEditor.editor === null ) {
 					// we didn't select property type yet
 					return;
 				}
@@ -883,7 +874,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 				}
 			} );
 
-			needToUpdate = needToUpdate || ( result.removedQualifiersHashes.length > 0 );
+			needToUpdate = needToUpdate || ( propertyEditor.removedQualifiersHashes.length > 0 );
 
 			if ( needToUpdate ) {
 				appendToNamedMap( updates.data, 'claims', propertyId, claim );
@@ -901,12 +892,12 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 			text: false,
 			label: 'Add qualifier',
 		} ).click( function() {
-			result.addQualifier();
+			propertyEditor.addQualifier();
 		} ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
 		beforeInputCell.append( newButton );
 	}
 
-	result.addQualifier = function() {
+	this.addQualifier = function() {
 		var qualifierRow = $( '<tr></tr>' ).appendTo( bottomContentTable );
 		var qualifierButtonsCell = $( '<td></td>' ).appendTo( qualifierRow );
 		var qualifierSelect = $( '<select class="ruwiki-wikidata-qualifier"></select>' ).appendTo( $( '<td></td>' ).appendTo( qualifierRow ) );
@@ -915,7 +906,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 		$.each( definition.qualifiers, function( index, qualifierDefinition ) {
 			var code = qualifierDefinition.code;
 			var option = $( '<option value=' + code + '>' + code + '</option>' ).appendTo( qualifierSelect );
-			option.text( ruWikiWikidataLabelsCache.getOrQueue( code, function( newLabel ) {
+			option.text( wef_LabelsCache.getOrQueue( code, function( newLabel ) {
 				option.text( newLabel );
 			} ) );
 			option.data( 'property', code );
@@ -932,7 +923,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 
 			var code = this.val();
 			label.text( '(' + this.val() + '): ' );
-			ruWikiWikidataLabelsCache.getOrQueue( code, function( newLabel ) {
+			wef_LabelsCache.getOrQueue( code, function( newLabel ) {
 				label.text( newLabel + ': ' );
 			} );
 
@@ -962,7 +953,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 
 				// do we have qualifier input already?
 				if ( this.editor == null ) {
-					this.editor = new RuWikiWikidataSnakEditor( datatype );
+					this.editor = new WEF_SnakEditor( datatype );
 					this.editor.property = property;
 					this.editor.appendTo( qualifierEditCell );
 				} else {
@@ -970,7 +961,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 						// leave as it is
 					} else {
 						this.editor.remove();
-						this.editor = new RuWikiWikidataSnakEditor( definition.dataType );
+						this.editor = new WEF_SnakEditor( definition.dataType );
 						this.editor.property == property;
 						this.editor.appendTo( qualifierEditCell );
 					}
@@ -1007,7 +998,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 				if ( option.length === 0 ) {
 					var code = qualifier.property;
 					var option = $( '<option value=' + code + '>' + code + '</option>' ).appendTo( qualifierSelect );
-					option.text( ruWikiWikidataLabelsCache.getOrQueue( code, function( newLabel ) {
+					option.text( wef_LabelsCache.getOrQueue( code, function( newLabel ) {
 						option.text( newLabel );
 					} ) );
 					option.data( 'property', qualifier.property );
@@ -1047,12 +1038,12 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 			}
 		};
 		qualifierHolder.onRemove = function() {
-			var index = result.qualifiers.indexOf( qualifierHolder );
+			var index = propertyEditor.qualifiers.indexOf( qualifierHolder );
 			if ( index !== -1 ) {
-				result.qualifiers.splice( index, 1 );
+				propertyEditor.qualifiers.splice( index, 1 );
 				var snak = qualifierHolder['wikidata-snak'];
 				if ( snak !== null && typeof ( snak.hash ) !== 'undefined' && snak.hash !== null ) {
-					result.removedQualifiersHashes.push( snak.hash );
+					propertyEditor.removedQualifiersHashes.push( snak.hash );
 				}
 				qualifierRow.remove();
 			}
@@ -1079,9 +1070,7 @@ function ruWikiWikidataFieldsEditors_createEditor( definition ) {
 			}
 		} );
 
-		result.qualifiers.push( qualifierHolder );
+		propertyEditor.qualifiers.push( qualifierHolder );
 		return qualifierHolder;
 	};
-
-	return result;
 };

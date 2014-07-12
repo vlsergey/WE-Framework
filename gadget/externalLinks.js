@@ -1475,9 +1475,9 @@ ExternalLinksEdit = function() {
 	/** @private */
 	var getLabelTextShort = function( definition ) {
 		if ( typeof ( definition.label ) !== "undefined" ) {
-			return ruWikiWikidataLabelsCache.get( definition.label );
+			return wef_LabelsCache.get( definition.label );
 		} else {
-			return ruWikiWikidataLabelsCache.get( definition.code );
+			return wef_LabelsCache.get( definition.code );
 		}
 	};
 
@@ -1506,7 +1506,7 @@ ExternalLinksEdit = function() {
 		var createRowNew = function( definition ) {
 			var a = $( '<a target="_blank"></a>' );
 
-			var editor = ruWikiWikidataFieldsEditors_createEditor( definition );
+			var editor = new WEF_PropertyEditor( definition ); 
 
 			var beforeCell = $( '<td></td>' ).prependTo( editor.tbody.find( 'tr' ).first() );
 			var afterCell1 = $( '<td></td>' ).appendTo( editor.tbody.find( 'tr' ).first() );
@@ -1693,7 +1693,7 @@ ExternalLinksEdit = function() {
 				return function() {
 					var question = externalLinksEditTexts.confirmDeleteValue //
 					.replace( '{code}', definition.label ) //
-					.replace( '{label}', ruWikiWikidataLabelsCache.get( definition.label ) );
+					.replace( '{label}', wef_LabelsCache.get( definition.label ) );
 
 					var r = !editor.hasValue() || confirm( question );
 					if ( r ) {
@@ -1716,7 +1716,7 @@ ExternalLinksEdit = function() {
 				};
 			};
 
-			selectedClaims = ruWikiWikidataFieldsEditors_filterClaims( definition, claims );
+			selectedClaims = WEF_filterClaims( definition, claims );
 			if ( typeof ( selectedClaims ) !== "undefined" ) {
 				$.each( selectedClaims, function( index, claim ) {
 					var inputRow = addF();
@@ -1774,7 +1774,7 @@ ExternalLinksEdit = function() {
 						} );
 					} );
 
-					ruWikiWikidataLabelsCache.receiveLabels();
+					wef_LabelsCache.receiveLabels();
 
 					// recenter
 					tabs.tabs();
@@ -1804,8 +1804,8 @@ ExternalLinksEdit = function() {
 				text: externalLinksEditTexts.buttonUpdateLabels,
 				label: externalLinksEditTexts.buttonUpdateLabelsLabel,
 				click: function() {
-					ruWikiWikidataLabelsCache.clearCacheAndRequeue();
-					ruWikiWikidataLabelsCache.receiveLabels();
+					wef_LabelsCache.clearCacheAndRequeue();
+					wef_LabelsCache.receiveLabels();
 				},
 				style: 'position: absolute; left: 1em;',
 			}, {
@@ -2329,14 +2329,14 @@ externalLinksEdit.setup();
 
 if ( wgServerName === 'ru.wikipedia.org' ) {
 	importScript( 'MediaWiki:RuWikiFlagsHtml.js' );
-	importScript( 'MediaWiki:RuWikiWikidataFieldsEditors.js' );
-	importStylesheet( 'MediaWiki:RuWikiWikidataFieldsEditors.css' );
-	importScript( 'MediaWiki:RuWikiWikidataLabelsCache.js' );
+	importScript( 'MediaWiki:WEF_Editors.js' );
+	importStylesheet( 'MediaWiki:WEF_Editors.css' );
+	importScript( 'MediaWiki:WEF_LabelsCache.js' );
 } else {
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&maxage=86400&smaxage=86400' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiWikidataFieldsEditors.js&action=raw&maxage=86400&smaxage=86400' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiWikidataFieldsEditors.css&action=raw&maxage=86400&smaxage=86400', 'text/css' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiWikidataLabelsCache.js&action=raw&maxage=86400&smaxage=86400' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&maxage=86400&smaxage=86400' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&maxage=86400&smaxage=86400', 'text/css' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_LabelsCache.js&action=raw&maxage=86400&smaxage=86400' );
 }
 mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.tabs' ], function() {
 	addOnloadHook( function() {
