@@ -116,24 +116,25 @@ WEF_ExternalLinks = function() {
 	this.definitions = d;
 
 	/**
-	 * @param sitelink --
-	 *            sitelink title to pass
-	 * @param urlFunction --
-	 *            function to convert title to URL
+	 * @param sitelink
+	 *            {string} sitelink title to pass
+	 * @param urlFunction
+	 *            {function} function to convert title to URL
 	 * @return {function}
 	 */
 	var searchClickF = function( sitelink, urlFunction ) {
-		var title;
-		if ( typeof externalLinksEdit.entity !== 'undefined' // 
-				&& typeof externalLinksEdit.entity.sitelinks !== 'undefined' //
-				&& typeof externalLinksEdit.entity.sitelinks[sitelink] !== 'undefined' //
-				&& typeof externalLinksEdit.entity.sitelinks[sitelink].title !== 'undefined' //
-		) {
-			title = externalLinksEdit.entity.sitelinks[sitelink].title;
-		} else {
-			title = wgTitle;
-		}
 		return function() {
+			var title;
+			if ( typeof externalLinksEdit.entity !== 'undefined' // 
+					&& typeof externalLinksEdit.entity.sitelinks !== 'undefined' //
+					&& typeof externalLinksEdit.entity.sitelinks[sitelink] !== 'undefined' //
+					&& typeof externalLinksEdit.entity.sitelinks[sitelink].title !== 'undefined' //
+			) {
+				title = externalLinksEdit.entity.sitelinks[sitelink].title;
+			} else {
+				title = wgTitle;
+			}
+
 			window.open( urlFunction( title ), '_blank' );
 		};
 	};
@@ -1084,7 +1085,7 @@ WEF_ExternalLinks = function() {
 			text: false,
 			label: 'Search on Yandex.Slovari website',
 			click: searchClickF( 'ruwiki', function( title ) {
-				return '//slovari.yandex.ru/' + encodeURIComponent( title );
+				return '//slovari.yandex.ru/' + encodeURIComponent( title ) + '/%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B5/';
 			} ),
 		} ],
 		qualifiers: [ d.P50, d.P357, d.P478 ],
@@ -1388,7 +1389,7 @@ WEF_ExternalLinks = function() {
 			},
 			text: false,
 			label: 'Search on Encyclopædia Britannica website',
-			click: searchClickF( 'ruwiki', function( title ) {
+			click: searchClickF( 'enwiki', function( title ) {
 				return 'http://global.britannica.com/search?query=' + encodeURIComponent( title );
 			} ),
 		} ],
@@ -1406,7 +1407,7 @@ WEF_ExternalLinks = function() {
 			},
 			text: false,
 			label: 'Search on Encyclopédie Larousse en ligne',
-			click: searchClickF( 'ruwiki', function( title ) {
+			click: searchClickF( 'frwiki', function( title ) {
 				return 'http://www.larousse.fr/encyclopedie/rechercher?q=' + encodeURIComponent( title );
 			} ),
 		} ],
@@ -1419,10 +1420,6 @@ WEF_ExternalLinks = function() {
 
 	/** code -> table row */
 	this.editors = {};
-
-	var firstObjectValue = function( obj ) {
-		return obj[Object.keys( obj )[0]];
-	};
 
 	/* Usually already in cache */
 	/** @private */
@@ -1452,238 +1449,108 @@ WEF_ExternalLinks = function() {
 			}
 		} );
 
-		var dialogForm = $( '' + '<div id="ruWikiExternalEditForm" title="' + externalLinksEditTexts.editFormTitle + '">' + '<form>' + '<fieldset>'
-				+ '<div id="ruWikiExternalEditFormTabs">' + '</div>' );
+		var dialogForm = $( '' + '<div class="wef_externalLinks_dialog" id="ruWikiExternalEditForm" title="' + externalLinksEditTexts.editFormTitle + '">'
+				+ '<div id="ruWikiExternalEditFormTabs">' + '<ul id="ruWikiExternalEditFormTabsList">' + '</ul>' + '</div>' + '<p class="validateTips"></p>' + '</div>' );
 		var statusAndTips = dialogForm.find( 'p.validateTips' );
 		dialogForm.find( "#ruWikiExternalEditProgress" ).hide();
-		
-//		var createRowNew = function( definition ) {
-//			var a = $( '<a target="_blank"></a>' );
-//
-//			var editor = new WEF_ClaimEditor( definition );
-//
-//			var beforeCell = $( '<td></td>' ).prependTo( editor.tbody.find( 'tr' ).first() );
-//			var afterCell1 = $( '<td></td>' ).appendTo( editor.tbody.find( 'tr' ).first() );
-//			var afterCell2 = $( '<td></td>' ).css( 'width', '99%' ).appendTo( editor.tbody.find( 'tr' ).first() );
-//
-//			afterCell2.append( a );
-//			editor.hideLabel( '     — "" — ' );
-//
-//			{
-//				var newButton = $( '<button type="button"></button>' );
-//				newButton.button( {
-//					icons: {
-//						primary: 'ui-icon-plus'
-//					},
-//					text: false,
-//					label: 'Add claim',
-//				} ).click( function() {
-//					editor.onAdd();
-//				} ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
-//				beforeCell.append( newButton );
-//			}
-//			{
-//				var newButton = $( '<button type="button"></button>' );
-//				newButton.button( {
-//					icons: {
-//						primary: 'ui-icon-close'
-//					},
-//					text: false,
-//					label: 'Remove claim',
-//				} ).click( function() {
-//					editor.onRemove();
-//				} ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
-//				beforeCell.append( newButton );
-//			}
-//
-//			if ( typeof definition.buttons === 'undefined' && typeof definition.url === 'undefined' ) {
-//				afterCell1.remove();
-//				afterCell2.remove();
-//				// to full line
-//				editor.tbody.find( 'tr' ).first().find( 'td' ).last().attr( 'colspan', '4' );
-//			}
-//
-//			if ( typeof definition.buttons !== 'undefined' && typeof definition.url === 'undefined' ) {
-//				afterCell1.remove();
-//				afterCell2.remove();
-//				// to full line except button
-//				editor.tbody.find( 'tr' ).first().find( 'td' ).last().attr( 'colspan', '3' );
-//				afterCell1 = $( '<td></td>' ).appendTo( editor.tbody.find( 'tr' ).first() );
-//			}
-//
-//			if ( typeof ( definition.buttons ) !== "undefined" ) {
-//				$.each( definition.buttons, function( index, buttonDefinition ) {
-//					var newButton = $( '<button type="button"></button>' );
-//					newButton.button( buttonDefinition ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
-//					if ( $.isFunction( buttonDefinition.click ) ) {
-//						newButton.click( buttonDefinition.click );
-//					}
-//					afterCell1.append( newButton );
-//				} );
-//			}
-//
-//			if ( $.isFunction( definition.url ) ) {
-//				var updateLinkImplF = function( newValue ) {
-//					if ( $.isFunction( definition.normalize ) ) {
-//						var newValueNormalized = definition.normalize( newValue );
-//						if ( newValue !== newValueNormalized ) {
-//							editor.setDataValue( {
-//								type: 'string',
-//								value: newValueNormalized
-//							} );
-//							newValue = newValueNormalized;
-//						}
-//					}
-//					if ( newValue ) {
-//						var newUrl = definition.url( newValue );
-//						a.attr( 'href', newUrl );
-//						a.text( newUrl );
-//						if ( typeof ( definition.check ) !== "undefined" && typeof ( definition.check.exec ) === "function" ) {
-//							var result = definition.check.exec( newValue );
-//							if ( result == null ) {
-//								var tip = externalLinksEditTexts.getTip( definition );
-//								var shortLabel = getLabelTextShort( definition );
-//								tip = tip.replace( "{0}", shortLabel );
-//
-//								a.addClass( 'ui-state-error' );
-//								editor.tbody.find( 'input' ).addClass( 'ui-state-error' );
-//								statusAndTips.text( tip );
-//								statusAndTips.addClass( 'ui-state-error' );
-//							} else {
-//								a.removeClass( 'ui-state-error' );
-//								editor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
-//								statusAndTips.text( '' );
-//								statusAndTips.removeClass( 'ui-state-error' );
-//							}
-//						}
-//					} else {
-//						a.attr( 'href', '' );
-//						a.text( '' );
-//						a.removeClass( 'ui-state-error' );
-//						editor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
-//						statusAndTips.text( '' );
-//						statusAndTips.removeClass( 'ui-state-error' );
-//					}
-//				};
-//				var updateLinkF = function() {
-//					if ( editor.hasValue() ) {
-//						updateLinkImplF( editor.getDataValue().value );
-//					} else {
-//						updateLinkImplF( '' );
-//					}
-//				};
-//				$( editor ).change( updateLinkF );
-//			}
-//
-//			return editor;
-//		};
-//
-//		var createRows = function( definition, claims, table, isEvenRow ) {
-//			var visibleDefinitionRows = [];
-//
-//			var addF;
-//			var removeFF;
-//
-//			var allEditors = {
-//				editors: [],
-//				onFoundValue: function( newValue ) {
-//					var normalized = newValue;
-//					if ( typeof ( definition.normalize ) !== "undefined" ) {
-//						normalized = definition.normalize( newValue );
-//					}
-//
-//					var editor;
-//					$.each( visibleDefinitionRows, function( index, toCheck ) {
-//						if ( toCheck.hasValue() && toCheck.getDataValue().value === normalized ) {
-//							editor = toCheck;
-//						}
-//					} );
-//
-//					if ( typeof ( editor ) !== 'undefined' ) {
-//						editor.tbody.find( 'input' ).css( 'background', '#EEFFEE' );
-//					} else {
-//
-//						// do we have single one with empty space ?
-//						$.each( visibleDefinitionRows, function( index, toCheck ) {
-//							if ( !toCheck.hasValue() && toCheck['wikidata-claim'] === null ) {
-//								editor = toCheck;
-//							}
-//						} );
-//						if ( typeof ( editor ) === 'undefined' ) {
-//							editor = addF();
-//						}
-//
-//						editor.setDataValue( {
-//							type: 'string',
-//							value: newValue
-//						} );
-//						$( editor ).change();
-//						editor.tbody.find( 'input' ).css( 'background', '#BBFFBB' );
-//					}
-//				},
-//			};
-//			externalLinksEdit.editors[definition.code] = allEditors;
-//
-//			addF = function() {
-//				var editor = createRowNew( definition );
-//				if ( isEvenRow ) {
-//					editor.tbody.css( 'background', 'rgba(211, 211, 211, 0.33)' );
-//				}
-//				editor.onAdd = addF;
-//				editor.onRemove = removeFF( editor );
-//
-//				if ( visibleDefinitionRows.length !== 0 ) {
-//					visibleDefinitionRows[visibleDefinitionRows.length - 1].tbody.after( editor.tbody );
-//				} else {
-//					table.append( editor.tbody );
-//				}
-//				editor.afterAppend();
-//
-//				visibleDefinitionRows.push( editor );
-//				allEditors.editors.push( editor );
-//				return editor;
-//			};
-//			removeFF = function( editor ) {
-//				return function() {
-//					var question = externalLinksEditTexts.confirmDeleteValue //
-//					.replace( '{code}', definition.label ) //
-//					.replace( '{label}', wef_LabelsCache.getLabel( definition.label ) );
-//
-//					var r = !editor.hasValue() || confirm( question );
-//					if ( r ) {
-//						editor.removeValue();
-//						editor.hide();
-//
-//						/*
-//						 * add before removing to insert immediately after last
-//						 * existing
-//						 */
-//						if ( visibleDefinitionRows.length === 1 ) {
-//							addF();
-//						}
-//
-//						visibleDefinitionRows = jQuery.grep( visibleDefinitionRows, function( value ) {
-//							return value != editor;
-//						} );
-//						visibleDefinitionRows[0].showLabel();
-//					}
-//				};
-//			};
-//
-//			selectedClaims = WEF_filterClaims( definition, claims );
-//			if ( typeof ( selectedClaims ) !== "undefined" ) {
-//				$.each( selectedClaims, function( index, claim ) {
-//					var inputRow = addF();
-//					inputRow.load( claim );
-//				} );
-//			}
-//
-//			if ( visibleDefinitionRows.length === 0 ) {
-//				addF();
-//			}
-//
-//			visibleDefinitionRows[0].showLabel();
-//		};
+
+		/** @type {WEF_ClaimEditorDecorator} */
+		var decorator = ( function() {
+			var result = new WEF_ClaimEditorDecorator();
+			var oldDecorate = result.decorate;
+			result.decorate = function( claimEditor, elements ) {
+				/** @type {WEF_Definition} */
+				var definition = claimEditor.definition;
+				/** @type {function} */
+				var normalizeF = definition.normalize;
+				/** @type {function} */
+				var urlF = definition.url;
+
+				// append before URL and after input cell
+				var buttonsCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
+				if ( typeof ( definition.buttons ) !== "undefined" ) {
+					$.each( definition.buttons, function( index, buttonDefinition ) {
+						var newButton = $( '<button class="wef_property_button" type="button"></button>' );
+						newButton.button( buttonDefinition );
+						if ( $.isFunction( buttonDefinition.click ) ) {
+							newButton.click( buttonDefinition.click );
+						}
+						buttonsCell.append( newButton );
+					} );
+				}
+
+				if ( $.isFunction( urlF ) ) {
+
+					claimEditor.row1.find( 'td.wef_property_editor_input' ).addClass( 'wef_external_links_before_url_cell' );
+					var urlCell = $( '<td class="wef_external_links_url_cell"></td>' ).appendTo( claimEditor.row1 );
+					var div = $( '<div class="wef_external_links_url_div">&nbsp;</div>' ).appendTo( urlCell );
+					var a = $( '<a class="wef_external_links_url_a"></a>' ).appendTo( div ).attr( 'target', '_blank' );
+
+					var updateLinkImplF = function( newValue ) {
+						if ( $.isFunction( normalizeF ) ) {
+							var newValueNormalized = normalizeF( newValue );
+							if ( newValue !== newValueNormalized ) {
+								claimEditor.setDataValue( {
+									type: 'string',
+									value: newValueNormalized
+								} );
+								newValue = newValueNormalized;
+							}
+						}
+						if ( newValue ) {
+							var newUrl = urlF( newValue );
+							a.attr( 'href', newUrl );
+							a.text( newUrl );
+							if ( typeof ( definition.check ) !== "undefined" ) {
+								var result = definition.check.exec( newValue );
+								if ( result == null ) {
+									var tip = externalLinksEditTexts.getTip( definition );
+									var shortLabel = getLabelTextShort( definition );
+									tip = tip.replace( "{0}", shortLabel );
+
+									a.addClass( 'ui-state-error' );
+									claimEditor.tbody.find( 'input' ).addClass( 'ui-state-error' );
+									statusAndTips.text( tip );
+									statusAndTips.addClass( 'ui-state-error' );
+								} else {
+									a.removeClass( 'ui-state-error' );
+									claimEditor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
+									statusAndTips.text( '' );
+									statusAndTips.removeClass( 'ui-state-error' );
+								}
+							}
+						} else {
+							a.attr( 'href', '' );
+							a.text( '' );
+							a.removeClass( 'ui-state-error' );
+							claimEditor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
+							statusAndTips.text( '' );
+							statusAndTips.removeClass( 'ui-state-error' );
+						}
+					};
+					var updateLinkF = function() {
+						if ( claimEditor.hasValue() ) {
+							updateLinkImplF( claimEditor.getDataValue().value );
+						} else {
+							updateLinkImplF( '' );
+						}
+					};
+					$( claimEditor ).change( updateLinkF );
+
+					// additional placeholder to align buttons after URL fields
+					$( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
+
+				} else {
+					claimEditor.row1.find( 'td.wef_property_editor_input' ).attr( 'colspan', 3 );
+				}
+
+				oldDecorate.call( this, claimEditor, elements );
+			};
+			return result;
+		} )();
+		var claimEditorsTableOptions = {
+			decorator: decorator,
+		};
 
 		$( "div#mw-content-text" ).after( dialogForm );
 		dialogForm.dialog( {
@@ -1710,7 +1577,6 @@ WEF_ExternalLinks = function() {
 						return;
 					}
 					externalLinksEdit.entity = result.entities[wgWikibaseItemId];
-					var claims = externalLinksEdit.entity.claims;
 
 					tabs.hide();
 					externalLinksEdit.editors = {};
@@ -1724,9 +1590,14 @@ WEF_ExternalLinks = function() {
 						tabs.append( newTabPage );
 
 						$.each( group.fields, function( i, definition ) {
-							var claimEditorsTable = new WEF_ClaimEditorsTable( definition );
+							var claimEditorsTable = new WEF_ClaimEditorsTable( definition, claimEditorsTableOptions );
+							externalLinksEdit.editors[definition.code] = claimEditorsTable;
 							claimEditorsTable.appendTo( newTabTable );
 						} );
+					} );
+
+					$.each( externalLinksEdit.editors, function( i, claimEditorsTable ) {
+						claimEditorsTable.load( externalLinksEdit.entity );
 					} );
 
 					wef_LabelsCache.receiveLabels();
@@ -1750,11 +1621,6 @@ WEF_ExternalLinks = function() {
 					},
 				} );
 			},
-			close: function() {
-				$( "#ruWikiExternalEditFormTabs" ).find( "div" ).remove();
-				$( '#ruWikiExternalEditFormTabsList' ).empty();
-				$( "#ruWikiExternalEditFormTabs" ).tabs( "destroy" );
-			},
 			buttons: [ {
 				text: externalLinksEditTexts.buttonUpdateLabels,
 				label: externalLinksEditTexts.buttonUpdateLabelsLabel,
@@ -1767,7 +1633,7 @@ WEF_ExternalLinks = function() {
 				text: externalLinksEditTexts.buttonSave,
 				click: function() {
 					dialogForm.dialog( 'close' );
-					wef_save( editors );
+					wef_save( externalLinksEdit.editors );
 				}
 			}, {
 				text: externalLinksEditTexts.buttonCancel,
@@ -1883,7 +1749,7 @@ WEF_ExternalLinks = function() {
 	};
 };
 
-ExternalLinksEdit.prototype.setup = function() {
+WEF_ExternalLinks.prototype.setup = function() {
 	var d = this.definitions;
 
 	this.groups = [];
@@ -2047,23 +1913,25 @@ ExternalLinksEdit.prototype.setup = function() {
 	} );
 };
 
-var externalLinksEdit = new WEF_ExternalLinks();
-externalLinksEdit.setup();
-
 if ( wgServerName === 'ru.wikipedia.org' ) {
 	importScript( 'MediaWiki:RuWikiFlagsHtml.js' );
+	importStylesheet( 'MediaWiki:WEF_ExternalLinks.css' );
 	importScript( 'MediaWiki:WEF_Editors.js' );
 	importStylesheet( 'MediaWiki:WEF_Editors.css' );
 	importScript( 'MediaWiki:WEF_LabelsCache.js' );
 } else {
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_ExternalLinks.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_LabelsCache.js&ctype=text/javascript&action=raw&maxage=86400&smaxage=21600' );
 }
+
+var externalLinksEdit;
 mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.tabs' ], function() {
 	addOnloadHook( function() {
+		externalLinksEdit = new WEF_ExternalLinks();
+		externalLinksEdit.setup();
 		externalLinksEdit.addButtonsEdit();
 	} );
 } );
-
