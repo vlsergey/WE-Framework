@@ -148,19 +148,6 @@ ExternalLinksEdit = function() {
 		};
 	};
 
-	/** @class */
-	var Definition = function( args ) {
-		this.datatype = 'string';
-		this.label = undefined;
-		this.labelPrefix = undefined;
-		this.normalize = undefined;
-		this.check = undefined;
-		this.url = undefined;
-		this.qualifiers = undefined;
-
-		$.extend( this, args );
-	};
-
 	var d = {};
 	this.definitions = d;
 
@@ -191,10 +178,10 @@ ExternalLinksEdit = function() {
 	var regexpTitle = new RegExp( '^[' + wgLegalTitleChars + ']+$' );
 
 	/* author, автор */
-	this.definitions.P50 = new Definition( {
+	this.definitions.P50 = new WEF_Definition( {
 		datatype: 'wikibase-item'
 	} );
-	this.definitions.P213 = new Definition( {
+	this.definitions.P213 = new WEF_Definition( {
 		label: 'Q423048',
 		labelPrefix: 'ISNI — ',
 		normalize: function( id ) {
@@ -210,7 +197,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P214 = new Definition( {
+	this.definitions.P214 = new WEF_Definition( {
 		label: 'Q54919',
 		labelPrefix: 'VIAF — ',
 		viaf: 'viafid',
@@ -233,7 +220,7 @@ ExternalLinksEdit = function() {
 		} ],
 		qualifiers: [],
 	} );
-	this.definitions.P227 = new Definition( {
+	this.definitions.P227 = new WEF_Definition( {
 		flag: 'de',
 		label: 'Q36578',
 		labelPrefix: 'DNB / GND — ',
@@ -247,7 +234,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P244 = new Definition( {
+	this.definitions.P244 = new WEF_Definition( {
 		flag: 'us',
 		label: 'Q620946',
 		labelPrefix: 'LCCN — ',
@@ -257,7 +244,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P245 = new Definition( {
+	this.definitions.P245 = new WEF_Definition( {
 		flag: 'us',
 		label: 'Q2494649',
 		labelPrefix: 'ULAN — ',
@@ -267,7 +254,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P268 = new Definition( {
+	this.definitions.P268 = new WEF_Definition( {
 		flag: 'fr',
 		label: 'Q193563',
 		labelPrefix: 'BNF — ',
@@ -296,7 +283,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P269 = new Definition( {
+	this.definitions.P269 = new WEF_Definition( {
 		flag: 'fr',
 		label: 'Q2597810',
 		labelPrefix: 'SUDOC — ',
@@ -306,7 +293,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P270 = new Definition( {
+	this.definitions.P270 = new WEF_Definition( {
 		flag: 'cn',
 		label: 'Q9384291',
 		labelPrefix: 'CALIS — ',
@@ -316,7 +303,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P271 = new Definition( {
+	this.definitions.P271 = new WEF_Definition( {
 		flag: 'jp',
 		label: 'Q10726338',
 		labelPrefix: 'CiNii — ',
@@ -329,7 +316,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P345 = new Definition( {
+	this.definitions.P345 = new WEF_Definition( {
 		label: 'Q37312',
 		normalize: function( id ) {
 			var result = id;
@@ -353,7 +340,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P349 = new Definition( {
+	this.definitions.P349 = new WEF_Definition( {
 		flag: 'jp',
 		label: 'Q477675',
 		labelPrefix: 'NDL — ',
@@ -363,7 +350,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P350 = new Definition( {
+	this.definitions.P350 = new WEF_Definition( {
 		flag: 'nl',
 		label: 'Q17299580',
 		check: /^\d+$/,
@@ -376,10 +363,10 @@ ExternalLinksEdit = function() {
 		qualifiers: [],
 	} );
 	/* title; название */
-	this.definitions.P357 = new Definition( {
+	this.definitions.P357 = new WEF_Definition( {
 		datatype: 'string',
 	} );
-	this.definitions.P373 = new Definition( {
+	this.definitions.P373 = new WEF_Definition( {
 		label: 'Q565',
 		autocomplete: {
 			source: function( request, response ) {
@@ -403,13 +390,13 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P380 = new Definition( {
+	this.definitions.P380 = new WEF_Definition( {
 		flag: 'fr',
 		label: 'Q809830',
 		check: /^[PEI][A]\d[0-9AB]\d\d\d\d\d\d$/,
 		qualifiers: [],
 	} );
-	this.definitions.P396 = new Definition( {
+	this.definitions.P396 = new WEF_Definition( {
 		flag: 'it',
 		label: 'Q3803707',
 		labelPrefix: 'ICCU / SBN — ',
@@ -427,11 +414,11 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P407 = new Definition( {
+	this.definitions.P407 = new WEF_Definition( {
 		dataType: 'wikibase-item',
 		qualifiers: [],
 	} );
-	this.definitions.P409 = new Definition( {
+	this.definitions.P409 = new WEF_Definition( {
 		flag: 'au',
 		label: 'Q623578',
 		labelPrefix: 'NLA — ',
@@ -445,7 +432,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P434 = new Definition( {
+	this.definitions.P434 = new WEF_Definition( {
 		label: 'Q14005',
 		labelQualifier: [ 'Q215627', 'Q2088357' ], // person, musical
 		// ensemble
@@ -458,7 +445,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P435 = new Definition( {
+	this.definitions.P435 = new WEF_Definition( {
 		label: 'Q14005',
 		// музыкальное произведение (Q2188189), mainly сингл (Q134556)
 		labelQualifier: [ 'Q2188189', 'Q134556' ],
@@ -471,7 +458,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P436 = new Definition( {
+	this.definitions.P436 = new WEF_Definition( {
 		label: 'Q14005',
 		// музыкальное произведение (Q2188189)
 		// mainly музыкальный альбом (Q482994)
@@ -486,10 +473,10 @@ ExternalLinksEdit = function() {
 		qualifiers: [],
 	} );
 	/* Volume, том */
-	this.definitions.P478 = new Definition( {
+	this.definitions.P478 = new WEF_Definition( {
 		datatype: 'string',
 	} );
-	this.definitions.P496 = new Definition( {
+	this.definitions.P496 = new WEF_Definition( {
 		label: 'Q51044',
 		normalize: function( id ) {
 			if ( /^\d\d\d\d\s\d\d\d\d\s\d\d\d\d\s\d\d\d[\dX]$/.exec( id ) ) {
@@ -506,7 +493,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P497 = new Definition( {
+	this.definitions.P497 = new WEF_Definition( {
 		flag: 'tw',
 		label: 'Q17299677',
 		labelPrefix: 'CBDB — ',
@@ -522,7 +509,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P535 = new Definition( {
+	this.definitions.P535 = new WEF_Definition( {
 		label: 'Q63056',
 		check: /^\d+$/,
 		url: function( id ) {
@@ -530,7 +517,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P549 = new Definition( {
+	this.definitions.P549 = new WEF_Definition( {
 		label: 'Q829984',
 		check: /^\d{1,6}$/,
 		url: function( id ) {
@@ -538,7 +525,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P650 = new Definition( {
+	this.definitions.P650 = new WEF_Definition( {
 		flag: 'nl',
 		label: 'Q17299517',
 		check: /^\d{1,6}$/,
@@ -550,7 +537,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P651 = new Definition( {
+	this.definitions.P651 = new WEF_Definition( {
 		flag: 'nl',
 		label: 'Q1868372',
 		labelPrefix: 'BPN — ',
@@ -560,7 +547,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P691 = new Definition( {
+	this.definitions.P691 = new WEF_Definition( {
 		flag: 'cz',
 		label: 'Q1967876',
 		labelPrefix: 'NKC — ',
@@ -570,14 +557,14 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P839 = new Definition( {
+	this.definitions.P839 = new WEF_Definition( {
 		label: 'Q523660',
 		check: regexpPath,
 		url: function( id ) {
 			return 'http://imslp.org/wiki/' + id;
 		},
 	} );
-	this.definitions.P886 = new Definition( {
+	this.definitions.P886 = new WEF_Definition( {
 		flag: 'ch',
 		label: 'Q642074',
 		labelQualifier: 'Q35127',
@@ -587,7 +574,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P902 = new Definition( {
+	this.definitions.P902 = new WEF_Definition( {
 		flag: 'ch',
 		label: 'Q642074',
 		labelPrefix: 'HLS — ',
@@ -597,7 +584,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P906 = new Definition( {
+	this.definitions.P906 = new WEF_Definition( {
 		flag: 'se',
 		label: 'Q953058',
 		labelPrefix: 'SELIBR / LIBRIS — ',
@@ -607,7 +594,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P947 = new Definition( {
+	this.definitions.P947 = new WEF_Definition( {
 		flag: 'ru',
 		label: 'Q1048694',
 		labelPrefix: 'RSL — ',
@@ -617,7 +604,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P950 = new Definition( {
+	this.definitions.P950 = new WEF_Definition( {
 		flag: 'es',
 		label: 'Q750403',
 		labelPrefix: 'BNE — ',
@@ -631,7 +618,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P951 = new Definition( {
+	this.definitions.P951 = new WEF_Definition( {
 		flag: 'hu',
 		label: 'Q1063819',
 		labelPrefix: 'NSZL — ',
@@ -641,7 +628,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P998 = new Definition( {
+	this.definitions.P998 = new WEF_Definition( {
 		label: 'Q41226',
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?dmoz\.org\/(.*)$/i, '$2' ).replace( /^(.*)\/$/i, '$1' ).replace( /^\/(.*)$/i, '$1' );
@@ -650,7 +637,7 @@ ExternalLinksEdit = function() {
 			return 'http://www.dmoz.org/' + id;
 		},
 	} );
-	this.definitions.P1003 = new Definition( {
+	this.definitions.P1003 = new WEF_Definition( {
 		flag: 'ro',
 		label: 'Q622012',
 		labelPrefix: 'BNR — ',
@@ -660,7 +647,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1005 = new Definition( {
+	this.definitions.P1005 = new WEF_Definition( {
 		flag: 'pt',
 		label: 'Q245966',
 		labelPrefix: 'PTBNP — ',
@@ -670,7 +657,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1006 = new Definition( {
+	this.definitions.P1006 = new WEF_Definition( {
 		flag: 'nl',
 		label: 'Q1526131',
 		labelPrefix: 'NTA — ',
@@ -680,7 +667,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1015 = new Definition( {
+	this.definitions.P1015 = new WEF_Definition( {
 		flag: 'no',
 		label: 'Q4584301',
 		labelPrefix: 'BIBSYS — ',
@@ -690,7 +677,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1017 = new Definition( {
+	this.definitions.P1017 = new WEF_Definition( {
 		flag: 'va',
 		label: 'Q213678',
 		labelPrefix: 'BAV — ',
@@ -704,7 +691,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1053 = new Definition( {
+	this.definitions.P1053 = new WEF_Definition( {
 		label: 'Q7315186',
 		check: /[A-Z]-\d{4}-(19|20)\d\d/,
 		url: function( id ) {
@@ -712,7 +699,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1153 = new Definition( {
+	this.definitions.P1153 = new WEF_Definition( {
 		label: 'Q371467',
 		check: /^\d+$/,
 		url: function( id ) {
@@ -720,14 +707,14 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1185 = new Definition( {
+	this.definitions.P1185 = new WEF_Definition( {
 		label: 'Q649227',
 		check: /^\d+$/,
 		url: function( id ) {
 			return 'http://ru.rodovid.org/wk/Person:' + id;
 		},
 	} );
-	this.definitions.P1207 = new Definition( {
+	this.definitions.P1207 = new WEF_Definition( {
 		flag: 'pl',
 		label: 'Q11789729',
 		labelPrefix: 'NUKAT — ',
@@ -738,7 +725,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1213 = new Definition( {
+	this.definitions.P1213 = new WEF_Definition( {
 		flag: 'cn',
 		label: 'Q732353',
 		labelPrefix: 'NLC — ',
@@ -748,7 +735,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1217 = new Definition( {
+	this.definitions.P1217 = new WEF_Definition( {
 		label: 'Q31964',
 		labelQualifier: [ 'Q8719053', 'Q24354' ], // Концертная площадка
 		// (Q8719053), <...>
@@ -759,7 +746,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1218 = new Definition( {
+	this.definitions.P1218 = new WEF_Definition( {
 		label: 'Q31964',
 		labelQualifier: 'Q7777570', // театральная постановка (Q7777570)
 		check: /^\d+$/,
@@ -768,7 +755,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1219 = new Definition( {
+	this.definitions.P1219 = new WEF_Definition( {
 		label: 'Q31964',
 		labelQualifier: [ 'Q386724', 'Q25379' ], // произведение
 		// (Q386724): пьеса
@@ -779,7 +766,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1220 = new Definition( {
+	this.definitions.P1220 = new WEF_Definition( {
 		label: 'Q31964',
 		labelQualifier: 'Q215627', // person
 		check: /^\d+$/,
@@ -788,7 +775,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1233 = new Definition( {
+	this.definitions.P1233 = new WEF_Definition( {
 		label: 'Q2629164',
 		labelQualifier: 'Q215627', // person
 		check: /^\d+$/,
@@ -797,7 +784,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1234 = new Definition( {
+	this.definitions.P1234 = new WEF_Definition( {
 		label: 'Q2629164',
 		labelQualifier: 'Q732577', // publication
 		check: /^\d+$/,
@@ -806,7 +793,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1235 = new Definition( {
+	this.definitions.P1235 = new WEF_Definition( {
 		label: 'Q2629164',
 		labelQualifier: 'Q7725310', // series
 		check: /^\d+$/,
@@ -815,7 +802,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1237 = new Definition( {
+	this.definitions.P1237 = new WEF_Definition( {
 		label: 'Q223142',
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?boxofficemojo\.com\/movies\/\?id\=(.*)\.htm$/i, '$2' );
@@ -826,7 +813,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1239 = new Definition( {
+	this.definitions.P1239 = new WEF_Definition( {
 		label: 'Q2629164',
 		labelQualifier: 'Q4198509', // publisher
 		check: /^\d+$/,
@@ -835,7 +822,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1258 = new Definition( {
+	this.definitions.P1258 = new WEF_Definition( {
 		label: 'Q105584',
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?rottentomatoes\.com\/(.*)$/i, '$2' );
@@ -846,7 +833,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1265 = new Definition( {
+	this.definitions.P1265 = new WEF_Definition( {
 		label: 'Q31165',
 		labelQualifier: 'Q11424', // film
 		normalize: function( id ) {
@@ -858,7 +845,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1266 = new Definition( {
+	this.definitions.P1266 = new WEF_Definition( {
 		label: 'Q31165',
 		labelQualifier: 'Q215627', // person
 		normalize: function( id ) {
@@ -870,7 +857,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1267 = new Definition( {
+	this.definitions.P1267 = new WEF_Definition( {
 		label: 'Q31165',
 		labelQualifier: 'Q7725310', // series
 		normalize: function( id ) {
@@ -882,7 +869,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1273 = new Definition( {
+	this.definitions.P1273 = new WEF_Definition( {
 		flag: 'ct',
 		label: 'Q1200925',
 		labelPrefix: 'BNC — ',
@@ -892,7 +879,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1280 = new Definition( {
+	this.definitions.P1280 = new WEF_Definition( {
 		flag: 'si',
 		label: 'Q16744133',
 		labelPrefix: 'CONOR — ',
@@ -902,7 +889,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1309 = new Definition( {
+	this.definitions.P1309 = new WEF_Definition( {
 		flag: 'eg',
 		label: 'Q501851',
 		labelPrefix: 'EGAXA — ',
@@ -915,7 +902,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1315 = new Definition( {
+	this.definitions.P1315 = new WEF_Definition( {
 		flag: 'au',
 		label: 'Q623578',
 		labelPrefix: 'NLA PI — ',
@@ -928,7 +915,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1368 = new Definition( {
+	this.definitions.P1368 = new WEF_Definition( {
 		flag: 'lv',
 		label: 'Q1133733',
 		labelPrefix: 'LNB — ',
@@ -939,7 +926,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1375 = new Definition( {
+	this.definitions.P1375 = new WEF_Definition( {
 		flag: 'hr',
 		label: 'Q631375',
 		labelPrefix: 'NSK — ',
@@ -950,7 +937,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.P1361 = new Definition( {
+	this.definitions.P1361 = new WEF_Definition( {
 		label: 'Q220509',
 		normalize: function( id ) {
 			var result = id;
@@ -978,7 +965,7 @@ ExternalLinksEdit = function() {
 		qualifiers: [],
 	} );
 
-	this.definitions.Q355 = new Definition( {
+	this.definitions.Q355 = new WEF_Definition( {
 		code: 'P553[Q355]/P554',
 		label: 'Q355',
 		normalize: function( id ) {
@@ -989,7 +976,7 @@ ExternalLinksEdit = function() {
 			return 'https://www.facebook.com/' + id;
 		},
 	} );
-	this.definitions.Q356 = new Definition( {
+	this.definitions.Q356 = new WEF_Definition( {
 		code: 'P553[Q356]/P554',
 		label: 'Q356',
 		normalize: function( id ) {
@@ -999,7 +986,7 @@ ExternalLinksEdit = function() {
 			return 'https://plus.google.com/' + id + '/posts';
 		},
 	} );
-	this.definitions.Q866 = new Definition( {
+	this.definitions.Q866 = new WEF_Definition( {
 		code: 'P553[Q866]/P554',
 		label: 'Q866',
 		normalize: function( id ) {
@@ -1010,7 +997,7 @@ ExternalLinksEdit = function() {
 			return 'https://youtube.com/' + id;
 		}
 	} );
-	this.definitions.Q918 = new Definition( {
+	this.definitions.Q918 = new WEF_Definition( {
 		code: 'P553[Q918]/P554',
 		label: 'Q918',
 		normalize: function( id ) {
@@ -1020,7 +1007,7 @@ ExternalLinksEdit = function() {
 			return 'https://twitter.com/' + id;
 		}
 	} );
-	this.definitions.Q40629 = new Definition( {
+	this.definitions.Q40629 = new WEF_Definition( {
 		code: 'P553[Q40629]/P554',
 		label: 'Q40629',
 		normalize: function( id ) {
@@ -1031,7 +1018,7 @@ ExternalLinksEdit = function() {
 			return 'https://myspace.com/' + id;
 		}
 	} );
-	this.definitions.Q103204 = new Definition( {
+	this.definitions.Q103204 = new WEF_Definition( {
 		code: 'P553[Q103204]/P554',
 		label: 'Q103204',
 		check: regexpPath,
@@ -1042,7 +1029,7 @@ ExternalLinksEdit = function() {
 			return 'https://www.flickr.com/' + id;
 		},
 	} );
-	this.definitions.Q116933 = new Definition( {
+	this.definitions.Q116933 = new WEF_Definition( {
 		code: 'P553[Q116933]/P554',
 		label: 'Q116933',
 		normalize: function( id ) {
@@ -1056,7 +1043,7 @@ ExternalLinksEdit = function() {
 			return 'https://vk' + '.com/' + id;
 		},
 	} );
-	this.definitions.Q156376 = new Definition( {
+	this.definitions.Q156376 = new WEF_Definition( {
 		code: 'P553[Q156376]/P554',
 		label: 'Q156376',
 		normalize: function( id ) {
@@ -1067,7 +1054,7 @@ ExternalLinksEdit = function() {
 			return 'http://vimeo.com/' + id;
 		}
 	} );
-	this.definitions.Q171186 = new Definition( {
+	this.definitions.Q171186 = new WEF_Definition( {
 		code: 'P553[Q171186]/P554',
 		label: 'Q171186',
 		normalize: function( id ) {
@@ -1078,7 +1065,7 @@ ExternalLinksEdit = function() {
 			return 'http://' + id + '.blogspot.com/';
 		},
 	} );
-	this.definitions.Q183718 = new Definition( {
+	this.definitions.Q183718 = new WEF_Definition( {
 		code: 'P553[Q183718]/P554',
 		label: 'Q183718',
 		normalize: function( id ) {
@@ -1093,7 +1080,7 @@ ExternalLinksEdit = function() {
 		},
 		qualifiers: [],
 	} );
-	this.definitions.Q209330 = new Definition( {
+	this.definitions.Q209330 = new WEF_Definition( {
 		code: 'P553[Q209330]/P554',
 		label: 'Q209330',
 		normalize: function( id ) {
@@ -1104,7 +1091,7 @@ ExternalLinksEdit = function() {
 			return 'http://instagram.com/' + id;
 		},
 	} );
-	this.definitions.Q219523 = new Definition( {
+	this.definitions.Q219523 = new WEF_Definition( {
 		code: 'P553[Q219523]/P554',
 		label: 'Q219523',
 		normalize: function( id ) {
@@ -1115,7 +1102,7 @@ ExternalLinksEdit = function() {
 			return 'http://' + id + '.livejournal.com/';
 		}
 	} );
-	this.definitions.Q234535 = new Definition( {
+	this.definitions.Q234535 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'ru',
 		code: 'P1343[Q234535]/P854',
@@ -1136,7 +1123,7 @@ ExternalLinksEdit = function() {
 		} ],
 		qualifiers: [ d.P50, d.P357, d.P478 ],
 	} );
-	this.definitions.Q372827 = new Definition( {
+	this.definitions.Q372827 = new WEF_Definition( {
 		code: 'P553[Q372827]/P554',
 		label: 'Q372827',
 		normalize: function( id ) {
@@ -1153,7 +1140,7 @@ ExternalLinksEdit = function() {
 			return "http://" + id + ".rutube.ru/";
 		}
 	} );
-	this.definitions.Q384060 = new Definition( {
+	this.definitions.Q384060 = new WEF_Definition( {
 		code: 'P553[Q384060]/P554',
 		label: 'Q384060',
 		normalize: function( id ) {
@@ -1164,7 +1151,7 @@ ExternalLinksEdit = function() {
 			return 'http://' + id + '.tumblr.com/';
 		}
 	} );
-	this.definitions.Q568769 = new Definition( {
+	this.definitions.Q568769 = new WEF_Definition( {
 		code: 'P553[Q568769]/P554',
 		label: 'Q568769',
 		normalize: function( id ) {
@@ -1175,7 +1162,7 @@ ExternalLinksEdit = function() {
 			return 'https://soundcloud.com/' + id + '/';
 		}
 	} );
-	this.definitions.Q798490 = new Definition( {
+	this.definitions.Q798490 = new WEF_Definition( {
 		code: 'P553[Q798490]/P554',
 		label: 'Q798490',
 		normalize: function( id ) {
@@ -1186,7 +1173,7 @@ ExternalLinksEdit = function() {
 			return 'http://' + id + '.ya.ru/';
 		},
 	} );
-	this.definitions.Q1002972 = new Definition( {
+	this.definitions.Q1002972 = new WEF_Definition( {
 		code: 'P553[Q1002972]/P554',
 		label: 'Q1002972',
 		normalize: function( id ) {
@@ -1197,7 +1184,7 @@ ExternalLinksEdit = function() {
 			return 'https://www.spring.me/' + id;
 		},
 	} );
-	this.definitions.Q1123836 = new Definition( {
+	this.definitions.Q1123836 = new WEF_Definition( {
 		code: 'P553[Q1123836]/P554',
 		label: 'Q1123836',
 		normalize: function( id ) {
@@ -1208,21 +1195,21 @@ ExternalLinksEdit = function() {
 			return 'http://www.odnoklassniki' + '.ru/profile/' + id;
 		},
 	} );
-	this.definitions.Q2498180 = new Definition( {
+	this.definitions.Q2498180 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'ru',
 		code: 'P1343[Q2498180]/P854',
 		label: 'Q2498180',
 		qualifiers: [ d.P50, d.P357, d.P478 ],
 	} );
-	this.definitions.Q2627728 = new Definition( {
+	this.definitions.Q2627728 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'ru',
 		code: 'P1343[Q2627728]/P854',
 		label: 'Q2627728',
 		qualifiers: [ d.P50, d.P357 ],
 	} );
-	this.definitions.Q4037665 = new Definition( {
+	this.definitions.Q4037665 = new WEF_Definition( {
 		code: 'P553[Q4037665]/P554',
 		label: 'Q4037665',
 		normalize: function( id ) {
@@ -1233,7 +1220,7 @@ ExternalLinksEdit = function() {
 			return 'https://dudu.com/' + id + '/';
 		}
 	} );
-	this.definitions.Q4043051 = new Definition( {
+	this.definitions.Q4043051 = new WEF_Definition( {
 		code: 'P553[Q4043051]/P554',
 		label: 'Q4043051',
 		normalize: function( id ) {
@@ -1247,7 +1234,7 @@ ExternalLinksEdit = function() {
 			return 'http://www.liveinternet.ru/users/' + id
 		},
 	} );
-	this.definitions.Q4101720 = new Definition( {
+	this.definitions.Q4101720 = new WEF_Definition( {
 		code: 'P553[Q4101720]/P554',
 		label: 'Q4101720',
 		normalize: function( id ) {
@@ -1258,21 +1245,21 @@ ExternalLinksEdit = function() {
 			return 'http://' + id + '.vkrugudruzei.ru/';
 		},
 	} );
-	this.definitions.Q4239850 = new Definition( {
+	this.definitions.Q4239850 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'ru',
 		code: 'P1343[Q4239850]/P854',
 		label: 'Q4239850',
 		qualifiers: [ d.P50, d.P357, d.P478 ],
 	} );
-	this.definitions.Q4263804 = new Definition( {
+	this.definitions.Q4263804 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'ru',
 		code: 'P1343[Q4263804]/P854',
 		label: 'Q4263804',
 		qualifiers: [ d.P50, d.P357, d.P478 ],
 	} );
-	this.definitions.Q4299813 = new Definition( {
+	this.definitions.Q4299813 = new WEF_Definition( {
 		code: 'P553[Q4299813]/P554',
 		label: 'Q4299813',
 		normalize: function( id ) {
@@ -1283,7 +1270,7 @@ ExternalLinksEdit = function() {
 			return 'http://' + id + '.moikrug.ru/';
 		},
 	} );
-	this.definitions.Q4299858 = new Definition( {
+	this.definitions.Q4299858 = new WEF_Definition( {
 		code: 'P553[Q4299858]/P554',
 		label: 'Q4299858',
 		normalize: function( id ) {
@@ -1297,7 +1284,7 @@ ExternalLinksEdit = function() {
 			return 'http://my.mail.ru/' + id;
 		},
 	} );
-	this.definitions.Q4380129 = new Definition( {
+	this.definitions.Q4380129 = new WEF_Definition( {
 		code: 'P553[Q4380129]/P554',
 		label: 'Q4380129',
 		normalize: function( id ) {
@@ -1311,7 +1298,7 @@ ExternalLinksEdit = function() {
 			return 'http://proza.ru/avtor/' + id;
 		}
 	} );
-	this.definitions.Q4442644 = new Definition( {
+	this.definitions.Q4442644 = new WEF_Definition( {
 		code: 'P553[Q4442644]/P554',
 		label: 'Q4442644',
 		normalize: function( id ) {
@@ -1325,7 +1312,7 @@ ExternalLinksEdit = function() {
 			return 'http://stihi.ru/avtor/' + id;
 		}
 	} );
-	this.definitions.Q6883832 = new Definition( {
+	this.definitions.Q6883832 = new WEF_Definition( {
 		code: 'P553[Q6883832]/P554',
 		label: 'Q6883832',
 		normalize: function( id ) {
@@ -1339,7 +1326,7 @@ ExternalLinksEdit = function() {
 			return 'https://mixcloud.com/' + id + '/';
 		}
 	} );
-	this.definitions.Q17117201 = new Definition( {
+	this.definitions.Q17117201 = new WEF_Definition( {
 		code: 'P553[Q17117201]/P554',
 		label: 'Q17117201',
 		normalize: function( id ) {
@@ -1353,7 +1340,7 @@ ExternalLinksEdit = function() {
 			return 'https://promodj.com/' + id + '/';
 		}
 	} );
-	this.definitions.Q17144398 = new Definition( {
+	this.definitions.Q17144398 = new WEF_Definition( {
 		code: 'P553[Q17144398]/P554',
 		label: 'Q17144398',
 		normalize: function( id ) {
@@ -1367,7 +1354,7 @@ ExternalLinksEdit = function() {
 			return 'http://qroom.ru/' + id + '/';
 		}
 	} );
-	this.definitions.Q17195318 = new Definition( {
+	this.definitions.Q17195318 = new WEF_Definition( {
 		code: 'P553[Q17195318]/P554',
 		label: 'Q17195318',
 		normalize: function( id ) {
@@ -1381,7 +1368,7 @@ ExternalLinksEdit = function() {
 			return 'http://sprashivai.ru/' + id;
 		}
 	} );
-	this.definitions.Q17195344 = new Definition( {
+	this.definitions.Q17195344 = new WEF_Definition( {
 		code: 'P553[Q17195344]/P554',
 		label: 'Q17195344',
 		normalize: function( id ) {
@@ -1395,7 +1382,7 @@ ExternalLinksEdit = function() {
 			return 'http://samlib.ru/' + id.charAt( 0 ) + '/' + id + '/';
 		}
 	} );
-	this.definitions.Q17254543 = new Definition( {
+	this.definitions.Q17254543 = new WEF_Definition( {
 		code: 'P553[Q17254543]/P554',
 		label: 'Q17254543',
 		normalize: function( id ) {
@@ -1409,7 +1396,7 @@ ExternalLinksEdit = function() {
 			return 'http://chitalnya.ru/users/' + id + '/';
 		}
 	} );
-	this.definitions.Q17300505 = new Definition( {
+	this.definitions.Q17300505 = new WEF_Definition( {
 		code: 'P553[Q17300505]/P554',
 		label: 'Q17300505',
 		normalize: function( id ) {
@@ -1423,7 +1410,7 @@ ExternalLinksEdit = function() {
 			return 'http://fan.lib.ru/' + id.charAt( 0 ) + '/' + id + '/';
 		}
 	} );
-	this.definitions.Q17329360 = new Definition( {
+	this.definitions.Q17329360 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'uk',
 		code: 'P1343[Q17329360]/P854',
@@ -1441,7 +1428,7 @@ ExternalLinksEdit = function() {
 		} ],
 		qualifiers: [ d.P50, d.P357, ],
 	} );
-	this.definitions.Q17329836 = new Definition( {
+	this.definitions.Q17329836 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'fr',
 		code: 'P1343[Q17329836]/P854',
@@ -1475,9 +1462,9 @@ ExternalLinksEdit = function() {
 	/** @private */
 	var getLabelTextShort = function( definition ) {
 		if ( typeof ( definition.label ) !== "undefined" ) {
-			return wef_LabelsCache.get( definition.label );
+			return wef_LabelsCache.getLabel( definition.label );
 		} else {
-			return wef_LabelsCache.get( definition.code );
+			return wef_LabelsCache.getLabel( definition.code );
 		}
 	};
 
@@ -1506,7 +1493,7 @@ ExternalLinksEdit = function() {
 		var createRowNew = function( definition ) {
 			var a = $( '<a target="_blank"></a>' );
 
-			var editor = new WEF_PropertyEditor( definition ); 
+			var editor = new WEF_ClaimEditor( definition );
 
 			var beforeCell = $( '<td></td>' ).prependTo( editor.tbody.find( 'tr' ).first() );
 			var afterCell1 = $( '<td></td>' ).appendTo( editor.tbody.find( 'tr' ).first() );
@@ -1693,7 +1680,7 @@ ExternalLinksEdit = function() {
 				return function() {
 					var question = externalLinksEditTexts.confirmDeleteValue //
 					.replace( '{code}', definition.label ) //
-					.replace( '{label}', wef_LabelsCache.get( definition.label ) );
+					.replace( '{label}', wef_LabelsCache.getLabel( definition.label ) );
 
 					var r = !editor.hasValue() || confirm( question );
 					if ( r ) {

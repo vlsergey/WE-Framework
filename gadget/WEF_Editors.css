@@ -1,3 +1,72 @@
-input.ruwiki-wikidata-url {
+.wef_personEditor_dialog table, .wef_personEditor_dialog tbody,
+	.wef_personEditor_dialog tr, .wef_personEditor_dialog th,
+	.wef_personEditor_dialog td {
+	padding: 0;
+	margin: 0;
+}
+
+.wef_button_cell {
+	padding: 0;
+	margin: 0;
+	width: 1px;
+}
+
+.wef_button_cell button {
+	margin: 0 0.1em !important;
+}
+
+.wef_button_cell button .ui-button-text {
+	padding: 0 0.5em !important;
+}
+
+.wef_property_editor_label {
+	text-align: left;
+	white-space: nowrap;
+}
+
+.wef_property_editor_input {
 	width: 100%;
+}
+
+.wef_snak_table {
+	width: 100%;
+}
+
+.wef_snak_table_value_editor_cell {
+	width: 100%;
+}
+
+.wef_commonsMedia, .wef_string, .wef_url, .wef_wikibase-item {
+	width: 100%;
+}
+
+.wef_qualifiers {
+	width: 100%;
+}
+
+.wef_qualifiers_select_cell {
+	width: 1px;
+	font-weight: bold;
+	white-space: nowrap;
+}
+
+.wef_time_table th {
+	text-align: left;
+}
+
+button.wef_select_snak_type_button>span.ui-button-icon-primary {
+	background-image:
+		url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAACNJREFUOMtjYBhewLZh839i8HA2YHAEIjGW0NaAgQ/EoRcGAJzMvdNs2OYMAAAAAElFTkSuQmCC');
+	background-position: 0 0 !important;
+}
+
+.wef-snaktypeselector-menu {
+	border: 1px solid #CCC;
+	position: absolute;
+	z-index: +1;
+	position: absolute;
+}
+
+.wef-snaktypeselector-menu option {
+	padding: 0.25em;
 }

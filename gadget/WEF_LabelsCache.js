@@ -1,15 +1,33 @@
 /**
- * Wikidata labels cache using local user storage (i.e. client-side)
+ * Wikidata labels and description cache using local user storage (i.e.
+ * client-side). Part of WE-Framework.
+ * 
+ * @see https://github.com/vlsergey/WE-Framework
+ * @author vlsergey
  */
 var WEF_LabelsCache = function() {
 
-	/** @private */
+	/**
+	 * @const
+	 * @private
+	 */
 	var URL_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
-	/** @private */
+	/**
+	 * @const
+	 * @private
+	 */
 	var MAX_ITEMS_PER_REQUEST = 50;
+	/**
+	 * @const
+	 * @private
+	 */
+	var LOCALSTORAGE_PREFIX_LABELS = 'wef-d-label-';
+	var LOCALSTORAGE_PREFIX_DESCRIPTIONS = 'wef-d-description-';
 
 	/** @private */
-	var cache = {};
+	var cacheLabels = {};
+	/** @private */
+	var cacheDescriptions = {};
 	/** @private */
 	var queue = [];
 
@@ -17,60 +35,95 @@ var WEF_LabelsCache = function() {
 	var listeners = [];
 
 	this.clearCacheAndRequeue = function() {
-		$.each( cache, function( key, item ) {
-			delete localStorage['vlsergey-d-label-' + key];
-			delete cache[key];
-			queue.push( key );
+		$.each( cacheLabels, function( key, item ) {
+			delete localStorage[LOCALSTORAGE_PREFIX_LABELS + key];
+			delete cacheLabels[key];
+			if ( queue.indexOf( key ) === -1 ) {
+				queue.push( key );
+			}
+		} );
+		$.each( cacheDescriptions, function( key, item ) {
+			delete localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + key];
+			delete cacheDescriptions[key];
+			if ( queue.indexOf( key ) === -1 ) {
+				queue.push( key );
+			}
 		} );
 	};
 
-	/** Return cached value */
-	this.get = function( key ) {
+	/**
+	 * @param key
+	 *            {string} key to check
+	 */
+	var assertKeyCorrect = function( key ) {
 		if ( !/^[PQ]\d+$/.test( key ) ) {
 			throw new Error( "Incorrect key: " + key );
 		}
+	};
 
-		var cached = cache[key];
+	/** Return cached value */
+	this.getLabel = function( key ) {
+		assertKeyCorrect( key );
+
+		var cached = cacheLabels[key];
 		if ( typeof ( cached ) !== 'undefined' ) {
 			return cached;
 		}
 
-		var localCached = localStorage['vlsergey-d-label-' + key];
+		var localCached = localStorage[LOCALSTORAGE_PREFIX_LABELS + key];
 		if ( isValid( localCached ) ) {
-			cache[key] = localCached;
+			cacheLabels[key] = localCached;
 			return localCached;
 		}
 
 		return key;
 	};
 
-	/** Return cached value or queue values to be received from Wikidata */
-	this.getOrQueue = function( key, listener ) {
-		if ( !/^[PQ]\d+$/.test( key ) ) {
-			throw new Error( "Incorrect key: " + key );
+	/** Return cached value */
+	this.getDescription = function( key ) {
+		assertKeyCorrect( key );
+
+		var cached = cacheDescriptions[key];
+		if ( typeof ( cached ) !== 'undefined' ) {
+			return cached;
 		}
 
-		var get = this.get;
-
-		var cached = get( key );
-		if ( !isValid( cached ) || cached === key ) {
-			listeners.push( function() {
-				var fromNewCache = get( key );
-				if ( typeof ( fromNewCache ) !== 'undefined' ) {
-					listener( fromNewCache );
-				}
-			} );
-			queue.push( key );
-			return key;
+		var localCached = localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + key];
+		if ( isValid( localCached ) ) {
+			cacheDescriptions[key] = localCached;
+			return localCached;
 		}
-		// call listener even if got from cache
-		listener( cached );
-		return cached;
+
+		return key;
 	};
 
 	/** @private */
 	var isValid = function( value ) {
 		return typeof ( value ) !== "undefined" && value !== null && value.length !== 0;
+	};
+
+	/** Return cached value or queue values to be received from Wikidata */
+	this.getOrQueue = function( key, listener ) {
+		assertKeyCorrect( key );
+
+		var getLabel = this.getLabel;
+		var getDescription = this.getDescription;
+
+		var cachedLabel = getLabel( key );
+		var cachedDescription = getDescription( key );
+		// call listener even if got from cache
+		listener( cachedLabel, cachedDescription );
+
+		if ( !isValid( cachedLabel ) || cachedLabel === key || !isValid( cachedDescription ) || cachedDescription === key ) {
+			listeners.push( function() {
+				var label = getLabel( key );
+				var description = getDescription( key );
+				listener( label, description );
+			} );
+			queue.push( key );
+			return key;
+		}
+		return cachedLabel;
 	};
 
 	/**
@@ -91,23 +144,31 @@ var WEF_LabelsCache = function() {
 	/** Receive values from Wikidata, if any queued */
 	this.receiveLabels = function() {
 
-		var languages = [ wgUserLanguage, wgContentLanguage, 'en' ];
-		var languagesString = encodeURIComponent( wgUserLanguage + '|' + wgContentLanguage + '|en' );
+		var languages = [ wgUserLanguage, wgContentLanguage, 'en', 'ru' ];
+		var languagesString = encodeURIComponent( wgUserLanguage + '|' + wgContentLanguage + '|en|ru' );
 
 		// remove already known
 		queue = jQuery.grep( queue, function( value ) {
-			return !isValid( cache[value] );
+			return !isValid( cacheLabels[value] ) || !isValid( cacheDescriptions[value] );
 		} );
 
 		var gotFromCache = [];
 		var idsToQuery = [];
 
 		$.each( queue, function( index, key ) {
-			var cached = localStorage['vlsergey-d-label-' + key];
-			if ( isValid( cached ) ) {
-				cache[key] = cached;
+			var cachedLabel = localStorage[LOCALSTORAGE_PREFIX_LABELS + key];
+			var cachedDescription = localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + key];
+
+			if ( isValid( cachedLabel ) ) {
+				cacheLabels[key] = cachedLabel;
 				gotFromCache.push( key );
-			} else {
+			}
+			if ( isValid( cachedDescription ) ) {
+				cacheDescriptions[key] = cachedDescription;
+				gotFromCache.push( key );
+			}
+
+			if ( !isValid( cachedLabel ) || isValid( cachedDescription ) ) {
 				idsToQuery.push( key );
 			}
 		} );
@@ -119,16 +180,29 @@ var WEF_LabelsCache = function() {
 			}
 
 			$.each( result.entities, function( entityIndex, entity ) {
-				if ( typeof ( entity.labels ) === "undefined" ) {
-					return;
+				var entityId = entity.id;
+
+				if ( typeof entity.labels !== "undefined" ) {
+					for ( var l = 0; l < languages.length; l++ ) {
+						var label = entity.labels[languages[l]];
+						if ( typeof label !== "undefined" ) {
+							var title = label.value;
+							cacheLabels[entityId] = title;
+							localStorage[LOCALSTORAGE_PREFIX_LABELS + entityId] = title;
+							break;
+						}
+					}
 				}
-				for ( var l = 0; l < languages.length; l++ ) {
-					var label = entity.labels[languages[l]];
-					if ( typeof ( label ) !== "undefined" ) {
-						var title = label.value;
-						cache[entity.id] = title;
-						localStorage['vlsergey-d-label-' + entity.id] = title;
-						break;
+
+				if ( typeof entity.descriptions !== "undefined" ) {
+					for ( var l = 0; l < languages.length; l++ ) {
+						var description = entity.descriptions[languages[l]];
+						if ( typeof description !== "undefined" ) {
+							var title = description.value;
+							cacheDescriptions[entityId] = title;
+							localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + entityId] = title;
+							break;
+						}
 					}
 				}
 			} );
@@ -145,7 +219,11 @@ var WEF_LabelsCache = function() {
 				idsString = idsString + idsToQuery[k];
 			}
 			$.ajax( {
-				url: URL_PREFIX + '&action=wbgetentities&props=labels&languages=' + languagesString + '&ids=' + encodeURIComponent( idsString ),
+				url: URL_PREFIX //
+						+ '&action=wbgetentities' //
+						+ '&props=' + encodeURIComponent( 'labels|descriptions' ) // 
+						+ '&languages=' + languagesString // 
+						+ '&ids=' + encodeURIComponent( idsString ),
 				dataType: 'json',
 				success: ajaxResultFunction,
 			} );
