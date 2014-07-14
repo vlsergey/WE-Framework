@@ -11,12 +11,16 @@ var WEF_LabelsCache = function() {
 	 * @const
 	 * @private
 	 */
-	var URL_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
+	var URL_PREFIX = wgSiteName === 'Wikidata' // 
+	? wgServer + wgScriptPath + '/api.php?format=json' // 
+	: '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
+
 	/**
 	 * @const
 	 * @private
 	 */
 	var MAX_ITEMS_PER_REQUEST = 50;
+
 	/**
 	 * @const
 	 * @private
@@ -143,7 +147,6 @@ var WEF_LabelsCache = function() {
 
 	/** Receive values from Wikidata, if any queued */
 	this.receiveLabels = function() {
-
 		var languages = [ wgUserLanguage, wgContentLanguage, 'en', 'ru' ];
 		var languagesString = encodeURIComponent( wgUserLanguage + '|' + wgContentLanguage + '|en|ru' );
 
@@ -173,10 +176,13 @@ var WEF_LabelsCache = function() {
 			}
 		} );
 
-		var ajaxResultFunction = function( result ) {
-
+		function onError( jqXHR, textStatus, errorThrown ) {
+			mw.log.warn( "Unable to load labels and descriptions from Wikidata: " + textStatus );
+		}
+		function onSuccess( result ) {
 			if ( typeof result.error !== 'undefined' ) {
 				mw.log.warn( result.error );
+				return;
 			}
 
 			$.each( result.entities, function( entityIndex, entity ) {
@@ -207,7 +213,7 @@ var WEF_LabelsCache = function() {
 				}
 			} );
 			onUpdate();
-		};
+		}
 
 		var total = idsToQuery.length;
 		for ( var i = 0; i < total; i += MAX_ITEMS_PER_REQUEST ) {
@@ -225,7 +231,8 @@ var WEF_LabelsCache = function() {
 						+ '&languages=' + languagesString // 
 						+ '&ids=' + encodeURIComponent( idsString ),
 				dataType: 'json',
-				success: ajaxResultFunction,
+				error: onError,
+				success: onSuccess,
 			} );
 		}
 		queue = jQuery.grep( queue, function( value ) {

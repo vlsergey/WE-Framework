@@ -64,9 +64,12 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 	border: 1px solid #CCC;
 	position: absolute;
 	z-index: +1;
-	position: absolute;
 }
 
 .wef-snaktypeselector-menu option {
 	padding: 0.25em;
+}
+
+.wef_progress_item {
+	white-space: nowrap;
 }

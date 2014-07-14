@@ -102,7 +102,7 @@ var externalLinksEditTexts = {
 };
 
 /** @class */
-ExternalLinksEdit = function() {
+WEF_ExternalLinks = function() {
 	var externalLinksEdit = this;
 
 	/** @const */
@@ -111,42 +111,6 @@ ExternalLinksEdit = function() {
 	this.dialogWidth = $( window ).width() * 0.66;
 	this.summary = 'via [[:w:ru:ВП:G/ELE|gadget]]';
 	this.allowedNamespaces = [ 0 ];
-
-	/** @private */
-	var htmlInProgress = '<img alt="⌚" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/17px-Pictogram_voting_wait.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/26px-Pictogram_voting_wait.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/34px-Pictogram_voting_wait.svg.png 2x" data-file-width="250" data-file-height="250" height="17" width="17">';
-	/** @private */
-	var htmlSuccess = '<img alt="✔" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/15px-Yes_check.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/23px-Yes_check.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/30px-Yes_check.svg.png 2x" data-file-width="600" data-file-height="600" height="15" width="15">';
-	/** @private */
-	var htmlFailure = '<img alt="×" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/16px-Red_x.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/24px-Red_x.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/32px-Red_x.svg.png 2x" data-file-width="600" data-file-height="600" height="16" width="16">';
-	/** @private */
-	var htmlNotNeeded = '<img alt="(=)" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/15px-Pictogram_voting_neutral.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/23px-Pictogram_voting_neutral.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/30px-Pictogram_voting_neutral.svg.png 2x" data-file-width="250" data-file-height="250" height="15" width="15">';
-
-	var ProgressItem = function( parentUl, text ) {
-		var span1 = $( '<span></span>' );
-		var span2 = $( '<span></span>' );
-		span2.text( text );
-		var li = $( '<li></li>' );
-		li.append( span1 );
-		li.append( '&nbsp;' );
-		li.append( span2 );
-		parentUl.append( li );
-
-		this.inProgress = function() {
-			span1.html( htmlInProgress );
-		};
-		this.success = function() {
-			span1.html( htmlSuccess );
-		};
-		this.failure = function( failureReason ) {
-			span1.html( htmlFailure );
-			if ( failureReason ) {
-				span2.append( ': ' + failureReason );
-			}
-		};
-		this.notNeeded = function() {
-			span1.html( htmlNotNeeded );
-		};
-	};
 
 	var d = {};
 	this.definitions = d;
@@ -371,11 +335,13 @@ ExternalLinksEdit = function() {
 		autocomplete: {
 			source: function( request, response ) {
 				var term = request.term;
-				$.ajax( {
-					type: 'GET',
-					dataType: 'json',
-					url: '//commons.wikimedia.org/w/api.php?format=json&origin=' + encodeURIComponent( location.protocol + wgServer ) + '&action=query&list=prefixsearch&psnamespace=14&pslimit=15&pssearch=' + encodeURIComponent( term ),
-				} ).done( function( result ) {
+				$.ajax(
+						{
+							type: 'GET',
+							dataType: 'json',
+							url: '//commons.wikimedia.org/w/api.php?format=json&origin=' + encodeURIComponent( location.protocol + wgServer )
+									+ '&action=query&list=prefixsearch&psnamespace=14&pslimit=15&pssearch=' + encodeURIComponent( term ),
+						} ).done( function( result ) {
 					var list = [];
 					$.each( result.query.prefixsearch, function( index, p ) {
 						list.push( p.title.substring( 'Category:'.length ) );
@@ -1486,237 +1452,238 @@ ExternalLinksEdit = function() {
 			}
 		} );
 
-		var dialogForm = $( '' + '<div id="ruWikiExternalEditForm" title="' + externalLinksEditTexts.editFormTitle + '">' + '<form>' + '<fieldset>' + '<div id="ruWikiExternalEditFormTabs">' + '<ul id="ruWikiExternalEditFormTabsList">' + '</ul>' + '</div>' + '</fieldset>' + '</form>' + '<p class="validateTips"></p>' + '<ul id="ruWikiExternalEditProgress"></ul>' + '</div>' );
+		var dialogForm = $( '' + '<div id="ruWikiExternalEditForm" title="' + externalLinksEditTexts.editFormTitle + '">' + '<form>' + '<fieldset>'
+				+ '<div id="ruWikiExternalEditFormTabs">' + '</div>' );
 		var statusAndTips = dialogForm.find( 'p.validateTips' );
 		dialogForm.find( "#ruWikiExternalEditProgress" ).hide();
-
-		var createRowNew = function( definition ) {
-			var a = $( '<a target="_blank"></a>' );
-
-			var editor = new WEF_ClaimEditor( definition );
-
-			var beforeCell = $( '<td></td>' ).prependTo( editor.tbody.find( 'tr' ).first() );
-			var afterCell1 = $( '<td></td>' ).appendTo( editor.tbody.find( 'tr' ).first() );
-			var afterCell2 = $( '<td></td>' ).css( 'width', '99%' ).appendTo( editor.tbody.find( 'tr' ).first() );
-
-			afterCell2.append( a );
-			editor.hideLabel( '     — "" — ' );
-
-			{
-				var newButton = $( '<button type="button"></button>' );
-				newButton.button( {
-					icons: {
-						primary: 'ui-icon-plus'
-					},
-					text: false,
-					label: 'Add claim',
-				} ).click( function() {
-					editor.onAdd();
-				} ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
-				beforeCell.append( newButton );
-			}
-			{
-				var newButton = $( '<button type="button"></button>' );
-				newButton.button( {
-					icons: {
-						primary: 'ui-icon-close'
-					},
-					text: false,
-					label: 'Remove claim',
-				} ).click( function() {
-					editor.onRemove();
-				} ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
-				beforeCell.append( newButton );
-			}
-
-			if ( typeof definition.buttons === 'undefined' && typeof definition.url === 'undefined' ) {
-				afterCell1.remove();
-				afterCell2.remove();
-				// to full line
-				editor.tbody.find( 'tr' ).first().find( 'td' ).last().attr( 'colspan', '4' );
-			}
-
-			if ( typeof definition.buttons !== 'undefined' && typeof definition.url === 'undefined' ) {
-				afterCell1.remove();
-				afterCell2.remove();
-				// to full line except button
-				editor.tbody.find( 'tr' ).first().find( 'td' ).last().attr( 'colspan', '3' );
-				afterCell1 = $( '<td></td>' ).appendTo( editor.tbody.find( 'tr' ).first() );
-			}
-
-			if ( typeof ( definition.buttons ) !== "undefined" ) {
-				$.each( definition.buttons, function( index, buttonDefinition ) {
-					var newButton = $( '<button type="button"></button>' );
-					newButton.button( buttonDefinition ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
-					if ( $.isFunction( buttonDefinition.click ) ) {
-						newButton.click( buttonDefinition.click );
-					}
-					afterCell1.append( newButton );
-				} );
-			}
-
-			if ( $.isFunction( definition.url ) ) {
-				var updateLinkImplF = function( newValue ) {
-					if ( $.isFunction( definition.normalize ) ) {
-						var newValueNormalized = definition.normalize( newValue );
-						if ( newValue !== newValueNormalized ) {
-							editor.setDataValue( {
-								type: 'string',
-								value: newValueNormalized
-							} );
-							newValue = newValueNormalized;
-						}
-					}
-					if ( newValue ) {
-						var newUrl = definition.url( newValue );
-						a.attr( 'href', newUrl );
-						a.text( newUrl );
-						if ( typeof ( definition.check ) !== "undefined" && typeof ( definition.check.exec ) === "function" ) {
-							var result = definition.check.exec( newValue );
-							if ( result == null ) {
-								var tip = externalLinksEditTexts.getTip( definition );
-								var shortLabel = getLabelTextShort( definition );
-								tip = tip.replace( "{0}", shortLabel );
-
-								a.addClass( 'ui-state-error' );
-								editor.tbody.find( 'input' ).addClass( 'ui-state-error' );
-								statusAndTips.text( tip );
-								statusAndTips.addClass( 'ui-state-error' );
-							} else {
-								a.removeClass( 'ui-state-error' );
-								editor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
-								statusAndTips.text( '' );
-								statusAndTips.removeClass( 'ui-state-error' );
-							}
-						}
-					} else {
-						a.attr( 'href', '' );
-						a.text( '' );
-						a.removeClass( 'ui-state-error' );
-						editor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
-						statusAndTips.text( '' );
-						statusAndTips.removeClass( 'ui-state-error' );
-					}
-				};
-				var updateLinkF = function() {
-					if ( editor.hasValue() ) {
-						updateLinkImplF( editor.getDataValue().value );
-					} else {
-						updateLinkImplF( '' );
-					}
-				};
-				$( editor ).change( updateLinkF );
-			}
-
-			return editor;
-		};
-
-		var createRows = function( definition, claims, table, isEvenRow ) {
-			var visibleDefinitionRows = [];
-
-			var addF;
-			var removeFF;
-
-			var allEditors = {
-				editors: [],
-				onFoundValue: function( newValue ) {
-					var normalized = newValue;
-					if ( typeof ( definition.normalize ) !== "undefined" ) {
-						normalized = definition.normalize( newValue );
-					}
-
-					var editor;
-					$.each( visibleDefinitionRows, function( index, toCheck ) {
-						if ( toCheck.hasValue() && toCheck.getDataValue().value === normalized ) {
-							editor = toCheck;
-						}
-					} );
-
-					if ( typeof ( editor ) !== 'undefined' ) {
-						editor.tbody.find( 'input' ).css( 'background', '#EEFFEE' );
-					} else {
-
-						// do we have single one with empty space ?
-						$.each( visibleDefinitionRows, function( index, toCheck ) {
-							if ( !toCheck.hasValue() && toCheck['wikidata-claim'] === null ) {
-								editor = toCheck;
-							}
-						} );
-						if ( typeof ( editor ) === 'undefined' ) {
-							editor = addF();
-						}
-
-						editor.setDataValue( {
-							type: 'string',
-							value: newValue
-						} );
-						$( editor ).change();
-						editor.tbody.find( 'input' ).css( 'background', '#BBFFBB' );
-					}
-				},
-			};
-			externalLinksEdit.editors[definition.code] = allEditors;
-
-			addF = function() {
-				var editor = createRowNew( definition );
-				if ( isEvenRow ) {
-					editor.tbody.css( 'background', 'rgba(211, 211, 211, 0.33)' );
-				}
-				editor.onAdd = addF;
-				editor.onRemove = removeFF( editor );
-
-				if ( visibleDefinitionRows.length !== 0 ) {
-					visibleDefinitionRows[visibleDefinitionRows.length - 1].tbody.after( editor.tbody );
-				} else {
-					table.append( editor.tbody );
-				}
-				editor.afterAppend();
-
-				visibleDefinitionRows.push( editor );
-				allEditors.editors.push( editor );
-				return editor;
-			};
-			removeFF = function( editor ) {
-				return function() {
-					var question = externalLinksEditTexts.confirmDeleteValue //
-					.replace( '{code}', definition.label ) //
-					.replace( '{label}', wef_LabelsCache.getLabel( definition.label ) );
-
-					var r = !editor.hasValue() || confirm( question );
-					if ( r ) {
-						editor.removeValue();
-						editor.hide();
-
-						/*
-						 * add before removing to insert immediately after last
-						 * existing
-						 */
-						if ( visibleDefinitionRows.length === 1 ) {
-							addF();
-						}
-
-						visibleDefinitionRows = jQuery.grep( visibleDefinitionRows, function( value ) {
-							return value != editor;
-						} );
-						visibleDefinitionRows[0].showLabel();
-					}
-				};
-			};
-
-			selectedClaims = WEF_filterClaims( definition, claims );
-			if ( typeof ( selectedClaims ) !== "undefined" ) {
-				$.each( selectedClaims, function( index, claim ) {
-					var inputRow = addF();
-					inputRow.load( claim );
-				} );
-			}
-
-			if ( visibleDefinitionRows.length === 0 ) {
-				addF();
-			}
-
-			visibleDefinitionRows[0].showLabel();
-		};
+		
+//		var createRowNew = function( definition ) {
+//			var a = $( '<a target="_blank"></a>' );
+//
+//			var editor = new WEF_ClaimEditor( definition );
+//
+//			var beforeCell = $( '<td></td>' ).prependTo( editor.tbody.find( 'tr' ).first() );
+//			var afterCell1 = $( '<td></td>' ).appendTo( editor.tbody.find( 'tr' ).first() );
+//			var afterCell2 = $( '<td></td>' ).css( 'width', '99%' ).appendTo( editor.tbody.find( 'tr' ).first() );
+//
+//			afterCell2.append( a );
+//			editor.hideLabel( '     — "" — ' );
+//
+//			{
+//				var newButton = $( '<button type="button"></button>' );
+//				newButton.button( {
+//					icons: {
+//						primary: 'ui-icon-plus'
+//					},
+//					text: false,
+//					label: 'Add claim',
+//				} ).click( function() {
+//					editor.onAdd();
+//				} ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
+//				beforeCell.append( newButton );
+//			}
+//			{
+//				var newButton = $( '<button type="button"></button>' );
+//				newButton.button( {
+//					icons: {
+//						primary: 'ui-icon-close'
+//					},
+//					text: false,
+//					label: 'Remove claim',
+//				} ).click( function() {
+//					editor.onRemove();
+//				} ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
+//				beforeCell.append( newButton );
+//			}
+//
+//			if ( typeof definition.buttons === 'undefined' && typeof definition.url === 'undefined' ) {
+//				afterCell1.remove();
+//				afterCell2.remove();
+//				// to full line
+//				editor.tbody.find( 'tr' ).first().find( 'td' ).last().attr( 'colspan', '4' );
+//			}
+//
+//			if ( typeof definition.buttons !== 'undefined' && typeof definition.url === 'undefined' ) {
+//				afterCell1.remove();
+//				afterCell2.remove();
+//				// to full line except button
+//				editor.tbody.find( 'tr' ).first().find( 'td' ).last().attr( 'colspan', '3' );
+//				afterCell1 = $( '<td></td>' ).appendTo( editor.tbody.find( 'tr' ).first() );
+//			}
+//
+//			if ( typeof ( definition.buttons ) !== "undefined" ) {
+//				$.each( definition.buttons, function( index, buttonDefinition ) {
+//					var newButton = $( '<button type="button"></button>' );
+//					newButton.button( buttonDefinition ).css( 'margin', '0 0.1em' ).find( '.ui-button-text' ).css( 'padding', '0em 0.5em' );
+//					if ( $.isFunction( buttonDefinition.click ) ) {
+//						newButton.click( buttonDefinition.click );
+//					}
+//					afterCell1.append( newButton );
+//				} );
+//			}
+//
+//			if ( $.isFunction( definition.url ) ) {
+//				var updateLinkImplF = function( newValue ) {
+//					if ( $.isFunction( definition.normalize ) ) {
+//						var newValueNormalized = definition.normalize( newValue );
+//						if ( newValue !== newValueNormalized ) {
+//							editor.setDataValue( {
+//								type: 'string',
+//								value: newValueNormalized
+//							} );
+//							newValue = newValueNormalized;
+//						}
+//					}
+//					if ( newValue ) {
+//						var newUrl = definition.url( newValue );
+//						a.attr( 'href', newUrl );
+//						a.text( newUrl );
+//						if ( typeof ( definition.check ) !== "undefined" && typeof ( definition.check.exec ) === "function" ) {
+//							var result = definition.check.exec( newValue );
+//							if ( result == null ) {
+//								var tip = externalLinksEditTexts.getTip( definition );
+//								var shortLabel = getLabelTextShort( definition );
+//								tip = tip.replace( "{0}", shortLabel );
+//
+//								a.addClass( 'ui-state-error' );
+//								editor.tbody.find( 'input' ).addClass( 'ui-state-error' );
+//								statusAndTips.text( tip );
+//								statusAndTips.addClass( 'ui-state-error' );
+//							} else {
+//								a.removeClass( 'ui-state-error' );
+//								editor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
+//								statusAndTips.text( '' );
+//								statusAndTips.removeClass( 'ui-state-error' );
+//							}
+//						}
+//					} else {
+//						a.attr( 'href', '' );
+//						a.text( '' );
+//						a.removeClass( 'ui-state-error' );
+//						editor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
+//						statusAndTips.text( '' );
+//						statusAndTips.removeClass( 'ui-state-error' );
+//					}
+//				};
+//				var updateLinkF = function() {
+//					if ( editor.hasValue() ) {
+//						updateLinkImplF( editor.getDataValue().value );
+//					} else {
+//						updateLinkImplF( '' );
+//					}
+//				};
+//				$( editor ).change( updateLinkF );
+//			}
+//
+//			return editor;
+//		};
+//
+//		var createRows = function( definition, claims, table, isEvenRow ) {
+//			var visibleDefinitionRows = [];
+//
+//			var addF;
+//			var removeFF;
+//
+//			var allEditors = {
+//				editors: [],
+//				onFoundValue: function( newValue ) {
+//					var normalized = newValue;
+//					if ( typeof ( definition.normalize ) !== "undefined" ) {
+//						normalized = definition.normalize( newValue );
+//					}
+//
+//					var editor;
+//					$.each( visibleDefinitionRows, function( index, toCheck ) {
+//						if ( toCheck.hasValue() && toCheck.getDataValue().value === normalized ) {
+//							editor = toCheck;
+//						}
+//					} );
+//
+//					if ( typeof ( editor ) !== 'undefined' ) {
+//						editor.tbody.find( 'input' ).css( 'background', '#EEFFEE' );
+//					} else {
+//
+//						// do we have single one with empty space ?
+//						$.each( visibleDefinitionRows, function( index, toCheck ) {
+//							if ( !toCheck.hasValue() && toCheck['wikidata-claim'] === null ) {
+//								editor = toCheck;
+//							}
+//						} );
+//						if ( typeof ( editor ) === 'undefined' ) {
+//							editor = addF();
+//						}
+//
+//						editor.setDataValue( {
+//							type: 'string',
+//							value: newValue
+//						} );
+//						$( editor ).change();
+//						editor.tbody.find( 'input' ).css( 'background', '#BBFFBB' );
+//					}
+//				},
+//			};
+//			externalLinksEdit.editors[definition.code] = allEditors;
+//
+//			addF = function() {
+//				var editor = createRowNew( definition );
+//				if ( isEvenRow ) {
+//					editor.tbody.css( 'background', 'rgba(211, 211, 211, 0.33)' );
+//				}
+//				editor.onAdd = addF;
+//				editor.onRemove = removeFF( editor );
+//
+//				if ( visibleDefinitionRows.length !== 0 ) {
+//					visibleDefinitionRows[visibleDefinitionRows.length - 1].tbody.after( editor.tbody );
+//				} else {
+//					table.append( editor.tbody );
+//				}
+//				editor.afterAppend();
+//
+//				visibleDefinitionRows.push( editor );
+//				allEditors.editors.push( editor );
+//				return editor;
+//			};
+//			removeFF = function( editor ) {
+//				return function() {
+//					var question = externalLinksEditTexts.confirmDeleteValue //
+//					.replace( '{code}', definition.label ) //
+//					.replace( '{label}', wef_LabelsCache.getLabel( definition.label ) );
+//
+//					var r = !editor.hasValue() || confirm( question );
+//					if ( r ) {
+//						editor.removeValue();
+//						editor.hide();
+//
+//						/*
+//						 * add before removing to insert immediately after last
+//						 * existing
+//						 */
+//						if ( visibleDefinitionRows.length === 1 ) {
+//							addF();
+//						}
+//
+//						visibleDefinitionRows = jQuery.grep( visibleDefinitionRows, function( value ) {
+//							return value != editor;
+//						} );
+//						visibleDefinitionRows[0].showLabel();
+//					}
+//				};
+//			};
+//
+//			selectedClaims = WEF_filterClaims( definition, claims );
+//			if ( typeof ( selectedClaims ) !== "undefined" ) {
+//				$.each( selectedClaims, function( index, claim ) {
+//					var inputRow = addF();
+//					inputRow.load( claim );
+//				} );
+//			}
+//
+//			if ( visibleDefinitionRows.length === 0 ) {
+//				addF();
+//			}
+//
+//			visibleDefinitionRows[0].showLabel();
+//		};
 
 		$( "div#mw-content-text" ).after( dialogForm );
 		dialogForm.dialog( {
@@ -1757,7 +1724,8 @@ ExternalLinksEdit = function() {
 						tabs.append( newTabPage );
 
 						$.each( group.fields, function( i, definition ) {
-							createRows( definition, claims, newTabTable, i % 2 == 0 );
+							var claimEditorsTable = new WEF_ClaimEditorsTable( definition );
+							claimEditorsTable.appendTo( newTabTable );
 						} );
 					} );
 
@@ -1798,241 +1766,8 @@ ExternalLinksEdit = function() {
 			}, {
 				text: externalLinksEditTexts.buttonSave,
 				click: function() {
-					$( "#ruWikiExternalEditFormTabs" ).hide();
-					$( "ul#ruWikiExternalEditProgress" ).show();
-					dialogForm.dialog( "option", "buttons", [] );
-
-					var progressUL = $( "ul#ruWikiExternalEditProgress" );
-					/** @return {ProgressItem} */
-					var newProgressItemF = function( text ) {
-						return new ProgressItem( progressUL, text );
-					};
-					progressUL.html( '' );
-
-					var token;
-					var funcs = [];
-					var last;
-					var centralAuthToken;
-
-					var queryCentralAuthTokenF = function( progressToken, progressOther, success, failure ) {
-						return function() {
-							progressToken.inProgress();
-							$.ajax( {
-								type: 'GET',
-								url: wgServer + wgScriptPath + '/api.php?format=json&action=tokens&type=centralauth',
-								error: function( jqXHR, textStatus, errorThrown ) {
-									alert( textStatus );
-									progressToken.failure( textStatus );
-									progressOther.failure( textStatus );
-									failure();
-									return;
-								},
-								success: success,
-							} );
-						};
-					};
-
-					var progressCentralAuthTokenRequest = newProgressItemF( externalLinksEditTexts.actionCentralauth );
-					var progressTokenRequest = newProgressItemF( externalLinksEditTexts.actionQueryInfoIntokenEdit );
-					funcs[0] = queryCentralAuthTokenF( progressCentralAuthTokenRequest, progressTokenRequest, function( result ) {
-						funcs[1]( result );
-					}, function() {
-						funcs[last]();
-					} );
-					funcs[1] = function( result ) {
-						if ( !result.tokens || !result.tokens.centralauthtoken ) {
-							progressCentralAuthTokenRequest.failure();
-							progressTokenRequest.failure();
-							funcs[last]();
-							return;
-						}
-						centralAuthToken = result.tokens.centralauthtoken;
-						progressCentralAuthTokenRequest.success();
-
-						progressTokenRequest.inProgress();
-
-						$.ajax( {
-							type: 'GET',
-							url: URI_PREFIX // 
-									+ '&centralauthtoken=' + encodeURIComponent( centralAuthToken ) // 
-									+ '&action=query' //
-									+ '&prop=info' //
-									+ '&intoken=edit' // 
-									+ '&titles=' + wgWikibaseItemId,
-							error: function( jqXHR, textStatus, errorThrown ) {
-								progressTokenRequest.failure( textStatus );
-								alert( externalLinksEditTexts.errorCantGetInfoIntokenEdit );
-								funcs[last]();
-								return;
-							},
-							success: funcs[2],
-						} );
-					};
-					funcs[2] = function( result ) {
-						var pageInfo = firstObjectValue( result.query.pages );
-						token = pageInfo.edittoken;
-						if ( !token ) {
-							progressTokenRequest.failure();
-							alert( externalLinksEditTexts.errorCantGetInfoIntokenEdit );
-							funcs[last]();
-							return;
-						}
-						progressTokenRequest.success();
-						funcs[3]();
-					};
-
-					last = 3;
-
-					var updates = {
-						data: {},
-						removedClaims: [],
-						removedQualifiers: []
-					};
-
-					$.each( externalLinksEdit.editors, function( code, propertyEditors ) {
-						$.each( propertyEditors.editors, function( i, editor ) {
-							editor.updates( updates );
-						} );
-					} );
-
-					// edit entity
-					if ( !$.isEmptyObject( updates.data ) ) {
-						var progressTokenRequestForEdit = newProgressItemF( externalLinksEditTexts.actionCentralauth );
-						var progressEditEntityRequest = newProgressItemF( externalLinksEditTexts.actionEditEntity );
-						var myIndex = last;
-
-						funcs[myIndex] = queryCentralAuthTokenF( progressTokenRequestForEdit, progressEditEntityRequest, function( result ) {
-							funcs[myIndex + 1]( result );
-						}, function() {
-							funcs[myIndex + 3]();
-						} );
-						funcs[myIndex + 1] = function( result ) {
-							if ( result.error ) {
-								progressTokenRequestForEdit.failure( result.error.info );
-								progressEditEntityRequest.failure( result.error.info );
-								alert( result.error.info );
-								funcs[myIndex + 3]();
-								return;
-							}
-							if ( !result.tokens || !result.tokens.centralauthtoken ) {
-								progressTokenRequestForEdit.failure();
-								progressEditEntityRequest.failure();
-								funcs[myIndex + 3]();
-								return;
-							}
-							centralAuthToken = result.tokens.centralauthtoken;
-							progressTokenRequestForEdit.success();
-
-							progressEditEntityRequest.inProgress();
-							$.ajax( {
-								type: 'POST',
-								url: URI_PREFIX // 
-										+ '&centralauthtoken=' + encodeURIComponent( centralAuthToken ) // 
-										+ '&token=' + encodeURIComponent( token ) // 
-										+ '&action=wbeditentity' // 
-										+ '&id=' + wgWikibaseItemId //
-										+ '&summary=' + encodeURIComponent( externalLinksEdit.summary ) //
-								,
-								data: {
-									data: JSON.stringify( updates.data ),
-								},
-								error: function( jqXHR, textStatus, errorThrown ) {
-									progressEditEntityRequest.failure( textStatus );
-									alert( textStatus );
-									funcs[myIndex + 3]();
-									return;
-								},
-								success: funcs[myIndex + 2],
-							} );
-						};
-						funcs[myIndex + 2] = function( result ) {
-							if ( result.error ) {
-								progressEditEntityRequest.failure( result.error.info );
-								alert( result.error.info );
-								funcs[myIndex + 3]();
-								return;
-							}
-							progressEditEntityRequest.success();
-							funcs[myIndex + 3]();
-							return;
-						};
-						last++;
-						last++;
-						last++;
-					}
-
-					// remove claims
-					if ( updates.removedClaims.length !== 0 ) {
-						var progressTokenRequestForRemoveClaims = newProgressItemF( externalLinksEditTexts.actionCentralauth );
-						var progressRemoveClaimsRequest = newProgressItemF( externalLinksEditTexts.actionDeleteClaims );
-						var myIndex = last;
-
-						funcs[myIndex] = queryCentralAuthTokenF( progressTokenRequestForRemoveClaims, progressRemoveClaimsRequest, function( result ) {
-							funcs[myIndex + 1]( result );
-						}, function() {
-							funcs[myIndex + 3]();
-						} );
-						funcs[myIndex + 1] = function( result ) {
-							if ( result.error ) {
-								progressTokenRequestForRemoveClaims.failure( result.error.info );
-								progressRemoveClaimsRequest.failure( result.error.info );
-								alert( result.error.info );
-								funcs[myIndex + 3]();
-								return;
-							}
-							if ( !result.tokens || !result.tokens.centralauthtoken ) {
-								progressTokenRequestForRemoveClaims.failure();
-								progressRemoveClaimsRequest.failure();
-								funcs[myIndex + 3]();
-								return;
-							}
-							centralAuthToken = result.tokens.centralauthtoken;
-							progressTokenRequestForRemoveClaims.success();
-
-							$.ajax( {
-								type: 'POST',
-								url: URI_PREFIX // 
-										+ '&centralauthtoken=' + encodeURIComponent( centralAuthToken ) // 
-										+ '&token=' + encodeURIComponent( token ) // 
-										+ '&action=wbremoveclaims' // 
-										+ '&claim=' + encodeURIComponent( updates.removedClaims.join( '|' ) ) //
-										+ '&summary=' + encodeURIComponent( externalLinksEdit.summary ) //
-								,
-								error: function( jqXHR, textStatus, errorThrown ) {
-									progressRemoveClaimsRequest.failure( textStatus );
-									alert( textStatus );
-									funcs[myIndex + 3]();
-									return;
-								},
-								success: funcs[myIndex + 2],
-							} );
-						};
-						funcs[myIndex + 2] = function( result ) {
-							if ( result.error ) {
-								progressRemoveClaimsRequest.failure( result.error.info );
-								alert( result.error.info );
-								funcs[myIndex + 3]();
-								return;
-							}
-							progressRemoveClaimsRequest.success();
-							funcs[myIndex + 3]();
-							return;
-						};
-						last++;
-						last++;
-						last++;
-					}
-
-					// TODO: remove qualifiers
-
-					funcs[last] = function() {
-						dialogForm.dialog( "close" );
-						if ( wgAction === 'view' ) {
-							externalLinksEdit.purge();
-						}
-					};
-
-					funcs[0]();
+					dialogForm.dialog( 'close' );
+					wef_save( editors );
 				}
 			}, {
 				text: externalLinksEditTexts.buttonCancel,
@@ -2042,7 +1777,8 @@ ExternalLinksEdit = function() {
 			} ]
 		} );
 		$( "#p-tb div ul" ).append( $( '<li class="plainlinks"><a href="javascript:externalLinksEdit.edit()">' + externalLinksEditTexts.buttonMenuLabel + '</a></li>' ) );
-		$( "table.ruwikiArticleExternalLinksTable" ).find( ".navbox-list" ).first().prepend( '<div style="float: right;"><a href="javascript:externalLinksEdit.edit()">' + externalLinksEditTexts.buttonNavboxLabel + '</a></div>' );
+		$( "table.ruwikiArticleExternalLinksTable" ).find( ".navbox-list" ).first().prepend(
+				'<div style="float: right;"><a href="javascript:externalLinksEdit.edit()">' + externalLinksEditTexts.buttonNavboxLabel + '</a></div>' );
 
 		{
 			var viafFillFieldset = $( '<fieldset></fieldset>' );
@@ -2311,7 +2047,7 @@ ExternalLinksEdit.prototype.setup = function() {
 	} );
 };
 
-var externalLinksEdit = new ExternalLinksEdit();
+var externalLinksEdit = new WEF_ExternalLinks();
 externalLinksEdit.setup();
 
 if ( wgServerName === 'ru.wikipedia.org' ) {
@@ -2320,13 +2056,14 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 	importStylesheet( 'MediaWiki:WEF_Editors.css' );
 	importScript( 'MediaWiki:WEF_LabelsCache.js' );
 } else {
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&maxage=86400&smaxage=86400' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&maxage=86400&smaxage=86400' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&maxage=86400&smaxage=86400', 'text/css' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_LabelsCache.js&action=raw&maxage=86400&smaxage=86400' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_LabelsCache.js&ctype=text/javascript&action=raw&maxage=86400&smaxage=21600' );
 }
 mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.tabs' ], function() {
 	addOnloadHook( function() {
 		externalLinksEdit.addButtonsEdit();
 	} );
 } );
+

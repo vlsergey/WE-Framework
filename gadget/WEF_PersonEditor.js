@@ -11,6 +11,10 @@ var wef_PersonEditor_i18n_en = {
 
 	dialogButtonUpdateLabelsText: 'Update labels',
 	dialogButtonUpdateLabelsLabel: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
+	dialogButtonSaveText: 'Save',
+	dialogButtonSaveLabel: 'Close the dialog and save all changes to Wikidata',
+	dialogButtonCloseText: 'Cancel',
+	dialogButtonCloseLabel: 'Close the dialog and discard all changes (do not save)',
 	dialogTitle: 'Person data — «{1}» — WE-Framework',
 
 	fieldsetBirth: 'Birth',
@@ -39,6 +43,10 @@ var wef_PersonEditor_i18n_ru = {
 
 	dialogButtonUpdateLabelsText: 'Обновить названия',
 	dialogButtonUpdateLabelsLabel: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
+	dialogButtonSaveText: 'Сохранить',
+	dialogButtonSaveLabel: 'Закрыть окно и сохранить все изменения в Викиданных',
+	dialogButtonCloseText: 'Отмена',
+	dialogButtonCloseLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
 	dialogTitle: 'Свойства персоны — «{1}» — WE-Framework',
 
 	fieldsetBirth: 'Рождение',
@@ -73,7 +81,7 @@ var WEF_PersonEditor = function() {
 	var URI_PREFIX;
 	var entityId;
 
-	if ( wgSiteName === 'Wikidata' ) {
+	if ( WEF_Utils.isWikidata() ) {
 		entityId = mw.config.get( 'wgTitle' );
 		URI_PREFIX = '//www.wikidata.org/w/api.php?format=json';
 	} else {
@@ -156,13 +164,25 @@ var WEF_PersonEditor = function() {
 					wef_LabelsCache.receiveLabels();
 				},
 				style: 'position: absolute; left: 1em;',
-			}, ],
+			}, {
+				text: i18n.dialogButtonSaveText,
+				label: i18n.dialogButtonSaveLabel,
+				click: function() {
+					dialog.dialog( 'close' );
+					wef_save( claimEditorsTables );
+				},
+			}, {
+				text: i18n.dialogButtonCloseText,
+				label: i18n.dialogButtonCloseLabel,
+				click: function() {
+					$( this ).dialog( "close" );
+				}
+			} ],
 		} );
 
 		this.load = function( entity ) {
 			$.each( claimEditorsTables, function( i, claimEditorsTable ) {
 				claimEditorsTable.load( entity );
-				// claimEditorsTable.hideBehindLabels();
 			} );
 		};
 
@@ -204,17 +224,16 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 	importStylesheet( 'MediaWiki:WEF_Editors.css' );
 	importScript( 'MediaWiki:WEF_LabelsCache.js' );
 } else {
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&maxage=86400&smaxage=21600' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_PersonEditor.css&action=raw&maxage=86400&smaxage=21600', 'text/css' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&maxage=86400&smaxage=21600' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&maxage=86400&smaxage=21600', 'text/css' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_LabelsCache.js&action=raw&maxage=86400&smaxage=21600' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_PersonEditor.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_LabelsCache.js&ctype=text/javascript&action=raw&maxage=86400&smaxage=21600' );
 }
-
-var wef_PersonEditor = new WEF_PersonEditor();
 
 mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.datepicker', 'jquery.ui.dialog', 'jquery.ui.selectable', 'jquery.ui.tabs' ], function() {
 	addOnloadHook( function() {
+		wef_PersonEditor = new WEF_PersonEditor();
 		wef_PersonEditor.init();
 		wef_PersonEditor.addEditButtons();
 	} );

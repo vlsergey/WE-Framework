@@ -9,6 +9,11 @@
 
 var wef_Editors_i18n_en = {
 
+	actionObtainCentralAuthToken: 'Get new global auth token',
+	actionObtainEditToken: 'Get edit token',
+	actionUpdateEntity: 'Saving changes in entity (update and create statements)',
+	actionRemoveClaims: 'Saving changes in entity (remove statements)',
+
 	buttonSelectSnakType: 'select snak type',
 	buttonAddClaim: 'add claim',
 	buttonRemoveClaim: 'remove claim',
@@ -19,6 +24,13 @@ var wef_Editors_i18n_en = {
 	checkboxOldstyleTitle: 'when displaying the date show with old-style format (julian calendar)',
 
 	confirmDeleteClaim: 'Remove the value of property «{label}»?',
+
+	dialogSaveChangesTitle: 'Saving changes to Wikidata',
+
+	errorObtainCentralAuthToken: 'Unable to obtain new global auth token',
+	errorObtainEditToken: 'Unable to obtain edit token',
+	errorUpdateEntity: 'Unable to update entity',
+	errorRemoveClaims: 'Unable to remove outdated statements from entity',
 
 	inputTimeTimeLabel: 'Time (ISO notation)',
 	inputTimeTimeTitle: 'Date and time in ISO notation, including. E.g. "+00000001994-01-01T00:00:00Z". '
@@ -62,6 +74,11 @@ var wef_Editors_i18n_en = {
 
 var wef_Editors_i18n_ru = {
 
+	actionObtainCentralAuthToken: 'Получение нового токена централизованной аутентификации',
+	actionObtainEditToken: 'Получение токена редактирования',
+	actionUpdateEntity: 'Сохранение изменений в элемент (обновление и создание утверждений)',
+	actionRemoveClaims: 'Сохранение изменений в элемент (удаление утверждений)',
+
 	buttonSelectSnakType: 'выбрать тип значения',
 	buttonAddClaim: 'добавить утверждение',
 	buttonRemoveClaim: 'удалить утверждение',
@@ -72,6 +89,13 @@ var wef_Editors_i18n_ru = {
 	checkboxOldstyleTitle: 'при отображении даты включать режим отображения со старым стилем (по юлинскому календарю)',
 
 	confirmDeleteClaim: 'Удалить значение свойства «{label}»?',
+
+	dialogSaveChangesTitle: 'Сохранение изменений на Викиданных',
+
+	errorObtainCentralAuthToken: 'Произошла ошибка при получении нового токена глобальной аутентификации',
+	errorObtainEditToken: 'Произошла ошибка при получении нового токена редактирования',
+	errorUpdateEntity: 'Произошла ошибка при сохранении изменений в элемент',
+	errorRemoveClaims: 'Произошла ошибка при удалении устаревших утверждений из элемента',
 
 	inputTimeTimeLabel: 'Дата и время (ISO-нотация)',
 	inputTimeTimeTitle: 'Дата и время в ISO-нотации, т. е. «+00000001994-01-01T00:00:00Z». ' + 'Примечание: формат и интерпретация данной строки зависит от календаря. '
@@ -107,14 +131,36 @@ var wef_Editors_i18n_ru = {
 
 var WEF_Editors_i18n = function() {
 
+	this.actionObtainCentralAuthToken = '{actionObtainCentralAuthToken}';
+	this.actionObtainEditToken = '{actionObtainEditToken}';
+	this.actionUpdateEntity = '{actionUpdateEntity}';
+	this.actionRemoveClaims = '{actionRemoveClaims}';
+
 	this.buttonAddClaim = '{buttonAddClaim}';
 	this.buttonRemoveClaim = '{buttonRemoveClaim}';
 
-	this.confirmDeleteClaim = '{confirmDeleteClaim}',
+	this.checkboxOldstyle = '{checkboxOldstyle}';
+	this.checkboxOldstyleTitle = '{checkboxOldstyleTitle}';
+
+	this.confirmDeleteClaim = '{confirmDeleteClaim}';
+
+	this.dialogSaveChangesTitle = '{dialogSaveChangesTitle}';
+
+	this.errorObtainCentralAuthToken = '{errorObtainCentralAuthToken}';
+	this.errorObtainEditToken = '{errorObtainEditToken}';
+	this.errorUpdateEntity = '{errorUpdateEntity}';
+	this.errorRemoveClaims = '{errorRemoveClaims}';
+
+	this.htmlInProgress = '<img alt="⌚" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/17px-Pictogram_voting_wait.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/26px-Pictogram_voting_wait.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/34px-Pictogram_voting_wait.svg.png 2x" data-file-width="250" data-file-height="250" height="17" width="17">';
+	this.htmlSuccess = '<img alt="✔" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/15px-Yes_check.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/23px-Yes_check.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/30px-Yes_check.svg.png 2x" data-file-width="600" data-file-height="600" height="15" width="15">';
+	this.htmlFailure = '<img alt="×" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/16px-Red_x.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/24px-Red_x.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/32px-Red_x.svg.png 2x" data-file-width="600" data-file-height="600" height="16" width="16">';
+	this.htmlNotNeeded = '<img alt="(=)" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/15px-Pictogram_voting_neutral.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/23px-Pictogram_voting_neutral.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/30px-Pictogram_voting_neutral.svg.png 2x" data-file-width="250" data-file-height="250" height="15" width="15">';
 
 	this.snakTypeValue = '{snakTypeValue}';
 	this.snakTypeNoValue = '{snakTypeNoValue}';
 	this.snakTypeSomeValue = '{snakTypeSomeValue}';
+
+	this.summary = 'via [[:w:ru:ВП:G/ELE|WE-Framework gadget]]';
 
 	this.timePrecision0 = '{timePrecision0}';
 	this.timePrecision1 = '{timePrecision1}';
@@ -184,6 +230,55 @@ var WEF_Definition = function( args ) {
 	this.qualifiers = undefined;
 
 	$.extend( this, args );
+};
+
+var WEF_Utils = {
+
+	/** @returns {string} */
+	formatDate: function( year, month, day ) {
+		var time;
+		if ( year >= 0 ) {
+			time = "+" + ( "00000000000" + year ).substr( -11, 11 );
+		} else {
+			time = "-" + ( "00000000000" + ( -year ) ).substr( -11, 11 );
+		}
+		time += "-";
+		if ( typeof month !== 'undefined' ) {
+			time += ( "00" + month ).substr( -2, 2 );
+		} else {
+			time += "01";
+		}
+		time += "-";
+		if ( typeof day !== 'undefined' ) {
+			time += ( "00" + day ).substr( -2, 2 );
+		} else {
+			time += "01";
+		}
+		time += "T00:00:00Z";
+		return time;
+	},
+
+	getEntityId: function() {
+		// TODO: add check
+		if ( WEF_Utils.isWikidata() ) {
+			return mw.config.get( 'wgTitle' );
+		} else {
+			return mw.config.get( 'wgWikibaseItemId' );
+		}
+	},
+
+	getFirstObjectValue: function( obj ) {
+		return obj[Object.keys( obj )[0]];
+	},
+
+	/** @returns {Boolean} */
+	isWikidata: function() {
+		return wgSiteName === 'Wikidata';
+	},
+
+	purge: function() {
+		window.location.replace( wgServer + wgScriptPath + '/index.php?action=purge&title=' + encodeURIComponent( wgPageName ) );
+	},
 };
 
 /**
@@ -263,60 +358,42 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 		} );
 	};
 
-	var selectDateTimePrecision = $( '<select class="wef_select_date_time_precision">' );
-	selectDateTimePrecision.attr( 'title', i18n.inputTimePrecisionTitle );
-	selectDateTimePrecision.append( $( '<option value="time-days">' ).data( 'precision', PRECISION_DAYS ).text( i18n['timePrecision' + PRECISION_DAYS] ) );
-	selectDateTimePrecision.append( $( '<option value="time-months">' ).data( 'precision', PRECISION_MONTHS ).text( i18n['timePrecision' + PRECISION_MONTHS] ) );
-	selectDateTimePrecision.append( $( '<option value="time-years">' ).data( 'precision', PRECISION_YEARS ).text( i18n['timePrecision' + PRECISION_YEARS] ) );
-	selectDateTimePrecision.append( $( '<option value="time">' ).text( i18n.timePrecisionOther ) );
-	selectDateTimePrecision.val( dataType );
-	selectDateTimePrecision.change( function() {
-		var newDataType = selectDateTimePrecision.val();
-		if ( newDataType !== dataType ) {
-			if ( snakValueEditor.hasValue() ) {
-				var dataValue = snakValueEditor.getDataValue();
-				if ( typeof dataValue.value !== 'undefined' ) {
-					dataValue.value.precision = Number( selectDateTimePrecision.find( 'option:selected' ).data( 'precision' ) );
+	var formatDate = WEF_Utils.formatDate;
+	var selectDateTimePrecision, oldStyleCheckbox, oldStyleCheckboxLabel;
+
+	if ( dataType.substring( 0, 4 ) === "time" ) {
+		selectDateTimePrecision = $( '<select class="wef_select_date_time_precision">' );
+		selectDateTimePrecision.attr( 'title', i18n.inputTimePrecisionTitle );
+		selectDateTimePrecision.append( $( '<option value="time-days">' ).data( 'precision', PRECISION_DAYS ).text( i18n['timePrecision' + PRECISION_DAYS] ) );
+		selectDateTimePrecision.append( $( '<option value="time-months">' ).data( 'precision', PRECISION_MONTHS ).text( i18n['timePrecision' + PRECISION_MONTHS] ) );
+		selectDateTimePrecision.append( $( '<option value="time-years">' ).data( 'precision', PRECISION_YEARS ).text( i18n['timePrecision' + PRECISION_YEARS] ) );
+		selectDateTimePrecision.append( $( '<option value="time">' ).text( i18n.timePrecisionOther ) );
+		selectDateTimePrecision.val( dataType );
+		selectDateTimePrecision.change( function() {
+			var newDataType = selectDateTimePrecision.val();
+			if ( newDataType !== dataType ) {
+				if ( snakValueEditor.hasValue() ) {
+					var dataValue = snakValueEditor.getDataValue();
+					if ( typeof dataValue.value !== 'undefined' ) {
+						dataValue.value.precision = Number( selectDateTimePrecision.find( 'option:selected' ).data( 'precision' ) );
+					}
+					snakValueEditor.switchDataType( newDataType, dataValue );
+				} else {
+					snakValueEditor.switchDataType( newDataType, undefined );
 				}
-				snakValueEditor.switchDataType( newDataType, dataValue );
-			} else {
-				snakValueEditor.switchDataType( newDataType, undefined );
 			}
-		}
-	} );
+		} );
 
-	var oldStyleCheckbox = $( '<input type="checkbox" class="wef_time_oldstyle">' );
-	oldStyleCheckbox.attr( 'title', i18n.checkboxOldstyleTitle );
-	oldStyleCheckbox.uniqueId();
-	oldStyleCheckbox.change( changeF );
-	oldStyleCheckbox.keyup( changeF );
+		oldStyleCheckbox = $( '<input type="checkbox" class="wef_time_oldstyle">' );
+		oldStyleCheckbox.attr( 'title', i18n.checkboxOldstyleTitle );
+		oldStyleCheckbox.uniqueId();
+		oldStyleCheckbox.change( changeF );
+		oldStyleCheckbox.keyup( changeF );
 
-	var oldStyleCheckboxLabel = $( '<label>' );
-	oldStyleCheckboxLabel.attr( 'for', oldStyleCheckbox.attr( 'id' ) );
-	oldStyleCheckboxLabel.attr( 'title', i18n.checkboxOldstyleTitle );
-	oldStyleCheckboxLabel.text( i18n.checkboxOldstyle );
-
-	function formatDate( year, month, day ) {
-		var time;
-		if ( year >= 0 ) {
-			time = "+" + ( "00000000000" + year ).substr( -11, 11 );
-		} else {
-			time = "-" + ( "00000000000" + ( -year ) ).substr( -11, 11 );
-		}
-		time += "-";
-		if ( typeof month !== 'undefined' ) {
-			time += ( "00" + month ).substr( -2, 2 );
-		} else {
-			time += "01";
-		}
-		time += "-";
-		if ( typeof day !== 'undefined' ) {
-			time += ( "00" + day ).substr( -2, 2 );
-		} else {
-			time += "01";
-		}
-		time += "T00:00:00Z";
-		return time;
+		oldStyleCheckboxLabel = $( '<label>' );
+		oldStyleCheckboxLabel.attr( 'for', oldStyleCheckbox.attr( 'id' ) );
+		oldStyleCheckboxLabel.attr( 'title', i18n.checkboxOldstyleTitle );
+		oldStyleCheckboxLabel.text( i18n.checkboxOldstyle );
 	}
 
 	if ( dataType === 'string' ) {
@@ -741,13 +818,11 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 				var entityId = 'Q' + datavalue.value['numeric-id'];
 				input.data( 'value-entity-id', entityId );
 				input.data( 'value-entity-label', '' );
-				input.data( 'value-entity-description', '' );
 				input.val( '(' + entityId + ')' );
 
 				wef_LabelsCache.getOrQueue( entityId, function( label, description ) {
 					if ( input.data( 'value-entity-id' ) === entityId ) {
 						input.data( 'value-entity-label', label );
-						input.data( 'value-entity-description', description );
 						input.val( label + ' (' + entityId + ')' );
 						input.attr( 'title', description );
 					}
@@ -761,7 +836,6 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 				input.val( '' );
 				input.data( 'value-entity-id', '' );
 				input.data( 'value-entity-label', '' );
-				input.data( 'value-entity-description', '' );
 			};
 
 			snakValueEditor.getDataValue = function() {
@@ -829,7 +903,6 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 					input.val( item.label );
 
 					if ( typeof item.desc !== 'undefined' ) {
-						input.data( 'value-entity-description', item.desc );
 						input.attr( 'title', item.desc );
 					} else {
 						input.removeAttr( 'title' );
@@ -1038,9 +1111,7 @@ var WEF_SnakEditor = function( dataType ) {
 		tr.append( $( '<td class="wef_button_cell">' ).append( butttonSelectSnakType ) );
 		if ( this.valueEditor !== null ) {
 			var td2 = $( '<td class="wef_snak_table_value_editor_cell">' ).appendTo( tr );
-			$.each( this.valueEditor.elements, function( index, item ) {
-				td2.append( item );
-			} );
+			td2.append( this.valueEditor.elements );
 		}
 	};
 
@@ -1094,9 +1165,7 @@ var WEF_SnakEditor = function( dataType ) {
 				this.valueEditor = new WEF_SnakValueEditor( dataType );
 				if ( this.parent !== null ) {
 					var parent = this.parent;
-					$.each( this.valueEditor.elements, function( index, item ) {
-						parent.append( item );
-					} );
+					parent.append( this.valueEditor.elements );
 				}
 				$( this.valueEditor ).change( function() {
 					$( _this ).change();
@@ -1339,7 +1408,7 @@ var WEF_ClaimEditor = function( definition ) {
 	}
 
 	this.tbody = $( '<tbody class="wef_property_editor_tbody wef_property_editor_' + propertyId + '"></tbody>' );
-	var row1 = $( '<tr class="wef_property_editor_row"></tr>' ).appendTo( this.tbody );
+	var row1 = this.row1 = $( '<tr class="wef_property_editor_row"></tr>' ).appendTo( this.tbody );
 	var flagCell = $( '<td class="wef_property_editor_flag"></td>' ).appendTo( row1 );
 	var labelCell = $( '<th class="wef_property_editor_label"></th>' ).appendTo( row1 );
 	var beforeInputCell = $( '<td class="wef_button_cell"></td>' ).appendTo( row1 );
@@ -1504,6 +1573,10 @@ var WEF_ClaimEditor = function( definition ) {
 		}
 	};
 
+	/**
+	 * @param updates
+	 *            {WEF_Updates}
+	 */
 	this.updates = function( updates ) {
 		if ( this.disabled ) {
 			return;
@@ -1537,34 +1610,23 @@ var WEF_ClaimEditor = function( definition ) {
 			}
 		} else {
 
-			var claim;
+			var claim = {};
+			if ( oldClaim != null ) {
+				$.extend( claim, oldClaim );
+				// qualifiers we will refill by ourselfs
+				delete claim.qualifiers;
+				delete claim['qualifiers-order'];
+			} else {
+				claim.type = 'statement';
+				claim.rank = 'normal';
+			}
+
 			var needToUpdate = false;
 
 			if ( isPropertyEditor ) {
-				// do we have claim?
-				if ( oldClaim === null ) {
-					claim = {
-						type: 'statement',
-						mainsnak: newSnak,
-						rank: 'normal',
-					};
-				} else {
-					claim = {
-						id: oldClaim.id,
-						mainsnak: newSnak,
-						rank: oldClaim.rank,
-					}
-				}
+				claim.mainsnak = newSnak;
 			} else if ( isQualifierEditor ) {
-				var claim = {};
-
-				if ( oldClaim !== null ) {
-					claim.type = oldClaim.type;
-					claim.id = oldClaim.id;
-					claim.mainsnak = oldClaim.mainsnak;
-					claim.rank = oldClaim.rank;
-				} else {
-					claim.type = 'statement';
+				if ( oldClaim === null ) {
 					claim.mainsnak = {
 						snaktype: "value",
 						property: propertyId,
@@ -1577,9 +1639,7 @@ var WEF_ClaimEditor = function( definition ) {
 							type: "wikibase-entityid",
 						}
 					};
-					claim.rank = 'normal';
 				}
-
 				var qualifier = newSnak;
 				if ( oldSnak !== null ) {
 					qualifier.hash = oldSnak.hash;
@@ -1825,7 +1885,9 @@ var WEF_ClaimEditorsTable = function( definition ) {
 	var propertyEditorsTable = this;
 	var i18n = wef_Editors_i18n;
 
-	/** @type {WEF_ClaimEditor} */
+	/** @type {WEF_ClaimEditor[]} */
+	var allClaimEditors = [];
+	/** @type {WEF_ClaimEditor[]} */
 	var visibleDefinitionRows = [];
 	var placed = false;
 	var temporaryHolder = null;
@@ -1838,8 +1900,8 @@ var WEF_ClaimEditorsTable = function( definition ) {
 	this.add = function() {
 		var claimEditor = new WEF_ClaimEditor( definition );
 
-		var beforeCell = $( '<td class="wef_button_cell"></td>' ).prependTo( claimEditor.tbody.find( 'tr' ).first() );
-		var afterCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.tbody.find( 'tr' ).first() );
+		var beforeCell = $( '<td class="wef_button_cell"></td>' ).prependTo( claimEditor.row1 );
+		var afterCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
 
 		{
 			var newButton = $( '<button type="button"></button>' );
@@ -1891,6 +1953,7 @@ var WEF_ClaimEditorsTable = function( definition ) {
 		}
 
 		visibleDefinitionRows.push( claimEditor );
+		allClaimEditors.push( claimEditor );
 
 		if ( placed ) {
 			// replaceAll already called
@@ -1936,6 +1999,26 @@ var WEF_ClaimEditorsTable = function( definition ) {
 		}
 	};
 
+	this.appendTo = function( target ) {
+		if ( placed ) {
+			throw new Error( "Claims edit table is already placed on the form" );
+		}
+		placed = true;
+
+		if ( visibleDefinitionRows.length < 1 ) {
+			// nothing loaded or created yet
+			temporaryHolder = $( '<tbody><!-- Temporary holder for ' + definition.code + ' --></tbody>' );
+			temporaryHolder.appendTo( target );
+			return;
+		}
+
+		for ( var i = 0; i < visibleDefinitionRows.length; i++ ) {
+			var claimEditor = visibleDefinitionRows[i];
+			claimEditor.tbody.appendTo( target );
+			claimEditor.afterAppend();
+		}
+	};
+
 	/** Replace each target element with the set of matched elements. */
 	this.replaceAll = function( target ) {
 		if ( placed ) {
@@ -1965,4 +2048,276 @@ var WEF_ClaimEditorsTable = function( definition ) {
 		return visibleDefinitionRows.length;
 	};
 
+	this.updates = function( updates ) {
+		$.each( allClaimEditors, function( i, claimEditor ) {
+			claimEditor.updates( updates );
+		} );
+	};
 };
+
+var WEF_ProgressItem = function( parentUl, text ) {
+
+	var i18n = wef_Editors_i18n;
+
+	var span1 = $( '<span></span>' );
+	var span2 = $( '<span></span>' );
+	span2.text( text );
+	var li = $( '<li class="wef_progress_item"></li>' );
+	li.append( span1 );
+	li.append( '&nbsp;' );
+	li.append( span2 );
+	parentUl.append( li );
+
+	this.inProgress = function() {
+		span1.html( i18n.htmlInProgress );
+	};
+	this.success = function() {
+		span1.html( i18n.htmlSuccess );
+	};
+	this.failure = function( failureReason ) {
+		span1.html( i18n.htmlFailure );
+		if ( failureReason ) {
+			span2.append( ': ' + failureReason );
+		}
+	};
+	this.notNeeded = function() {
+		span1.html( i18n.htmlNotNeeded );
+	};
+};
+
+var WEF_Updates = function() {
+	this.data = {};
+	this.removedClaims = [];
+};
+
+function wef_save( claimEditorTables ) {
+
+	var i18n = wef_Editors_i18n;
+
+	var updates = new WEF_Updates();
+	$.each( claimEditorTables, function( i, claimEditorTable ) {
+		claimEditorTable.updates( updates );
+	} );
+
+	var dialog = $( "<div></div>" );
+	dialog.attr( 'title', i18n.dialogSaveChangesTitle );
+
+	var progressUl = $( "<ul></ul>" ).appendTo( dialog );
+
+	var executionContext = {
+		centralAuthToken: null,
+		editToken: null,
+		entityId: WEF_Utils.getEntityId(),
+		isWikidata: WEF_Utils.isWikidata(),
+		localUrlPrefix: wgServer + wgScriptPath + '/api.php' + '?format=json',
+		wikidataUrlPrefix: '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json',
+
+		getPrefixWithCentralAuthToken: function() {
+			if ( this.isWikidata ) {
+				return this.localUrlPrefix;
+			} else {
+				return this.wikidataUrlPrefix + "&centralauthtoken=" + encodeURIComponent( this.centralAuthToken );
+			}
+		}
+	};
+
+	var actions = [];
+	var actionFinal = function() {
+		dialog.dialog( 'close' );
+		if ( wgAction === 'view' ) {
+			WEF_Utils.purge();
+		}
+	};
+
+	function createObtainCentralAuthTokenAction( onSuccessActionIndex, onFailureActionIndex ) {
+		var progressItem = new WEF_ProgressItem( progressUl, i18n.actionObtainCentralAuthToken );
+		return function() {
+			var onFailureAction = typeof onFailureActionIndex === 'undefined' ? actionFinal : actions[onFailureActionIndex];
+			var onSuccessAction = actions[onSuccessActionIndex];
+			progressItem.inProgress();
+			$.ajax( {
+				type: 'GET',
+				url: executionContext.localUrlPrefix + '&action=tokens&type=centralauth',
+				error: function( jqXHR, textStatus, errorThrown ) {
+					alert( i18n.errorObtainCentralAuthToken + ': ' + textStatus );
+					progressItem.failure( textStatus );
+					onFailureAction();
+					return;
+				},
+				success: function( result ) {
+					if ( result.error ) {
+						progressItem.failure( result.error.info );
+						alert( i18n.errorObtainCentralAuthToken + ': ' + result.error.info );
+						onFailureAction();
+						return;
+					}
+					if ( !result.tokens || !result.tokens.centralauthtoken ) {
+						progressItem.failure();
+						alert( i18n.errorObtainCentralAuthToken );
+						onFailureAction();
+						return;
+					}
+					executionContext.centralAuthToken = result.tokens.centralauthtoken;
+					progressItem.success();
+					onSuccessAction();
+				},
+			} );
+		};
+	}
+
+	var currentAction = 0;
+
+	if ( !WEF_Utils.isWikidata() ) {
+		actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1 );
+		currentAction++;
+	}
+
+	/* Edit token obtains once for all edit actions on the same element so far */
+	( function() {
+		var nextAction = currentAction + 1;
+		var progressItem = new WEF_ProgressItem( progressUl, i18n.actionObtainEditToken );
+		actions[currentAction] = function() {
+			var onFailureAction = actionFinal;
+			var onSuccessAction = actions[nextAction];
+			progressItem.inProgress();
+			$.ajax( {
+				type: 'GET',
+				url: executionContext.getPrefixWithCentralAuthToken() // 
+						+ '&action=query' //
+						+ '&prop=info' //
+						+ '&intoken=edit' // 
+						+ '&titles=' + executionContext.entityId,
+				error: function( jqXHR, textStatus, errorThrown ) {
+					progressItem.failure( textStatus );
+					alert( i18n.errorObtainEditToken + ': ' + textStatus );
+					onFailureAction();
+					return;
+				},
+				success: function( result ) {
+					if ( result.error ) {
+						progressItem.failure( result.error.info );
+						alert( i18n.errorObtainEditToken + ': ' + result.error.info );
+						onFailureAction();
+						return;
+					}
+
+					var pageInfo = WEF_Utils.getFirstObjectValue( result.query.pages );
+					executionContext.editToken = pageInfo.edittoken;
+					if ( !executionContext.editToken ) {
+						progressItem.failure();
+						alert( i18n.errorObtainEditToken );
+						onFailureAction();
+						return;
+					}
+					progressItem.success();
+					onSuccessAction();
+				}
+			} );
+		};
+		currentAction++;
+	} )();
+
+	/* Saving changes in entity, if required */
+	if ( !$.isEmptyObject( updates.data ) ) {
+		/*
+		 * Each action (including obtaining edit token) need separate auth
+		 * token, because it's expiring in 10 seconds
+		 */
+		if ( !WEF_Utils.isWikidata() ) {
+			actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1, currentAction + 2 );
+			currentAction++;
+		}
+		( function() {
+			var nextAction = currentAction + 1;
+			var progressItem = new WEF_ProgressItem( progressUl, i18n.actionUpdateEntity );
+			actions[currentAction] = function() {
+				var onFailureAction = actions[nextAction];
+				var onSuccessAction = actions[nextAction];
+				progressItem.inProgress();
+				$.ajax( {
+					type: 'POST',
+					url: executionContext.getPrefixWithCentralAuthToken() // 
+							+ '&token=' + encodeURIComponent( executionContext.editToken ) // 
+							+ '&action=wbeditentity' // 
+							+ '&id=' + executionContext.entityId //
+							+ '&summary=' + encodeURIComponent( i18n.summary ) //
+					,
+					data: {
+						data: JSON.stringify( updates.data ),
+					},
+					error: function( jqXHR, textStatus, errorThrown ) {
+						progressItem.failure( textStatus );
+						alert( i18n.errorUpdateEntity + ': ' + textStatus );
+						onFailureAction();
+						return;
+					},
+					success: function( result ) {
+						if ( result.error ) {
+							progressItem.failure( result.error.info );
+							alert( i18n.errorUpdateEntity + ': ' + result.error.info );
+							onFailureAction();
+							return;
+						}
+						progressItem.success();
+						onSuccessAction();
+					},
+				} );
+			};
+			currentAction++;
+		} )();
+	}
+
+	/* Remove claims in separate request */
+	if ( updates.removedClaims.length !== 0 ) {
+		/*
+		 * Each action (including obtaining edit token) need separate auth
+		 * token, because it's expiring in 10 seconds
+		 */
+		if ( !WEF_Utils.isWikidata() ) {
+			actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1, currentAction + 2 );
+			currentAction++;
+		}
+		( function() {
+			var nextAction = currentAction + 1;
+			var progressItem = new WEF_ProgressItem( progressUl, i18n.actionRemoveClaims );
+			actions[currentAction] = function() {
+				var onFailureAction = actions[nextAction];
+				var onSuccessAction = actions[nextAction];
+				progressItem.inProgress();
+				$.ajax( {
+					type: 'POST',
+					url: executionContext.getPrefixWithCentralAuthToken() // 
+							+ '&token=' + encodeURIComponent( executionContext.editToken ) // 
+							+ '&action=wbremoveclaims' // 
+							+ '&claim=' + encodeURIComponent( updates.removedClaims.join( '|' ) ) //
+							+ '&summary=' + encodeURIComponent( i18n.summary ) //
+					,
+					error: function( jqXHR, textStatus, errorThrown ) {
+						progressItem.failure( textStatus );
+						alert( i18n.errorRemoveClaims + ': ' + textStatus );
+						onFailureAction();
+						return;
+					},
+					success: function() {
+						if ( result.error ) {
+							progressItem.failure( result.error.info );
+							alert( i18n.errorRemoveClaims + ': ' + result.error.info );
+							onFailureAction();
+							return;
+						}
+						progressItem.success();
+						onSuccessAction();
+					},
+				} );
+			};
+			currentAction++;
+		} )();
+	}
+
+	actions[currentAction] = actionFinal;
+	dialog.dialog( {
+		height: 'auto',
+		width: 'auto',
+	} );
+	actions[0]();
+}
