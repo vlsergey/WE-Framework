@@ -1270,7 +1270,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 						dataType: 'json',
 						url: WEF_Utils.getWikidataApiPrefix() // 
 								+ '&action=wbsearchentities' //
-								+ '&language=' + encodeURIComponent( wgContentLanguage ) // 
+								+ '&language=' + encodeURIComponent( wgUserLanguage ) // 
 								+ '&limit=15' //
 								+ '&search=' + encodeURIComponent( term ),
 					} ).done( function( result ) {
