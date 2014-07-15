@@ -783,9 +783,9 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 					if ( typeof dataValue.value !== 'undefined' ) {
 						dataValue.value.precision = Number( selectDateTimePrecision.find( 'option:selected' ).data( 'precision' ) );
 					}
-					snakValueEditor.switchDataType( newDataType, dataValue );
+					switchDataType( newDataType, dataValue );
 				} else {
-					snakValueEditor.switchDataType( newDataType, undefined );
+					switchDataType( newDataType, undefined );
 				}
 			}
 		} );
@@ -1048,12 +1048,12 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 
 			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				if ( !/^[\\+\\-]00000/.test( datavalue.value.time ) ) {
-					snakValueEditor.switchDataType( 'time', datavalue );
+					switchDataType( 'time', datavalue );
 				}
 
 				var parseable = datavalue.value.time.replace( /^([\\+\\-])00000/, '$1' );
 				if ( isNaN( Date.parse( parseable ) ) ) {
-					snakValueEditor.switchDataType( 'time', datavalue );
+					switchDataType( 'time', datavalue );
 				}
 
 				input.datepicker( 'setDate', new Date( parseable ) );
@@ -1110,11 +1110,11 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 
 			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				if ( !/^[\\+\\-]00000/.test( datavalue.value.time ) ) {
-					snakValueEditor.switchDataType( 'time', datavalue );
+					switchDataType( 'time', datavalue );
 				}
 				var parseable = datavalue.value.time.replace( /^([\\+\\-])00000/, '$1' );
 				if ( isNaN( Date.parse( parseable ) ) ) {
-					snakValueEditor.switchDataType( 'time', datavalue );
+					switchDataType( 'time', datavalue );
 				}
 				var date = new Date( parseable );
 				months.val( date.getMonth() + 1 );
@@ -1167,11 +1167,11 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 
 			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				if ( !/^[\\+\\-]00000/.test( datavalue.value.time ) ) {
-					snakValueEditor.switchDataType( 'time', datavalue );
+					switchDataType( 'time', datavalue );
 				}
 				var parseable = datavalue.value.time.replace( /^([\\+\\-])00000/, '$1' );
 				if ( isNaN( Date.parse( parseable ) ) ) {
-					snakValueEditor.switchDataType( 'time', datavalue );
+					switchDataType( 'time', datavalue );
 				}
 				var date = new Date( parseable );
 				years.val( date.getFullYear() );
