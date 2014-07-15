@@ -755,13 +755,10 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 	this.editorDataType = editorDataType;
 
 	var switchDataType = function( newDataType, datavalue ) {
-		var mainElement = this.mainElement;
+		snakValueEditor.mainElement.remove();
 
 		// replace all current variables with new type
-		WEF_SnakValueEditor.call( this, parent, newDataType, datavalue, options );
-
-		// remove old elements
-		mainElement.remove();
+		WEF_SnakValueEditor.call( snakValueEditor, parent, newDataType, datavalue, options );
 	};
 
 	var formatDate = WEF_Utils.formatDate;
