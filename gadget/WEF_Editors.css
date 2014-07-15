@@ -29,6 +29,10 @@
 	width: 100%;
 }
 
+.wef_snak_type_label {
+	font-style: italic;
+}
+
 .wef_commonsMedia, .wef_string, .wef_url, .wef_wikibase-item {
 	width: 100%;
 }

@@ -1,9 +1,83 @@
-var externalLinksEditTexts = {
+/**
+ * Gadget based on WE-Framework to edit external links and linked sites
+ * 
+ * @see https://github.com/vlsergey/WE-Framework
+ * @author vlsergey
+ */
 
-	buttonMenuLabel: 'Внешние ссылки',
+wef_ExternalLinks_i18n_en = {
+
+	buttonMenuLabel: 'WEF: Links',
+	buttonNavboxLabel: '[edit links]',
+	buttonViafLabel: 'Find and download VIAF data',
+	editFormTitle: 'Edit external links and linked sites',
+
+	dialogButtonUpdateLabelsText: 'Update labels',
+	dialogButtonUpdateLabelsLabel: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
+	dialogButtonSaveText: 'Save',
+	dialogButtonSaveLabel: 'Close the dialog and save all changes to Wikidata',
+	dialogButtonCloseText: 'Cancel',
+	dialogButtonCloseLabel: 'Close the dialog and discard all changes (do not save)',
+	dialogTitle: 'External links and linked sites — WE-Framework',
+
+	tabOfficialPages: 'Official Pages',
+	tabTexts: 'Texts',
+	tabMedia: 'Audio, Photo & Video',
+	tabTheaterAndMovies: 'Profiles: Theater and Cinema',
+	tabMusic: 'Profiles: Music',
+	tabLiteratureAndManga: 'Profiles: Literature and Manga',
+	tabScience: 'Profiles: Science',
+	tabOther: 'Profiles: Other',
+	tabEncyclopedias: 'Encyclopedias',
+	tabAuthorityControlVIAF: 'Authority Control (VIAF)',
+	tabAuthorityControlOther: 'Authority Control (etc.)',
+
+	tipDefault: 'ID «{0}» is incorrect. It should match the pattern «{1}»',
+	tipOnlyNumbers: 'ID «{0}» should contains only numbers',
+
+	tips: {},
+
+	getTip: function( definition ) {
+		var tip = this.tipDefault;
+		if ( definition.check.toString() === /^\d+$/.toString() ) {
+			tip = this.tipOnlyNumbers;
+		}
+		if ( typeof ( this.tips[definition.code] ) !== "undefined" ) {
+			tip = this.tips[definition.code];
+		}
+		if ( $.isFunction( tip ) ) {
+			tip = tip();
+		}
+		tip = tip.replace( '{1}', definition.check.toString() );
+		return tip;
+	},
+};
+
+wef_ExternalLinks_i18n_ru = {
+
+	buttonMenuLabel: 'WEF: Ссылки',
 	buttonNavboxLabel: '[править ссылки]',
 	buttonViafLabel: 'Найти и загрузить данные с сервера VIAF',
-	editFormTitle: 'Редактирование внешних ссылок',
+
+	dialogButtonUpdateLabelsText: 'Обновить названия',
+	dialogButtonUpdateLabelsLabel: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
+	dialogButtonSaveText: 'Сохранить',
+	dialogButtonSaveLabel: 'Закрыть окно и сохранить все изменения в Викиданных',
+	dialogButtonCloseText: 'Отмена',
+	dialogButtonCloseLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
+	dialogTitle: 'Внешние ссылки и связанные сайты — WE-Framework',
+
+	tabOfficialPages: 'Официальные страницы',
+	tabTexts: 'Тексты произведений',
+	tabMedia: 'Аудио, фото и видео',
+	tabTheaterAndMovies: 'Профили: театр и кино',
+	tabMusic: 'Профили: музыка',
+	tabLiteratureAndManga: 'Профили: литература и манга',
+	tabScience: 'Профили: наука',
+	tabOther: 'Профили: остальное',
+	tabEncyclopedias: 'Энциклопедии',
+	tabAuthorityControlVIAF: 'Нормативный контроль (VIAF)',
+	tabAuthorityControlOther: 'Нормативный контроль (ост.)',
 
 	tipDefault: 'Идентификатор «{0}» содержит ошибки. Правильный должен удовлетворять шаблону {1}',
 	tipOnlyNumbers: 'Идентификатор «{0}» должен содержать только цифры',
@@ -84,33 +158,69 @@ var externalLinksEditTexts = {
 		tip = tip.replace( '{1}', definition.check.toString() );
 		return tip;
 	},
+};
 
-	actionCentralauth: 'Получение нового токена централизованной аутентификации',
-	actionQueryInfoIntokenEdit: 'Получение токена редактирования элемента ' + mw.config.get( 'wgWikibaseItemId' ) + ' («' + mw.config.get( 'wgTitle' ) + '»)',
+var wef_ExternalLinks_i18n = {
+	buttonMenuLabel: '{buttonMenuLabel}',
+	buttonNavboxLabel: '{buttonMenuLabel}',
+	buttonViafLabel: '{buttonViafLabel}',
+	editFormTitle: '{editFormTitle}',
 
-	actionEditEntity: 'Сохранение изменений в элементе',
-	actionDeleteClaims: 'Удаление утверждений',
-	actionDeleteQualifiers: 'Удаление квалификаторов',
+	dialogButtonUpdateLabelsText: '{dialogButtonUpdateLabelsText}',
+	dialogButtonUpdateLabelsLabel: '{dialogButtonUpdateLabelsLabel}',
+	dialogButtonSaveText: '{dialogButtonSaveText}',
+	dialogButtonSaveLabel: '{dialogButtonSaveLabel}',
+	dialogButtonCloseText: '{dialogButtonCloseText}',
+	dialogButtonCloseLabel: '{dialogButtonCloseLabel}',
+	dialogTitle: '{dialogTitle}',
 
-	errorCantGetInfoIntokenEdit: 'Не получилось получить токен редактирования страницы',
-	buttonUpdateLabels: 'Обновить названия',
-	buttonUpdateLabelsLabel: 'Обновить названия полей и квалификаторов с Wikidata',
-	buttonSave: 'Сохранить',
-	buttonCancel: 'Отменить',
+	tabOfficialPages: '{tabOfficialPages}',
+	tabTexts: '{tabTexts}',
+	tabMedia: '{tabMedia}',
+	tabTheaterAndMovies: '{tabTheaterAndMovies}',
+	tabMusic: '{tabMusic}',
+	tabLiteratureAndManga: '{tabLiteratureAndManga}',
+	tabScience: '{tabScience}',
+	tabOther: '{tabOther}',
+	tabEncyclopedias: '{tabEncyclopedias}',
+	tabAuthorityControlVIAF: '{tabAuthorityControlVIAF}',
+	tabAuthorityControlOther: '{tabAuthorityControlOther}',
 
-	confirmDeleteValue: 'Удалить значение свойства «{label}»?',
+	tipDefault: '{tipDefault}',
+	tipOnlyNumbers: '{tipOnlyNumbers}',
+
+	tips: {},
+
+	getTip: function( definition ) {
+		return '{tip}';
+	},
 };
 
 /** @class */
 WEF_ExternalLinks = function() {
 	var externalLinksEdit = this;
 
-	/** @const */
-	var URI_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
+	var URI_PREFIX;
+	var entityId;
+
+	if ( WEF_Utils.isWikidata() ) {
+		entityId = mw.config.get( 'wgTitle' );
+		URI_PREFIX = '//www.wikidata.org/w/api.php?format=json';
+	} else {
+		entityId = mw.config.get( 'wgWikibaseItemId' );
+		URI_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
+	}
+
+	this.i18n = wef_ExternalLinks_i18n;
+	var i18n = this.i18n;
+
+	this.enabled = /^Q\d+$/.test( entityId );
+
+	this.init = function() {
+		WEF_Utils.localize( i18n, 'wef_ExternalLinks_i18n_' );
+	};
 
 	this.dialogWidth = $( window ).width() * 0.66;
-	this.summary = 'via [[:w:ru:ВП:G/ELE|gadget]]';
-	this.allowedNamespaces = [ 0 ];
 
 	var d = {};
 	this.definitions = d;
@@ -178,7 +288,7 @@ WEF_ExternalLinks = function() {
 				primary: 'ui-icon-search'
 			},
 			text: false,
-			label: externalLinksEditTexts.buttonViafLabel,
+			label: i18n.buttonViafLabel,
 			click: function() {
 				externalLinksEdit.viafFillDialog.dialog( 'open' );
 			},
@@ -1198,7 +1308,7 @@ WEF_ExternalLinks = function() {
 		},
 		check: regexpPath,
 		url: function( id ) {
-			return 'http://www.liveinternet.ru/users/' + id
+			return 'http://www.liveinternet.ru/users/' + id;
 		},
 	} );
 	this.definitions.Q4101720 = new WEF_Definition( {
@@ -1432,7 +1542,7 @@ WEF_ExternalLinks = function() {
 	};
 
 	this.addButtonsEdit = function() {
-		if ( !mw.config.get( 'wgWikibaseItemId' ) || $.inArray( mw.config.get( 'wgNamespaceNumber' ), externalLinksEdit.allowedNamespaces ) === -1 )
+		if ( !this.enabled )
 			return;
 
 		var definitions = this.definitions;
@@ -1449,8 +1559,8 @@ WEF_ExternalLinks = function() {
 			}
 		} );
 
-		var dialogForm = $( '' + '<div class="wef_externalLinks_dialog" id="ruWikiExternalEditForm" title="' + externalLinksEditTexts.editFormTitle + '">'
-				+ '<div id="ruWikiExternalEditFormTabs">' + '<ul id="ruWikiExternalEditFormTabsList">' + '</ul>' + '</div>' + '<p class="validateTips"></p>' + '</div>' );
+		var dialogForm = $( '' + '<div class="wef_externalLinks_dialog" id="wefExternalLinksDialog" title="' + i18n.dialogTitle + '">' + '<div id="wefExternalLinksDialogTabs">'
+				+ '<ul id="wefExternalLinksDialogTabsList">' + '</ul>' + '</div>' + '<p class="validateTips"></p>' + '</div>' );
 		var statusAndTips = dialogForm.find( 'p.validateTips' );
 		dialogForm.find( "#ruWikiExternalEditProgress" ).hide();
 
@@ -1504,7 +1614,7 @@ WEF_ExternalLinks = function() {
 							if ( typeof ( definition.check ) !== "undefined" ) {
 								var result = definition.check.exec( newValue );
 								if ( result == null ) {
-									var tip = externalLinksEditTexts.getTip( definition );
+									var tip = i18n.getTip( definition );
 									var shortLabel = getLabelTextShort( definition );
 									tip = tip.replace( "{0}", shortLabel );
 
@@ -1560,28 +1670,28 @@ WEF_ExternalLinks = function() {
 			modal: false,
 			open: function( event, ui ) {
 				dialogForm.find( "tr" ).remove();
-				var tabs = $( "#ruWikiExternalEditFormTabs" );
+				var tabs = $( "#wefExternalLinksDialogTabs" );
 
-				var tabsHeaders = $( '#ruWikiExternalEditFormTabsList' );
+				var tabsHeaders = $( '#wefExternalLinksDialogTabsList' );
 				statusAndTips.text( 'Идёт загрузка данных с Викиданных...' );
 
 				var onWikidataResult = function( result ) {
 					statusAndTips.text( '' );
 					if ( typeof result === 'undefined'// 
 							|| typeof result.entities === 'undefined'//
-							|| typeof result.entities[wgWikibaseItemId] === 'undefined'// 
-							|| typeof result.entities[wgWikibaseItemId].claims === 'undefined'// 
+							|| typeof result.entities[entityId] === 'undefined'// 
+							|| typeof result.entities[entityId].claims === 'undefined'// 
 					) {
-						alert( 'Формат ответа от Викиданных отличается от ожидаемого' );
+						alert( 'Wikidata answer format is not expected one' );
 						dialogForm.dialog( 'close' );
 						return;
 					}
-					externalLinksEdit.entity = result.entities[wgWikibaseItemId];
+					externalLinksEdit.entity = result.entities[entityId];
 
 					tabs.hide();
 					externalLinksEdit.editors = {};
 					$.each( externalLinksEdit.groups, function( index, group ) {
-						var link = 'ruWikiExternalEditFormTabs-' + index;
+						var link = 'wefExternalLinksDialogTabs-' + index;
 						var newTabHeader = $( '<li></li>' ).append( $( '<a href="#' + link + '"></a>' ).text( group.label ) );
 						var newTabTable = $( '<table border="0" style="white-space: nowrap;" width="100%" cellspacing="0"></table>' );
 						var newTabPage = $( '<div id="' + link + '"></div>' ).append( newTabTable );
@@ -1597,7 +1707,7 @@ WEF_ExternalLinks = function() {
 					} );
 
 					$.each( externalLinksEdit.editors, function( i, claimEditorsTable ) {
-						claimEditorsTable.load( externalLinksEdit.entity );
+						claimEditorsTable.init( externalLinksEdit.entity );
 					} );
 
 					wef_LabelsCache.receiveLabels();
@@ -1612,43 +1722,45 @@ WEF_ExternalLinks = function() {
 
 				$.ajax( {
 					type: 'GET',
-					url: URI_PREFIX + '&action=wbgetentities&ids=' + wgWikibaseItemId,
+					url: URI_PREFIX + '&action=wbgetentities&ids=' + entityId,
 					dataType: "json",
 					success: onWikidataResult,
 					fail: function() {
-						alert( 'Невозможно загрузить информацию с Викиданных' );
+						alert( 'Unable to load Wikidata entity' );
 						dialogForm.dialog( 'close' );
 					},
 				} );
 			},
 			buttons: [ {
-				text: externalLinksEditTexts.buttonUpdateLabels,
-				label: externalLinksEditTexts.buttonUpdateLabelsLabel,
+				text: i18n.dialogButtonUpdateLabelsText,
+				label: i18n.dialogButtonUpdateLabelsLabel,
 				click: function() {
 					wef_LabelsCache.clearCacheAndRequeue();
 					wef_LabelsCache.receiveLabels();
 				},
 				style: 'position: absolute; left: 1em;',
 			}, {
-				text: externalLinksEditTexts.buttonSave,
+				text: i18n.dialogButtonSaveText,
+				label: i18n.dialogButtonSaveLabel,
 				click: function() {
 					dialogForm.dialog( 'close' );
 					wef_save( externalLinksEdit.editors );
 				}
 			}, {
-				text: externalLinksEditTexts.buttonCancel,
+				text: i18n.dialogButtonCloseText,
+				label: i18n.dialogButtonCloseLabel,
 				click: function() {
 					$( this ).dialog( "close" );
 				}
 			} ]
 		} );
-		$( "#p-tb div ul" ).append( $( '<li class="plainlinks"><a href="javascript:externalLinksEdit.edit()">' + externalLinksEditTexts.buttonMenuLabel + '</a></li>' ) );
+		$( "#p-tb div ul" ).append( $( '<li class="plainlinks"><a href="javascript:externalLinksEdit.edit()">' + i18n.buttonMenuLabel + '</a></li>' ) );
 		$( "table.ruwikiArticleExternalLinksTable" ).find( ".navbox-list" ).first().prepend(
-				'<div style="float: right;"><a href="javascript:externalLinksEdit.edit()">' + externalLinksEditTexts.buttonNavboxLabel + '</a></div>' );
+				'<div style="float: right;"><a href="javascript:externalLinksEdit.edit()">' + i18n.buttonNavboxLabel + '</a></div>' );
 
 		{
 			var viafFillFieldset = $( '<fieldset></fieldset>' );
-			var viafFillDialog = $( '<div></div>' ).attr( 'title', externalLinksEditTexts.buttonViafLabel ).append( $( '<form></form>' ).append( viafFillFieldset ) );
+			var viafFillDialog = $( '<div></div>' ).attr( 'title', i18n.buttonViafLabel ).append( $( '<form></form>' ).append( viafFillFieldset ) );
 			externalLinksEdit.viafFillDialog = viafFillDialog;
 			var viafFillInput = $( '<input type="text" style="width: 100%;"></input>' );
 			var viafFillCheckButtons = $( '<div></div>' );
@@ -1740,7 +1852,7 @@ WEF_ExternalLinks = function() {
 	};
 
 	this.edit = function() {
-		$( "#ruWikiExternalEditForm" ).dialog( 'open' );
+		$( "#wefExternalLinksDialog" ).dialog( 'open' );
 	};
 
 	this.purge = function() {
@@ -1751,10 +1863,11 @@ WEF_ExternalLinks = function() {
 
 WEF_ExternalLinks.prototype.setup = function() {
 	var d = this.definitions;
+	var i18n = wef_ExternalLinks_i18n;
 
 	this.groups = [];
 	this.groups.push( {
-		label: 'Официальные страницы',
+		label: i18n.tabOfficialPages,
 		fields: [// 
 		d.Q116933, // vk.com
 		d.Q4101720, // vkrugudruzei.ru
@@ -1777,7 +1890,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Тексты произведений',
+		label: i18n.tabTexts,
 		fields: [//
 		d.Q17254543, // chitalnya.ru
 		d.Q4380129, // proza.ru
@@ -1787,7 +1900,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Аудио, видео, фото',
+		label: i18n.tabMedia,
 		fields: [//
 		d.P373, // commons.wikimedia.org
 		d.Q103204, // flickr.com
@@ -1801,7 +1914,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Профили: театр и кино',
+		label: i18n.tabTheaterAndMovies,
 		fields: [//
 		d.P1265, // allocine.fr
 		d.P1266, // allocine.fr
@@ -1816,7 +1929,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Профили: музыка',
+		label: i18n.tabMusic,
 		fields: [ //
 		d.P839, // imslp.org
 		d.Q183718, // lastfm.ru
@@ -1826,7 +1939,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Профили: литература и манга',
+		label: i18n.tabLiteratureAndManga,
 		fields: [// 
 		d.P1361, // animenewsnetwork.com
 		d.P1233, // isfdb.org
@@ -1836,7 +1949,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Профили: наука',
+		label: i18n.tabScience,
 		fields: [// 
 		d.P549, // genealogy.ams.org
 		d.P496, // orcid.org
@@ -1845,9 +1958,9 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Профили: остальноe',
+		label: i18n.tabOther,
 		fields: [//
-		d.P1185, // ru.rodovid.org
+		d.P1185, // rodovid.org
 		d.P535, // findagrave.com
 		d.P998, // dmoz.org
 		d.P650, // RKDartists
@@ -1855,7 +1968,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Энциклопедии',
+		label: i18n.tabEncyclopedias,
 		fields: [//
 		d.Q234535,// Большая советская
 		d.Q4239850,// Краткая литературная
@@ -1869,7 +1982,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Нормативный контроль (VIAF)',
+		label: i18n.tabAuthorityControlVIAF,
 		fields: [// 
 		d.P213, // ISNI
 		d.P214, // VIAF
@@ -1899,7 +2012,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
-		label: 'Нормативный контроль (ост.)',
+		label: i18n.tabAuthorityControlOther,
 		fields: [//
 		d.P1003, // BNR
 		d.P270, // CALIS
@@ -1918,19 +2031,18 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 	importStylesheet( 'MediaWiki:WEF_ExternalLinks.css' );
 	importScript( 'MediaWiki:WEF_Editors.js' );
 	importStylesheet( 'MediaWiki:WEF_Editors.css' );
-	importScript( 'MediaWiki:WEF_LabelsCache.js' );
 } else {
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_ExternalLinks.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_LabelsCache.js&ctype=text/javascript&action=raw&maxage=86400&smaxage=21600' );
 }
 
 var externalLinksEdit;
 mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.tabs' ], function() {
 	addOnloadHook( function() {
 		externalLinksEdit = new WEF_ExternalLinks();
+		externalLinksEdit.init();
 		externalLinksEdit.setup();
 		externalLinksEdit.addButtonsEdit();
 	} );

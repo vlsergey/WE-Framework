@@ -169,8 +169,11 @@ var WEF_Editors_i18n = function() {
 	this.htmlNotNeeded = '<img alt="(=)" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/15px-Pictogram_voting_neutral.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/23px-Pictogram_voting_neutral.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/30px-Pictogram_voting_neutral.svg.png 2x" data-file-width="250" data-file-height="250" height="15" width="15">';
 
 	this.snakTypeValue = '{snakTypeValue}';
+	this.snakTypeValueTitle = '{snakTypeValueTitle}';
 	this.snakTypeNoValue = '{snakTypeNoValue}';
+	this.snakTypeNoValueTitle = '{snakTypeNoValueTitle}';
 	this.snakTypeSomeValue = '{snakTypeSomeValue}';
+	this.snakTypeSomeValueTitle = '{snakTypeSomeValueTitle}';
 
 	this.summary = 'via [[:w:ru:ВП:G/ELE|WE-Framework gadget]]';
 
@@ -191,16 +194,8 @@ var WEF_Editors_i18n = function() {
 	this.timePrecision14 = '{timePrecision14}';
 	this.timePrecisionOther = '{timePrecisionOther}';
 
-	var i18n = this;
-	var languages = [ 'ru', 'en', wgContentLanguage, wgUserLanguage ];
-	$.each( languages, function( i, lang ) {
-		if ( window['wef_Editors_i18n_' + lang] ) {
-			$.extend( i18n, window['wef_Editors_i18n_' + lang] );
-		}
-	} );
+	WEF_Utils.localize( this, 'wef_Editors_i18n_' );
 };
-
-var wef_Editors_i18n = new WEF_Editors_i18n();
 
 /**
  * @typedef WEF_Entity
@@ -254,6 +249,19 @@ var WEF_Definition = function( args ) {
 
 var WEF_Utils = {
 
+	appendToNamedMap: function( element, mapName, key, obj ) {
+		if ( typeof element === 'undefined' ) {
+			throw new Error( 'Illegal argument: element is undefined' );
+		}
+		if ( typeof element[mapName] === 'undefined' ) {
+			element[mapName] = {};
+		}
+		if ( typeof element[mapName][key] === 'undefined' ) {
+			element[mapName][key] = [];
+		}
+		element[mapName][key].push( obj );
+	},
+
 	/** @returns {string} */
 	formatDate: function( year, month, day ) {
 		var time;
@@ -291,9 +299,27 @@ var WEF_Utils = {
 		return obj[Object.keys( obj )[0]];
 	},
 
+	/** @returns {string} */
+	getWikidataApiPrefix: function() {
+		if ( wgSiteName === 'Wikidata' ) {
+			return wgServer + wgScriptPath + '/api.php' + '?format=json';
+		} else {
+			return '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
+		}
+	},
+
 	/** @returns {Boolean} */
 	isWikidata: function() {
 		return wgSiteName === 'Wikidata';
+	},
+
+	localize: function( targetObject, globalVariablesPrefix ) {
+		var languages = [ 'ru', 'en', wgContentLanguage, wgUserLanguage ];
+		$.each( languages, function( i, lang ) {
+			if ( window[globalVariablesPrefix + lang] ) {
+				$.extend( targetObject, window[globalVariablesPrefix + lang] );
+			}
+		} );
 	},
 
 	purge: function() {
@@ -301,14 +327,374 @@ var WEF_Utils = {
 	},
 };
 
+var wef_Editors_i18n = new WEF_Editors_i18n();
+
 /**
+ * Wikidata labels and description cache using local user storage (i.e.
+ * client-side). Part of WE-Framework.
+ * 
+ * @see https://github.com/vlsergey/WE-Framework
+ * @author vlsergey
+ */
+var WEF_LabelsCache = function() {
+
+	/**
+	 * @const
+	 * @private
+	 */
+	var MAX_ITEMS_PER_REQUEST = 50;
+
+	/**
+	 * @const
+	 * @private
+	 */
+	var LOCALSTORAGE_PREFIX_LABELS = 'wef-d-label-';
+	var LOCALSTORAGE_PREFIX_DESCRIPTIONS = 'wef-d-description-';
+
+	/** @private */
+	var cacheLabels = {};
+	/** @private */
+	var cacheDescriptions = {};
+	/** @private */
+	var queue = [];
+
+	/** Functions to be called after new items received from Wikidata */
+	var listeners = [];
+
+	this.clearCacheAndRequeue = function() {
+		$.each( cacheLabels, function( key, item ) {
+			delete localStorage[LOCALSTORAGE_PREFIX_LABELS + key];
+			delete cacheLabels[key];
+			if ( queue.indexOf( key ) === -1 ) {
+				queue.push( key );
+			}
+		} );
+		$.each( cacheDescriptions, function( key, item ) {
+			delete localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + key];
+			delete cacheDescriptions[key];
+			if ( queue.indexOf( key ) === -1 ) {
+				queue.push( key );
+			}
+		} );
+	};
+
+	/**
+	 * @param key
+	 *            {string} key to check
+	 */
+	var assertKeyCorrect = function( key ) {
+		if ( !/^[PQ]\d+$/.test( key ) ) {
+			throw new Error( "Incorrect key: " + key );
+		}
+	};
+
+	/** Return cached value */
+	this.getLabel = function( key ) {
+		assertKeyCorrect( key );
+
+		var cached = cacheLabels[key];
+		if ( typeof ( cached ) !== 'undefined' ) {
+			return cached;
+		}
+
+		var localCached = localStorage[LOCALSTORAGE_PREFIX_LABELS + key];
+		if ( isValid( localCached ) ) {
+			cacheLabels[key] = localCached;
+			return localCached;
+		}
+
+		return key;
+	};
+
+	/** Return cached value */
+	this.getDescription = function( key ) {
+		assertKeyCorrect( key );
+
+		var cached = cacheDescriptions[key];
+		if ( typeof ( cached ) !== 'undefined' ) {
+			return cached;
+		}
+
+		var localCached = localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + key];
+		if ( isValid( localCached ) ) {
+			cacheDescriptions[key] = localCached;
+			return localCached;
+		}
+
+		return key;
+	};
+
+	/** @private */
+	var isValid = function( value ) {
+		return typeof ( value ) !== "undefined" && value !== null && value.length !== 0;
+	};
+
+	/** Return cached value or queue values to be received from Wikidata */
+	this.getOrQueue = function( key, listener ) {
+		assertKeyCorrect( key );
+
+		var getLabel = this.getLabel;
+		var getDescription = this.getDescription;
+
+		var cachedLabel = getLabel( key );
+		var cachedDescription = getDescription( key );
+		// call listener even if got from cache
+		listener( cachedLabel, cachedDescription );
+
+		if ( !isValid( cachedLabel ) || cachedLabel === key || !isValid( cachedDescription ) || cachedDescription === key ) {
+			listeners.push( function() {
+				var label = getLabel( key );
+				var description = getDescription( key );
+				listener( label, description );
+			} );
+			queue.push( key );
+			return key;
+		}
+		return cachedLabel;
+	};
+
+	/**
+	 * Notify listeners
+	 * 
+	 * @private
+	 */
+	var onUpdate = function() {
+		$.each( listeners, function( index, listener ) {
+			try {
+				listener();
+			} catch ( err ) {
+				mw.warn( 'Exception during labels-update listener call' );
+			}
+		} );
+	};
+
+	/** Receive values from Wikidata, if any queued */
+	this.receiveLabels = function() {
+		var languages = [ wgUserLanguage, wgContentLanguage, 'en', 'ru' ];
+		var languagesString = encodeURIComponent( wgUserLanguage + '|' + wgContentLanguage + '|en|ru' );
+
+		// remove already known
+		queue = jQuery.grep( queue, function( value ) {
+			return !isValid( cacheLabels[value] ) || !isValid( cacheDescriptions[value] );
+		} );
+
+		var gotFromCache = [];
+		var idsToQuery = [];
+
+		$.each( queue, function( index, key ) {
+			var cachedLabel = localStorage[LOCALSTORAGE_PREFIX_LABELS + key];
+			var cachedDescription = localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + key];
+
+			if ( isValid( cachedLabel ) ) {
+				cacheLabels[key] = cachedLabel;
+				gotFromCache.push( key );
+			}
+			if ( isValid( cachedDescription ) ) {
+				cacheDescriptions[key] = cachedDescription;
+				gotFromCache.push( key );
+			}
+
+			if ( !isValid( cachedLabel ) || isValid( cachedDescription ) ) {
+				idsToQuery.push( key );
+			}
+		} );
+
+		function onError( jqXHR, textStatus, errorThrown ) {
+			mw.log.warn( "Unable to load labels and descriptions from Wikidata: " + textStatus );
+		}
+		function onSuccess( result ) {
+			if ( typeof result.error !== 'undefined' ) {
+				mw.log.warn( result.error );
+				return;
+			}
+
+			$.each( result.entities, function( entityIndex, entity ) {
+				var entityId = entity.id;
+
+				if ( typeof entity.labels !== "undefined" ) {
+					for ( var l = 0; l < languages.length; l++ ) {
+						var label = entity.labels[languages[l]];
+						if ( typeof label !== "undefined" ) {
+							var title = label.value;
+							cacheLabels[entityId] = title;
+							localStorage[LOCALSTORAGE_PREFIX_LABELS + entityId] = title;
+							break;
+						}
+					}
+				}
+
+				if ( typeof entity.descriptions !== "undefined" ) {
+					for ( var l = 0; l < languages.length; l++ ) {
+						var description = entity.descriptions[languages[l]];
+						if ( typeof description !== "undefined" ) {
+							var title = description.value;
+							cacheDescriptions[entityId] = title;
+							localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + entityId] = title;
+							break;
+						}
+					}
+				}
+			} );
+			onUpdate();
+		}
+
+		var total = idsToQuery.length;
+		for ( var i = 0; i < total; i += MAX_ITEMS_PER_REQUEST ) {
+			var idsString = '';
+			for ( var k = i; k < i + MAX_ITEMS_PER_REQUEST && k < total; k++ ) {
+				if ( k != i ) {
+					idsString = idsString + '|';
+				}
+				idsString = idsString + idsToQuery[k];
+			}
+			$.ajax( {
+				url: WEF_Utils.getWikidataApiPrefix() //
+						+ '&action=wbgetentities' //
+						+ '&props=' + encodeURIComponent( 'labels|descriptions' ) // 
+						+ '&languages=' + languagesString // 
+						+ '&ids=' + encodeURIComponent( idsString ),
+				dataType: 'json',
+				error: onError,
+				success: onSuccess,
+			} );
+		}
+		queue = jQuery.grep( queue, function( value ) {
+			return idsToQuery.indexOf( value ) === -1;
+		} );
+		if ( gotFromCache.length > 0 ) {
+			onUpdate();
+		}
+	};
+};
+var wef_LabelsCache = new WEF_LabelsCache();
+
+/**
+ * Caches types of properties. Required because sometimes entity contains the
+ * property code and "novalue" mark, but not datatype marker.
+ * 
+ * @see https://github.com/vlsergey/WE-Framework
+ * @author vlsergey
+ */
+var WEF_TypesCache = function() {
+
+	/**
+	 * @const
+	 * @private
+	 */
+	var LOCALSTORAGE_PREFIX = 'wef-d-type-';
+
+	/** @private */
+	var cacheTypes = {};
+
+	/**
+	 * @param propertyId
+	 *            {string} property ID to query
+	 * @param onSuccess
+	 *            {function} callback handler for success
+	 * @param onFailure {
+	 */
+	this.getPropertyType = function( propertyId, onSuccess, onFailure ) {
+		if ( !/^[P]\d+$/.test( propertyId ) ) {
+			throw new Error( "Incorrect property ID: " + propertyId );
+		}
+
+		var cached = cacheTypes[propertyId];
+		if ( typeof ( cached ) !== 'undefined' ) {
+			onSuccess( cached );
+			return;
+		}
+
+		var localCached = localStorage[LOCALSTORAGE_PREFIX + propertyId];
+		if ( typeof localCached !== 'undefined' && localCached !== null ) {
+			cacheTypes[propertyId] = localCached;
+			onSuccess( localCached );
+			return;
+		}
+
+		// still no luck. Display modal window and ask Wikidata
+
+		// TODO: i18n
+		var dialog = $( '<div title="Get Wikidata property type" class="wef_dialog_no_close"></div>' );
+		var ul = $( '<ul></ul>' ).appendTo( dialog );
+		var progress = new WEF_ProgressItem( ul, "Request property type from Wikidata" );
+
+		dialog.dialog( {
+			width: 'auto',
+			height: 'auto',
+			resizable: false,
+			modal: true,
+		} );
+
+		/* We need new handlers to close dialog */
+		var onFailureNew = function( reason ) {
+			progress.failure( reason );
+			dialog.dialog( 'close' );
+			onFailure( reason );
+		};
+		var onSuccessNew = function( datatype ) {
+			progress.success();
+			dialog.dialog( 'close' );
+			onSuccess( datatype );
+		};
+
+		progress.inProgress();
+		$.ajax( {
+			url: WEF_Utils.getWikidataApiPrefix() //
+					+ '&action=wbgetentities' //
+					+ '&props=' + encodeURIComponent( 'datatype' ) // 
+					+ '&ids=' + encodeURIComponent( propertyId ),
+			dataType: 'json',
+			error: function( jqXHR, textStatus, errorThrown ) {
+				onFailure( textStatus );
+			},
+			success: function( result ) {
+				if ( typeof result.error !== 'undefined' ) {
+					mw.log.warn( result.error );
+					onFailureNew( result.error );
+					return;
+				}
+
+				$.each( result.entities, function( entityIndex, entity ) {
+					if ( propertyId === entity.id ) {
+						var dataType = entity.datatype;
+						if ( typeof datatype !== 'undefined' && dataType !== null ) {
+							localStorage[LOCALSTORAGE_PREFIX + propertyId] = dataType;
+							cacheTypes[propertyId] = dataType;
+							onSuccessNew( dataType );
+							return;
+						}
+					}
+				} );
+				onFailureNew( 'no results returned for ' + propertyId );
+				return;
+			},
+		} );
+
+		return;
+	};
+
+	this.putInCache = function( propertyId, dataType ) {
+		if ( !/^[P]\d+$/.test( propertyId ) ) {
+			throw new Error( "Incorrect property ID: " + propertyId );
+		}
+
+		if ( !$.isEmpty( dataType ) ) {
+			cacheTypes[propertyId] = dataType;
+			localStorage[LOCALSTORAGE_PREFIX + propertyId] = dataType;
+		}
+	};
+};
+var wef_TypesCache = new WEF_TypesCache();
+
+/**
+ * @param dataValue
+ *            {WEF_Snak} datavalue to initialize editor. If empty, new editor
+ *            will be created
  * @class
  */
-var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
+var WEF_SnakValueEditor = function( dataDataType, dataValue ) {
 
-	allowToSimplify = typeof allowToSimplify === 'undefined' || allowToSimplify === null ? true : allowToSimplify;
-
-	if ( typeof dataType === 'undefined' ) {
+	if ( typeof dataDataType === 'undefined' ) {
 		throw new Error( 'DataType is not specified' );
 	}
 
@@ -336,14 +722,14 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 	};
 
 	var unsupportedF = function() {
-		throw new Error( 'DataType "' + dataType + '" is not supported' );
+		throw new Error( 'DataType "' + dataDataType + '" is not supported' );
 	};
 
 	this.hasValue = unsupportedF;
 	this.removeValue = unsupportedF;
 
 	this.getDataValue = unsupportedF;
-	this.setDataValue = unsupportedF;
+	this.setDataValueImpl = unsupportedF;
 
 	this.getAsLabel = unsupportedF;
 
@@ -351,14 +737,28 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 		$( snakValueEditor ).change();
 	};
 
-	if ( allowToSimplify ) {
-		// defaults and simplifies
-		if ( dataType === 'time' ) {
-			dataType = 'time-days';
+	var editorDataType = dataDataType;
+	if ( editorDataType === 'time' ) {
+		if ( typeof dataValue === 'undefined' ) {
+			editorDataType = 'time-days';
+		} else {
+			if ( !$.isEmpty( dataValue.value ) && !$.isEmpty( dataValue.value.precision ) ) {
+				var precision = dataValue.value.precision;
+				if ( precision === PRECISION_YEARS ) {
+					editorDataType = 'time-years';
+				} else if ( precision === PRECISION_MONTHS ) {
+					editorDataType = 'time-months';
+				} else if ( precision === PRECISION_DAYS ) {
+					editorDataType = 'time-days';
+				}
+			}
 		}
 	}
 
-	this.switchDataType = function( newDataType, datavalue ) {
+	this.dataDataType = dataDataType;
+	this.editorDataType = editorDataType;
+
+	var switchDataType = function( newDataType, datavalue ) {
 		var elements = this.elements;
 
 		// replace all current variables with new type
@@ -366,7 +766,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 
 		// set value
 		if ( typeof datavalue !== 'undefined' ) {
-			this.setDataValue( datavalue );
+			this.setDataValueImpl( datavalue );
 		}
 
 		// replace elements with new ones
@@ -381,17 +781,17 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 	var formatDate = WEF_Utils.formatDate;
 	var selectDateTimePrecision, oldStyleCheckbox, oldStyleCheckboxLabel;
 
-	if ( dataType.substring( 0, 4 ) === "time" ) {
+	if ( editorDataType.substring( 0, 4 ) === "time" ) {
 		selectDateTimePrecision = $( '<select class="wef_select_date_time_precision">' );
 		selectDateTimePrecision.attr( 'title', i18n.inputTimePrecisionTitle );
 		selectDateTimePrecision.append( $( '<option value="time-days">' ).data( 'precision', PRECISION_DAYS ).text( i18n['timePrecision' + PRECISION_DAYS] ) );
 		selectDateTimePrecision.append( $( '<option value="time-months">' ).data( 'precision', PRECISION_MONTHS ).text( i18n['timePrecision' + PRECISION_MONTHS] ) );
 		selectDateTimePrecision.append( $( '<option value="time-years">' ).data( 'precision', PRECISION_YEARS ).text( i18n['timePrecision' + PRECISION_YEARS] ) );
 		selectDateTimePrecision.append( $( '<option value="time">' ).text( i18n.timePrecisionOther ) );
-		selectDateTimePrecision.val( dataType );
+		selectDateTimePrecision.val( editorDataType );
 		selectDateTimePrecision.change( function() {
 			var newDataType = selectDateTimePrecision.val();
-			if ( newDataType !== dataType ) {
+			if ( newDataType !== editorDataType ) {
 				if ( snakValueEditor.hasValue() ) {
 					var dataValue = snakValueEditor.getDataValue();
 					if ( typeof dataValue.value !== 'undefined' ) {
@@ -416,11 +816,11 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 		oldStyleCheckboxLabel.text( i18n.checkboxOldstyle );
 	}
 
-	if ( dataType === 'string' ) {
+	if ( editorDataType === 'string' ) {
 		( function() {
 			var input = $( '<input type="text" class="wef_string">' );
 			snakValueEditor.elements.push( input );
-			snakValueEditor.setDataValue = function( datavalue ) {
+			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				input.val( datavalue.value );
 			};
 			snakValueEditor.hasValue = function() {
@@ -445,11 +845,11 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			input.change( changeF );
 			input.keyup( changeF );
 		} )();
-	} else if ( dataType === 'commonsMedia' ) {
+	} else if ( editorDataType === 'commonsMedia' ) {
 		( function() {
 			var input = $( '<input type="text" class="wef_commonsMedia">' );
 			snakValueEditor.elements.push( input );
-			snakValueEditor.setDataValue = function( datavalue ) {
+			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				input.val( datavalue.value );
 			};
 			snakValueEditor.hasValue = function() {
@@ -476,7 +876,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			input.change( changeF );
 			input.keyup( changeF );
 		} )();
-	} else if ( dataType === 'url' ) {
+	} else if ( editorDataType === 'url' ) {
 		( function() {
 			function decode( stored ) {
 				var abc = 'ёйцукенгшщзхъфывапролджэячсмитьбю';
@@ -520,7 +920,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 
 			var input = $( '<input type="url" class="wef_url">' );
 			snakValueEditor.elements.push( input );
-			snakValueEditor.setDataValue = function( datavalue ) {
+			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				input.val( decode( datavalue.value ) );
 			};
 
@@ -548,7 +948,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			input.change( changeF );
 			input.keyup( changeF );
 		} )();
-	} else if ( dataType === 'time' ) {
+	} else if ( editorDataType === 'time' ) {
 		( function() {
 
 			var table = $( '<table class="wef_time_table"></table>' );
@@ -597,7 +997,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			addTr( i18n.inputTimePrecisionLabel, i18n.inputTimePrecisionTitle, inputPrecision );
 			addTr( i18n.inputTimeCalendarModelLabel, i18n.inputTimeCalendarModelTitle, inputCalendarModel.select );
 
-			snakValueEditor.setDataValue = function( datavalue ) {
+			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				inputTime.val( datavalue.value.time );
 				inputTimeZone.val( datavalue.value.timezone );
 				inputPrecision.val( datavalue.value.precision );
@@ -639,7 +1039,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			inputCalendarModel.select.change( changeF );
 			inputCalendarModel.select.keyup( changeF );
 		} )();
-	} else if ( dataType === 'time-days' ) {
+	} else if ( editorDataType === 'time-days' ) {
 		( function() {
 
 			snakValueEditor.elements.push( selectDateTimePrecision );
@@ -656,16 +1056,8 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			snakValueEditor.elements.push( oldStyleCheckbox );
 			snakValueEditor.elements.push( oldStyleCheckboxLabel );
 
-			snakValueEditor.setDataValue = function( datavalue ) {
+			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				if ( !/^[\\+\\-]00000/.test( datavalue.value.time ) ) {
-					snakValueEditor.switchDataType( 'time', datavalue );
-				}
-
-				if ( datavalue.value.precision === PRECISION_YEARS ) {
-					snakValueEditor.switchDataType( 'time-years', datavalue );
-				} else if ( datavalue.value.precision === PRECISION_MONTHS ) {
-					snakValueEditor.switchDataType( 'time-month', datavalue );
-				} else if ( datavalue.value.precision !== PRECISION_DAYS ) {
 					snakValueEditor.switchDataType( 'time', datavalue );
 				}
 
@@ -709,7 +1101,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			input.change( changeF );
 			input.keyup( changeF );
 		} )();
-	} else if ( dataType === 'time-months' ) {
+	} else if ( editorDataType === 'time-months' ) {
 		( function() {
 
 			snakValueEditor.elements.push( selectDateTimePrecision );
@@ -729,7 +1121,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			snakValueEditor.elements.push( oldStyleCheckbox );
 			snakValueEditor.elements.push( oldStyleCheckboxLabel );
 
-			snakValueEditor.setDataValue = function( datavalue ) {
+			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				if ( !/^[\\+\\-]00000/.test( datavalue.value.time ) ) {
 					snakValueEditor.switchDataType( 'time', datavalue );
 				}
@@ -776,7 +1168,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			years.change( changeF );
 			years.keyup( changeF );
 		} )();
-	} else if ( dataType === 'time-years' ) {
+	} else if ( editorDataType === 'time-years' ) {
 		( function() {
 
 			snakValueEditor.elements.push( selectDateTimePrecision );
@@ -787,7 +1179,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			snakValueEditor.elements.push( oldStyleCheckbox );
 			snakValueEditor.elements.push( oldStyleCheckboxLabel );
 
-			snakValueEditor.setDataValue = function( datavalue ) {
+			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				if ( !/^[\\+\\-]00000/.test( datavalue.value.time ) ) {
 					snakValueEditor.switchDataType( 'time', datavalue );
 				}
@@ -830,11 +1222,11 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			years.change( changeF );
 			years.keyup( changeF );
 		} )();
-	} else if ( dataType === 'wikibase-item' ) {
+	} else if ( editorDataType === 'wikibase-item' ) {
 		( function() {
 			var input = $( '<input type="text" class="wef_wikibase-item">' );
 			snakValueEditor.elements.push( input );
-			snakValueEditor.setDataValue = function( datavalue ) {
+			snakValueEditor.setDataValueImpl = function( datavalue ) {
 				var entityId = 'Q' + datavalue.value['numeric-id'];
 				input.data( 'value-entity-id', entityId );
 				input.data( 'value-entity-label', '' );
@@ -893,9 +1285,7 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 					var term = request.term;
 					$.ajax( {
 						dataType: 'json',
-						url: '//www.wikidata.org/w/api.php' //
-								+ '?origin=' + encodeURIComponent( location.protocol + wgServer ) // 
-								+ '&format=json' // 
+						url: WEF_Utils.getWikidataApiPrefix() // 
 								+ '&action=wbsearchentities' //
 								+ '&language=' + encodeURIComponent( wgContentLanguage ) // 
 								+ '&limit=15' //
@@ -969,10 +1359,14 @@ var WEF_SnakValueEditor = function( dataType, allowToSimplify ) {
 			input.keyup( changeF );
 		} )();
 	} else {
-		snakValueEditor.elements.push( $( '<b>Unknown type: ' + dataType + '</b>' ) );
+		snakValueEditor.elements.push( $( '<b>Unknown type: ' + editorDataType + '</b>' ) );
 		snakValueEditor.getAsLabel = function() {
-			return $( '<i>Unknown type: ' + dataType + '</i>' );
+			return $( '<i>Unknown type: ' + editorDataType + '</i>' );
 		};
+	}
+
+	if ( typeof dataValue !== 'undefined' ) {
+		this.setDataValueImpl( dataValue );
 	}
 };
 
@@ -1035,9 +1429,9 @@ var WEF_SelectSnakType = function() {
 		}
 	}
 
-	$( '<option value="value">' ).appendTo( select ).text( i18n.snakTypeValue );
-	$( '<option value="novalue">' ).appendTo( select ).text( i18n.snakTypeNoValue );
-	$( '<option value="somevalue">' ).appendTo( select ).text( i18n.snakTypeSomeValue );
+	$( '<option value="value">' ).appendTo( select ).text( i18n.snakTypeValue ).attr( 'title', i18n.snakTypeValueTitle );
+	$( '<option value="novalue">' ).appendTo( select ).text( i18n.snakTypeNoValue ).attr( 'title', i18n.snakTypeNoValueTitle );
+	$( '<option value="somevalue">' ).appendTo( select ).text( i18n.snakTypeSomeValue ).attr( 'title', i18n.snakTypeSomeValueTitle );
 
 	select.click( changeF );
 	select.change( changeF );
@@ -1090,9 +1484,12 @@ mediaWiki.loader.using( [ 'jquery.ui.button' ], function() {
 	} );
 } );
 
-var WEF_SnakEditor = function( dataType ) {
-	if ( typeof dataType === 'undefined' ) {
-		throw new Error( "DataType is not specified" );
+var WEF_SnakEditor = function( parent, propertyId ) {
+	if ( $.isEmpty( parent ) ) {
+		throw new Error( "parent is empty or not specified" );
+	}
+	if ( $.isEmpty( propertyId ) ) {
+		throw new Error( "propertyId is empty or not specified" );
 	}
 
 	var i18n = wef_Editors_i18n;
@@ -1100,8 +1497,9 @@ var WEF_SnakEditor = function( dataType ) {
 
 	this.snakTypeMode = null;
 	this.valueEditor = null;
+	this.propertyId = propertyId;
 
-	var butttonSelectSnakType = $( '<button >' );
+	var butttonSelectSnakType = $( '<button class="wef_select_snak_type_button">' );
 	butttonSelectSnakType.button( {
 		icons: {
 			primary: 'ui-icon-triangle-1-e'
@@ -1117,31 +1515,20 @@ var WEF_SnakEditor = function( dataType ) {
 				snakEditor.switchToSnakType( value );
 			} );
 		}
-	} ).addClass( 'wef_select_snak_type_button' );
+	} );
 
 	// JQuery parent element
-	this.parent = null;
-	this.table = $( '<table class="wef_snak_table">' );
+	this.table = $( '<table class="wef_snak_table">' ).appendTo( parent );
 	var tr = $( '<tr></tr>' ).appendTo( this.table );
+	var td1 = $( '<td class="wef_button_cell">' ).appendTo( tr );
+	var td2 = $( '<td class="wef_snak_table_value_editor_cell">' ).appendTo( tr );
+	var snakTypeLabel = $( '<span class="wef_snak_type_label"></span>' ).appendTo( td2 );
+
+	td1.append( butttonSelectSnakType );
+
 	this.hiddenBehindLabel = false;
 
-	this.appendTo = function( parent ) {
-		this.parent = parent;
-		this.table.appendTo( this.parent );
-		tr.append( $( '<td class="wef_button_cell">' ).append( butttonSelectSnakType ) );
-		if ( this.valueEditor !== null ) {
-			var td2 = $( '<td class="wef_snak_table_value_editor_cell">' ).appendTo( tr );
-			td2.append( this.valueEditor.elements );
-		}
-	};
-
 	this.hideBehindLabel = function() {
-		// assuming valueEditor is not null and parent is set
-		if ( this.parent === null )
-			throw new Error( "parent is not set yet to hide behind label" );
-		if ( this.valueEditor === null )
-			throw new Error( "valueEditor is not set yet to hide behind label" );
-
 		var label = $( '<span></span>' );
 		label.css( 'cursor', 'pointer' );
 
@@ -1153,51 +1540,75 @@ var WEF_SnakEditor = function( dataType ) {
 
 		this.table.before( label );
 		this.table.hide();
-		this.valueEditor.hide();
 
 		snakEditor.hiddenBehindLabel = true;
 		label.click( function() {
 			label.remove();
 			snakEditor.table.show();
-			if ( snakEditor.snakTypeMode === 'value' ) {
-				snakEditor.valueEditor.show();
-			}
 			snakEditor.hiddenBehindLabel = false;
 		} );
 
 		return label;
 	};
 
+	function showSnakTypeLabel( snakType ) {
+		if ( snakType === 'novalue' ) {
+			snakTypeLabel.text( i18n.snakTypeNoValue ).attr( 'title', i18n.snakTypeNoValueTitle );
+		} else if ( snakType === 'somevalue' ) {
+			snakTypeLabel.text( i18n.snakTypeSomeValue ).attr( 'title', i18n.snakTypeSomeValueTitle );
+		} else {
+			snakTypeLabel.text( '' ).attr( 'title', '' );
+		}
+		snakTypeLabel.show();
+	}
+
+	function initValueEditor() {
+		td2.append( snakEditor.valueEditor.elements );
+		$( snakEditor.valueEditor ).change( function() {
+			$( snakEditor ).change();
+		} );
+	}
+
 	this.switchToSnakType = function( snakType ) {
-		if ( this.snakTypeMode === snakType ) {
+		var oldSnakType = this.snakTypeMode;
+		if ( oldSnakType === snakType ) {
 			return;
 		}
 
+		this.snakTypeMode = snakType;
 		if ( this.valueEditor !== null ) {
 			this.valueEditor.hide();
 		}
-		this.elements = [];
-		this.snakTypeMode = snakType;
 
 		var _this = this;
 		if ( snakType === 'value' ) {
 			if ( this.valueEditor === null ) {
-				this.valueEditor = new WEF_SnakValueEditor( dataType );
-				if ( this.parent !== null ) {
-					var parent = this.parent;
-					parent.append( this.valueEditor.elements );
-				}
-				$( this.valueEditor ).change( function() {
+				wef_TypesCache.getPropertyType( propertyId, function( datatype ) {
+					snakTypeLabel.hide();
+					_this.valueEditor = new WEF_SnakValueEditor( dataType, undefined );
+					initValueEditor();
 					$( _this ).change();
+				}, function( failureReason ) {
+					alert( "Can't change snak value type bacause property data type is unknown: " + failureReason );
+					_this.snakTypeMode = oldSnakType;
 				} );
 			}
-			this.valueEditor.show();
+		} else {
+			showSnakTypeLabel( snakType );
+			$( this ).change();
 		}
-		$( this ).change();
 	};
 
-	this.hasValue = function() {
-		return this.valueEditor.hasValue();
+	this.hasData = function() {
+		return this.snakTypeMode !== 'value' || this.valueEditor.hasValue();
+	};
+
+	/** @return {string} */
+	this.getDataType = function() {
+		if ( this.snakTypeMode !== 'value' ) {
+			throw new Error( 'data type make sence only when snak type is "value"' );
+		}
+		return this.valueEditor.dataDataType;
 	};
 
 	this.getDataValue = function() {
@@ -1208,16 +1619,28 @@ var WEF_SnakEditor = function( dataType ) {
 		this.valueEditor.removeValue();
 	};
 
-	this.setDataValue = function( datavalue ) {
-		this.valueEditor.setDataValue( datavalue );
+	this.initWithValue = function( snak ) {
+		this.snakTypeMode = snak.snaktype;
+		if ( snak.snaktype === 'value' ) {
+			if ( typeof snak.datatype === 'undefined' ) {
+				throw new Error( 'Snak contains value, but does not specify data type' );
+			}
+			if ( typeof snak.datavalue === 'undefined' ) {
+				throw new Error( 'Snak type is value, but value does not present' );
+			}
+			this.valueEditor = new WEF_SnakValueEditor( snak.datatype, snak.datavalue );
+			initValueEditor();
+		} else {
+			showSnakTypeLabel( snak.snaktype );
+		}
+
 		$( this ).change();
 	};
 
-	this.load = function( snak ) {
-		this.switchToSnakType( snak.snaktype );
-		if ( snak.snaktype === 'value' ) {
-			this.setDataValue( snak.datavalue );
-		}
+	this.initEmpty = function( dataType ) {
+		this.snakTypeMode = 'value';
+		this.valueEditor = new WEF_SnakValueEditor( dataType, undefined );
+		initValueEditor();
 	};
 
 	this.remove = function() {
@@ -1230,8 +1653,6 @@ var WEF_SnakEditor = function( dataType ) {
 		this.valueEditor = null;
 		this.parent = null;
 	};
-
-	this.switchToSnakType( 'value' );
 };
 
 /**
@@ -1304,6 +1725,184 @@ function WEF_filterClaims( definition, claims ) {
 	throw new Error( "Illegal state" );
 }
 
+var WEF_QualifierEditor = function( parent, qualifierDefinitions, onRemove ) {
+
+	var i18n = wef_Editors_i18n;
+	var qualifiedEditor = this;
+
+	var qualifierRow = $( '<tr></tr>' ).appendTo( parent );
+	/** @type {WEF_ItemSelect} */
+	var qualifierSelect = new WEF_ItemSelect();
+	qualifierSelect.select.appendTo( $( '<td class="wef_qualifiers_select_cell" ></td>' ).appendTo( qualifierRow ) );
+	var qualifierEditCell = $( '<td  class="wef_qualifiers_edit_cell"></td>' ).appendTo( qualifierRow );
+	var qualifierRemoveCell = $( '<td class="wef_button_cell"></td>' ).appendTo( qualifierRow );
+
+	if ( $.isArray( qualifierDefinitions ) ) {
+		$.each( qualifierDefinitions, function( index, qualifierDefinition ) {
+			var code = qualifierDefinition.code;
+			qualifierSelect.addOption( code );
+
+			if ( !$.isEmpty( qualifierDefinition.datatype ) ) {
+				wef_TypesCache.putInCache( code, qualifierDefinition.datatype );
+			}
+		} );
+	}
+
+	// do not select the first
+	qualifierSelect.val( null );
+
+	qualifierSelect.hideBehindLabel = function() {
+		var label = $( '<span></span>' );
+		label.css( 'cursor', 'pointer' );
+
+		var code = qualifierSelect.val();
+		label.text( '(' + qualifierSelect.val() + '): ' );
+		wef_LabelsCache.getOrQueue( code, function( newLabel, newDescription ) {
+			label.text( newLabel + ': ' );
+			label.attr( 'title', newDescription );
+		} );
+
+		qualifierSelect.select.before( label );
+		qualifierSelect.select.hide();
+
+		label.click( function() {
+			label.remove();
+			qualifierSelect.select.show();
+		} );
+		return label;
+	};
+
+	/** @type {string} */
+	var property = null;
+	/** @type {WEF_SnakEditor} */
+	var snakEditor = null;
+	/** @type {WEF_Snak} */
+	var wikidataSnak = null;
+	/** @type {string} */
+	var wikidataOldValue = null;
+
+	var getSnakValue = function() {
+		if ( !qualifiedEditor.hasData() ) {
+			throw new Error( 'no data' );
+		}
+
+		var snak = {};
+		if ( wikidataSnak !== null ) {
+			snak.hash = wikidataSnak.hash;
+		}
+		snak.snaktype = snakEditor.snakTypeMode;
+		snak.property = property;
+		if ( snakEditor.snakTypeMode === 'value' ) {
+			snak.datatype = snakEditor.getDataType();
+			snak.datavalue = snakEditor.getDataValue();
+		}
+		return snak;
+	};
+
+	function setProperty( qProperty ) {
+		property = qProperty;
+
+		// do we have qualifier input already?
+		if ( snakEditor == null ) {
+			snakEditor = new WEF_SnakEditor( qualifierEditCell, qProperty );
+			snakEditor.propertyId = qProperty;
+			snakEditor.initEmpty( /* XXX */);
+		} else {
+			if ( snakEditor.propertyId === qProperty ) {
+				// leave as it is
+			} else {
+				snakEditor.remove();
+				snakEditor = new WEF_SnakEditor( qualifierEditCell, qProperty );
+				snakEditor.propertyId == qProperty;
+			}
+		}
+		qualifierSelect.val( qProperty );
+	}
+
+	qualifierSelect.select.change( function() {
+		var propertyId = qualifierSelect.val();
+		if ( propertyId != null ) {
+			setProperty( propertyId );
+		}
+	} );
+
+	this.clear = function() {
+		property = null;
+		snakEditor = null;
+		qualifierRow.remove();
+	};
+
+	/**
+	 * @param claimData
+	 *            {WEF_Claim}
+	 * @return {Boolean}
+	 */
+	this.collectUpdates = function( claimData ) {
+		if ( this.hasData() ) {
+			WEF_Utils.appendToNamedMap( claimData, 'qualifiers', property, getSnakValue() );
+			return JSON.stringify( getSnakValue() ) !== wikidataOldValue;
+		} else {
+			/*
+			 * just ignore it and do not add to claim -- it will be removed as
+			 * "missing" one
+			 */
+			return wikidataOldValue !== null;
+		}
+	};
+
+	/** @return {string} */
+	this.getHash = function() {
+		return wikidataSnak.hash != null ? wikidataSnak.hash : null;
+	};
+
+	this.hasData = function() {
+		return property != null && snakEditor.hasData();
+	};
+
+	this.initWithValue = function( qualifier ) {
+		qualifierSelect.val( qualifier.property );
+
+		wikidataSnak = qualifier;
+		setProperty( qualifier.property );
+
+		// must present now -- after setProperty() call
+		snakEditor.initWithValue( qualifier );
+
+		// remember old value
+		this.wikidataOldValue = this.hasData() ? JSON.stringify( getSnakValue() ) : null;
+
+		var selectLabel = qualifierSelect.hideBehindLabel();
+		var editorLabel = snakEditor.hideBehindLabel();
+		qualifierRemoveCell.css( 'visibility', 'hidden' );
+
+		var firstTime = true;
+		qualifierRow.click( function( evt ) {
+			if ( firstTime ) {
+				firstTime = false;
+				qualifierRemoveCell.css( 'visibility', 'inherit' );
+
+				var target = $( evt.target );
+				if ( !selectLabel.is( target ) && !$.contains( selectLabel[0], target ) ) {
+					selectLabel.click();
+				}
+				if ( !editorLabel.is( target ) && !$.contains( editorLabel[0], target ) ) {
+					editorLabel.click();
+				}
+			}
+		} );
+	};
+
+	$( '<button type="button"></button>' ).button( {
+		icons: {
+			primary: 'ui-icon-trash'
+		},
+		text: false,
+		label: i18n.buttonRemoveQualifier,
+	} ).click( function() {
+		onRemove( qualifiedEditor );
+	} ).addClass( 'wef_qualifier_button' ).appendTo( qualifierRemoveCell );
+};
+
 /**
  * Creates editor from definition. Definition includes:
  * <ul>
@@ -1332,12 +1931,11 @@ function WEF_filterClaims( definition, claims ) {
  * On exit there is an editor structure:
  * <ul>
  * <li><tt>tbody</tt> -- jQuery HTML TBODY element of editor
- * <li><tt>updates( updates )</tt> -- updates special structure:
+ * <li><tt>collectUpdates( updates )</tt> -- updates special structure:
  * <ul>
  * <li><tt>data</tt> -- JSON structure to be sent to <tt>wgeditclaims</tt> to update Wikidata claim
  * <li><tt>removedClaims</tt> -- list of claims ID to be removed
  * </ul>
- * <li><tt>afterAppend( )</tt> -- method must be called after element placement
  * <li><tt>hide( )</tt> -- method to hide editor  
  * <li><tt>show( )</tt> -- method to show editor  
  * <li><tt>hideLabel( placeholderText )</tt> -- hide label (optionally replace with placeholder)  
@@ -1442,7 +2040,7 @@ var WEF_ClaimEditor = function( definition ) {
 		} );
 	}
 
-	var snakEditor = new WEF_SnakEditor( definition.datatype );
+	var snakEditor = new WEF_SnakEditor( inputCell, isPropertyEditor ? propertyId : qualifierPropertyId );
 
 	/* TBODY */
 	this.hide = function() {
@@ -1452,8 +2050,6 @@ var WEF_ClaimEditor = function( definition ) {
 		this.tbody.show();
 	};
 	this.afterAppend = function() {
-		snakEditor.appendTo( inputCell );
-
 		// set aucomplete if defined
 		if ( definition.datatype === 'string' && typeof ( definition.autocomplete ) === "object" ) {
 			var input = snakEditor.valueEditor.elements[0];
@@ -1506,8 +2102,8 @@ var WEF_ClaimEditor = function( definition ) {
 	this.wikidataSnak = null;
 	this.wikidataOldValue = null;
 
-	this.hasValue = function() {
-		return snakEditor.hasValue();
+	this.hasData = function() {
+		return snakEditor.hasData();
 	};
 	this.removeValue = function() {
 		snakEditor.removeValue();
@@ -1520,8 +2116,8 @@ var WEF_ClaimEditor = function( definition ) {
 	};
 
 	this.getSnakValue = function() {
-		if ( snakEditor.snakTypeMode === 'value' && !this.hasValue() ) {
-			throw new Error( 'no value' );
+		if ( !this.hasData() ) {
+			throw new Error( 'no data' );
 		}
 
 		var snak = {};
@@ -1549,7 +2145,12 @@ var WEF_ClaimEditor = function( definition ) {
 		$( claimEditor ).change();
 	} );
 
-	this.load = function( claim ) {
+	this.initEmpty = function() {
+		// we have definition only
+		snakEditor.initEmpty( definition.datatype );
+	};
+
+	this.initWithValue = function( claim ) {
 
 		claimEditor.wikidataClaim = claim;
 
@@ -1557,7 +2158,10 @@ var WEF_ClaimEditor = function( definition ) {
 			// load property main snak
 			claimEditor.wikidataSnak = claim.mainsnak;
 			if ( claim.mainsnak ) {
-				snakEditor.load( claim.mainsnak );
+				snakEditor.initWithValue( claim.mainsnak );
+			} else {
+				// WTF?
+				snakEditor.initEmpty( definition.datatype );
 			}
 		} else if ( isQualifierEditor ) {
 			/*
@@ -1574,12 +2178,12 @@ var WEF_ClaimEditor = function( definition ) {
 
 			var qualifier = qualifiers[0];
 			claimEditor.wikidataSnak = qualifier;
-			snakEditor.load( qualifier );
+			snakEditor.initWithValue( qualifier );
 		} else {
 			throw new Error( "Unsupported code: " + definition.code );
 		}
 
-		claimEditor.wikidataOldValue = this.hasValue() ? JSON.stringify( this.getSnakValue() ) : null;
+		claimEditor.wikidataOldValue = this.hasData() ? JSON.stringify( this.getSnakValue() ) : null;
 
 		if ( typeof claim.qualifiers !== 'undefined' ) {
 			$.each( claim.qualifiers, function( property, qualifiers ) {
@@ -1587,8 +2191,8 @@ var WEF_ClaimEditor = function( definition ) {
 					return;
 				}
 				$.each( qualifiers, function( index, qualifier ) {
-					var qualifierHolder = claimEditor.addQualifier();
-					qualifierHolder.load( qualifier );
+					var qualifierEditor = claimEditor.addQualifier();
+					qualifierEditor.initWithValue( qualifier );
 				} );
 			} );
 		}
@@ -1598,34 +2202,20 @@ var WEF_ClaimEditor = function( definition ) {
 	 * @param updates
 	 *            {WEF_Updates}
 	 */
-	this.updates = function( updates ) {
+	this.collectUpdates = function( updates ) {
 		if ( this.disabled ) {
 			return;
 		}
 
-		// util functions
-		var appendToNamedMap = function( element, mapName, key, obj ) {
-			if ( typeof element === 'undefined' ) {
-				throw new Error( 'Illegal argument: element is undefined' );
-			}
-			if ( typeof element[mapName] === 'undefined' ) {
-				element[mapName] = {};
-			}
-			if ( typeof element[mapName][key] === 'undefined' ) {
-				element[mapName][key] = [];
-			}
-			element[mapName][key].push( obj );
-		};
-
 		// check if we have any changes
-		var hasValue = snakEditor.snakTypeMode !== 'value' || snakEditor.hasValue();
-		var newSnak = hasValue ? this.getSnakValue() : null;
+		var hasData = snakEditor.hasData();
+		var newSnak = hasData ? this.getSnakValue() : null;
 
 		var oldClaim = this.wikidataClaim;
 		var oldSnak = this.wikidataSnak;
 		var oldSnakStr = this.wikidataOldValue;
 
-		if ( !hasValue ) {
+		if ( !hasData ) {
 			if ( oldClaim != null ) {
 				updates.removedClaims.push( oldClaim.id );
 			}
@@ -1665,7 +2255,7 @@ var WEF_ClaimEditor = function( definition ) {
 				if ( oldSnak !== null ) {
 					qualifier.hash = oldSnak.hash;
 				}
-				appendToNamedMap( claim, 'qualifiers', qualifierPropertyId, qualifier );
+				WEF_Utils.appendToNamedMap( claim, 'qualifiers', qualifierPropertyId, qualifier );
 			} else {
 				throw new Error( "Unsupported code: " + definition.code );
 			}
@@ -1673,40 +2263,23 @@ var WEF_ClaimEditor = function( definition ) {
 			needToUpdate = needToUpdate || ( JSON.stringify( newSnak ) !== oldSnakStr );
 
 			// save qualifiers
-			$.each( claimEditor.qualifiers, function( index, qualifierHolder ) {
-				if ( qualifierHolder.editor === null ) {
-					// we didn't select property type for qualifier
-					return;
-				}
-
-				var qHasValue = qualifierHolder.editor.snakTypeMode !== 'value' || qualifierHolder.editor.hasValue();
-				var qNewSnak = qHasValue ? qualifierHolder.getSnakValue() : null;
-
-				var qOldSnakStr = qualifierHolder.wikidataOldValue;
-
-				if ( !qHasValue ) {
-					// remove qualifier from table and add it hash to
-					// this.removedQualifiersHashes
-					qualifierHolder.onRemove();
-				} else {
-					// always add qualifier, otherwise it will be removed!
-					appendToNamedMap( claim, 'qualifiers', qualifierHolder.property, qNewSnak );
-
-					needToUpdate = needToUpdate || ( JSON.stringify( qNewSnak ) !== qOldSnakStr );
-				}
+			$.each( claimEditor.qualifiers, function( index, qualifierEditor ) {
+				needToUpdate = qualifierEditor.collectUpdates( claim ) || needToUpdate;
 			} );
 
 			needToUpdate = needToUpdate || ( claimEditor.removedQualifiersHashes.length > 0 );
 
 			if ( needToUpdate ) {
-				appendToNamedMap( updates.data, 'claims', propertyId, claim );
+				WEF_Utils.appendToNamedMap( updates.data, 'claims', propertyId, claim );
 			}
 		}
 	};
 
 	/* Qualifiers support */
 
+	/** @type {WEF_QualifierEditor[]} */
 	this.qualifiers = [];
+	/** @type {string[]} */
 	this.removedQualifiersHashes = [];
 
 	/* Add qualifier button */
@@ -1724,173 +2297,17 @@ var WEF_ClaimEditor = function( definition ) {
 		beforeInputCell.append( newButton );
 	}
 
-	this.addQualifier = function() {
-		var qualifierRow = $( '<tr></tr>' ).appendTo( bottomContentTable );
-		/** @type {WEF_ItemSelect} */
-		var qualifierSelect = new WEF_ItemSelect();
-		qualifierSelect.select.appendTo( $( '<td class="wef_qualifiers_select_cell" ></td>' ).appendTo( qualifierRow ) );
-		var qualifierEditCell = $( '<td  class="wef_qualifiers_edit_cell"></td>' ).appendTo( qualifierRow );
-		var qualifierRemoveCell = $( '<td class="wef_button_cell"></td>' ).appendTo( qualifierRow );
-
-		if ( $.isArray( definition.qualifiers ) ) {
-			$.each( definition.qualifiers, function( index, qualifierDefinition ) {
-				var code = qualifierDefinition.code;
-				var option = qualifierSelect.addOption( code );
-				option.data( 'property', code );
-				option.data( 'datatype', qualifierDefinition.datatype );
-			} );
+	function onQualifierRemove( qualifierEditor ) {
+		var hash = qualifierEditor.getHash();
+		if ( hash !== null ) {
+			claimEditor.removedQualifiersHashes.push( hash );
 		}
+	}
 
-		// do not select the first
-		qualifierSelect.val( null );
-
-		qualifierSelect.hideBehindLabel = function() {
-			var select = this.select;
-			var label = $( '<span></span>' );
-			label.css( 'cursor', 'pointer' );
-
-			var code = select.val();
-			label.text( '(' + select.val() + '): ' );
-			wef_LabelsCache.getOrQueue( code, function( newLabel, newDescription ) {
-				label.text( newLabel + ': ' );
-				label.attr( 'title', newDescription );
-			} );
-
-			select.before( label );
-			select.hide();
-
-			label.click( function() {
-				label.remove();
-				select.show();
-			} );
-			return label;
-		};
-
-		var qualifierHolder = {
-			tbody: qualifierRow,
-			select: qualifierSelect,
-
-			property: null,
-			datatype: null,
-			editor: null,
-			wikidataSnak: null,
-
-			setProperty: function( qProperty, qDatatype ) {
-				this.property = qProperty;
-				this.datatype = qDatatype;
-
-				// do we have qualifier input already?
-				if ( this.editor == null ) {
-					this.editor = new WEF_SnakEditor( qDatatype );
-					this.editor.property = qProperty;
-					this.editor.appendTo( qualifierEditCell );
-				} else {
-					if ( this.editor.property === qProperty ) {
-						// leave as it is
-					} else {
-						this.editor.remove();
-						this.editor = new WEF_SnakEditor( qDatatype );
-						this.editor.property == qProperty;
-						this.editor.appendTo( qualifierEditCell );
-					}
-				}
-				qualifierSelect.val( qProperty );
-			},
-
-			hasValue: function() {
-				return this.editor.hasValue();
-			},
-
-			getSnakValue: function() {
-				if ( this.editor.snakTypeMode === 'value' && !this.hasValue() ) {
-					throw new Error( 'no value' );
-				}
-
-				var snak = {};
-				if ( this.wikidataSnak !== null ) {
-					snak.hash = this.wikidataSnak.hash;
-				}
-				snak.snaktype = snakEditor.snakTypeMode;
-				snak.property = this.property;
-				snak.datatype = this.datatype;
-				if ( this.editor.snakTypeMode === 'value' ) {
-					snak.datavalue = this.editor.getDataValue();
-				}
-				return snak;
-			},
-
-			load: function( qualifier ) {
-
-				var option = qualifierSelect.val( qualifier.property );
-				option.data( 'property', qualifier.property );
-				option.data( 'datatype', qualifier.datatype );
-
-				this.wikidataSnak = qualifier;
-				var property = qualifier.property;
-				var datatype = qualifier.datatype;
-				this.setProperty( property, datatype );
-
-				// must present now
-				this.editor.load( qualifier );
-				// remember old value
-				this.wikidataOldValue = this.hasValue() ? JSON.stringify( this.getSnakValue() ) : null;
-
-				var selectLabel = qualifierSelect.hideBehindLabel();
-				var editorLabel = this.editor.hideBehindLabel();
-				qualifierRemoveCell.css( 'visibility', 'hidden' );
-
-				var firstTime = true;
-				qualifierRow.click( function( evt ) {
-					if ( firstTime ) {
-						firstTime = false;
-						qualifierRemoveCell.css( 'visibility', 'inherit' );
-
-						var target = $( evt.target );
-						if ( !selectLabel.is( target ) && !$.contains( selectLabel[0], target ) ) {
-							selectLabel.click();
-						}
-						if ( !editorLabel.is( target ) && !$.contains( editorLabel[0], target ) ) {
-							editorLabel.click();
-						}
-					}
-				} );
-			}
-		};
-		qualifierHolder.onRemove = function() {
-			var index = claimEditor.qualifiers.indexOf( qualifierHolder );
-			if ( index !== -1 ) {
-				claimEditor.qualifiers.splice( index, 1 );
-				var snak = qualifierHolder.wikidataSnak;
-				if ( snak !== null && typeof ( snak.hash ) !== 'undefined' && snak.hash !== null ) {
-					claimEditor.removedQualifiersHashes.push( snak.hash );
-				}
-				qualifierRow.remove();
-			}
-		};
-
-		var removeButton = $( '<button type="button"></button>' );
-		removeButton.button( {
-			icons: {
-				primary: 'ui-icon-trash'
-			},
-			text: false,
-			label: i18n.buttonRemoveQualifier,
-		} ).click( function() {
-			qualifierHolder.onRemove();
-		} ).addClass( 'wef_qualifier_button' );
-		qualifierRemoveCell.append( removeButton );
-
-		qualifierSelect.select.change( function() {
-			var option = qualifierSelect.select.find( ":selected" );
-			if ( option.length > 0 ) {
-				var property = option.data( 'property' );
-				var datatype = option.data( 'datatype' );
-				qualifierHolder.setProperty( property, datatype );
-			}
-		} );
-
-		claimEditor.qualifiers.push( qualifierHolder );
-		return qualifierHolder;
+	this.addQualifier = function() {
+		var qualifierEditor = new WEF_QualifierEditor( bottomContentTable, definition.qualifiers, onQualifierRemove );
+		claimEditor.qualifiers.push( qualifierEditor );
+		return qualifierEditor;
 	};
 };
 
@@ -1936,6 +2353,10 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 
 	/** @returns {WEF_ClaimEditor} */
 	this.add = function() {
+		if ( !placed ) {
+			throw new Error( "Claims edit table is not placed on the form yet" );
+		}
+
 		var claimEditor = new WEF_ClaimEditor( definition );
 
 		var buttonAddClaim = ( function() {
@@ -1947,7 +2368,8 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 				text: false,
 				label: i18n.buttonAddClaim,
 			} ).click( function() {
-				propertyEditorsTable.add();
+				var editor = propertyEditorsTable.add();
+				editor.initEmpty();
 			} ).addClass( 'wef_property_button' );
 			return newButton;
 		} )();
@@ -1966,7 +2388,7 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 				.replace( '{code}', definition.label ) //
 				.replace( '{label}', wef_LabelsCache.getLabel( definition.label ) );
 
-				var r = !claimEditor.hasValue() || confirm( question );
+				var r = !claimEditor.hasData() || confirm( question );
 				if ( r ) {
 					claimEditor.removeValue();
 					claimEditor.hide();
@@ -1976,7 +2398,8 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 					 * existing
 					 */
 					if ( visibleDefinitionRows.length === 1 ) {
-						propertyEditorsTable.add();
+						var editor = propertyEditorsTable.add();
+						editor.initEmpty();
 					}
 
 					visibleDefinitionRows = jQuery.grep( visibleDefinitionRows, function( value ) {
@@ -1996,18 +2419,15 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 		visibleDefinitionRows.push( claimEditor );
 		allClaimEditors.push( claimEditor );
 
-		if ( placed ) {
-			// replaceAll already called
-			if ( temporaryHolder !== null ) {
-				claimEditor.tbody.replaceAll( temporaryHolder );
-				temporaryHolder = null;
-			} else {
-				var prev = visibleDefinitionRows[visibleDefinitionRows.length - 2].tbody;
-				var curr = visibleDefinitionRows[visibleDefinitionRows.length - 1].tbody;
-				curr.insertAfter( prev );
-			}
-			claimEditor.afterAppend();
+		if ( temporaryHolder !== null ) {
+			claimEditor.tbody.replaceAll( temporaryHolder );
+			temporaryHolder = null;
+		} else {
+			var prev = visibleDefinitionRows[visibleDefinitionRows.length - 2].tbody;
+			var curr = visibleDefinitionRows[visibleDefinitionRows.length - 1].tbody;
+			curr.insertAfter( prev );
 		}
+		claimEditor.afterAppend();
 
 		$( claimEditor ).change( function() {
 			changeF();
@@ -2017,30 +2437,29 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 	};
 
 	/**
-	 * Hide all input boxes behind labels, so interface looks much cleaner and
-	 * simpler
-	 */
-	this.hideBehindLabels = function() {
-		$.each( visibleDefinitionRows, function( i, editor ) {
-			editor.hideBehindLabel();
-		} );
-	};
-
-	/**
+	 * Init editor with values. Must be called after placement on the form.
+	 * 
 	 * @param entity
 	 *            {WEF_Entity}
 	 */
-	this.load = function( entity ) {
+	this.init = function( entity ) {
+		if ( !placed ) {
+			throw new Error( "Claims edit table is not placed on the form yet" );
+		}
+
 		/** @type {WEF_Claim[]} */
 		var claims = WEF_filterClaims( definition, entity.claims );
 
 		$.each( claims, function( i, claim ) {
 			/** @type {WEF_ClaimEditor} */
 			var editor = propertyEditorsTable.add();
-			editor.load( claim );
+			editor.initWithValue( claim );
 		} );
+
 		if ( this.size() === 0 ) {
-			propertyEditorsTable.add();
+			/** @type {WEF_ClaimEditor} */
+			var editor = this.add();
+			editor.initEmpty();
 		}
 	};
 
@@ -2050,18 +2469,9 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 		}
 		placed = true;
 
-		if ( visibleDefinitionRows.length < 1 ) {
-			// nothing loaded or created yet
-			temporaryHolder = $( '<tbody><!-- Temporary holder for ' + definition.code + ' --></tbody>' );
-			temporaryHolder.appendTo( target );
-			return;
-		}
-
-		for ( var i = 0; i < visibleDefinitionRows.length; i++ ) {
-			var claimEditor = visibleDefinitionRows[i];
-			claimEditor.tbody.appendTo( target );
-			claimEditor.afterAppend();
-		}
+		temporaryHolder = $( '<tbody><!-- Temporary holder for ' + definition.code + ' --></tbody>' );
+		temporaryHolder.appendTo( target );
+		return;
 	};
 
 	/** Replace each target element with the set of matched elements. */
@@ -2071,31 +2481,19 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 		}
 		placed = true;
 
-		if ( visibleDefinitionRows.length < 1 ) {
-			// nothing loaded or created yet
-			temporaryHolder = $( '<tbody><!-- Temporary holder for ' + definition.code + ' --></tbody>' );
-			temporaryHolder.replaceAll( target );
-			return;
-		}
-
-		for ( var i = 0; i < visibleDefinitionRows.length; i++ ) {
-			var claimEditor = visibleDefinitionRows[i];
-			if ( i === 0 ) {
-				claimEditor.tbody.replaceAll( target );
-			} else {
-				claimEditor.tbody.insertAfter( visibleDefinitionRows[i - 1].tbody );
-			}
-			claimEditor.afterAppend();
-		}
+		// nothing loaded or created yet
+		temporaryHolder = $( '<tbody><!-- Temporary holder for ' + definition.code + ' --></tbody>' );
+		temporaryHolder.replaceAll( target );
+		return;
 	};
 
 	this.size = function() {
 		return visibleDefinitionRows.length;
 	};
 
-	this.updates = function( updates ) {
+	this.collectUpdates = function( updates ) {
 		$.each( allClaimEditors, function( i, claimEditor ) {
-			claimEditor.updates( updates );
+			claimEditor.collectUpdates( updates );
 		} );
 	};
 };
@@ -2152,7 +2550,7 @@ function wef_save( claimEditorTables ) {
 	try {
 		var updates = new WEF_Updates();
 		$.each( claimEditorTables, function( i, claimEditorTable ) {
-			claimEditorTable.updates( updates );
+			claimEditorTable.collectUpdates( updates );
 		} );
 
 		if ( $.isEmptyObject( updates.data ) && updates.removedClaims.length === 0 ) {

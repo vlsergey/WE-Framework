@@ -5,19 +5,20 @@
 	border-collapse: collapse;
 }
 
-.wef_externalLinks_dialog th, .wef_externalLinks_dialog td {
+.wef_externalLinks_dialog .wef_externalLinks_dialog th,
+	.wef_externalLinks_dialog  .wef_externalLinks_dialog td {
 	padding: 0 0.1em;
 	margin: 0;
 	border-collapse: collapse;
 }
 
-.wef_fieldset {
+.wef_externalLinks_dialog .wef_fieldset {
 	margin: 0.1em;
 	padding: 0.1em;
 	line-height: 0.75em;
 }
 
-.wef_property_editor_tbody:nth-child(odd) {
+.wef_externalLinks_dialog .wef_property_editor_tbody:nth-child(odd) {
 	background-color: rgba(0, 0, 0, 0.10);
 }
 
@@ -42,4 +43,8 @@
 	overflow: hidden;
 	position: absolute;
 	white-space: nowrap;
+}
+
+.wef_dialog_no_close .ui-dialog-titlebar-close {
+	display: none;
 }

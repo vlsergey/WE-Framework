@@ -15,7 +15,7 @@ var wef_PersonEditor_i18n_en = {
 	dialogButtonSaveLabel: 'Close the dialog and save all changes to Wikidata',
 	dialogButtonCloseText: 'Cancel',
 	dialogButtonCloseLabel: 'Close the dialog and discard all changes (do not save)',
-	dialogTitle: 'Person data — «{1}» — WE-Framework',
+	dialogTitle: 'Person data — WE-Framework',
 
 	fieldsetBirth: 'Birth',
 	fieldsetDeath: 'Death',
@@ -47,7 +47,7 @@ var wef_PersonEditor_i18n_ru = {
 	dialogButtonSaveLabel: 'Закрыть окно и сохранить все изменения в Викиданных',
 	dialogButtonCloseText: 'Отмена',
 	dialogButtonCloseLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
-	dialogTitle: 'Свойства персоны — «{1}» — WE-Framework',
+	dialogTitle: 'Свойства персоны — WE-Framework',
 
 	fieldsetBirth: 'Рождение',
 	fieldsetDeath: 'Смерть',
@@ -92,12 +92,7 @@ var WEF_PersonEditor = function() {
 	this.enabled = /^Q\d+$/.test( entityId );
 
 	this.init = function() {
-		var languages = [ 'ru', 'en', wgContentLanguage, wgUserLanguage ];
-		$.each( languages, function( i, lang ) {
-			if ( window['wef_PersonEditor_i18n_' + lang] ) {
-				$.extend( i18n, window['wef_PersonEditor_i18n_' + lang] );
-			}
-		} );
+		WEF_Utils.localize( i18n, 'wef_PersonEditor_i18n_' );
 	};
 
 	this.addEditButtons = function() {
@@ -182,7 +177,7 @@ var WEF_PersonEditor = function() {
 
 		this.load = function( entity ) {
 			$.each( claimEditorsTables, function( i, claimEditorsTable ) {
-				claimEditorsTable.load( entity );
+				claimEditorsTable.init( entity );
 			} );
 		};
 
@@ -222,13 +217,11 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 	importStylesheet( 'MediaWiki:WEF_PersonEditor.css' );
 	importScript( 'MediaWiki:WEF_Editors.js' );
 	importStylesheet( 'MediaWiki:WEF_Editors.css' );
-	importScript( 'MediaWiki:WEF_LabelsCache.js' );
 } else {
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_PersonEditor.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_LabelsCache.js&ctype=text/javascript&action=raw&maxage=86400&smaxage=21600' );
 }
 
 mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.datepicker', 'jquery.ui.dialog', 'jquery.ui.selectable', 'jquery.ui.tabs' ], function() {
