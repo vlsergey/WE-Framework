@@ -1,7 +1,8 @@
 /**
- * This JavaScrtipt classes are main core of WE-Framework to edit Wikidata using
- * JQuery dialogs. They provide classes to edit to edit snak values, snaks,
- * claims, and claim groups (of the same property)
+ * Those JavaScrtipt classes are main core of WE-Framework to edit Wikidata
+ * using JQuery dialogs. They provide classes to edit snak values, snaks,
+ * claims, and claim groups (of the same property). For the examples how to use
+ * those classes see "WEF_ExternalLinks.js" and "WEF_PersonEditor.js".
  * 
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
@@ -67,12 +68,12 @@ var wef_Editors_i18n_en = {
 	timePrecision6: 'Kiloyear',
 	timePrecision7: '100 years',
 	timePrecision8: '10 years',
-	timePrecision9: 'years',
-	timePrecision10: 'months',
-	timePrecision11: 'days',
-	timePrecision12: 'hours',
-	timePrecision13: 'minutes',
-	timePrecision14: 'seconds',
+	timePrecision9: 'year',
+	timePrecision10: 'month',
+	timePrecision11: 'day',
+	timePrecision12: 'hour',
+	timePrecision13: 'minute',
+	timePrecision14: 'second',
 	timePrecisionOther: 'other',
 };
 
@@ -388,7 +389,13 @@ var WEF_LabelsCache = function() {
 		}
 	};
 
-	/** Return cached value */
+	/**
+	 * Return cached value
+	 * 
+	 * @param key
+	 *            {string}
+	 * @returns {string}
+	 */
 	this.getLabel = function( key ) {
 		assertKeyCorrect( key );
 
@@ -406,7 +413,13 @@ var WEF_LabelsCache = function() {
 		return key;
 	};
 
-	/** Return cached value */
+	/**
+	 * Return cached value
+	 * 
+	 * @param key
+	 *            {string}
+	 * @returns {string}
+	 */
 	this.getDescription = function( key ) {
 		assertKeyCorrect( key );
 
@@ -429,7 +442,16 @@ var WEF_LabelsCache = function() {
 		return typeof ( value ) !== "undefined" && value !== null && value.length !== 0;
 	};
 
-	/** Return cached value or queue values to be received from Wikidata */
+	/**
+	 * Return cached value or queue values to be received from Wikidata
+	 * 
+	 * @param key
+	 *            {string}
+	 * @param listener
+	 *            {function(string,string)}callback to be called (may be several
+	 *            times) after cache or Wikidata retrieve
+	 * @return {string} immediatly available value
+	 */
 	this.getOrQueue = function( key, listener ) {
 		assertKeyCorrect( key );
 
@@ -761,7 +783,6 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 		WEF_SnakValueEditor.call( snakValueEditor, parent, newDataType, datavalue, options );
 	};
 
-	var formatDate = WEF_Utils.formatDate;
 	var selectDateTimePrecision, oldStyleCheckbox, oldStyleCheckboxLabel;
 
 	if ( editorDataType.substring( 0, 5 ) === "time-" ) {
@@ -1072,7 +1093,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 				return {
 					type: 'time',
 					value: {
-						time: formatDate( date.getFullYear(), date.getMonth() + 1, date.getDate() ),
+						time: WEF_Utils.formatDate( date.getFullYear(), date.getMonth() + 1, date.getDate() ),
 						timezone: 0,
 						precision: PRECISION_DAYS,
 						before: 0,
@@ -1134,7 +1155,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 				return {
 					type: 'time',
 					value: {
-						time: formatDate( years.val(), months.val() ),
+						time: WEF_Utils.formatDate( years.val(), months.val() ),
 						timezone: 0,
 						precision: PRECISION_MONTHS,
 						before: 0,
@@ -1189,7 +1210,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, dataValue, options ) {
 				return {
 					type: 'time',
 					value: {
-						time: formatDate( years.val() ),
+						time: WEF_Utils.formatDate( years.val() ),
 						timezone: 0,
 						precision: PRECISION_YEARS,
 						before: 0,
@@ -1625,7 +1646,8 @@ var WEF_SnakEditor = function( parent, options ) {
 		$( this ).change();
 	};
 
-	this.initEmptyWithDataType = function( dataType ) {
+	this.initEmptyWithDataType = function( propertyId, dataType ) {
+		this.propertyId = propertyId;
 		this.snakTypeMode = 'value';
 		this.valueEditor = new WEF_SnakValueEditor( td2, dataType, undefined, options );
 		initValueEditor();
@@ -1767,7 +1789,7 @@ var WEF_QualifierEditor = function( parent, qualifierDefinitions, onRemove ) {
 	};
 
 	/** @type {string} */
-	var property = null;
+	var propertyId = null;
 	/** @type {WEF_SnakEditor} */
 	var snakEditor = null;
 	/** @type {WEF_Snak} */
@@ -1785,7 +1807,7 @@ var WEF_QualifierEditor = function( parent, qualifierDefinitions, onRemove ) {
 			snak.hash = wikidataSnak.hash;
 		}
 		snak.snaktype = snakEditor.snakTypeMode;
-		snak.property = property;
+		snak.property = propertyId;
 		if ( snakEditor.snakTypeMode === 'value' ) {
 			snak.datatype = snakEditor.getDataType();
 			snak.datavalue = snakEditor.getDataValue();
@@ -1793,34 +1815,34 @@ var WEF_QualifierEditor = function( parent, qualifierDefinitions, onRemove ) {
 		return snak;
 	};
 
-	function setProperty( qProperty ) {
-		property = qProperty;
+	function setProperty( newPropertyId ) {
+		propertyId = newPropertyId;
 
 		// do we have qualifier input already?
 		if ( snakEditor == null ) {
 			snakEditor = new WEF_SnakEditor( qualifierEditCell );
-			snakEditor.initEmptyWithPropertyId( qProperty );
+			snakEditor.initEmptyWithPropertyId( newPropertyId );
 		} else {
-			if ( snakEditor.propertyId === qProperty ) {
+			if ( snakEditor.propertyId === newPropertyId ) {
 				// leave as it is
 			} else {
 				snakEditor.remove();
 				snakEditor = new WEF_SnakEditor( qualifierEditCell );
-				snakEditor.initEmptyWithPropertyId( qProperty );
+				snakEditor.initEmptyWithPropertyId( newPropertyId );
 			}
 		}
-		qualifierSelect.val( qProperty );
+		qualifierSelect.val( newPropertyId );
 	}
 
 	qualifierSelect.select.change( function() {
-		var propertyId = qualifierSelect.val();
-		if ( propertyId != null ) {
-			setProperty( propertyId );
+		var newPropertyId = qualifierSelect.val();
+		if ( newPropertyId != null && propertyId != newPropertyId ) {
+			setProperty( newPropertyId );
 		}
 	} );
 
 	this.clear = function() {
-		property = null;
+		propertyId = null;
 		snakEditor = null;
 		qualifierRow.remove();
 	};
@@ -1832,7 +1854,7 @@ var WEF_QualifierEditor = function( parent, qualifierDefinitions, onRemove ) {
 	 */
 	this.collectUpdates = function( claimData ) {
 		if ( this.hasData() ) {
-			WEF_Utils.appendToNamedMap( claimData, 'qualifiers', property, getSnakValue() );
+			WEF_Utils.appendToNamedMap( claimData, 'qualifiers', propertyId, getSnakValue() );
 			return JSON.stringify( getSnakValue() ) !== wikidataOldValue;
 		} else {
 			/*
@@ -1849,16 +1871,15 @@ var WEF_QualifierEditor = function( parent, qualifierDefinitions, onRemove ) {
 	};
 
 	this.hasData = function() {
-		return property != null && snakEditor.hasData();
+		return propertyId != null && snakEditor.hasData();
 	};
 
 	this.initWithValue = function( qualifier ) {
-		qualifierSelect.val( qualifier.property );
 
 		wikidataSnak = qualifier;
-		setProperty( qualifier.property );
-
-		// must present now -- after setProperty() call
+		propertyId = qualifier.property;
+		qualifierSelect.val( qualifier.property );
+		snakEditor = new WEF_SnakEditor( qualifierEditCell );
 		snakEditor.initWithValue( qualifier );
 
 		// remember old value
@@ -2132,7 +2153,7 @@ var WEF_ClaimEditor = function( definition ) {
 
 	this.initEmpty = function() {
 		// we have definition only
-		snakEditor.initEmptyWithDataType( definition.datatype );
+		snakEditor.initEmptyWithDataType( isPropertyEditor ? propertyId : qualifierPropertyId, definition.datatype );
 	};
 
 	this.initWithValue = function( claim ) {
@@ -2146,7 +2167,7 @@ var WEF_ClaimEditor = function( definition ) {
 				snakEditor.initWithValue( claim.mainsnak );
 			} else {
 				// WTF?
-				snakEditor.initEmptyWithDataType( definition.datatype );
+				snakEditor.initEmptyWithDataType( propertyId, definition.datatype );
 			}
 		} else if ( isQualifierEditor ) {
 			/*
