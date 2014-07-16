@@ -1328,6 +1328,8 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 							};
 							if ( typeof entity.description !== "undefined" ) {
 								item.desc = entity.description;
+							} else if ( $.isArray( entity.aliases ) ) {
+								item.desc = 'a.k.a.: ' + entity.aliases.join( '; ' );
 							}
 							list.push( item );
 						} );
