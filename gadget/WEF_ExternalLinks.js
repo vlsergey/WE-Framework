@@ -140,7 +140,6 @@ wef_ExternalLinks_i18n_ru = {
 		'Q4299813': 'Идентификатор «Мой круг» содержит недопустимые символы',
 		'Q4299858': 'Идентификатор «Мой мир» должен начинаться с одного из префиксов «bk/», «inbox/», «list/» или «mail/»',
 		'Q17117201': 'Идентификатор «PROMODJ» содержит недопустимые символы',
-		'Q17329360': 'URL для «Encyclopædia Britannica» должен начинаться с «http://global.britannica.com/»',
 		'Q17329836': 'URL для «Encyclopédie Larousse» должен начинаться с «http://www.larousse.fr/encyclopedie/»',
 	},
 
@@ -1041,6 +1040,27 @@ WEF_ExternalLinks = function() {
 		},
 		qualifiers: [],
 	} );
+	this.definitions.P1417 = new WEF_Definition( {
+		datatype: 'string',
+		flag: 'uk',
+		code: 'P1417',
+		label: 'Q17329360',
+		check: /^\d+$/,
+		buttons: [ {
+			icons: {
+				primary: 'ui-icon-search'
+			},
+			text: false,
+			label: 'Search on Encyclopædia Britannica website',
+			click: searchClickF( 'enwiki', function( title ) {
+				return 'http://global.britannica.com/search?query=' + encodeURIComponent( title );
+			} ),
+		} ],
+		url: function( id ) {
+			return 'http://global.britannica.com/EBchecked/topic/' + id + '/';
+		},
+		qualifiers: [ d.P50, d.P357, ],
+	} );
 
 	this.definitions.Q355 = new WEF_Definition( {
 		code: 'P553[Q355]/P554',
@@ -1486,24 +1506,6 @@ WEF_ExternalLinks = function() {
 		url: function( id ) {
 			return 'http://fan.lib.ru/' + id.charAt( 0 ) + '/' + id + '/';
 		}
-	} );
-	this.definitions.Q17329360 = new WEF_Definition( {
-		datatype: 'url',
-		flag: 'uk',
-		code: 'P1343[Q17329360]/P854',
-		label: 'Q17329360',
-		check: /^https?:\/\/(global\.|www\.)?britannica\/.com\//,
-		buttons: [ {
-			icons: {
-				primary: 'ui-icon-search'
-			},
-			text: false,
-			label: 'Search on Encyclopædia Britannica website',
-			click: searchClickF( 'enwiki', function( title ) {
-				return 'http://global.britannica.com/search?query=' + encodeURIComponent( title );
-			} ),
-		} ],
-		qualifiers: [ d.P50, d.P357, ],
 	} );
 	this.definitions.Q17329836 = new WEF_Definition( {
 		datatype: 'url',
@@ -1983,7 +1985,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q2627728,// Кругосвет
 		d.Q4263804,// Литературная
 		d.Q2498180,// Православная
-		d.Q17329360, // Encyclopædia Britannica online
+		d.P1417, // Encyclopædia Britannica online
 		d.Q17329836,// Encyclopédique Larousse en ligne
 		d.P902, // hls-dhs-dss.ch
 		d.P886, // e-lir.ch
