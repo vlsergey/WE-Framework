@@ -376,7 +376,7 @@ var WEF_Utils = {
 
 		var pattern = new RegExp( patterns.join( '|' ), 'g' );
 
-		return function( stored ) {
+		return function( displayed ) {
 			return displayed.replace( pattern, function( match ) {
 				return map[match];
 			} );
@@ -808,7 +808,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 	this.removeValue = unsupportedF;
 
 	this.getDataValue = unsupportedF;
-	this.setDataValueImpl = unsupportedF;
+	this.setDataValue = unsupportedF;
 
 	this.getAsLabel = unsupportedF;
 
@@ -887,7 +887,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 	if ( editorDataType === 'commonsMedia' ) {
 		( function() {
 			var input = $( '<input type="text" class="wef_commonsMedia">' ).appendTo( snakValueEditor.mainElement );
-			snakValueEditor.setDataValueImpl = function( newDataValue ) {
+			snakValueEditor.setDataValue = function( newDataValue ) {
 				input.val( newDataValue.value );
 			};
 			snakValueEditor.hasValue = function() {
@@ -914,38 +914,6 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			input.change( changeF );
 			input.keyup( changeF );
 		} )();
-	} else if ( editorDataType === 'url' ) {
-		( function() {
-
-			var input = $( '<input type="url" class="wef_url">' ).appendTo( snakValueEditor.mainElement );
-			snakValueEditor.setDataValueImpl = function( newDataValue ) {
-				input.val( WEF_Utils.urlNice( newDataValue.value ) );
-			};
-
-			snakValueEditor.hasValue = function() {
-				return !$.isEmpty( input.val() );
-			};
-			snakValueEditor.removeValue = function() {
-				input.val( '' );
-			};
-
-			snakValueEditor.getDataValue = function() {
-				if ( !snakValueEditor.hasValue() ) {
-					throw new Error( 'No value' );
-				}
-
-				return {
-					type: 'string',
-					value: WEF_Utils.urlUnnice( input.val() ),
-				};
-			};
-			snakValueEditor.getAsLabel = function() {
-				return $( '<span></span>' ).text( input.val() );
-			};
-
-			input.change( changeF );
-			input.keyup( changeF );
-		} )();
 	} else if ( editorDataType === 'string' ) {
 		( function() {
 			var input = $( '<input type="text" class="wef_string">' ).appendTo( snakValueEditor.mainElement );
@@ -958,7 +926,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				} );
 			}
 
-			snakValueEditor.setDataValueImpl = function( newDataValue ) {
+			snakValueEditor.setDataValue = function( newDataValue ) {
 				input.val( newDataValue.value );
 			};
 			snakValueEditor.hasValue = function() {
@@ -1031,7 +999,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			addTr( i18n.inputTimePrecisionLabel, i18n.inputTimePrecisionTitle, inputPrecision );
 			addTr( i18n.inputTimeCalendarModelLabel, i18n.inputTimeCalendarModelTitle, inputCalendarModel.select );
 
-			snakValueEditor.setDataValueImpl = function( newDataValue ) {
+			snakValueEditor.setDataValue = function( newDataValue ) {
 				inputTime.val( newDataValue.value.time );
 				inputTimeZone.val( newDataValue.value.timezone );
 				inputPrecision.val( newDataValue.value.precision );
@@ -1089,7 +1057,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			showJulianCheckbox.appendTo( snakValueEditor.mainElement );
 			showJulianCheckboxLabel.appendTo( snakValueEditor.mainElement );
 
-			snakValueEditor.setDataValueImpl = function( newDataValue ) {
+			snakValueEditor.setDataValue = function( newDataValue ) {
 				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
 				}
@@ -1151,7 +1119,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			showJulianCheckbox.appendTo( snakValueEditor.mainElement );
 			showJulianCheckboxLabel.appendTo( snakValueEditor.mainElement );
 
-			snakValueEditor.setDataValueImpl = function( newDataValue ) {
+			snakValueEditor.setDataValue = function( newDataValue ) {
 				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
 				}
@@ -1208,7 +1176,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			showJulianCheckbox.appendTo( snakValueEditor.mainElement );
 			showJulianCheckboxLabel.appendTo( snakValueEditor.mainElement );
 
-			snakValueEditor.setDataValueImpl = function( newDataValue ) {
+			snakValueEditor.setDataValue = function( newDataValue ) {
 				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
 				}
@@ -1251,11 +1219,43 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			years.change( changeF );
 			years.keyup( changeF );
 		} )();
+	} else if ( editorDataType === 'url' ) {
+		( function() {
+
+			var input = $( '<input type="url" class="wef_url">' ).appendTo( snakValueEditor.mainElement );
+			snakValueEditor.setDataValue = function( newDataValue ) {
+				input.val( WEF_Utils.urlNice( newDataValue.value ) );
+			};
+
+			snakValueEditor.hasValue = function() {
+				return !$.isEmpty( input.val() );
+			};
+			snakValueEditor.removeValue = function() {
+				input.val( '' );
+			};
+
+			snakValueEditor.getDataValue = function() {
+				if ( !snakValueEditor.hasValue() ) {
+					throw new Error( 'No value' );
+				}
+
+				return {
+					type: 'string',
+					value: WEF_Utils.urlUnnice( input.val() ),
+				};
+			};
+			snakValueEditor.getAsLabel = function() {
+				return $( '<span></span>' ).text( input.val() );
+			};
+
+			input.change( changeF );
+			input.keyup( changeF );
+		} )();
 	} else if ( editorDataType === 'wikibase-item' ) {
 		( function() {
 			var input = $( '<input type="text" class="wef_wikibase-item">' ).appendTo( snakValueEditor.mainElement );
 
-			snakValueEditor.setDataValueImpl = function( newDataValue ) {
+			snakValueEditor.setDataValue = function( newDataValue ) {
 				var entityId = 'Q' + newDataValue.value['numeric-id'];
 				input.data( 'value-entity-id', entityId );
 				input.data( 'value-entity-label', '' );
@@ -1392,7 +1392,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 	}
 
 	if ( typeof initialDataValue !== 'undefined' ) {
-		this.setDataValueImpl( initialDataValue );
+		this.setDataValue( initialDataValue );
 	}
 };
 
@@ -1549,6 +1549,31 @@ var WEF_SnakEditor = function( parent, options ) {
 
 	td1.append( butttonSelectSnakType );
 
+	function initValueEditor() {
+		$( snakEditor.valueEditor ).change( function() {
+			$( snakEditor ).change();
+		} );
+	}
+
+	function showSnakTypeLabel( snakType ) {
+		if ( snakType === 'novalue' ) {
+			snakTypeLabel.text( i18n.snakTypeNoValue ).attr( 'title', i18n.snakTypeNoValueTitle );
+		} else if ( snakType === 'somevalue' ) {
+			snakTypeLabel.text( i18n.snakTypeSomeValue ).attr( 'title', i18n.snakTypeSomeValueTitle );
+		} else {
+			snakTypeLabel.text( '' ).attr( 'title', '' );
+		}
+		snakTypeLabel.show();
+	}
+
+	this.hasData = function() {
+		return this.snakTypeMode !== 'value' || this.valueEditor.hasValue();
+	};
+
+	this.hasValue = function() {
+		return this.snakTypeMode === 'value' && this.valueEditor.hasValue();
+	};
+
 	this.hiddenBehindLabel = false;
 
 	this.hideBehindLabel = function() {
@@ -1572,80 +1597,6 @@ var WEF_SnakEditor = function( parent, options ) {
 		} );
 
 		return label;
-	};
-
-	function showSnakTypeLabel( snakType ) {
-		if ( snakType === 'novalue' ) {
-			snakTypeLabel.text( i18n.snakTypeNoValue ).attr( 'title', i18n.snakTypeNoValueTitle );
-		} else if ( snakType === 'somevalue' ) {
-			snakTypeLabel.text( i18n.snakTypeSomeValue ).attr( 'title', i18n.snakTypeSomeValueTitle );
-		} else {
-			snakTypeLabel.text( '' ).attr( 'title', '' );
-		}
-		snakTypeLabel.show();
-	}
-
-	function initValueEditor() {
-		$( snakEditor.valueEditor ).change( function() {
-			$( snakEditor ).change();
-		} );
-	}
-
-	this.switchToSnakType = function( snakType ) {
-		var oldSnakType = this.snakTypeMode;
-		if ( oldSnakType === snakType ) {
-			return;
-		}
-
-		this.snakTypeMode = snakType;
-		if ( this.valueEditor !== null ) {
-			this.valueEditor.hide();
-		}
-
-		var _this = this;
-		if ( snakType === 'value' ) {
-			if ( this.valueEditor === null ) {
-				wef_TypesCache.getPropertyType( _this.propertyId, function( dataType ) {
-					snakTypeLabel.hide();
-					_this.valueEditor = new WEF_SnakValueEditor( td2, dataType, undefined, undefined, options );
-					initValueEditor();
-					$( _this ).change();
-				}, function( failureReason ) {
-					alert( "Can't change snak value type bacause property data type is unknown: " + failureReason );
-					_this.snakTypeMode = oldSnakType;
-				} );
-			} else {
-				snakTypeLabel.hide();
-				this.valueEditor.show();
-			}
-		} else {
-			showSnakTypeLabel( snakType );
-			$( this ).change();
-		}
-	};
-
-	this.hasData = function() {
-		return this.snakTypeMode !== 'value' || this.valueEditor.hasValue();
-	};
-
-	this.hasValue = function() {
-		return this.snakTypeMode === 'value' && this.valueEditor.hasValue();
-	};
-
-	/** @return {string} */
-	this.getDataType = function() {
-		if ( this.snakTypeMode !== 'value' ) {
-			throw new Error( 'data type make sence only when snak type is "value"' );
-		}
-		return this.valueEditor.dataDataType;
-	};
-
-	this.getDataValue = function() {
-		return this.valueEditor.getDataValue();
-	};
-
-	this.removeValue = function() {
-		this.valueEditor.removeValue();
 	};
 
 	this.initWithValue = function( snak ) {
@@ -1685,6 +1636,71 @@ var WEF_SnakEditor = function( parent, options ) {
 		this.propertyId = propertyId;
 		this.snakTypeMode = 'novalue';
 		this.switchToSnakType( 'value' );
+	};
+
+	/** @return {string} */
+	this.getDataType = function() {
+		if ( this.snakTypeMode !== 'value' ) {
+			throw new Error( 'data type make sence only when snak type is "value"' );
+		}
+		return this.valueEditor.dataDataType;
+	};
+
+	this.getDataValue = function() {
+		return this.valueEditor.getDataValue();
+	};
+
+	this.removeValue = function() {
+		this.valueEditor.removeValue();
+		$( this ).change();
+	};
+
+	this.setSnakValue = function( snak ) {
+		if ( typeof snak.property === 'undefined' ) {
+			throw new Error( 'Snak does not specify property ID' );
+		}
+		if ( typeof snak.snaktype === 'snaktype' ) {
+			throw new Error( 'Snak does not specify snak type' );
+		}
+		this.propertyId = snak.property;
+		this.switchToSnakType( snak.snaktype );
+		if ( snak.snaktype === 'value' ) {
+			this.valueEditor.setDataValue( snak.datavalue );
+		}
+		$( this ).change();
+	};
+
+	this.switchToSnakType = function( snakType ) {
+		var oldSnakType = this.snakTypeMode;
+		if ( oldSnakType === snakType ) {
+			return;
+		}
+
+		this.snakTypeMode = snakType;
+		if ( this.valueEditor !== null ) {
+			this.valueEditor.hide();
+		}
+
+		var _this = this;
+		if ( snakType === 'value' ) {
+			if ( this.valueEditor === null ) {
+				wef_TypesCache.getPropertyType( _this.propertyId, function( dataType ) {
+					snakTypeLabel.hide();
+					_this.valueEditor = new WEF_SnakValueEditor( td2, dataType, undefined, undefined, options );
+					initValueEditor();
+					$( _this ).change();
+				}, function( failureReason ) {
+					alert( "Can't change snak value type bacause property data type is unknown: " + failureReason );
+					_this.snakTypeMode = oldSnakType;
+				} );
+			} else {
+				snakTypeLabel.hide();
+				this.valueEditor.show();
+			}
+		} else {
+			showSnakTypeLabel( snakType );
+			$( this ).change();
+		}
 	};
 
 	this.remove = function() {
@@ -2233,6 +2249,32 @@ var WEF_ClaimEditor = function( definition ) {
 		}
 	};
 
+	this.initWithStringValue = function( strValue ) {
+		claimEditor.wikidataClaim = null;
+		claimEditor.wikidataOldValue = null;
+		snakEditor.initWithValue( {
+			snaktype: "value",
+			property: isPropertyEditor ? propertyId : qualifierPropertyId,
+			datatype: "string",
+			datavalue: {
+				value: strValue,
+				type: "string"
+			}
+		} );
+	};
+
+	this.setStringValue = function( strValue ) {
+		snakEditor.setSnakValue( {
+			snaktype: "value",
+			property: isPropertyEditor ? propertyId : qualifierPropertyId,
+			datatype: "string",
+			datavalue: {
+				value: strValue,
+				type: "string"
+			}
+		} );
+	};
+
 	/**
 	 * @param updates
 	 *            {WEF_Updates}
@@ -2518,15 +2560,58 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 		return;
 	};
 
-	this.size = function() {
-		return visibleDefinitionRows.length;
-	};
-
 	this.collectUpdates = function( updates ) {
 		$.each( allClaimEditors, function( i, claimEditor ) {
 			claimEditor.collectUpdates( updates );
 		} );
 	};
+
+	/**
+	 * Looking for equals value and mark it as foung (light-green) or create new
+	 * item and mark it as new
+	 */
+	this.onFoundValue = function( strValue ) {
+		function hasStringValue( claimEditor, lookupValue ) {
+			if ( !claimEditor.hasValue() ) {
+				return false;
+			}
+			var dataValue = claimEditor.getDataValue();
+			return typeof dataValue === 'object' && dataValue.type === 'string' && typeof dataValue.value === 'string' && dataValue.value === lookupValue;
+		}
+
+		var found = false;
+		$.each( visibleDefinitionRows, function( i, claimEditor ) {
+			if ( hasStringValue( claimEditor, strValue ) ) {
+				claimEditor.tbody.addClass( 'wef-lookup-found' );
+				found = true;
+			}
+		} );
+
+		if ( found === false ) {
+			var withEmpty = $.grep( visibleDefinitionRows, function( claimEditor ) {
+				return !claimEditor.hasValue();
+			} );
+
+			if ( withEmpty.length === 0 ) {
+				var newClaimEditor = this.add();
+				newClaimEditor.initWithStringValue( strValue );
+				newClaimEditor.tbody.addClass( 'wef-lookup-found-new' );
+			} else {
+				var newClaimEditor = withEmpty[0];
+				newClaimEditor.setStringValue( strValue );
+				newClaimEditor.tbody.addClass( 'wef-lookup-found-new' );
+			}
+		}
+	};
+
+	this.size = function() {
+		return visibleDefinitionRows.length;
+	};
+};
+
+WEF_ClaimEditorsTable.removeFoundValueClasses = function() {
+	$( '.wef-lookup-found' ).removeClass( 'wef-lookup-found' );
+	$( '.wef-lookup-found-new' ).removeClass( 'wef-lookup-found-new' );
 };
 
 var WEF_ProgressItem = function( parentUl, text ) {

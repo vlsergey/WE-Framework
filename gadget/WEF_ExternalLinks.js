@@ -1600,11 +1600,8 @@ WEF_ExternalLinks = function() {
 						if ( $.isFunction( normalizeF ) ) {
 							var newValueNormalized = normalizeF( newValue );
 							if ( newValue !== newValueNormalized ) {
-								claimEditor.setDataValue( {
-									type: 'string',
-									value: newValueNormalized
-								} );
-								newValue = newValueNormalized;
+								claimEditor.setStringValue( newValueNormalized );
+								return;
 							}
 						}
 						if ( newValue ) {
@@ -1819,24 +1816,35 @@ WEF_ExternalLinks = function() {
 				},
 				buttons: {
 					'Select': function() {
+						WEF_ClaimEditorsTable.removeFoundValueClasses();
 						var selected = viafFillCheckButtons.find( 'input[type=checkbox]:checked' );
 						$.each( selected, function( i1, input ) {
 							var checkbox = $( input );
 							var viafdata = checkbox.data( 'viaf' );
 							if ( viafdata ) {
-								$.each( externalLinksEdit.definitions, function( i2, entry ) {
-									if ( typeof ( entry.viaf ) === "undefined" ) {
+								$.each( externalLinksEdit.definitions,
+								/**
+								 * @param definition
+								 *            {WEF_Definition}
+								 */
+								function( i2, definition ) {
+									if ( typeof ( definition.viaf ) === "undefined" ) {
 										return;
 									}
-									var newValue = viafdata[entry.viaf];
+									var newValue = viafdata[definition.viaf];
 									if ( typeof ( newValue ) === "undefined" || newValue.length === 0 ) {
 										return;
 									}
 
-									var editors = externalLinksEdit.editors[entry.code];
+									var editors = externalLinksEdit.editors[definition.code];
 									if ( typeof editors === "undefined" ) {
 										return;
 									}
+
+									if ( $.isFunction( definition.normalize ) ) {
+										newValue = definition.normalize( newValue );
+									}
+
 									editors.onFoundValue( newValue );
 								} );
 							}
