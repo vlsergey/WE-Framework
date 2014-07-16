@@ -548,6 +548,10 @@ var WEF_LabelsCache = function() {
 
 	/** Receive values from Wikidata, if any queued */
 	this.receiveLabels = function() {
+		if ( queue.length === 0 ) {
+			return;
+		}
+
 		var languages = [ wgUserLanguage, wgContentLanguage, 'en', 'ru' ];
 		var languagesString = encodeURIComponent( wgUserLanguage + '|' + wgContentLanguage + '|en|ru' );
 
@@ -592,7 +596,7 @@ var WEF_LabelsCache = function() {
 				if ( typeof entity.labels !== "undefined" ) {
 					for ( var l = 0; l < languages.length; l++ ) {
 						var label = entity.labels[languages[l]];
-						if ( typeof label !== "undefined" ) {
+						if ( typeof label !== "undefined" && !$.isEmpty( label.value ) ) {
 							var title = label.value;
 							cacheLabels[entityId] = title;
 							localStorage[LOCALSTORAGE_PREFIX_LABELS + entityId] = title;
@@ -604,7 +608,7 @@ var WEF_LabelsCache = function() {
 				if ( typeof entity.descriptions !== "undefined" ) {
 					for ( var l = 0; l < languages.length; l++ ) {
 						var description = entity.descriptions[languages[l]];
-						if ( typeof description !== "undefined" ) {
+						if ( typeof description !== "undefined" && !$.isEmpty( description.value ) ) {
 							var title = description.value;
 							cacheDescriptions[entityId] = title;
 							localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + entityId] = title;
@@ -1334,6 +1338,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 							list.push( item );
 						} );
 						response( list );
+						wef_LabelsCache.receiveLabels();
 					} );
 				},
 				select: function( event, ui ) {
@@ -1381,9 +1386,16 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			} );
 
 			input.data( "autocomplete" )._renderItem = function( ul, item ) {
-				return $( '<li>' ).append(
-						'<a><strong>' + item.label + '</strong> <span style="color: darkgray;">' + item.value + '</span><br>'
-								+ ( typeof ( item.desc ) === 'undefined' ? '' : item.desc ) + '</a>' ).data( 'item.autocomplete', item ).appendTo( ul );
+				var a = $( '<a><strong>' + item.label + '</strong> <span style="color: darkgray;">' + item.value + '</span><br>' + '</a>' );
+				var desc = $( '<span>' ).appendTo( a );
+				if ( !$.isEmpty( item.desc ) ) {
+					desc.text( item.desc );
+				} else {
+					wef_LabelsCache.getOrQueue( item.value, function( label, newDescription ) {
+						desc.text( newDescription );
+					} );
+				}
+				return $( '<li>' ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
 			};
 
 			input.change( changeF );
