@@ -552,6 +552,17 @@ WEF_ExternalLinks = function() {
 	this.definitions.P478 = new WEF_Definition( {
 		datatype: 'string',
 	} );
+	this.definitions.P480 = new WEF_Definition( {
+		label: 'Q2638147',
+		check: /^\d+$/,
+		normalize: function( id ) {
+			return id.replace( /^https?:\/\/(www\.)?filmaffinity\.com\/[a-z]+\/film(\d+)\.html?$/i, '$2' );
+		},
+		url: function( id ) {
+			return 'http://www.filmaffinity.com/en/film' + id + '.html';
+		},
+		qualifiers: [],
+	} );
 	this.definitions.P496 = new WEF_Definition( {
 		label: 'Q51044',
 		normalize: function( id ) {
@@ -1930,6 +1941,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.P1266, // allocine.fr
 		d.P1267, // allocine.fr
 		d.P1237, // boxofficemojo.com
+		d.P480, // Filmaffinity
 		d.P1217, // ibdb.com
 		d.P1218, // ibdb.com
 		d.P1219, // ibdb.com
