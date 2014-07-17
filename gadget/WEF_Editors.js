@@ -327,8 +327,15 @@ var WEF_Utils = {
 	},
 
 	/**
-	 * @type {function}
-	 * @param {string}
+	 * @param s
+	 *            {string} string to escapse
+	 * @returns {string} safe-to-use regexp pattern string
+	 */
+	regexpEscape: function( s ) {
+		return s.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' );
+	},
+
+	/**
 	 * @returns {string}
 	 */
 	urlNice: ( function() {
@@ -356,8 +363,6 @@ var WEF_Utils = {
 	} )(),
 
 	/**
-	 * @type {function}
-	 * @param {string}
 	 * @returns {string}
 	 */
 	urlUnnice: ( function() {
