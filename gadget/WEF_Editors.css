@@ -4,11 +4,11 @@
 	width: 1px;
 }
 
-.wef_button_cell button {
+.wef_button_cell .ui-button {
 	margin: 0 0.1em !important;
 }
 
-.wef_button_cell button .ui-button-text {
+.wef_button_cell .ui-button .ui-button-text {
 	padding: 0 0.5em !important;
 }
 
@@ -34,7 +34,7 @@
 }
 
 .wef_commonsMedia, .wef_string, .wef_url, .wef_wikibase-item {
-	width: 100%;
+	width: 99%;
 }
 
 .wef_qualifiers {
