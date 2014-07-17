@@ -36,21 +36,39 @@ wef_ExternalLinks_i18n_en = {
 	tipOnlyNumbers: 'ID «{0}» should contains only numbers',
 
 	tips: {},
+};
 
-	getTip: function( definition ) {
-		var tip = this.tipDefault;
-		if ( definition.check.toString() === /^\d+$/.toString() ) {
-			tip = this.tipOnlyNumbers;
-		}
-		if ( typeof ( this.tips[definition.code] ) !== "undefined" ) {
-			tip = this.tips[definition.code];
-		}
-		if ( $.isFunction( tip ) ) {
-			tip = tip();
-		}
-		tip = tip.replace( '{1}', definition.check.toString() );
-		return tip;
-	},
+wef_ExternalLinks_i18n_fr = {
+
+	buttonMenuLabel: 'WEF : Liens',
+	buttonNavboxLabel: '[modifier les liens]',
+	buttonViafLabel: 'Rechercher et importer les données du VIAF',
+	editFormTitle: 'Modifier les liens externes et sites liés',
+
+	dialogButtonUpdateLabelsText: 'Mettre à jour les libellés',
+	dialogButtonUpdateLabelsLabel: 'Recharger les labels et descriptions des propriétés, qualificatifs et objets',
+	dialogButtonSaveText: 'Enregistrer',
+	dialogButtonSaveLabel: 'Fermer la fenêtre en enregistrant les modifications sur Wikidata',
+	dialogButtonCloseText: 'Annuler',
+	dialogButtonCloseLabel: 'Fermer la fenêtre sans enregistrer',
+	dialogTitle: 'Liens externes et sites liés — WE-Framework',
+
+	tabOfficialPages: 'Pages officielles',
+	tabTexts: 'Textes',
+	tabMedia: 'Images, sons et vidéos',
+	tabTheaterAndMovies: 'Profil : Théâtre et cinéma',
+	tabMusic: 'Profil : Musique',
+	tabLiteratureAndManga: 'Profil : Littérature et manga',
+	tabScience: 'Profil : Science',
+	tabOther: 'Profil : Autres',
+	tabEncyclopedias: 'Encyclopédies',
+	tabAuthorityControlVIAF: 'Données d\'autorité (VIAF)',
+	tabAuthorityControlOther: 'Données d\'autorité (autres)',
+
+	tipDefault: 'L\'identifiant « {0} » est incorrect. Il doit respecter la forme « {1} »',
+	tipOnlyNumbers: 'L\'identifiant « {0} » ne doit contenir que des chiffres',
+
+	tips: {},
 };
 
 wef_ExternalLinks_i18n_ru = {
@@ -142,21 +160,6 @@ wef_ExternalLinks_i18n_ru = {
 		'Q17117201': 'Идентификатор «PROMODJ» содержит недопустимые символы',
 		'Q17329836': 'URL для «Encyclopédie Larousse» должен начинаться с «http://www.larousse.fr/encyclopedie/»',
 	},
-
-	getTip: function( definition ) {
-		var tip = this.tipDefault;
-		if ( definition.check.toString() === /^\d+$/.toString() ) {
-			tip = this.tipOnlyNumbers;
-		}
-		if ( typeof ( this.tips[definition.code] ) !== "undefined" ) {
-			tip = this.tips[definition.code];
-		}
-		if ( $.isFunction( tip ) ) {
-			tip = tip();
-		}
-		tip = tip.replace( '{1}', definition.check.toString() );
-		return tip;
-	},
 };
 
 var wef_ExternalLinks_i18n = {
@@ -191,7 +194,18 @@ var wef_ExternalLinks_i18n = {
 	tips: {},
 
 	getTip: function( definition ) {
-		return '{tip}';
+		var tip = this.tipDefault;
+		if ( definition.check.toString() === /^\d+$/.toString() ) {
+			tip = this.tipOnlyNumbers;
+		}
+		if ( typeof ( this.tips[definition.code] ) !== "undefined" ) {
+			tip = this.tips[definition.code];
+		}
+		if ( $.isFunction( tip ) ) {
+			tip = tip();
+		}
+		tip = tip.replace( '{1}', definition.check.toString() );
+		return tip;
 	},
 };
 

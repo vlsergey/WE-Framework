@@ -45,6 +45,44 @@ var wef_PersonEditor_i18n_en = {
 
 };
 
+var wef_PersonEditor_i18n_fr = {
+
+	dialogButtonUpdateLabelsText: 'Mettre à jour les libellés',
+	dialogButtonUpdateLabelsLabel: 'Recharger les labels et descriptions des propriétés, qualificatifs et objets',
+	dialogButtonSaveText: 'Enregistrer',
+	dialogButtonSaveLabel: 'Fermer la fenêtre en enregistrant les modifications sur Wikidata',
+	dialogButtonCloseText: 'Annuler',
+	dialogButtonCloseLabel: 'Fermer la fenêtre sans enregistrer',
+	dialogTitle: 'Données biographiques — WE-Framework',
+
+	fieldsetBirth: 'Naissance',
+	fieldsetCoatOfArms: 'Armoiries',
+	fieldsetDeath: 'Mort',
+	fieldsetImage: 'Image',
+	fieldsetGeneral: 'Général',
+	fieldsetName: 'Nom',
+	fieldsetTitle: 'Titre',
+
+	groupAwards: 'Distinctions',
+	groupBirthAndDeath: 'Naissance et mort',
+	groupCulture: 'Culture et art',
+	groupEducation: 'Scolarité',
+	groupFamily: 'Famille',
+	groupGeneral: 'Général',
+	groupMedia: 'Images, sons et vidéos',
+	groupMilitary: 'Armée',
+	groupProfession: 'Profession',
+	groupSport: 'Sport',
+	groupViews: 'Opinions',
+
+	errorLoadingWikidata: 'Échec du chargement des données de Wikidata',
+
+	menuButton: 'WEF : Biographie',
+
+	statusLoadingWikidata: 'Chargement des données de Wikidata',
+
+};
+
 var wef_PersonEditor_i18n_ru = {
 
 	dialogButtonUpdateLabelsText: 'Обновить названия',
