@@ -38,9 +38,7 @@ var wef_Editors_i18n_en = {
 	errorRemoveClaims: 'Unable to remove outdated statements from entity',
 
 	inputTimeTimeLabel: 'Time (ISO notation)',
-	inputTimeTimeTitle: 'Date and time in ISO notation, including. E.g. "+00000001994-01-01T00:00:00Z". '
-			+ 'Note: the format and interpretation of this string may vary based on the calendar model. '
-			+ 'Currently, only julian and gregorian dates are supported, which use the ISO format.',
+	inputTimeTimeTitle: 'Date and time in ISO notation, including. E.g. "+00000001994-01-01T00:00:00Z"',
 	inputTimeTimeZoneLabel: 'Timezone (minutes)',
 	inputTimeTimeZoneTitle: 'The time zone offset against UTC, in minutes. May be given as an integer or string literal.',
 	inputTimeCalendarModelLabel: 'Calendar model',
