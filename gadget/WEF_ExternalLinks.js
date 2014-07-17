@@ -365,7 +365,7 @@ WEF_ExternalLinks = function() {
 					bnf_check_digit += bnf_xdigits.indexOf( id[i] ) * ( i + 1 );
 				}
 				// 29 is the radix
-				result = id.substr( 2 ) + bnf_xdigits[bnf_check_digit % bnf_xdigits.length];
+				result = result.substr( 2 ) + bnf_xdigits[bnf_check_digit % bnf_xdigits.length];
 			}
 
 			return result;
