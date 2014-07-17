@@ -415,19 +415,30 @@ var WEF_LabelsCache = function() {
 	/** @private */
 	var queue = [];
 
-	/** Functions to be called after new items received from Wikidata */
-	var listeners = [];
+	this.clear = function() {
+		cacheLabels = {};
+		cacheDescriptions = {};
+		$.each( localStorage, function( key, value ) {
+			if ( key.substr( 0, LOCALSTORAGE_PREFIX_LABELS.length ) === LOCALSTORAGE_PREFIX_LABELS ) {
+				localStorage.removeItem( key );
+			}
+			if ( key.substr( 0, LOCALSTORAGE_PREFIX_DESCRIPTIONS.length ) === LOCALSTORAGE_PREFIX_DESCRIPTIONS ) {
+				localStorage.removeItem( key );
+			}
+		} );
+		onUpdate();
+	};
 
 	this.clearCacheAndRequeue = function() {
 		$.each( cacheLabels, function( key, item ) {
-			delete localStorage[LOCALSTORAGE_PREFIX_LABELS + key];
+			localStorage.removeItem( LOCALSTORAGE_PREFIX_LABELS + key );
 			delete cacheLabels[key];
 			if ( queue.indexOf( key ) === -1 ) {
 				queue.push( key );
 			}
 		} );
 		$.each( cacheDescriptions, function( key, item ) {
-			delete localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + key];
+			localStorage.removeItem( LOCALSTORAGE_PREFIX_DESCRIPTIONS + key );
 			delete cacheDescriptions[key];
 			if ( queue.indexOf( key ) === -1 ) {
 				queue.push( key );
@@ -450,9 +461,11 @@ var WEF_LabelsCache = function() {
 	 * 
 	 * @param key
 	 *            {string}
+	 * @param returnKeyIfEmpty
+	 *            {boolean}
 	 * @returns {string}
 	 */
-	this.getLabel = function( key ) {
+	this.getLabel = function( key, returnKeyIfEmpty ) {
 		assertKeyCorrect( key );
 
 		var cached = cacheLabels[key];
@@ -466,7 +479,8 @@ var WEF_LabelsCache = function() {
 			return localCached;
 		}
 
-		return key;
+		if ( returnKeyIfEmpty !== false )
+			return key;
 	};
 
 	/**
@@ -474,9 +488,11 @@ var WEF_LabelsCache = function() {
 	 * 
 	 * @param key
 	 *            {string}
+	 * @param returnKeyIfEmpty
+	 *            {boolean}
 	 * @returns {string}
 	 */
-	this.getDescription = function( key ) {
+	this.getDescription = function( key, returnKeyIfEmpty ) {
 		assertKeyCorrect( key );
 
 		var cached = cacheDescriptions[key];
@@ -490,12 +506,13 @@ var WEF_LabelsCache = function() {
 			return localCached;
 		}
 
-		return key;
+		if ( returnKeyIfEmpty !== false )
+			return key;
 	};
 
 	/** @private */
 	var isValid = function( value ) {
-		return typeof ( value ) !== "undefined" && value !== null && value.length !== 0;
+		return typeof ( value ) !== "undefined" && value !== null;
 	};
 
 	/**
@@ -519,31 +536,39 @@ var WEF_LabelsCache = function() {
 		// call listener even if got from cache
 		listener( cachedLabel, cachedDescription );
 
+		// label can be updated later, or user can change language
+		$( this ).bind( 'change', function() {
+			var label = getLabel( key );
+			var description = getDescription( key );
+			listener( label, description );
+		} );
 		if ( !isValid( cachedLabel ) || cachedLabel === key || !isValid( cachedDescription ) || cachedDescription === key ) {
-			listeners.push( function() {
-				var label = getLabel( key );
-				var description = getDescription( key );
-				listener( label, description );
-			} );
 			queue.push( key );
 			return key;
 		}
 		return cachedLabel;
 	};
 
+	var _this = this;
 	/**
 	 * Notify listeners
 	 * 
 	 * @private
 	 */
 	var onUpdate = function() {
-		$.each( listeners, function( index, listener ) {
-			try {
-				listener();
-			} catch ( err ) {
-				mw.warn( 'Exception during labels-update listener call' );
-			}
-		} );
+		$( _this ).change();
+	};
+
+	/**
+	 * Add key to the queue if his description is missing from cache
+	 * 
+	 * @param key
+	 *            {string}
+	 */
+	this.queueForDescription = function( key ) {
+		if ( !isValid( cacheDescriptions[key] ) ) {
+			queue.push( key );
+		}
 	};
 
 	/** Receive values from Wikidata, if any queued */
@@ -556,8 +581,8 @@ var WEF_LabelsCache = function() {
 		var languagesString = encodeURIComponent( wgUserLanguage + '|' + wgContentLanguage + '|en|ru' );
 
 		// remove already known
-		queue = jQuery.grep( queue, function( value ) {
-			return !isValid( cacheLabels[value] ) || !isValid( cacheDescriptions[value] );
+		queue = jQuery.grep( queue, function( key ) {
+			return !isValid( cacheLabels[key] ) || !isValid( cacheDescriptions[key] );
 		} );
 
 		var gotFromCache = [];
@@ -604,6 +629,9 @@ var WEF_LabelsCache = function() {
 						}
 					}
 				}
+				if ( $.isEmpty( cacheLabels[entityId] ) ) {
+					cacheLabels[entityId] = '';
+				}
 
 				if ( typeof entity.descriptions !== "undefined" ) {
 					for ( var l = 0; l < languages.length; l++ ) {
@@ -616,6 +644,10 @@ var WEF_LabelsCache = function() {
 						}
 					}
 				}
+				if ( $.isEmpty( cacheDescriptions[entityId] ) ) {
+					cacheDescriptions[entityId] = '';
+				}
+
 			} );
 			onUpdate();
 		}
@@ -1313,6 +1345,19 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				return result;
 			};
 
+			var translatableDesciptions = [];
+			function labelsCacheListener() {
+				$.each( translatableDesciptions, function( index, desc ) {
+					var id = desc.data( 'entity-id' );
+					if ( !$.isEmpty( id ) ) {
+						var text = wef_LabelsCache.getDescription( id, false );
+						if ( !$.isEmpty( id ) ) {
+							desc.text( text );
+						}
+					}
+				} );
+			}
+
 			input.autocomplete( {
 				source: function( request, response ) {
 					var term = request.term;
@@ -1337,9 +1382,22 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 							}
 							list.push( item );
 						} );
+
+						// clear before render
+						translatableDesciptions = [];
+
 						response( list );
+
+						// just in case everything in cache already
+						labelsCacheListener();
 						wef_LabelsCache.receiveLabels();
 					} );
+				},
+				close: function() {
+					$( wef_LabelsCache ).unbind( "change", labelsCacheListener );
+				},
+				open: function() {
+					$( wef_LabelsCache ).bind( "change", labelsCacheListener );
 				},
 				select: function( event, ui ) {
 					var item = ui.item;
@@ -1391,9 +1449,9 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				if ( !$.isEmpty( item.desc ) ) {
 					desc.text( item.desc );
 				} else {
-					wef_LabelsCache.getOrQueue( item.value, function( label, newDescription ) {
-						desc.text( newDescription );
-					} );
+					desc.data( 'entity-id', item.value );
+					wef_LabelsCache.queueForDescription( item.value );
+					translatableDesciptions.push( desc );
 				}
 				return $( '<li>' ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
 			};
@@ -1742,10 +1800,6 @@ function WEF_filterClaims( definition, claims ) {
 	var isPropertyEditor = /^P\d+$/i.test( definition.code );
 	var isQualifierEditor = /^P\d+\[Q\d+\]\/P\d+$/i.test( definition.code );
 
-	if ( !isPropertyEditor && !isQualifierEditor ) {
-		throw new Error( "Unsupported code: " + definition.code );
-	}
-
 	/* Main property ID */
 	/** @type {string} */
 	var propertyId;
@@ -1756,11 +1810,12 @@ function WEF_filterClaims( definition, claims ) {
 		var test = definition.code.match( /^P(\d+)$/i );
 		propertyId = 'P' + test[1];
 		propertyValue = undefined;
-	}
-	if ( isQualifierEditor ) {
+	} else if ( isQualifierEditor ) {
 		var test = definition.code.match( /^P(\d+)\[Q(\d+)\]\/P(\d+)$/i );
 		propertyId = 'P' + test[1];
 		propertyValue = 'Q' + test[2];
+	} else {
+		throw new Error( "Unsupported code: " + definition.code );
 	}
 
 	if ( typeof claims === 'undefined' || typeof claims[propertyId] === 'undefined' ) {
