@@ -22,6 +22,7 @@ var wef_Editors_i18n_en = {
 	buttonRemoveClaim: 'remove claim',
 	buttonAddQualifier: 'add qualifier',
 	buttonRemoveQualifier: 'remove qualifier',
+	buttonUrlNavigate: 'open specified URL',
 
 	checkboxShowJulian: 'show in Julian calendar?',
 	checkboxShowJulianTitle: 'when displaying the date show in julian calendar. This option does not change the input format or the value stored',
@@ -89,6 +90,7 @@ var wef_Editors_i18n_ru = {
 	buttonRemoveClaim: 'удалить утверждение',
 	buttonAddQualifier: 'добавить квалификатор',
 	buttonRemoveQualifier: 'удалить квалификатор',
+	buttonUrlNavigate: 'открыть указанный URL',
 
 	checkboxShowJulian: 'отображать в юлианском календаре',
 	checkboxShowJulianTitle: 'при отображении даты включать режим отображения по юлинскому календарю. Данная опция не влияет на формат ввода или хранения.',
@@ -137,60 +139,12 @@ var wef_Editors_i18n_ru = {
 
 var WEF_Editors_i18n = function() {
 
-	this.actionAnalyzeChanges = '{actionAnalyzeChanges}';
-	this.actionNoChangesPurge = '{actionNoChangesPurge}';
-	this.actionObtainCentralAuthToken = '{actionObtainCentralAuthToken}';
-	this.actionObtainEditToken = '{actionObtainEditToken}';
-	this.actionUpdateEntity = '{actionUpdateEntity}';
-	this.actionRemoveClaims = '{actionRemoveClaims}';
-
-	this.buttonAddClaim = '{buttonAddClaim}';
-	this.buttonRemoveClaim = '{buttonRemoveClaim}';
-
-	this.checkboxShowJulian = '{checkboxShowJulian}';
-	this.checkboxShowJulianTitle = '{checkboxShowJulianTitle}';
-
-	this.confirmDeleteClaim = '{confirmDeleteClaim}';
-
-	this.dialogAnalyzeChangesTitle = '{dialogAnalyzeChangesTitle}';
-	this.dialogSaveChangesTitle = '{dialogSaveChangesTitle}';
-
-	this.errorAnalyzeChanges = '{errorAnalyzeChanges}';
-	this.errorObtainCentralAuthToken = '{errorObtainCentralAuthToken}';
-	this.errorObtainEditToken = '{errorObtainEditToken}';
-	this.errorUpdateEntity = '{errorUpdateEntity}';
-	this.errorRemoveClaims = '{errorRemoveClaims}';
-
 	this.htmlInProgress = '<img alt="⌚" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/17px-Pictogram_voting_wait.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/26px-Pictogram_voting_wait.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/34px-Pictogram_voting_wait.svg.png 2x" data-file-width="250" data-file-height="250" height="17" width="17">';
 	this.htmlSuccess = '<img alt="✔" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/15px-Yes_check.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/23px-Yes_check.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/30px-Yes_check.svg.png 2x" data-file-width="600" data-file-height="600" height="15" width="15">';
 	this.htmlFailure = '<img alt="×" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/16px-Red_x.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/24px-Red_x.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/32px-Red_x.svg.png 2x" data-file-width="600" data-file-height="600" height="16" width="16">';
 	this.htmlNotNeeded = '<img alt="(=)" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/15px-Pictogram_voting_neutral.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/23px-Pictogram_voting_neutral.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/30px-Pictogram_voting_neutral.svg.png 2x" data-file-width="250" data-file-height="250" height="15" width="15">';
 
-	this.snakTypeValue = '{snakTypeValue}';
-	this.snakTypeValueTitle = '{snakTypeValueTitle}';
-	this.snakTypeNoValue = '{snakTypeNoValue}';
-	this.snakTypeNoValueTitle = '{snakTypeNoValueTitle}';
-	this.snakTypeSomeValue = '{snakTypeSomeValue}';
-	this.snakTypeSomeValueTitle = '{snakTypeSomeValueTitle}';
-
 	this.summary = 'via [[:w:ru:ВП:G/ELE|WE-Framework gadget]]';
-
-	this.timePrecision0 = '{timePrecision0}';
-	this.timePrecision1 = '{timePrecision1}';
-	this.timePrecision2 = '{timePrecision2}';
-	this.timePrecision3 = '{timePrecision3}';
-	this.timePrecision4 = '{timePrecision4}';
-	this.timePrecision5 = '{timePrecision5}';
-	this.timePrecision6 = '{timePrecision6}';
-	this.timePrecision7 = '{timePrecision7}';
-	this.timePrecision8 = '{timePrecision8}';
-	this.timePrecision9 = '{timePrecision9}';
-	this.timePrecision10 = '{timePrecision10}';
-	this.timePrecision11 = '{timePrecision11}';
-	this.timePrecision12 = '{timePrecision12}';
-	this.timePrecision13 = '{timePrecision13}';
-	this.timePrecision14 = '{timePrecision14}';
-	this.timePrecisionOther = '{timePrecisionOther}';
 
 	WEF_Utils.localize( this, 'wef_Editors_i18n_' );
 };
@@ -2670,15 +2624,46 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 
 		// append before URL and after input cell
 		var buttonsCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
-		if ( typeof ( definition.buttons ) !== "undefined" ) {
-			$.each( definition.buttons, function( index, buttonDefinition ) {
-				var newButton = $( '<button class="wef_property_button" type="button"></button>' );
-				newButton.button( buttonDefinition );
-				if ( $.isFunction( buttonDefinition.click ) ) {
-					newButton.click( buttonDefinition.click );
+		{
+			try {
+				if ( definition.datatype === 'url' ) {
+					var newButton = $( '<button class="wef_property_button" type="button"></button>' );
+					newButton.button( {
+						icons: {
+							primary: 'ui-icon-extlink'
+						},
+						disabled: true,
+						text: false,
+						label: i18n.buttonUrlNavigate,
+					} ).click( function() {
+						if ( claimEditor.hasValue() ) {
+							window.open( claimEditor.getDataValue().value, '_blank' );
+						}
+					} );
+					$( claimEditor ).change( function() {
+						if ( claimEditor.hasValue() ) {
+							newButton.button( "option", "disabled", false );
+							newButton.button( 'enable' );
+						} else {
+							newButton.button( "option", "disabled", true );
+							newButton.button( 'disable' );
+						}
+					} );
+					buttonsCell.append( newButton );
 				}
-				buttonsCell.append( newButton );
-			} );
+			} catch ( err ) {
+				mw.log.warn( 'Unable to attach URL button: ' + err );
+			}
+			if ( typeof ( definition.buttons ) !== 'undefined' ) {
+				$.each( definition.buttons, function( index, buttonDefinition ) {
+					var newButton = $( '<button class="wef_property_button" type="button"></button>' );
+					newButton.button( buttonDefinition );
+					if ( $.isFunction( buttonDefinition.click ) ) {
+						newButton.click( buttonDefinition.click );
+					}
+					buttonsCell.append( newButton );
+				} );
+			}
 		}
 
 		if ( $.isFunction( urlF ) ) {
