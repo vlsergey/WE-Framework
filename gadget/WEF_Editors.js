@@ -2726,9 +2726,24 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 		}
 	};
 
+	/**
+	 * @returns {number} the number of values, including no-value and some-value
+	 *          snaks
+	 */
+	this.getHasDataSize = function() {
+		var counter = 0;
+		$.each( visibleDefinitionRows, function( index, claimEditor ) {
+			if ( claimEditor.hasData() ) {
+				counter++;
+			}
+		} );
+		return counter;
+	};
+
 	this.size = function() {
 		return visibleDefinitionRows.length;
 	};
+
 };
 
 WEF_ClaimEditorsTable.removeFoundValueClasses = function() {
@@ -3045,7 +3060,60 @@ var WEF_EditorForm = function( title, html, i18n ) {
 		var item = $( htmlItem );
 		if ( typeof i18n[item.text()] !== 'undefined' ) {
 			item.text( i18n[item.text()] );
+			item.removeClass( 'wef_i18n_text' );
 		}
+	} );
+
+	/**
+	 * @type {string}
+	 * @const
+	 */
+	var DATAKEY_ANCHOR_EDITOR_TABLES = 'wef-achor-editors';
+	var DATAKEY_ANCHOR_ORIGINAL_TEXT = 'wef-original-text';
+
+	var enableAnchorCounterUpdate = false;
+
+	function updateLinkedAnchorCounter() {
+		if ( enableAnchorCounterUpdate === false )
+			return;
+
+		try {
+			/** @type {WEF_ClaimEditorsTable} */
+			var currentClaimEditorTable = this;
+			if ( typeof currentClaimEditorTable.wefTabAnchor === 'undefined' ) {
+				return;
+			}
+			var anchor = currentClaimEditorTable.wefTabAnchor;
+			updateAnchorCounter( anchor );
+		} catch ( err ) {
+			mw.log.warn( 'Unable to update editors count on tab: ' + err );
+		}
+	}
+
+	function updateAnchorCounter( anchor ) {
+		if ( enableAnchorCounterUpdate === false )
+			return;
+
+		try {
+			var claimEditorTables = anchor.data( DATAKEY_ANCHOR_EDITOR_TABLES );
+			if ( typeof claimEditorTables === 'undefined' ) {
+				return;
+			}
+			var counter = 0;
+			$.each( claimEditorTables, function( index, claimEditorTable ) {
+				counter += claimEditorTable.getHasDataSize();
+			} );
+
+			var newText = anchor.data( DATAKEY_ANCHOR_ORIGINAL_TEXT ) + " (" + counter + ")";
+			anchor.text( newText );
+		} catch ( err ) {
+			mw.log.warn( 'Unable to update editors count on tab: ' + err );
+		}
+	}
+
+	dialog.find( '.wef_editor_tab_anchor' ).each( function( i, anchor ) {
+		var jAnchor = $( anchor );
+		jAnchor.data( DATAKEY_ANCHOR_ORIGINAL_TEXT, jAnchor.text() );
 	} );
 
 	dialog.find( '.wef_claim_editors' ).each( function( i, htmlItem ) {
@@ -3077,6 +3145,23 @@ var WEF_EditorForm = function( title, html, i18n ) {
 
 		var claimEditorTable = new WEF_ClaimEditorsTable( definition );
 		claimEditorsTables.push( claimEditorTable );
+
+		try {
+			// find corresponding anchor to future tab label update
+			var tab = item.parents( '.wef_editor_tab' );
+			var anchor = dialog.find( 'a.wef_editor_tab_anchor[href="#' + tab.attr( 'id' ) + '"]' );
+			if ( anchor.length > 0 ) {
+				claimEditorTable.wefTabAnchor = anchor;
+				if ( anchor.data( DATAKEY_ANCHOR_EDITOR_TABLES ) == null ) {
+					anchor.data( DATAKEY_ANCHOR_EDITOR_TABLES, [] );
+				}
+				anchor.data( DATAKEY_ANCHOR_EDITOR_TABLES ).push( claimEditorTable );
+			}
+			$( claimEditorTable ).change( updateLinkedAnchorCounter );
+		} catch ( err ) {
+			mw.log.warn( 'Unable to attach updateAnchorCounter() listener to claimEditorTable: ' + err );
+		}
+
 		claimEditorTable.replaceAll( item );
 	} );
 
@@ -3111,6 +3196,10 @@ var WEF_EditorForm = function( title, html, i18n ) {
 	this.load = function( entity ) {
 		$.each( claimEditorsTables, function( i, claimEditorsTable ) {
 			claimEditorsTable.init( entity );
+		} );
+		enableAnchorCounterUpdate = true;
+		dialog.find( 'a.wef_editor_tab_anchor' ).each( function( i, anchor ) {
+			updateAnchorCounter( $( anchor ) );
 		} );
 	};
 
