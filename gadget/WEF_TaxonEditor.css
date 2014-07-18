@@ -1,0 +1,12 @@
+.wef_taxonEditor_dialog table, .wef_taxonEditor_dialog tbody,
+	.wef_taxonEditor_dialog tr, .wef_taxonEditor_dialog th,
+	.wef_taxonEditor_dialog td {
+	padding: 0;
+	margin: 0;
+}
+
+.wef_taxonEditor_dialog .wef_fieldset {
+	margin: 0.1em;
+	padding: 0.1em;
+	line-height: 0.75em;
+}
