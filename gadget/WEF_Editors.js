@@ -370,6 +370,79 @@ var WEF_Utils = {
 		} );
 	},
 
+	/**
+	 * Analyzes definition.template string and updates definition with new
+	 * functions like url() and normalize()
+	 * 
+	 * @param definition
+	 *            {WEF_Definition}
+	 */
+	processDefinitionTemplate: function( definition ) {
+		if ( typeof definition.template !== 'undefined' ) {
+			var newNormFunctions = [];
+			$.each( $.isArray( definition.template ) ? definition.template : [ definition.template ], function( index, template ) {
+				if ( template.indexOf( '$1' ) === -1 ) {
+					mw.log.warn( 'Template of definition «' + definition.code + '» missing «$1» in «' + template + '»' );
+					return;
+				}
+
+				var prefix = template.substr( 0, template.indexOf( '$1' ) );
+				var suffix = template.substr( template.indexOf( '$1' ) + '$1'.length );
+
+				var rPrefix = WEF_Utils.regexpEscape( prefix );
+				var rSuffix = WEF_Utils.regexpEscape( suffix );
+				var pattern;
+
+				if ( /^http:/.test( rPrefix ) ) {
+					rPrefix = rPrefix.replace( /^http:/, 'https?:' );
+				}
+				if ( /^https:/.test( rPrefix ) ) {
+					rPrefix = rPrefix.replace( /^https:/, 'https?:' );
+				}
+
+				pattern = '^' + rPrefix + '(';
+				if ( typeof definition.check !== 'undefined' ) {
+					var inner = definition.check.toString();
+					inner = inner.replace( /^\/(.*)\/[a-z]*$/, '$1' );
+					inner = inner.replace( /^\^(.*)$/, '$1' ).replace( /^(.*)\$$/, '$1' );
+					pattern += inner;
+				} else {
+					pattern += '.*';
+				}
+				pattern += ')';
+
+				if ( $.isEmpty( rSuffix ) ) {
+					pattern += '$';
+				} else {
+					pattern += rSuffix + '.*$';
+				}
+				var regExp = new RegExp( pattern );
+
+				newNormFunctions.push( function( id ) {
+					return id.replace( regExp, '$1' );
+				} );
+			} );
+			$.each( newNormFunctions, function( i, func ) {
+				var old = definition.normalize;
+				if ( typeof old !== 'undefined' ) {
+					definition.normalize = function( id ) {
+						return func( old( id ) );
+					};
+				} else {
+					definition.normalize = function( id ) {
+						return func( id );
+					};
+				}
+			} );
+			if ( typeof definition.url === 'undefined' ) {
+				var first = $.isArray( definition.template ) ? definition.template[0] : definition.template;
+				definition.url = function( id ) {
+					return first.replace( '$1', id );
+				};
+			}
+		}
+	},
+
 	purge: function() {
 		window.location.replace( wgServer + wgScriptPath + '/index.php?action=purge&title=' + encodeURIComponent( wgPageName ) );
 	},
@@ -2507,16 +2580,6 @@ var WEF_ClaimEditor = function( definition ) {
 	};
 };
 
-var WEF_ClaimEditorDecorator = function() {
-	this.decorate = function( claimEditor, elements ) {
-		var beforeCell = $( '<td class="wef_button_cell"></td>' ).prependTo( claimEditor.row1 );
-		beforeCell.append( elements.buttonAddClaim );
-
-		var afterCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
-		afterCell.append( elements.buttonRemoveClaim );
-	};
-};
-
 /**
  * Organize multiple claim edit rows into single structure
  * 
@@ -2525,13 +2588,6 @@ var WEF_ClaimEditorDecorator = function() {
  * @class
  */
 var WEF_ClaimEditorsTable = function( definition, options ) {
-
-	if ( typeof options === 'undefined' ) {
-		options = {};
-	}
-	if ( typeof options.decorator === 'undefined' ) {
-		options.decorator = new WEF_ClaimEditorDecorator();
-	}
 
 	var propertyEditorsTable = this;
 	var i18n = wef_Editors_i18n;
@@ -2607,10 +2663,89 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 			return newButton;
 		} )();
 
-		options.decorator.decorate( claimEditor, {
-			buttonAddClaim: buttonAddClaim,
-			buttonRemoveClaim: buttonRemoveClaim
-		} );
+		/** @type {function} */
+		var normalizeF = definition.normalize;
+		/** @type {function} */
+		var urlF = definition.url;
+
+		// append before URL and after input cell
+		var buttonsCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
+		if ( typeof ( definition.buttons ) !== "undefined" ) {
+			$.each( definition.buttons, function( index, buttonDefinition ) {
+				var newButton = $( '<button class="wef_property_button" type="button"></button>' );
+				newButton.button( buttonDefinition );
+				if ( $.isFunction( buttonDefinition.click ) ) {
+					newButton.click( buttonDefinition.click );
+				}
+				buttonsCell.append( newButton );
+			} );
+		}
+
+		if ( $.isFunction( urlF ) ) {
+			claimEditor.row1.find( 'td.wef_property_editor_input' ).addClass( 'wef_external_links_before_url_cell' );
+			var urlCell = $( '<td class="wef_external_links_url_cell"></td>' ).appendTo( claimEditor.row1 );
+			var div = $( '<div class="wef_external_links_url_div">&nbsp;</div>' ).appendTo( urlCell );
+			var a = $( '<a class="wef_external_links_url_a"></a>' ).appendTo( div ).attr( 'target', '_blank' );
+
+			var updateLinkImplF = function( newValue ) {
+				if ( $.isFunction( normalizeF ) ) {
+					var newValueNormalized = normalizeF( newValue );
+					if ( newValue !== newValueNormalized ) {
+						claimEditor.setStringValue( newValueNormalized );
+						return;
+					}
+				}
+				if ( newValue ) {
+					var newUrl = urlF( newValue );
+					a.attr( 'href', newUrl );
+					a.text( newUrl );
+					if ( typeof ( definition.check ) !== "undefined" ) {
+						var result = definition.check.exec( newValue );
+						if ( result == null ) {
+							// var tip = i18n.getTip( definition );
+							// var shortLabel = getLabelTextShort( definition );
+							// tip = tip.replace( "{0}", shortLabel );
+
+							a.addClass( 'ui-state-error' );
+							claimEditor.tbody.find( 'input' ).addClass( 'ui-state-error' );
+							// statusAndTips.text( tip );
+							// statusAndTips.addClass( 'ui-state-error' );
+						} else {
+							a.removeClass( 'ui-state-error' );
+							claimEditor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
+							// statusAndTips.text( '' );
+							// statusAndTips.removeClass( 'ui-state-error' );
+						}
+					}
+				} else {
+					a.attr( 'href', '' );
+					a.text( '' );
+					a.removeClass( 'ui-state-error' );
+					claimEditor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
+					// statusAndTips.text( '' );
+					// statusAndTips.removeClass( 'ui-state-error' );
+				}
+			};
+			var updateLinkF = function() {
+				if ( claimEditor.hasValue() ) {
+					updateLinkImplF( claimEditor.getDataValue().value );
+				} else {
+					updateLinkImplF( '' );
+				}
+			};
+			$( claimEditor ).change( updateLinkF );
+
+			// additional placeholder to align buttons after URL fields
+			$( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
+		} else {
+			claimEditor.row1.find( 'td.wef_property_editor_input' ).attr( 'colspan', 3 );
+		}
+
+		var beforeCell = $( '<td class="wef_button_cell"></td>' ).prependTo( claimEditor.row1 );
+		beforeCell.append( buttonAddClaim );
+
+		var afterCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
+		afterCell.append( buttonRemoveClaim );
 
 		visibleDefinitionRows.push( claimEditor );
 		allClaimEditors.push( claimEditor );
@@ -3142,18 +3277,25 @@ var WEF_EditorForm = function( title, html, i18n ) {
 	dialog.find( '.wef_claim_editors' ).each( function( i, htmlItem ) {
 		var item = $( htmlItem );
 
+		var check = $.isEmpty( item.data( 'check' ) ) ? undefined : new RegExp( item.data( 'check' ) );
 		var code = item.data( 'code' );
 		var datatype = item.data( 'datatype' );
+		var flag = item.data( 'flag' );
 		var label = item.data( 'label' );
+		var template = $.isEmpty( item.data( 'template' ) ) ? undefined : item.data( 'template' );
+
 		if ( typeof label === 'undefined' ) {
 			label = code;
 		}
 
 		var definition = new WEF_Definition( {
+			check: check,
 			code: code,
 			datatype: datatype,
+			flag: flag,
 			label: label,
 			qualifiers: [],
+			template: template,
 		} );
 
 		item.find( "tr" ).each( function( k, qItem ) {
@@ -3165,6 +3307,8 @@ var WEF_EditorForm = function( title, html, i18n ) {
 			} );
 			definition.qualifiers.push( qDefinition );
 		} );
+
+		WEF_Utils.processDefinitionTemplate( definition );
 
 		var claimEditorTable = new WEF_ClaimEditorsTable( definition );
 		claimEditorsTables.push( claimEditorTable );

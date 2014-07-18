@@ -152,16 +152,16 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 	importScript( 'MediaWiki:WEF_Editors.js' );
 	importStylesheet( 'MediaWiki:WEF_Editors.css' );
 } else {
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_PersonEditor.css&action=raw&ctype=text/css&maxage=86400', 'text/css' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_PersonEditor.css&action=raw&ctype=text/css', 'text/css' );
 
 	if ( !window.wef_loadingMarker_RuWikiFlagsHtml ) {
-		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript&maxage=86400' );
+		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript' );
 		window.wef_loadingMarker_RuWikiFlagsHtml = true;
 	}
 
 	if ( !window.wef_loadingMarker_Editors ) {
-		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript&maxage=86400' );
-		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css&maxage=86400', 'text/css' );
+		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript' );
+		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css', 'text/css' );
 		window.wef_loadingMarker_Editors = true;
 	}
 }

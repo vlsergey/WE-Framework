@@ -1546,170 +1546,13 @@ WEF_ExternalLinks = function() {
 			if ( typeof definition.qualifiers === 'undefined' ) {
 				definition.qualifiers = externalLinksEdit.defaultQualifiers;
 			}
-			if ( typeof definition.template !== 'undefined' ) {
-				var newNormFunctions = [];
-				$.each( $.isArray( definition.template ) ? definition.template : [ definition.template ], function( index, template ) {
-					if ( template.indexOf( '$1' ) === -1 ) {
-						mw.log.warn( 'Template of definition «' + definition.code + '» missing «$1» in «' + template + '»' );
-						return;
-					}
-
-					var prefix = template.substr( 0, template.indexOf( '$1' ) );
-					var suffix = template.substr( template.indexOf( '$1' ) + '$1'.length );
-
-					var rPrefix = WEF_Utils.regexpEscape( prefix );
-					var rSuffix = WEF_Utils.regexpEscape( suffix );
-					var pattern;
-
-					if ( /^http:/.test( rPrefix ) ) {
-						rPrefix = rPrefix.replace( /^http:/, 'https?:' );
-					}
-					if ( /^https:/.test( rPrefix ) ) {
-						rPrefix = rPrefix.replace( /^https:/, 'https?:' );
-					}
-
-					pattern = '^' + rPrefix + '(';
-					if ( typeof definition.check !== 'undefined' ) {
-						var inner = definition.check.toString();
-						inner = inner.replace( /^\/(.*)\/[a-z]*$/, '$1' );
-						inner = inner.replace( /^\^(.*)$/, '$1' ).replace( /^(.*)\$$/, '$1' );
-						pattern += inner;
-					} else {
-						pattern += '.*';
-					}
-					pattern += ')';
-
-					if ( $.isEmpty( rSuffix ) ) {
-						pattern += '$';
-					} else {
-						pattern += rSuffix + '.*$';
-					}
-					var regExp = new RegExp( pattern );
-
-					newNormFunctions.push( function( id ) {
-						return id.replace( regExp, '$1' );
-					} );
-				} );
-				$.each( newNormFunctions, function( i, func ) {
-					var old = definition.normalize;
-					if ( typeof old !== 'undefined' ) {
-						definition.normalize = function( id ) {
-							return func( old( id ) );
-						};
-					} else {
-						definition.normalize = function( id ) {
-							return func( id );
-						};
-					}
-				} );
-				if ( typeof definition.url === 'undefined' ) {
-					var first = $.isArray( definition.template ) ? definition.template[0] : definition.template;
-					definition.url = function( id ) {
-						return first.replace( '$1', id );
-					};
-				}
-			}
+			WEF_Utils.processDefinitionTemplate( definition );
 		} );
 
 		var dialogForm = $( '' + '<div class="wef_externalLinks_dialog" id="wefExternalLinksDialog" title="' + i18n.dialogTitle + '">' + '<div id="wefExternalLinksDialogTabs">'
 				+ '<ul id="wefExternalLinksDialogTabsList">' + '</ul>' + '</div>' + '<p class="validateTips"></p>' + '</div>' );
 		var statusAndTips = dialogForm.find( 'p.validateTips' );
 		dialogForm.find( "#ruWikiExternalEditProgress" ).hide();
-
-		/** @type {WEF_ClaimEditorDecorator} */
-		var decorator = ( function() {
-			var result = new WEF_ClaimEditorDecorator();
-			var oldDecorate = result.decorate;
-			result.decorate = function( claimEditor, elements ) {
-				/** @type {WEF_Definition} */
-				var definition = claimEditor.definition;
-				/** @type {function} */
-				var normalizeF = definition.normalize;
-				/** @type {function} */
-				var urlF = definition.url;
-
-				// append before URL and after input cell
-				var buttonsCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
-				if ( typeof ( definition.buttons ) !== "undefined" ) {
-					$.each( definition.buttons, function( index, buttonDefinition ) {
-						var newButton = $( '<button class="wef_property_button" type="button"></button>' );
-						newButton.button( buttonDefinition );
-						if ( $.isFunction( buttonDefinition.click ) ) {
-							newButton.click( buttonDefinition.click );
-						}
-						buttonsCell.append( newButton );
-					} );
-				}
-
-				if ( $.isFunction( urlF ) ) {
-
-					claimEditor.row1.find( 'td.wef_property_editor_input' ).addClass( 'wef_external_links_before_url_cell' );
-					var urlCell = $( '<td class="wef_external_links_url_cell"></td>' ).appendTo( claimEditor.row1 );
-					var div = $( '<div class="wef_external_links_url_div">&nbsp;</div>' ).appendTo( urlCell );
-					var a = $( '<a class="wef_external_links_url_a"></a>' ).appendTo( div ).attr( 'target', '_blank' );
-
-					var updateLinkImplF = function( newValue ) {
-						if ( $.isFunction( normalizeF ) ) {
-							var newValueNormalized = normalizeF( newValue );
-							if ( newValue !== newValueNormalized ) {
-								claimEditor.setStringValue( newValueNormalized );
-								return;
-							}
-						}
-						if ( newValue ) {
-							var newUrl = urlF( newValue );
-							a.attr( 'href', newUrl );
-							a.text( newUrl );
-							if ( typeof ( definition.check ) !== "undefined" ) {
-								var result = definition.check.exec( newValue );
-								if ( result == null ) {
-									var tip = i18n.getTip( definition );
-									var shortLabel = getLabelTextShort( definition );
-									tip = tip.replace( "{0}", shortLabel );
-
-									a.addClass( 'ui-state-error' );
-									claimEditor.tbody.find( 'input' ).addClass( 'ui-state-error' );
-									statusAndTips.text( tip );
-									statusAndTips.addClass( 'ui-state-error' );
-								} else {
-									a.removeClass( 'ui-state-error' );
-									claimEditor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
-									statusAndTips.text( '' );
-									statusAndTips.removeClass( 'ui-state-error' );
-								}
-							}
-						} else {
-							a.attr( 'href', '' );
-							a.text( '' );
-							a.removeClass( 'ui-state-error' );
-							claimEditor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
-							statusAndTips.text( '' );
-							statusAndTips.removeClass( 'ui-state-error' );
-						}
-					};
-					var updateLinkF = function() {
-						if ( claimEditor.hasValue() ) {
-							updateLinkImplF( claimEditor.getDataValue().value );
-						} else {
-							updateLinkImplF( '' );
-						}
-					};
-					$( claimEditor ).change( updateLinkF );
-
-					// additional placeholder to align buttons after URL fields
-					$( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
-
-				} else {
-					claimEditor.row1.find( 'td.wef_property_editor_input' ).attr( 'colspan', 3 );
-				}
-
-				oldDecorate.call( this, claimEditor, elements );
-			};
-			return result;
-		} )();
-		var claimEditorsTableOptions = {
-			decorator: decorator,
-		};
 
 		$( "div#mw-content-text" ).after( dialogForm );
 		dialogForm.dialog( {
@@ -1749,7 +1592,7 @@ WEF_ExternalLinks = function() {
 						tabs.append( newTabPage );
 
 						$.each( group.fields, function( i, definition ) {
-							var claimEditorsTable = new WEF_ClaimEditorsTable( definition, claimEditorsTableOptions );
+							var claimEditorsTable = new WEF_ClaimEditorsTable( definition );
 							externalLinksEdit.editors[definition.code] = claimEditorsTable;
 							claimEditorsTable.appendTo( newTabTable );
 						} );
@@ -2095,16 +1938,16 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 	importScript( 'MediaWiki:WEF_Editors.js' );
 	importStylesheet( 'MediaWiki:WEF_Editors.css' );
 } else {
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_ExternalLinks.css&action=raw&ctype=text/css&maxage=86400', 'text/css' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_ExternalLinks.css&action=raw&ctype=text/css', 'text/css' );
 
 	if ( !window.wef_loadingMarker_RuWikiFlagsHtml ) {
-		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript&maxage=86400' );
+		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript' );
 		window.wef_loadingMarker_RuWikiFlagsHtml = true;
 	}
 
 	if ( !window.wef_loadingMarker_Editors ) {
-		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript&maxage=86400' );
-		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css&maxage=86400', 'text/css' );
+		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript' );
+		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css', 'text/css' );
 		window.wef_loadingMarker_Editors = true;
 	}
 }
