@@ -3057,10 +3057,33 @@ var WEF_EditorForm = function( title, html, i18n ) {
 	dialog.attr( 'title', title );
 
 	dialog.find( '.wef_i18n_text' ).each( function( i, htmlItem ) {
-		var item = $( htmlItem );
-		if ( typeof i18n[item.text()] !== 'undefined' ) {
-			item.text( i18n[item.text()] );
-			item.removeClass( 'wef_i18n_text' );
+		try {
+			var item = $( htmlItem );
+			var code = item.text();
+			var translated = i18n[code];
+			if ( typeof translated !== 'undefined' ) {
+				item.text( translated );
+				item.removeClass( 'wef_i18n_text' );
+			}
+		} catch ( err ) {
+			mw.log.warn( 'Unable to translate element text: ' + err );
+		}
+	} );
+	dialog.find( '.wef_i18n_label' ).each( function( i, htmlItem ) {
+		try {
+			var item = $( htmlItem );
+			var code = item.text();
+			wef_LabelsCache.getOrQueue( code, function( label, description ) {
+				if ( !$.isEmpty( label ) ) {
+					item.text( label );
+				}
+				if ( !$.isEmpty( description ) ) {
+					item.attr( 'title', description );
+				}
+				item.removeClass( 'wef_i18n_label' );
+			} );
+		} catch ( err ) {
+			mw.log.warn( 'Unable to translate element text: ' + err );
 		}
 	} );
 
