@@ -1034,7 +1034,7 @@ WEF_ExternalLinks = function() {
 		datatype: 'string',
 		flag: 'uk',
 		code: 'P1417',
-		label: 'Q17329360',
+		label: 'Q5375741',
 		buttons: [ {
 			icons: {
 				primary: 'ui-icon-search'
