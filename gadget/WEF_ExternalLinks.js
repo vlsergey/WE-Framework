@@ -1063,7 +1063,7 @@ WEF_ExternalLinks = function() {
 				return 'http://ta.sandrart.net/en/persons/?query=' + encodeURIComponent( title );
 			} ),
 		} ],
-		check: /^\d+$/,
+		check: /^([1-9]\d{0,2}|[1-5]\d{3})$/,
 		template: 'http://ta.sandrart.net/en/person/view/$1',
 		qualifiers: [],
 	} );
@@ -1538,7 +1538,7 @@ WEF_ExternalLinks = function() {
 		flag: 'fr',
 		code: 'P1343[Q17329836]/P854',
 		label: 'Q17329836',
-		check: /^https?:\/\/(www\.)?larousse\/.fr\/encyclopedie\//,
+		check: /^https?:\/\/(www\.)?larousse\.fr\/encyclopedie\//,
 		buttons: [ {
 			icons: {
 				primary: 'ui-icon-search'
