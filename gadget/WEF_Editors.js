@@ -356,8 +356,7 @@ var WEF_Utils = {
 
 				pattern = '^' + rPrefix + '(';
 				if ( typeof definition.check !== 'undefined' ) {
-					var inner = definition.check.toString();
-					inner = inner.replace( /^\/(.*)\/[a-z]*$/, '$1' );
+					var inner = WEF_Utils.regexpGetSource( definition.check );
 					inner = inner.replace( /^\^(.*)$/, '$1' ).replace( /^(.*)\$$/, '$1' );
 					pattern += inner;
 				} else {
@@ -408,6 +407,10 @@ var WEF_Utils = {
 	 */
 	regexpEscape: function( s ) {
 		return s.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' );
+	},
+
+	regexpGetSource: function( regexp ) {
+		return regexp.toString().replace( /^\/(.*)\/[a-z]*$/, '$1' );
 	},
 
 	/**
@@ -1041,6 +1044,13 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					input.change();
 				} );
 			}
+			try {
+				if ( typeof options === "object" && typeof options.check === "object" ) {
+					input.attr( 'pattern', WEF_Utils.regexpGetSource( options.check ) );
+				}
+			} catch ( err ) {
+				mw.log.warn( 'Unable to attach check pattern to input: ' + err );
+			}
 
 			snakValueEditor.setDataValue = function( newDataValue ) {
 				input.val( newDataValue.value );
@@ -1342,6 +1352,14 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			snakValueEditor.setDataValue = function( newDataValue ) {
 				input.val( WEF_Utils.urlNice( newDataValue.value ) );
 			};
+
+			try {
+				if ( typeof options === "object" && typeof options.check === "object" ) {
+					input.attr( 'pattern', WEF_Utils.regexpGetSource( options.check ) );
+				}
+			} catch ( err ) {
+				mw.log.warn( 'Unable to attach check pattern to input: ' + err );
+			}
 
 			snakValueEditor.hasValue = function() {
 				return !$.isEmpty( input.val() );
@@ -2684,29 +2702,23 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 					var newUrl = urlF( newValue );
 					a.attr( 'href', newUrl );
 					a.text( newUrl );
-					if ( typeof ( definition.check ) !== "undefined" ) {
-						var result = definition.check.exec( newValue );
-						if ( result == null ) {
-							// var tip = i18n.getTip( definition );
-							// var shortLabel = getLabelTextShort( definition );
-							// tip = tip.replace( "{0}", shortLabel );
+					// if ( typeof ( definition.check ) !== "undefined" ) {
+					// var result = definition.check.exec( newValue );
+					// if ( result == null ) {
+					// var tip = i18n.getTip( definition );
+					// var shortLabel = getLabelTextShort( definition );
+					// tip = tip.replace( "{0}", shortLabel );
 
-							a.addClass( 'ui-state-error' );
-							claimEditor.tbody.find( 'input' ).addClass( 'ui-state-error' );
-							// statusAndTips.text( tip );
-							// statusAndTips.addClass( 'ui-state-error' );
-						} else {
-							a.removeClass( 'ui-state-error' );
-							claimEditor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
-							// statusAndTips.text( '' );
-							// statusAndTips.removeClass( 'ui-state-error' );
-						}
-					}
+					// statusAndTips.text( tip );
+					// statusAndTips.addClass( 'ui-state-error' );
+					// } else {
+					// statusAndTips.text( '' );
+					// statusAndTips.removeClass( 'ui-state-error' );
+					// }
+					// }
 				} else {
 					a.attr( 'href', '' );
 					a.text( '' );
-					a.removeClass( 'ui-state-error' );
-					claimEditor.tbody.find( 'input' ).removeClass( 'ui-state-error' );
 					// statusAndTips.text( '' );
 					// statusAndTips.removeClass( 'ui-state-error' );
 				}
