@@ -12,12 +12,6 @@ wef_ExternalLinks_i18n_en = {
 	buttonViafLabel: 'Find and download VIAF data',
 	editFormTitle: 'Edit external links and linked sites',
 
-	dialogButtonUpdateLabelsText: 'Update labels',
-	dialogButtonUpdateLabelsLabel: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
-	dialogButtonSaveText: 'Save',
-	dialogButtonSaveLabel: 'Close the dialog and save all changes to Wikidata',
-	dialogButtonCloseText: 'Cancel',
-	dialogButtonCloseLabel: 'Close the dialog and discard all changes (do not save)',
 	dialogTitle: 'External links and linked sites — WE-Framework',
 
 	tabOfficialPages: 'Official Pages',
@@ -45,12 +39,6 @@ wef_ExternalLinks_i18n_fr = {
 	buttonViafLabel: 'Rechercher et importer les données du VIAF',
 	editFormTitle: 'Modifier les liens externes et sites liés',
 
-	dialogButtonUpdateLabelsText: 'Mettre à jour les libellés',
-	dialogButtonUpdateLabelsLabel: 'Recharger les labels et descriptions des propriétés, qualificatifs et objets',
-	dialogButtonSaveText: 'Enregistrer',
-	dialogButtonSaveLabel: 'Fermer la fenêtre en enregistrant les modifications sur Wikidata',
-	dialogButtonCloseText: 'Annuler',
-	dialogButtonCloseLabel: 'Fermer la fenêtre sans enregistrer',
 	dialogTitle: 'Liens externes et sites liés — WE-Framework',
 
 	tabOfficialPages: 'Pages officielles',
@@ -77,12 +65,6 @@ wef_ExternalLinks_i18n_ru = {
 	buttonNavboxLabel: '[править ссылки]',
 	buttonViafLabel: 'Найти и загрузить данные с сервера VIAF',
 
-	dialogButtonUpdateLabelsText: 'Обновить названия',
-	dialogButtonUpdateLabelsLabel: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
-	dialogButtonSaveText: 'Сохранить',
-	dialogButtonSaveLabel: 'Закрыть окно и сохранить все изменения в Викиданных',
-	dialogButtonCloseText: 'Отмена',
-	dialogButtonCloseLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
 	dialogTitle: 'Внешние ссылки и связанные сайты — WE-Framework',
 
 	tabOfficialPages: 'Официальные страницы',
@@ -230,6 +212,7 @@ WEF_ExternalLinks = function() {
 	this.enabled = /^Q\d+$/.test( entityId );
 
 	this.init = function() {
+		WEF_Utils.localize( i18n, 'wef_AnyEditor_i18n_' );
 		WEF_Utils.localize( i18n, 'wef_ExternalLinks_i18n_' );
 	};
 

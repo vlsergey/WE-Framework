@@ -9,12 +9,6 @@ var wef_PersonEditor_html = '<div class="wef_personEditor_dialog"><div class="we
 
 var wef_PersonEditor_i18n_en = {
 
-	dialogButtonUpdateLabelsText: 'Update labels',
-	dialogButtonUpdateLabelsLabel: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
-	dialogButtonSaveText: 'Save',
-	dialogButtonSaveLabel: 'Close the dialog and save all changes to Wikidata',
-	dialogButtonCloseText: 'Cancel',
-	dialogButtonCloseLabel: 'Close the dialog and discard all changes (do not save)',
 	dialogTitle: 'Person data — WE-Framework',
 
 	fieldsetBiology: 'name',
@@ -22,7 +16,6 @@ var wef_PersonEditor_i18n_en = {
 	fieldsetCoatOfArms: 'coat of arms',
 	fieldsetDeath: 'death',
 	fieldsetImage: 'image',
-	fieldsetGeneral: 'general',
 	fieldsetName: 'name',
 	fieldsetTitle: 'title',
 
@@ -31,29 +24,18 @@ var wef_PersonEditor_i18n_en = {
 	groupCulture: 'Culture & Art',
 	groupEducationAndScience: 'Education & Science',
 	groupFamily: 'Family',
-	groupGeneral: 'General',
 	groupMedia: 'Media',
 	groupMilitary: 'Military',
 	groupProfession: 'Profession',
 	groupSport: 'Sport',
 	groupViews: 'Views',
 
-	errorLoadingWikidata: 'Unable to load element data from Wikidata',
-
 	menuButton: 'WEF: Person',
-
-	statusLoadingWikidata: 'Loading element data from Wikidata',
 
 };
 
 var wef_PersonEditor_i18n_fr = {
 
-	dialogButtonUpdateLabelsText: 'Mettre à jour les libellés',
-	dialogButtonUpdateLabelsLabel: 'Recharger les labels et descriptions des propriétés, qualificatifs et objets',
-	dialogButtonSaveText: 'Enregistrer',
-	dialogButtonSaveLabel: 'Fermer la fenêtre en enregistrant les modifications sur Wikidata',
-	dialogButtonCloseText: 'Annuler',
-	dialogButtonCloseLabel: 'Fermer la fenêtre sans enregistrer',
 	dialogTitle: 'Données biographiques — WE-Framework',
 
 	fieldsetBiology: 'biologie',
@@ -61,38 +43,25 @@ var wef_PersonEditor_i18n_fr = {
 	fieldsetCoatOfArms: 'armoiries',
 	fieldsetDeath: 'mort',
 	fieldsetImage: 'image',
-	fieldsetGeneral: 'général',
 	fieldsetName: 'nom',
 	fieldsetTitle: 'titre',
 
 	groupAwards: 'Distinctions',
 	groupBirthAndDeath: 'Naissance et mort',
 	groupCulture: 'Culture et art',
-	groupEducationAndScience: 'Scolarité and science',
+	groupEducationAndScience: 'Scolarité et science',
 	groupFamily: 'Famille',
-	groupGeneral: 'Général',
 	groupMedia: 'Images, sons et vidéos',
 	groupMilitary: 'Armée',
 	groupProfession: 'Profession',
 	groupSport: 'Sport',
 	groupViews: 'Opinions',
 
-	errorLoadingWikidata: 'Échec du chargement des données de Wikidata',
-
 	menuButton: 'WEF : Biographie',
-
-	statusLoadingWikidata: 'Chargement des données de Wikidata',
-
 };
 
 var wef_PersonEditor_i18n_ru = {
 
-	dialogButtonUpdateLabelsText: 'Обновить названия',
-	dialogButtonUpdateLabelsLabel: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
-	dialogButtonSaveText: 'Сохранить',
-	dialogButtonSaveLabel: 'Закрыть окно и сохранить все изменения в Викиданных',
-	dialogButtonCloseText: 'Отмена',
-	dialogButtonCloseLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
 	dialogTitle: 'Свойства персоны — WE-Framework',
 
 	fieldsetBiology: 'биология',
@@ -100,7 +69,6 @@ var wef_PersonEditor_i18n_ru = {
 	fieldsetCoatOfArms: 'герб',
 	fieldsetDeath: 'смерть',
 	fieldsetImage: 'изображение',
-	fieldsetGeneral: 'общие свойства',
 	fieldsetName: 'имя',
 	fieldsetTitle: 'титул',
 
@@ -109,18 +77,13 @@ var wef_PersonEditor_i18n_ru = {
 	groupCulture: 'Культура и искусство',
 	groupEducationAndScience: 'Образование и наука',
 	groupFamily: 'Семья',
-	groupGeneral: 'Основное',
 	groupMedia: 'Медиа',
 	groupMilitary: 'Военные',
 	groupProfession: 'Проф. деятельность',
 	groupSport: 'Спорт',
 	groupViews: 'Взгляды',
 
-	errorLoadingWikidata: 'Невозможно загрузить информацию с Викиданных',
-
 	menuButton: 'WEF: Персона',
-
-	statusLoadingWikidata: 'Загружаем данные элемента с Викиданных',
 };
 
 /**
@@ -145,6 +108,7 @@ var WEF_PersonEditor = function() {
 	this.enabled = /^Q\d+$/.test( entityId );
 
 	this.init = function() {
+		WEF_Utils.localize( i18n, 'wef_AnyEditor_i18n_' );
 		WEF_Utils.localize( i18n, 'wef_PersonEditor_i18n_' );
 	};
 

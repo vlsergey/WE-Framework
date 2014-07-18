@@ -195,6 +195,56 @@ var WEF_Editors_i18n = function() {
 	WEF_Utils.localize( this, 'wef_Editors_i18n_' );
 };
 
+/* Some commons i18n strings for all editors */
+var wef_AnyEditor_i18n_en = {
+
+	dialogButtonUpdateLabelsText: 'Update labels',
+	dialogButtonUpdateLabelsLabel: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
+	dialogButtonSaveText: 'Save',
+	dialogButtonSaveLabel: 'Close the dialog and save all changes to Wikidata',
+	dialogButtonCloseText: 'Cancel',
+	dialogButtonCloseLabel: 'Close the dialog and discard all changes (do not save)',
+
+	fieldsetGeneral: 'general',
+	groupGeneral: 'General',
+
+	errorLoadingWikidata: 'Unable to load element data from Wikidata',
+
+	statusLoadingWikidata: 'Loading element data from Wikidata',
+};
+
+var wef_AnyEditor_i18n_fr = {
+	dialogButtonUpdateLabelsText: 'Mettre à jour les libellés',
+	dialogButtonUpdateLabelsLabel: 'Recharger les labels et descriptions des propriétés, qualificatifs et objets',
+	dialogButtonSaveText: 'Enregistrer',
+	dialogButtonSaveLabel: 'Fermer la fenêtre en enregistrant les modifications sur Wikidata',
+	dialogButtonCloseText: 'Annuler',
+	dialogButtonCloseLabel: 'Fermer la fenêtre sans enregistrer',
+
+	fieldsetGeneral: 'Général',
+	groupGeneral: 'Général',
+
+	errorLoadingWikidata: 'Échec du chargement des données de Wikidata',
+
+	statusLoadingWikidata: 'Chargement des données de Wikidata',
+};
+
+var wef_AnyEditor_i18n_ru = {
+	dialogButtonUpdateLabelsText: 'Обновить названия',
+	dialogButtonUpdateLabelsLabel: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
+	dialogButtonSaveText: 'Сохранить',
+	dialogButtonSaveLabel: 'Закрыть окно и сохранить все изменения в Викиданных',
+	dialogButtonCloseText: 'Отмена',
+	dialogButtonCloseLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
+
+	fieldsetGeneral: 'основное',
+	groupGeneral: 'Основное',
+
+	errorLoadingWikidata: 'Невозможно загрузить информацию с Викиданных',
+
+	statusLoadingWikidata: 'Загружаем данные элемента с Викиданных',
+};
+
 /**
  * @typedef WEF_Entity
  * @type {object}
