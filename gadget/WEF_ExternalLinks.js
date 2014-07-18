@@ -824,7 +824,7 @@ WEF_ExternalLinks = function() {
 	this.definitions.P1219 = new WEF_Definition( {
 		label: 'Q31964',
 		// произведение (Q386724): пьеса (Q25379)
-		labelQualifier: [ 'Q386724', 'Q25379' ], 
+		labelQualifier: [ 'Q386724', 'Q25379' ],
 		check: /^\d+$/,
 		template: 'http://www.ibdb.com/show.asp?id=id$1',
 		qualifiers: [],
@@ -2112,10 +2112,18 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 	importScript( 'MediaWiki:WEF_Editors.js' );
 	importStylesheet( 'MediaWiki:WEF_Editors.css' );
 } else {
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_ExternalLinks.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript&maxage=86400&smaxage=21600' );
-	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css&maxage=86400&smaxage=21600', 'text/css' );
+	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_ExternalLinks.css&action=raw&ctype=text/css&maxage=86400', 'text/css' );
+
+	if ( !window.wef_loadingMarker_RuWikiFlagsHtml ) {
+		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:RuWikiFlagsHtml.js&action=raw&ctype=text/javascript&maxage=86400' );
+		window.wef_loadingMarker_RuWikiFlagsHtml = true;
+	}
+
+	if ( !window.wef_loadingMarker_Editors ) {
+		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.js&action=raw&ctype=text/javascript&maxage=86400' );
+		mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_Editors.css&action=raw&ctype=text/css&maxage=86400', 'text/css' );
+		window.wef_loadingMarker_Editors = true;
+	}
 }
 
 var externalLinksEdit;
