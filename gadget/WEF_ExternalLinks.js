@@ -911,10 +911,19 @@ WEF_ExternalLinks = function() {
 		flag: 'ct',
 		label: 'Q1200925',
 		labelPrefix: 'BNC — ',
+		check: /^a[\dx]{8}$/,
+		template: 'http://cantic.bnc.cat/registres/CUCId/$1',
 		viaf: 'bnc',
-		url: function( id ) {
-			return 'http://cantic.bnc.cat/registres/CUCId/' + id;
-		},
+		buttons: [ {
+			icons: {
+				primary: 'ui-icon-search'
+			},
+			text: false,
+			label: 'Search on CANTIC website',
+			click: searchClickF( [ 'cawiki', 'enwiki' ], function( title ) {
+				return 'http://cantic.bnc.cat/index_nps/index?text=' + encodeURIComponent( title ) + '&index=1';
+			} ),
+		} ],
 		qualifiers: [],
 	} );
 	this.definitions.P1280 = new WEF_Definition( {
@@ -937,7 +946,7 @@ WEF_ExternalLinks = function() {
 			},
 			text: false,
 			label: 'Search on enciclopedia.cat',
-			click: searchClickF( [ 'ctwiki', 'enwiki' ], function( title ) {
+			click: searchClickF( [ 'cawiki', 'enwiki' ], function( title ) {
 				return 'http://www.enciclopedia.cat/enciclopèdies/cerca?s.q=' + encodeURIComponent( title ) + '&s.book=gec&search-go=Cerca';
 			} ),
 		} ],
@@ -1291,6 +1300,16 @@ WEF_ExternalLinks = function() {
 		flag: 'ru',
 		code: 'P1343[Q2627728]/P854',
 		label: 'Q2627728',
+		buttons: [ {
+			icons: {
+				primary: 'ui-icon-search'
+			},
+			text: false,
+			label: 'Искать на сайте «Кругосвет»',
+			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
+				return 'http://krugosvet.ru/search-content?keys=' + encodeURIComponent( title );
+			} ),
+		} ],
 		qualifiers: [ d.P50, d.P357 ],
 	} );
 	this.definitions.Q4037665 = new WEF_Definition( {
@@ -1334,6 +1353,16 @@ WEF_ExternalLinks = function() {
 		flag: 'ru',
 		code: 'P1343[Q4239850]/P854',
 		label: 'Q4239850',
+		buttons: [ {
+			icons: {
+				primary: 'ui-icon-search'
+			},
+			text: false,
+			label: 'Искать на сайте ФЭБ',
+			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
+				return '//www.google.com/search?q=site%3Afeb-web.ru%2Ffeb%2Fkle+' + encodeURIComponent( title );
+			} ),
+		} ],
 		qualifiers: [ d.P50, d.P357, d.P478 ],
 	} );
 	this.definitions.Q4263804 = new WEF_Definition( {
@@ -1341,6 +1370,16 @@ WEF_ExternalLinks = function() {
 		flag: 'ru',
 		code: 'P1343[Q4263804]/P854',
 		label: 'Q4263804',
+		buttons: [ {
+			icons: {
+				primary: 'ui-icon-search'
+			},
+			text: false,
+			label: 'Искать на сайте ФЭБ',
+			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
+				return '//www.google.com/search?q=site%3Afeb-web.ru%2Ffeb%2Flitenc+' + encodeURIComponent( title );
+			} ),
+		} ],
 		qualifiers: [ d.P50, d.P357, d.P478 ],
 	} );
 	this.definitions.Q4299813 = new WEF_Definition( {
