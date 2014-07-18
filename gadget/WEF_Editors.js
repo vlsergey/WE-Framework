@@ -409,6 +409,17 @@ var WEF_Utils = {
 		return s.replace( /[-\/\\^$*+?.()|[\]{}]/g, '\\$&' );
 	},
 
+	regexpGetHtmlPattern: function( regexp ) {
+		var source = WEF_Utils.regexpGetSource( options.check );
+		if ( source.substr( 0, 1 ) !== '^' ) {
+			source = ".*" + source;
+		}
+		if ( source.substr( source.lenght - 1, 1 ) !== '$' ) {
+			source = source + ".*";
+		}
+		return source;
+	},
+
 	regexpGetSource: function( regexp ) {
 		return regexp.toString().replace( /^\/(.*)\/[a-z]*$/, '$1' );
 	},
@@ -1046,7 +1057,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			}
 			try {
 				if ( typeof options === "object" && typeof options.check === "object" ) {
-					input.attr( 'pattern', WEF_Utils.regexpGetSource( options.check ) );
+					input.attr( 'pattern', WEF_Utils.regexpGetHtmlPattern( options.check ) );
 				}
 			} catch ( err ) {
 				mw.log.warn( 'Unable to attach check pattern to input: ' + err );
@@ -1355,7 +1366,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 			try {
 				if ( typeof options === "object" && typeof options.check === "object" ) {
-					input.attr( 'pattern', WEF_Utils.regexpGetSource( options.check ) );
+					input.attr( 'pattern', WEF_Utils.regexpGetHtmlPattern( options.check ) );
 				}
 			} catch ( err ) {
 				mw.log.warn( 'Unable to attach check pattern to input: ' + err );
