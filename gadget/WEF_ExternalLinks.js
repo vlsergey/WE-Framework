@@ -361,8 +361,8 @@ WEF_ExternalLinks = function() {
 				var bnf_xdigits = '0123456789bcdfghjkmnpqrstvwxz';
 				var bnf_check_digit = 0;
 				result = 'cb' + id;
-				for ( var i = 0; i < id.length; i++ ) {
-					bnf_check_digit += bnf_xdigits.indexOf( id[i] ) * ( i + 1 );
+				for ( var i = 0; i < result.length; i++ ) {
+					bnf_check_digit += bnf_xdigits.indexOf( result[i] ) * ( i + 1 );
 				}
 				// 29 is the radix
 				result = result.substr( 2 ) + bnf_xdigits[bnf_check_digit % bnf_xdigits.length];
