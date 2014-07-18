@@ -3032,3 +3032,89 @@ function wef_save( claimEditorTables ) {
 	} );
 	actions[0]();
 }
+
+var WEF_EditorForm = function( title, html, i18n ) {
+
+	/** @type {WEF_ClaimEditorsTable[]} */
+	var claimEditorsTables = [];
+
+	var dialog = $( html );
+	dialog.attr( 'title', title );
+
+	dialog.find( '.wef_i18n_text' ).each( function( i, htmlItem ) {
+		var item = $( htmlItem );
+		if ( typeof i18n[item.text()] !== 'undefined' ) {
+			item.text( i18n[item.text()] );
+		}
+	} );
+
+	dialog.find( '.wef_claim_editors' ).each( function( i, htmlItem ) {
+		var item = $( htmlItem );
+
+		var code = item.data( 'code' );
+		var datatype = item.data( 'datatype' );
+		var label = item.data( 'label' );
+		if ( typeof label === 'undefined' ) {
+			label = code;
+		}
+
+		var definition = new WEF_Definition( {
+			code: code,
+			datatype: datatype,
+			label: label,
+			qualifiers: [],
+		} );
+
+		item.find( "tr" ).each( function( k, qItem ) {
+			var qualifier = $( qItem );
+			var qDefinition = new WEF_Definition( {
+				code: qualifier.data( 'code' ),
+				datatype: qualifier.data( 'datatype' ),
+				label: qualifier.data( 'label' ),
+			} );
+			definition.qualifiers.push( qDefinition );
+		} );
+
+		var claimEditorTable = new WEF_ClaimEditorsTable( definition );
+		claimEditorsTables.push( claimEditorTable );
+		claimEditorTable.replaceAll( item );
+	} );
+
+	dialog.find( '.wef_tabs' ).tabs();
+	dialog.dialog( {
+		autoOpen: false,
+		width: 900,
+		buttons: [ {
+			text: i18n.dialogButtonUpdateLabelsText,
+			label: i18n.dialogButtonUpdateLabelsLabel,
+			click: function() {
+				wef_LabelsCache.clearCacheAndRequeue();
+				wef_LabelsCache.receiveLabels();
+			},
+			style: 'position: absolute; left: 1em;',
+		}, {
+			text: i18n.dialogButtonSaveText,
+			label: i18n.dialogButtonSaveLabel,
+			click: function() {
+				dialog.dialog( 'close' );
+				wef_save( claimEditorsTables );
+			},
+		}, {
+			text: i18n.dialogButtonCloseText,
+			label: i18n.dialogButtonCloseLabel,
+			click: function() {
+				$( this ).dialog( "close" );
+			}
+		} ],
+	} );
+
+	this.load = function( entity ) {
+		$.each( claimEditorsTables, function( i, claimEditorsTable ) {
+			claimEditorsTable.init( entity );
+		} );
+	};
+
+	this.open = function() {
+		dialog.dialog( 'open' );
+	};
+};
