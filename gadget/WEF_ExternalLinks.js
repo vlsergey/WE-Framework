@@ -487,7 +487,7 @@ WEF_ExternalLinks = function() {
 		qualifiers: [],
 	} );
 	this.definitions.P407 = new WEF_Definition( {
-		dataType: 'wikibase-item',
+		datatype: 'wikibase-item',
 		qualifiers: [],
 	} );
 	this.definitions.P409 = new WEF_Definition( {
@@ -1195,11 +1195,11 @@ WEF_ExternalLinks = function() {
 		check: regexpPath,
 		template: 'https://$1.livejournal.com/',
 	} );
-	this.definitions.Q234535 = new WEF_Definition( {
+	this.definitions.Q17378135 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'ru',
-		code: 'P1343[Q234535]/P854',
-		label: 'Q234535',
+		code: 'P1343[Q17378135]/P854',
+		label: 'Q17378135',
 		normalize: function( id ) {
 			return id.replace( /^(https?:\/\/slovari\.yandex\.ru\/)[^\/]+(\/%D0%91%D0%A1%D0%AD\/.*)$/i, '$1~%D0%BA%D0%BD%D0%B8%D0%B3%D0%B8$2' );
 		},
@@ -1919,7 +1919,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.P886, // e-lir.ch
 		d.P1417, // Encyclopædia Britannica online .en
 		d.Q17329836,// Encyclopédique Larousse en ligne .fr
-		d.Q234535,// Большая советская .ru
+		d.Q17378135,// Большая советская .ru
 		d.Q4239850,// Краткая литературная .ru
 		d.Q2627728,// Кругосвет .ru
 		d.Q4263804,// Литературная .ru
