@@ -1300,7 +1300,7 @@ WEF_ExternalLinks = function() {
 			text: false,
 			label: 'Искать на сайте Православной энциклопедии',
 			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
-				return 'http://www.pravenc.ru/search/?ie=utf-8&oe=utf-8&text' + encodeURIComponent( title );
+				return 'http://www.pravenc.ru/search/?ie=utf-8&oe=utf-8&text=' + encodeURIComponent( title );
 			} ),
 		} ],
 		qualifiers: [ d.P50, d.P357, d.P478 ],
