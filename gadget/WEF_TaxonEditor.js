@@ -96,10 +96,18 @@ var WEF_TaxonEditor = function() {
 };
 
 if ( wgServerName === 'ru.wikipedia.org' ) {
-	importScript( 'MediaWiki:RuWikiFlagsHtml.js' );
 	importStylesheet( 'MediaWiki:WEF_TaxonEditor.css' );
-	importScript( 'MediaWiki:WEF_Editors.js' );
-	importStylesheet( 'MediaWiki:WEF_Editors.css' );
+
+	if ( !window.wef_loadingMarker_RuWikiFlagsHtml ) {
+		importScript( 'MediaWiki:RuWikiFlagsHtml.js' );
+		window.wef_loadingMarker_RuWikiFlagsHtml = true;
+	}
+
+	if ( !window.wef_loadingMarker_Editors ) {
+		importScript( 'MediaWiki:WEF_Editors.js' );
+		importStylesheet( 'MediaWiki:WEF_Editors.css' );
+		window.wef_loadingMarker_Editors = true;
+	}
 } else {
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_TaxonEditor.css&action=raw&ctype=text/css', 'text/css' );
 

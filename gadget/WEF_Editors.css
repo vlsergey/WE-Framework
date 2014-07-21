@@ -1,76 +1,137 @@
+/*Form level*/
 .wef_button_cell {
-    padding: 0;
-    margin: 0;
-    width: 1px;
+	padding: 0;
+	margin: 0;
+	width: 1px;
 }
 
 .wef_button_cell .ui-button {
-    margin: 0 0.1em !important;
+	margin: 0 0.1em !important;
 }
 
 .wef_button_cell .ui-button .ui-button-text {
-    padding: 0 0.5em !important;
-}
-
-.wef_property_editor_label {
-    text-align: left;
-    white-space: nowrap;
+	padding: 0 0.5em !important;
 }
 
 .wef_single_property_fieldset .wef_property_editor_label {
-    display: none;
-}
-
-.wef_property_editor_input {
-    width: 100%;
-}
-
-.wef_snak_table {
-    width: 100%;
-}
-
-.wef_snak_table_value_editor_cell {
-    width: 100%;
-}
-
-.wef_snak_type_label {
-    font-style: italic;
-}
-
-.wef_commonsMedia, .wef_string, .wef_url, .wef_wikibase-item {
-    width: 99%;
-}
-
-.wef_qualifiers {
-    width: 100%;
-}
-
-.wef_qualifiers_select_cell {
-    width: 1px;
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-.wef_time_table th {
-    text-align: left;
-}
-
-button.wef_select_snak_type_button>span.ui-button-icon-primary {
-    background-image:
-        url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAACNJREFUOMtjYBhewLZh839i8HA2YHAEIjGW0NaAgQ/EoRcGAJzMvdNs2OYMAAAAAElFTkSuQmCC');
-    background-position: 0 0 !important;
-}
-
-.wef-snaktypeselector-menu {
-    border: 1px solid #CCC;
-    position: absolute;
-    z-index: +1;
-}
-
-.wef-snaktypeselector-menu option {
-    padding: 0.25em;
+	display: none;
 }
 
 .wef_progress_item {
-    white-space: nowrap;
+	white-space: nowrap;
+}
+
+.wef_table {
+	width: 100%;
+}
+
+/*Properties level */
+.wef_property_editor_label {
+	text-align: left;
+	white-space: nowrap;
+}
+
+.wef_property_editor_column_cell {
+	width: 1px;
+}
+
+.wef_property_editor_column_table {
+	width: 100%;
+}
+
+.wef_columns_table {
+	width: 100%;
+}
+
+/*Snak level */
+.wef_snak_table {
+	width: 100%;
+}
+
+.wef_snak_table_value_editor_cell {
+	width: 100%;
+}
+
+.wef_snak_type_label {
+	font-style: italic;
+	white-space: nowrap;
+}
+
+button.wef_select_snak_type_button>span.ui-button-icon-primary {
+	background-image:
+		url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAACNJREFUOMtjYBhewLZh839i8HA2YHAEIjGW0NaAgQ/EoRcGAJzMvdNs2OYMAAAAAElFTkSuQmCC');
+	background-position: 0 0 !important;
+}
+
+.wef-snaktypeselector-menu {
+	border: 1px solid #CCC;
+	position: absolute;
+	z-index: +1;
+}
+
+.wef-snaktypeselector-menu option {
+	padding: 0.25em;
+}
+
+/*Snak value level -- per types */
+.wef_commonsMedia, .wef_string, .wef_url, .wef_wikibase-item {
+	width: 99%;
+}
+
+.wef_snak_replacement_label_time, .wef_snak_replacement_label_time_days,
+	.wef_snak_replacement_label_time_months,
+	.wef_snak_replacement_label_time_years {
+	white-space: nowrap;
+}
+
+/*Snak value level -- per types: TIME */
+.wef_time_table th {
+	text-align: left;
+}
+
+.wef_snak_value_editor_time input, .wef_snak_value_editor_time select {
+	width: 15em;
+}
+
+/*Snak value level -- per types: TIME-DAYS */
+.wef_snak_value_editor_time-days {
+	white-space: nowrap;
+}
+
+.wef_property_editor_column_table .wef_time_oldstyle_span:before {
+	content: '\A';
+	white-space: pre;
+}
+
+/*Snak value level -- per types: TIME-MONTHS */
+.wef_snak_value_editor_time-months {
+	white-space: nowrap;
+}
+
+.wef_snak_value_editor_time-months input {
+	width: 6em;
+}
+
+/*Snak value level -- per types: TIME-YEARS */
+.wef_snak_value_editor_time-years {
+	white-space: nowrap;
+}
+
+.wef_snak_value_editor_time-years input {
+	width: 6em;
+}
+
+/* Qualifiers only */
+.wef_qualifiers {
+	width: 100%;
+}
+
+.wef_qualifiers_select_cell {
+	width: 1px;
+	font-weight: bold;
+	white-space: nowrap;
+}
+
+.wef_button_cell_addColumnQualifier {
+	vertical-align: bottom;
 }

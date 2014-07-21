@@ -16,7 +16,7 @@
 		<div id="wef_personEditor_tab_general" class="wef_editor_tab">
 			<fieldset class="wef_fieldset">
 				<legend class="wef_i18n_text">fieldsetName</legend>
-				<table>
+				<table class="wef_table">
 					<!-- given name -->
 					<tbody class="wef_claim_editors" data-code="P735" data-datatype="wikibase-item" />
 					<!-- surname -->
@@ -35,7 +35,7 @@
 			</fieldset>
 			<fieldset class="wef_fieldset">
 				<legend class="wef_i18n_text">fieldsetTitle</legend>
-				<table>
+				<table class="wef_table">
 					<!-- noble family -->
 					<tbody class="wef_claim_editors" data-code="P53" data-datatype="wikibase-item" />
 					<!-- noble title -->
@@ -46,7 +46,7 @@
 			</fieldset>
 			<fieldset class="wef_fieldset">
 				<legend class="wef_i18n_text">fieldsetGeneral</legend>
-				<table>
+				<table class="wef_table">
 					<!-- instance of -->
 					<tbody class="wef_claim_editors" data-code="P31" data-datatype="wikibase-item" />
 					<!-- sex or gender -->
@@ -61,7 +61,7 @@
 		<div id="wef_personEditor_tab_birthAndDeath" class="wef_editor_tab">
 			<fieldset class="wef_fieldset">
 				<legend class="wef_i18n_text">fieldsetBirth</legend>
-				<table>
+				<table class="wef_table">
 					<!-- birth date -->
 					<tbody class="wef_claim_editors" data-code="P569" data-datatype="time" />
 					<!-- birth place -->
@@ -81,7 +81,7 @@
 			</fieldset>
 			<fieldset class="wef_fieldset">
 				<legend class="wef_i18n_text">fieldsetDeath</legend>
-				<table>
+				<table class="wef_table">
 					<!-- Death date -->
 					<tbody class="wef_claim_editors" data-code="P570" data-datatype="time" />
 					<!-- Death place -->
@@ -103,7 +103,7 @@
 			</fieldset>
 		</div>
 		<div id="wef_personEditor_tab_media" class="wef_editor_tab">
-			<table>
+			<table class="wef_table">
 				<!-- Image -->
 				<tbody class="wef_claim_editors" data-code="P18" data-datatype="commonsMedia" />
 				<!-- signature -->
@@ -122,7 +122,7 @@
 			</fieldset>
 		</div>
 		<div id="wef_personEditor_tab_family" class="wef_editor_tab">
-			<table>
+			<table class="wef_table">
 				<!-- father -->
 				<tbody class="wef_claim_editors" data-code="P22" data-datatype="wikibase-item" />
 				<!-- mother -->
@@ -160,7 +160,7 @@
 			</table>
 		</div>
 		<div id="wef_personEditor_tab_education_and_science" class="wef_editor_tab">
-			<table>
+			<table class="wef_table">
 				<!-- student of -->
 				<tbody class="wef_claim_editors" data-code="P1066" data-datatype="wikibase-item" />
 				<!-- student -->
@@ -183,7 +183,7 @@
 			</table>
 			<fieldset>
 				<legend class="wef_i18n_text">fieldsetBiology</legend>
-				<table>
+				<table class="wef_table">
 					<!-- botanist author abbreviation -->
 					<tbody class="wef_claim_editors" data-code="P428" data-datatype="string" />
 					<!-- author citation (zoology) -->
@@ -192,7 +192,7 @@
 			</fieldset>
 		</div>
 		<div id="wef_personEditor_tab_profession" class="wef_editor_tab">
-			<table>
+			<table class="wef_table">
 				<!--  occupation -->
 				<tbody class="wef_claim_editors" data-code="P106" data-datatype="wikibase-item" />
 				<!--  field of work -->
@@ -204,23 +204,30 @@
 					<!-- end date -->
 					<tr data-code="P582" data-datatype="time" />
 				</tbody>
-				<!--  position held -->
-				<tbody class="wef_claim_editors" data-code="P39" data-datatype="wikibase-item">
-					<!-- of -->
-					<tr data-code="P642" data-datatype="wikibase-item" />
-					<!-- electoral district -->
-					<tr data-code="P768" data-datatype="wikibase-item" />
-					<!-- start date -->
-					<tr data-code="P580" data-datatype="time" />
-					<!-- end date -->
-					<tr data-code="P582" data-datatype="time" />
-					<!-- subject of -->
-					<tr data-code="P805" data-datatype="wikibase-item" />
-					<!-- follows -->
-					<tr data-code="P155" data-datatype="wikibase-item" />
-					<!-- followed by -->
-					<tr data-code="P156" data-datatype="wikibase-item" />
-				</tbody>
+			</table>
+			<fieldset class="wef_fieldset wef_single_property_fieldset">
+				<legend class="wef_i18n_label">P39</legend>
+				<table class="wef_table">
+					<!--  position held -->
+					<tbody class="wef_claim_editors" data-code="P39" data-datatype="wikibase-item">
+						<!-- start date -->
+						<tr data-code="P580" data-datatype="time" data-as-column="true" data-editordatatype="time-years" />
+						<!-- end date -->
+						<tr data-code="P582" data-datatype="time" data-as-column="true" data-editordatatype="time-years" />
+						<!-- subject of -->
+						<!-- of -->
+						<tr data-code="P642" data-datatype="wikibase-item" />
+						<!-- electoral district -->
+						<tr data-code="P768" data-datatype="wikibase-item" />
+						<tr data-code="P805" data-datatype="wikibase-item" />
+						<!-- follows -->
+						<tr data-code="P155" data-datatype="wikibase-item" />
+						<!-- followed by -->
+						<tr data-code="P156" data-datatype="wikibase-item" />
+					</tbody>
+				</table>
+			</fieldset>
+			<table class="wef_table">
 				<!--  manager/director -->
 				<tbody class="wef_claim_editors" data-code="P1037" data-datatype="wikibase-item">
 					<!-- start date -->
@@ -244,7 +251,7 @@
 			</table>
 		</div>
 		<div id="wef_personEditor_tab_military" class="wef_editor_tab">
-			<table>
+			<table class="wef_table">
 				<!-- military branch -->
 				<tbody class="wef_claim_editors" data-code="P241" data-datatype="wikibase-item" />
 				<!-- military rank -->
@@ -256,7 +263,7 @@
 			</table>
 		</div>
 		<div id="wef_personEditor_tab_views" class="wef_editor_tab">
-			<table>
+			<table class="wef_table">
 				<!-- member of political party -->
 				<tbody class="wef_claim_editors" data-code="P102" data-datatype="wikibase-item" />
 				<!-- religion -->
@@ -268,7 +275,7 @@
 			</table>
 		</div>
 		<div id="wef_personEditor_tab_sport" class="wef_editor_tab">
-			<table>
+			<table class="wef_table">
 				<!-- member of sports team -->
 				<tbody class="wef_claim_editors" data-code="P54" data-datatype="wikibase-item">
 					<!-- start date -->
@@ -285,7 +292,7 @@
 			</table>
 		</div>
 		<div id="wef_personEditor_tab_culture" class="wef_editor_tab">
-			<table>
+			<table class="wef_table">
 				<!-- movement -->
 				<tbody class="wef_claim_editors" data-code="P135" data-datatype="wikibase-item" />
 				<!-- voice type -->
@@ -299,13 +306,13 @@
 		<div id="wef_personEditor_tab_awards" class="wef_editor_tab">
 			<fieldset class="wef_fieldset wef_single_property_fieldset">
 				<legend class="wef_i18n_label">P166</legend>
-				<table>
+				<table class="wef_table">
 					<!-- award received -->
 					<tbody class="wef_claim_editors" data-code="P166" data-datatype="wikibase-item">
 						<!-- point in time -->
-						<tr data-code="P585" data-datatype="time" />
+						<tr data-code="P585" data-datatype="time" data-as-column="true" data-editordatatype="time-years" />
 						<!-- awarded by -->
-						<tr data-code="P1027" data-datatype="time" />
+						<tr data-code="P1027" data-datatype="wikibase-item" />
 					</tbody>
 				</table>
 			</fieldset>

@@ -1721,7 +1721,7 @@ WEF_ExternalLinks = function() {
 					dataType: 'jsonp',
 					success: function( data ) {
 						viafFillCheckButtons.empty();
-						if ( data.result === undefined ) {
+						if ( $.isEmpty( data.result ) ) {
 							return;
 						}
 						$.each( data.result, function( index, entry ) {
@@ -1982,10 +1982,17 @@ WEF_ExternalLinks.prototype.setup = function() {
 };
 
 if ( wgServerName === 'ru.wikipedia.org' ) {
-	importScript( 'MediaWiki:RuWikiFlagsHtml.js' );
 	importStylesheet( 'MediaWiki:WEF_ExternalLinks.css' );
-	importScript( 'MediaWiki:WEF_Editors.js' );
-	importStylesheet( 'MediaWiki:WEF_Editors.css' );
+
+	if ( !window.wef_loadingMarker_RuWikiFlagsHtml ) {
+		importScript( 'MediaWiki:RuWikiFlagsHtml.js' );
+		window.wef_loadingMarker_RuWikiFlagsHtml = true;
+	}
+
+	if ( !window.wef_loadingMarker_Editors ) {
+		importScript( 'MediaWiki:WEF_Editors.js' );
+		importStylesheet( 'MediaWiki:WEF_Editors.css' );
+	}
 } else {
 	mediaWiki.loader.load( '//ru.wikipedia.org/w/index.php?title=MediaWiki:WEF_ExternalLinks.css&action=raw&ctype=text/css', 'text/css' );
 
