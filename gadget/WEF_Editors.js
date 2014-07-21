@@ -1183,7 +1183,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 			selectDateTimePrecision.appendTo( snakValueEditor.mainElement );
 
-			var input = $( '<input type="date" class="wef_time_date">' ).appendTo( snakValueEditor.mainElement );
+			var input = $( '<input type="text" class="wef_time_date">' ).appendTo( snakValueEditor.mainElement );
 			input.datepicker( {
 				dateFormat: 'd MM yy',
 				changeMonth: true,
