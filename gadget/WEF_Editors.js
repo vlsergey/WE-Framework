@@ -825,8 +825,8 @@ var WEF_TypesCache = function() {
 		// still no luck. Display modal window and ask Wikidata
 
 		// TODO: i18n
-		var dialog = $( '<div title="Get Wikidata property type" class="wef_dialog_no_close"></div>' );
-		var ul = $( '<ul></ul>' ).appendTo( dialog );
+		var dialog = $( document.createElement( 'div' ) ).attr( 'title', 'Get Wikidata property type' ).addClass( 'wef_dialog_no_close' );
+		var ul = $( document.createElement( 'ul' ) ).appendTo( dialog );
 		var progress = new WEF_ProgressItem( ul, "Request property type from Wikidata" );
 
 		dialog.dialog( {
@@ -924,7 +924,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 	var PRECISION_MONTHS = 10;
 	var PRECISION_YEARS = 9;
 
-	this.mainElement = $( '<span>' ).appendTo( parent );
+	this.mainElement = $( document.createElement( 'span' ) ).appendTo( parent );
 
 	var unsupportedF = function() {
 		throw new Error( 'DataType "' + dataDataType + '" is not supported' );
@@ -978,12 +978,15 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 	var selectDateTimePrecision;
 
 	if ( editorDataType.substring( 0, 5 ) === "time-" ) {
-		selectDateTimePrecision = $( '<select class="wef_select_date_time_precision">' );
+		selectDateTimePrecision = $( document.createElement( 'select' ) ).addClass( 'wef_select_date_time_precision' );
 		selectDateTimePrecision.attr( 'title', i18n.inputTimePrecisionTitle );
-		selectDateTimePrecision.append( $( '<option value="time-days">' ).data( 'precision', PRECISION_DAYS ).text( i18n['timePrecision' + PRECISION_DAYS] ) );
-		selectDateTimePrecision.append( $( '<option value="time-months">' ).data( 'precision', PRECISION_MONTHS ).text( i18n['timePrecision' + PRECISION_MONTHS] ) );
-		selectDateTimePrecision.append( $( '<option value="time-years">' ).data( 'precision', PRECISION_YEARS ).text( i18n['timePrecision' + PRECISION_YEARS] ) );
-		selectDateTimePrecision.append( $( '<option value="time">' ).text( i18n.timePrecisionOther ) );
+		selectDateTimePrecision.append( $( document.createElement( 'option' ) ) //
+		.attr( 'value', 'time-days' ).data( 'precision', PRECISION_DAYS ).text( i18n['timePrecision' + PRECISION_DAYS] ) );
+		selectDateTimePrecision.append( $( document.createElement( 'option' ) ) //
+		.attr( 'value', 'time-months' ).data( 'precision', PRECISION_MONTHS ).text( i18n['timePrecision' + PRECISION_MONTHS] ) );
+		selectDateTimePrecision.append( $( document.createElement( 'option' ) ) //
+		.attr( 'value', 'time-years' ).data( 'precision', PRECISION_YEARS ).text( i18n['timePrecision' + PRECISION_YEARS] ) );
+		selectDateTimePrecision.append( $( document.createElement( 'option' ) ).attr( 'value', 'time' ).text( i18n.timePrecisionOther ) );
 		selectDateTimePrecision.val( editorDataType );
 		selectDateTimePrecision.change( function() {
 			var newDataType = selectDateTimePrecision.val();
@@ -1003,7 +1006,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 	if ( editorDataType === 'commonsMedia' ) {
 		( function() {
-			var input = $( '<input type="text" class="wef_commonsMedia">' ).appendTo( snakValueEditor.mainElement );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_commonsMedia' ).appendTo( snakValueEditor.mainElement );
 			snakValueEditor.setDataValue = function( newDataValue ) {
 				input.val( newDataValue.value );
 			};
@@ -1023,7 +1026,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				};
 			};
 			snakValueEditor.getAsLabel = function() {
-				return $( '<a></a>' ) //
+				return $( document.createElement( 'a' ) ) //
 				.attr( 'href', '//commons.wikimedia.org/wiki/File:' + encodeURI( input.val() ) ) //
 				.text( input.val() );
 			};
@@ -1033,7 +1036,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 		} )();
 	} else if ( editorDataType === 'string' ) {
 		( function() {
-			var input = $( '<input type="text" class="wef_string">' ).appendTo( snakValueEditor.mainElement );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_string' ).appendTo( snakValueEditor.mainElement );
 
 			if ( typeof options === "object" && typeof options.autocomplete === "object" ) {
 				input.autocomplete( options.autocomplete );
@@ -1069,7 +1072,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				};
 			};
 			snakValueEditor.getAsLabel = function() {
-				return $( '<span></span>' ).text( input.val() );
+				return $( document.createElement( 'span' ) ).text( input.val() );
 			};
 
 			input.change( changeF );
@@ -1078,14 +1081,14 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 	} else if ( editorDataType === 'time' ) {
 		( function() {
 
-			var table = $( '<table class="wef_time_table"></table>' ).appendTo( snakValueEditor.mainElement );
+			var table = $( document.createElement( 'table' ) ).addClass( 'wef_time_table' ).appendTo( snakValueEditor.mainElement );
 
-			var inputTime = $( '<input type="text" class="wef_time_time">' );
-			var inputTimeZone = $( '<input type="text" class="wef_time_timezone">' );
+			var inputTime = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_time' );
+			var inputTimeZone = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_timezone' );
 
-			var inputPrecision = $( '<select class="wef_time_precision">' );
+			var inputPrecision = $( document.createElement( 'select' ) ).addClass( 'wef_time_precision' );
 			for ( var i = 0; i < 15; i++ ) {
-				var option = $( '<option></option>' );
+				var option = $( document.createElement( 'option' ) );
 				option.attr( 'value', i );
 				option.text( i18n['timePrecision' + i] );
 				inputPrecision.append( option );
@@ -1101,21 +1104,11 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			var addTr = function( textLabel, textTitle, input ) {
 				input.uniqueId();
 
-				var tr = $( '<tr></tr>' );
-				tr.attr( 'title', textTitle );
-				table.append( tr );
-
-				var th = $( '<th></th>' );
-				tr.append( th );
-
-				var label = $( '<label></label>' );
-				label.text( textLabel + ': ' );
-				label.attr( 'id', input.attr( 'id' ) );
-				th.append( label );
-
-				var td = $( '<td></td>' );
+				var tr = $( document.createElement( 'tr' ) ).attr( 'title', textTitle ).appendTo( table );
+				var th = $( document.createElement( 'th' ) ).appendTo( tr );
+				var label = $( document.createElement( 'label' ) ).text( textLabel + ': ' ).attr( 'id', input.attr( 'id' ) ).appendTo( th );
+				var td = $( document.createElement( 'td' ) ).appendTo( tr );
 				td.append( input );
-				tr.append( td );
 			};
 
 			addTr( i18n.inputTimeTimeLabel, i18n.inputTimeTimeTitle, inputTime );
@@ -1153,7 +1146,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			};
 			snakValueEditor.getAsLabel = function() {
 				// TODO: format value using server ?
-				return $( '<span class="wef_snak_replacement_label_time"></span>' ).text( inputTime.val() );
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time' ).text( inputTime.val() );
 			};
 
 			inputTime.change( changeF );
@@ -1170,7 +1163,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 			selectDateTimePrecision.appendTo( snakValueEditor.mainElement );
 
-			var input = $( '<input type="text" class="wef_time_date">' ).appendTo( snakValueEditor.mainElement );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_date' ).appendTo( snakValueEditor.mainElement );
 			input.datepicker( {
 				dateFormat: 'd MM yy',
 				changeMonth: true,
@@ -1178,16 +1171,16 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				showButtonPanel: true,
 			} );
 
-			var showJulianSpan = $( '<span class="wef_time_oldstyle_span">' ).appendTo( snakValueEditor.mainElement );
+			var showJulianSpan = $( document.createElement( 'span' ) ).addClass( 'wef_time_oldstyle_span' ).appendTo( snakValueEditor.mainElement );
 
-			var showJulianCheckbox = $( '<input type="checkbox" class="wef_time_oldstyle">' );
+			var showJulianCheckbox = $( document.createElement( 'input' ) ).attr( 'type', 'checkbox' ).addClass( 'wef_time_oldstyle' );
 			showJulianCheckbox.attr( 'title', i18n.checkboxShowJulianTitle );
 			showJulianCheckbox.uniqueId();
 			showJulianCheckbox.change( changeF );
 			showJulianCheckbox.keyup( changeF );
 			showJulianCheckbox.appendTo( showJulianSpan );
 
-			var showJulianCheckboxLabel = $( '<label>' );
+			var showJulianCheckboxLabel = $( document.createElement( 'label' ) );
 			showJulianCheckboxLabel.attr( 'for', showJulianCheckbox.attr( 'id' ) );
 			showJulianCheckboxLabel.attr( 'title', i18n.checkboxShowJulianTitle );
 			showJulianCheckboxLabel.text( i18n.checkboxShowJulian );
@@ -1232,7 +1225,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				};
 			};
 			snakValueEditor.getAsLabel = function() {
-				return $( '<span class="wef_snak_replacement_label_time_days"></span>' ).text( input.val() );
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_days' ).text( input.val() );
 			};
 
 			input.change( changeF );
@@ -1243,16 +1236,15 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 			selectDateTimePrecision.appendTo( snakValueEditor.mainElement );
 
-			var months = $( '<select class="wef_time_month">' ).appendTo( snakValueEditor.mainElement );
+			var months = $( document.createElement( 'select' ) ).addClass( 'wef_time_month' ).appendTo( snakValueEditor.mainElement );
 			for ( var i = 1; i <= 12; i++ ) {
-				var option = $( '<option>' );
+				var option = $( document.createElement( 'option' ) );
 				option.attr( 'value', i );
 				option.text( wgMonthNames[i] );
 				months.append( option );
 			}
 
-			var years = $( '<input type="number" step="1" />' ).appendTo( snakValueEditor.mainElement );
-
+			var years = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( snakValueEditor.mainElement );
 			snakValueEditor.setDataValue = function( newDataValue ) {
 				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
@@ -1290,7 +1282,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				};
 			};
 			snakValueEditor.getAsLabel = function() {
-				return $( '<span class="wef_snak_replacement_label_time_months"></span>' ).text( wgMonthNames[months.val()] + " " + years.val() );
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_months' ).text( wgMonthNames[months.val()] + " " + years.val() );
 			};
 
 			months.change( changeF );
@@ -1303,7 +1295,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 			selectDateTimePrecision.appendTo( snakValueEditor.mainElement );
 
-			var years = $( '<input type="number" step="1" />' ).appendTo( snakValueEditor.mainElement );
+			var years = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( snakValueEditor.mainElement );
 
 			snakValueEditor.setDataValue = function( newDataValue ) {
 				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
@@ -1340,7 +1332,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				};
 			};
 			snakValueEditor.getAsLabel = function() {
-				return $( '<span class="wef_snak_replacement_label_time_years"></span>' ).text( years.val() );
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_years' ).text( years.val() );
 			};
 
 			years.change( changeF );
@@ -1349,7 +1341,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 	} else if ( editorDataType === 'url' ) {
 		( function() {
 
-			var input = $( '<input type="url" class="wef_url">' ).appendTo( snakValueEditor.mainElement );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'url' ).addClass( 'wef_url' ).appendTo( snakValueEditor.mainElement );
 			snakValueEditor.setDataValue = function( newDataValue ) {
 				input.val( WEF_Utils.urlNice( newDataValue.value ) );
 			};
@@ -1380,7 +1372,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				};
 			};
 			snakValueEditor.getAsLabel = function() {
-				return $( '<span class="wef_snak_replacement_label_url"></span>' ).text( input.val() );
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_url' ).text( input.val() );
 			};
 
 			input.change( changeF );
@@ -1388,7 +1380,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 		} )();
 	} else if ( editorDataType === 'wikibase-item' ) {
 		( function() {
-			var input = $( '<input type="text" class="wef_wikibase-item">' ).appendTo( snakValueEditor.mainElement );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_wikibase-item' ).appendTo( snakValueEditor.mainElement );
 
 			snakValueEditor.setDataValue = function( newDataValue ) {
 				var entityId = 'Q' + newDataValue.value['numeric-id'];
@@ -1432,10 +1424,10 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			snakValueEditor.getAsLabel = function() {
 				var entityId = input.data( 'value-entity-id' );
 				if ( $.isEmpty( entityId ) ) {
-					return $( '<span></span>' );
+					return $( document.createElement( 'span' ) );
 				}
 
-				var result = $( '<span></span>' );
+				var result = $( document.createElement( 'span' ) );
 				result.text( '(' + entityId + ')' );
 				wef_LabelsCache.getOrQueue( entityId, function( label, description ) {
 					result.text( label + ' (' + entityId + ')' );
@@ -1544,7 +1536,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 			input.data( "autocomplete" )._renderItem = function( ul, item ) {
 				var a = $( '<a><strong>' + item.label + '</strong> <span style="color: darkgray;">' + item.value + '</span><br>' + '</a>' );
-				var desc = $( '<span>' ).appendTo( a );
+				var desc = $( document.createElement( 'span' ) ).appendTo( a );
 				if ( !$.isEmpty( item.desc ) ) {
 					desc.text( item.desc );
 				} else {
@@ -1552,7 +1544,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					wef_LabelsCache.queueForDescription( item.value );
 					translatableDesciptions.push( desc );
 				}
-				return $( '<li>' ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
+				return $( document.createElement( 'li' ) ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
 			};
 
 			input.change( changeF );
@@ -1580,7 +1572,7 @@ WEF_SnakValueEditor.prototype.show = function() {
  * and JQuery autoselect
  */
 var WEF_ItemSelect = function() {
-	var select = $( '<select class="wef_item_select">' );
+	var select = $( document.createElement( 'select' ) ).addClass( 'wef_item_select' );
 	this.select = select;
 
 	this.addOption = function( entityId ) {
@@ -1588,7 +1580,7 @@ var WEF_ItemSelect = function() {
 			throw new Error( 'incorrect entity ID: ' + entityId );
 		}
 
-		var option = $( '<option></option>' ).appendTo( select );
+		var option = $( document.createElement( 'option' ) ).appendTo( select );
 		option.attr( 'value', entityId );
 		option.text( entityId );
 		wef_LabelsCache.getOrQueue( entityId, function( label, description ) {
@@ -1620,7 +1612,7 @@ var WEF_ItemSelect = function() {
 var WEF_SelectSnakType = function() {
 	var i18n = wef_Editors_i18n;
 
-	var select = $( '<select class="wef-snaktypeselector-menu" size="3" />' );
+	var select = $( document.createElement( 'select' ) ).addClass( 'wef-snaktypeselector-menu' ).attr( 'size', 3 );
 	select.hide();
 	$( document.body ).append( select );
 
@@ -1633,9 +1625,9 @@ var WEF_SelectSnakType = function() {
 		}
 	}
 
-	$( '<option value="value">' ).appendTo( select ).text( i18n.snakTypeValue ).attr( 'title', i18n.snakTypeValueTitle );
-	$( '<option value="novalue">' ).appendTo( select ).text( i18n.snakTypeNoValue ).attr( 'title', i18n.snakTypeNoValueTitle );
-	$( '<option value="somevalue">' ).appendTo( select ).text( i18n.snakTypeSomeValue ).attr( 'title', i18n.snakTypeSomeValueTitle );
+	$( document.createElement( 'option' ) ).attr( 'value', 'value' ).text( i18n.snakTypeValue ).attr( 'title', i18n.snakTypeValueTitle ).appendTo( select );
+	$( document.createElement( 'option' ) ).attr( 'value', 'novalue' ).text( i18n.snakTypeNoValue ).attr( 'title', i18n.snakTypeNoValueTitle ).appendTo( select );
+	$( document.createElement( 'option' ) ).attr( 'value', 'somevalue' ).text( i18n.snakTypeSomeValue ).attr( 'title', i18n.snakTypeSomeValueTitle ).appendTo( select );
 
 	select.click( changeF );
 	select.change( changeF );
@@ -1693,204 +1685,211 @@ var WEF_SnakEditor = function( parent, options ) {
 		throw new Error( "parent is empty or not specified" );
 	}
 
-	var i18n = wef_Editors_i18n;
+	this.options = options;
 	var snakEditor = this;
 
 	this.snakTypeMode = null;
 	this.valueEditor = null;
 	this.propertyId = null;
 
-	var butttonSelectSnakType = $( '<button class="wef_select_snak_type_button">' );
-	butttonSelectSnakType.button( {
+	this._butttonSelectSnakType = $( document.createElement( 'button' ) ).addClass( 'wef_select_snak_type_button' );
+	this._butttonSelectSnakType.button( {
 		icons: {
 			primary: 'ui-icon-triangle-1-e'
 		},
 		text: false,
-		label: i18n.buttonSelectSnakType,
+		label: wef_Editors_i18n.buttonSelectSnakType,
 	} ).click( function() {
 		if ( wef_selectSnakType.visible && wef_selectSnakType.initiator === this ) {
 			wef_selectSnakType.hide();
 		} else {
 			wef_selectSnakType.initiator = this;
-			wef_selectSnakType.show( butttonSelectSnakType, snakEditor.snakTypeMode, function( value ) {
+			wef_selectSnakType.show( snakEditor._butttonSelectSnakType, snakEditor.snakTypeMode, function( value ) {
 				snakEditor.switchToSnakType( value );
 			} );
 		}
 	} );
 
 	// JQuery parent element
-	this.table = $( '<table class="wef_snak_table">' ).appendTo( parent );
-	var tr = $( '<tr></tr>' ).appendTo( this.table );
-	var td1 = $( '<td class="wef_button_cell">' ).appendTo( tr );
-	var td2 = $( '<td class="wef_snak_table_value_editor_cell">' ).appendTo( tr );
-	var snakTypeLabel = $( '<span class="wef_snak_type_label"></span>' ).appendTo( td2 );
+	this.table = $( document.createElement( 'table' ) ).addClass( 'wef_snak_table' ).appendTo( parent );
+	this._tr = $( document.createElement( 'tr' ) ).appendTo( this.table );
+	this._td1 = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( this._tr );
+	this._td2 = $( document.createElement( 'td' ) ).addClass( 'wef_snak_table_value_editor_cell' ).appendTo( this._tr );
+	this._snakTypeLabel = $( document.createElement( 'span' ) ).addClass( 'wef_snak_type_label' ).appendTo( this._td2 );
 
-	td1.append( butttonSelectSnakType );
-
-	function initValueEditor() {
-		$( snakEditor.valueEditor ).change( function() {
-			$( snakEditor ).change();
-		} );
-	}
-
-	function showSnakTypeLabel( snakType ) {
-		if ( snakType === 'novalue' ) {
-			snakTypeLabel.text( i18n.snakTypeNoValue ).attr( 'title', i18n.snakTypeNoValueTitle );
-		} else if ( snakType === 'somevalue' ) {
-			snakTypeLabel.text( i18n.snakTypeSomeValue ).attr( 'title', i18n.snakTypeSomeValueTitle );
-		} else {
-			snakTypeLabel.text( '' ).attr( 'title', '' );
-		}
-		snakTypeLabel.show();
-	}
-
-	this.hasData = function() {
-		return this.snakTypeMode !== 'value' || this.valueEditor.hasValue();
-	};
-
-	this.hasValue = function() {
-		return this.snakTypeMode === 'value' && this.valueEditor.hasValue();
-	};
+	this._td1.append( this._butttonSelectSnakType );
 
 	this.hiddenBehindLabel = false;
+	this._jThis = $( this );
+};
 
-	this.hideBehindLabel = function() {
-		var label = $( '<span class="wef_snak_replacement_label"></span>' );
-		label.css( 'cursor', 'pointer' );
+WEF_SnakEditor.prototype._change = function() {
+	this._jThis.trigger( 'change' );
+};
 
-		if ( this.snakTypeMode === 'value' ) {
-			label.append( this.valueEditor.getAsLabel() );
-		} else {
-			label.text( wef_selectSnakType.text() );
+WEF_SnakEditor.prototype.hasData = function() {
+	return this.snakTypeMode !== 'value' || this.valueEditor.hasValue();
+};
+
+WEF_SnakEditor.prototype.hasValue = function() {
+	return this.snakTypeMode === 'value' && this.valueEditor.hasValue();
+};
+
+WEF_SnakEditor.prototype.hideBehindLabel = function() {
+	var label = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label' );
+	label.css( 'cursor', 'pointer' );
+
+	if ( this.snakTypeMode === 'value' ) {
+		label.append( this.valueEditor.getAsLabel() );
+	} else {
+		label.text( wef_selectSnakType.text() );
+	}
+
+	this.table.before( label );
+	this.table.hide();
+
+	var snakEditor = this;
+	snakEditor.hiddenBehindLabel = true;
+	label.click( function() {
+		label.remove();
+		snakEditor.table.show();
+		snakEditor.hiddenBehindLabel = false;
+	} );
+
+	return label;
+};
+
+WEF_SnakEditor.prototype.initEmptyWithDataType = function( propertyId, dataType, editorDataType ) {
+	this.propertyId = propertyId;
+	this.snakTypeMode = 'value';
+	this.valueEditor = new WEF_SnakValueEditor( this._td2, dataType, editorDataType, undefined, this.options );
+	this._initValueEditor();
+};
+
+WEF_SnakEditor.prototype.initEmptyWithPropertyId = function( propertyId ) {
+	this.propertyId = propertyId;
+	this.snakTypeMode = 'novalue';
+	this.switchToSnakType( 'value' );
+};
+
+WEF_SnakEditor.prototype._initValueEditor = function() {
+	var snakEditor = this;
+	$( this.valueEditor ).change( function() {
+		snakEditor._change();
+	} );
+};
+
+WEF_SnakEditor.prototype.initWithValue = function( snak ) {
+	if ( typeof snak.property === 'undefined' ) {
+		throw new Error( 'Snak does not specify property ID' );
+	}
+	if ( typeof snak.snaktype === 'snaktype' ) {
+		throw new Error( 'Snak does not specify snak type' );
+	}
+	this.propertyId = snak.property;
+	this.snakTypeMode = snak.snaktype;
+
+	if ( snak.snaktype === 'value' ) {
+		if ( typeof snak.datatype === 'undefined' ) {
+			throw new Error( 'Snak contains value, but does not specify data type' );
 		}
+		if ( typeof snak.datavalue === 'undefined' ) {
+			throw new Error( 'Snak type is value, but value does not present' );
+		}
+		this.valueEditor = new WEF_SnakValueEditor( this._td2, snak.datatype, undefined, snak.datavalue, this.options );
+		this._initValueEditor();
+	} else {
+		this._showSnakTypeLabel( snak.snaktype );
+	}
 
-		this.table.before( label );
-		this.table.hide();
+	this._change();
+};
 
-		snakEditor.hiddenBehindLabel = true;
-		label.click( function() {
-			label.remove();
-			snakEditor.table.show();
-			snakEditor.hiddenBehindLabel = false;
+/** @return {string} */
+WEF_SnakEditor.prototype.getDataType = function() {
+	if ( this.snakTypeMode !== 'value' ) {
+		throw new Error( 'data type make sence only when snak type is "value"' );
+	}
+	return this.valueEditor.dataDataType;
+};
+
+WEF_SnakEditor.prototype.getDataValue = function() {
+	return this.valueEditor.getDataValue();
+};
+
+WEF_SnakEditor.prototype.remove = function() {
+	if ( this.valueEditor !== null ) {
+		$.each( this.valueEditor.elements, function( index, item ) {
+			item.remove();
 		} );
+	}
+	this._butttonSelectSnakType.remove();
+	this.valueEditor = null;
+	this.parent = null;
+};
 
-		return label;
-	};
+WEF_SnakEditor.prototype.removeValue = function() {
+	this.valueEditor.removeValue();
+	this._change();
+};
 
-	this.initWithValue = function( snak ) {
-		if ( typeof snak.property === 'undefined' ) {
-			throw new Error( 'Snak does not specify property ID' );
-		}
-		if ( typeof snak.snaktype === 'snaktype' ) {
-			throw new Error( 'Snak does not specify snak type' );
-		}
-		this.propertyId = snak.property;
-		this.snakTypeMode = snak.snaktype;
+WEF_SnakEditor.prototype.setSnakValue = function( snak ) {
+	if ( typeof snak.property === 'undefined' ) {
+		throw new Error( 'Snak does not specify property ID' );
+	}
+	if ( typeof snak.snaktype === 'snaktype' ) {
+		throw new Error( 'Snak does not specify snak type' );
+	}
+	this.propertyId = snak.property;
+	this.switchToSnakType( snak.snaktype );
+	if ( snak.snaktype === 'value' ) {
+		this.valueEditor.setDataValue( snak.datavalue );
+	}
+	this._change();
+};
 
-		if ( snak.snaktype === 'value' ) {
-			if ( typeof snak.datatype === 'undefined' ) {
-				throw new Error( 'Snak contains value, but does not specify data type' );
-			}
-			if ( typeof snak.datavalue === 'undefined' ) {
-				throw new Error( 'Snak type is value, but value does not present' );
-			}
-			this.valueEditor = new WEF_SnakValueEditor( td2, snak.datatype, undefined, snak.datavalue, options );
-			initValueEditor();
-		} else {
-			showSnakTypeLabel( snak.snaktype );
-		}
+WEF_SnakEditor.prototype._showSnakTypeLabel = function( snakType ) {
+	if ( snakType === 'novalue' ) {
+		this._snakTypeLabel.text( wef_Editors_i18n.snakTypeNoValue ).attr( 'title', wef_Editors_i18n.snakTypeNoValueTitle );
+	} else if ( snakType === 'somevalue' ) {
+		this._snakTypeLabel.text( wef_Editors_i18n.snakTypeSomeValue ).attr( 'title', wef_Editors_i18n.snakTypeSomeValueTitle );
+	} else {
+		this._snakTypeLabel.text( '' ).attr( 'title', '' );
+	}
+	this._snakTypeLabel.show();
+};
 
-		$( this ).change();
-	};
+WEF_SnakEditor.prototype.switchToSnakType = function( snakType ) {
+	var oldSnakType = this.snakTypeMode;
+	if ( oldSnakType === snakType ) {
+		return;
+	}
 
-	this.initEmptyWithDataType = function( propertyId, dataType, editorDataType ) {
-		this.propertyId = propertyId;
-		this.snakTypeMode = 'value';
-		this.valueEditor = new WEF_SnakValueEditor( td2, dataType, editorDataType, undefined, options );
-		initValueEditor();
-	};
+	this.snakTypeMode = snakType;
+	if ( this.valueEditor !== null ) {
+		this.valueEditor.hide();
+	}
 
-	this.initEmptyWithPropertyId = function( propertyId ) {
-		this.propertyId = propertyId;
-		this.snakTypeMode = 'novalue';
-		this.switchToSnakType( 'value' );
-	};
-
-	/** @return {string} */
-	this.getDataType = function() {
-		if ( this.snakTypeMode !== 'value' ) {
-			throw new Error( 'data type make sence only when snak type is "value"' );
-		}
-		return this.valueEditor.dataDataType;
-	};
-
-	this.getDataValue = function() {
-		return this.valueEditor.getDataValue();
-	};
-
-	this.removeValue = function() {
-		this.valueEditor.removeValue();
-		$( this ).change();
-	};
-
-	this.setSnakValue = function( snak ) {
-		if ( typeof snak.property === 'undefined' ) {
-			throw new Error( 'Snak does not specify property ID' );
-		}
-		if ( typeof snak.snaktype === 'snaktype' ) {
-			throw new Error( 'Snak does not specify snak type' );
-		}
-		this.propertyId = snak.property;
-		this.switchToSnakType( snak.snaktype );
-		if ( snak.snaktype === 'value' ) {
-			this.valueEditor.setDataValue( snak.datavalue );
-		}
-		$( this ).change();
-	};
-
-	this.switchToSnakType = function( snakType ) {
-		var oldSnakType = this.snakTypeMode;
-		if ( oldSnakType === snakType ) {
-			return;
-		}
-
-		this.snakTypeMode = snakType;
-		if ( this.valueEditor !== null ) {
-			this.valueEditor.hide();
-		}
-
-		var _this = this;
-		if ( snakType === 'value' ) {
-			if ( this.valueEditor === null ) {
-				wef_TypesCache.getPropertyType( _this.propertyId, function( dataType ) {
-					snakTypeLabel.hide();
-					_this.valueEditor = new WEF_SnakValueEditor( td2, dataType, undefined, undefined, options );
-					initValueEditor();
-					$( _this ).change();
-				}, function( failureReason ) {
-					alert( "Can't change snak value type bacause property data type is unknown: " + failureReason );
-					_this.snakTypeMode = oldSnakType;
-				} );
-			} else {
-				snakTypeLabel.hide();
-				this.valueEditor.show();
-			}
-		} else {
-			showSnakTypeLabel( snakType );
-			$( this ).change();
-		}
-	};
-
-	this.remove = function() {
-		if ( this.valueEditor !== null ) {
-			$.each( this.valueEditor.elements, function( index, item ) {
-				item.remove();
+	var snakEditor = this;
+	if ( snakType === 'value' ) {
+		if ( this.valueEditor === null ) {
+			wef_TypesCache.getPropertyType( snakEditor.propertyId, function( dataType ) {
+				snakEditor._snakTypeLabel.hide();
+				snakEditor.valueEditor = new WEF_SnakValueEditor( td2, dataType, undefined, undefined, options );
+				initValueEditor();
+				snakEditor._change();
+			}, function( failureReason ) {
+				alert( "Can't change snak value type bacause property data type is unknown: " + failureReason );
+				snakEditor.snakTypeMode = oldSnakType;
 			} );
+		} else {
+			this._snakTypeLabel.hide();
+			this.valueEditor.show();
 		}
-		butttonSelectSnakType.remove();
-		this.valueEditor = null;
-		this.parent = null;
-	};
+	} else {
+		this._showSnakTypeLabel( snakType );
+		this._change();
+	}
 };
 
 /**
@@ -1970,9 +1969,9 @@ var WEF_QualifierEditor = function( parent, propertyId, onRemove ) {
 	/** @type {string} */
 	this.wikidataOldValue = null;
 
-	this.qualifierRow = $( '<tr></tr>' ).appendTo( parent );
-	this.qualifierEditCell = $( '<td  class="wef_qualifiers_edit_cell"></td>' ).appendTo( this.qualifierRow );
-	this.qualifierRemoveCell = $( '<td class="wef_button_cell"></td>' ).appendTo( this.qualifierRow );
+	this.qualifierRow = $( document.createElement( 'tr' ) ).appendTo( parent );
+	this.qualifierEditCell = $( document.createElement( 'td' ) ).addClass( 'wef_qualifiers_edit_cell' ).appendTo( this.qualifierRow );
+	this.qualifierRemoveCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( this.qualifierRow );
 
 	this._addRemoveButton( this.qualifierRemoveCell );
 };
@@ -2055,7 +2054,7 @@ WEF_QualifierEditor.prototype.clear = function() {
 
 WEF_QualifierEditor.prototype._addRemoveButton = function( target ) {
 	var qualifierEditor = this;
-	var button = $( '<button type="button"></button>' ).button( {
+	var button = $( document.createElement( 'button' ) ).attr( 'type', 'button' ).button( {
 		icons: {
 			primary: 'ui-icon-trash'
 		},
@@ -2086,12 +2085,12 @@ var WEF_SelectableQualifierEditor = function( parent, qualifierDefinitions, onRe
 
 	var qualifiedEditor = this;
 
-	this.qualifierRow = $( '<tr></tr>' ).appendTo( parent );
+	this.qualifierRow = $( document.createElement( 'tr' ) ).appendTo( parent );
 	/** @type {WEF_ItemSelect} */
 	var qualifierSelect = this.qualifierSelect = new WEF_ItemSelect();
-	qualifierSelect.select.appendTo( $( '<td class="wef_qualifiers_select_cell" ></td>' ).appendTo( this.qualifierRow ) );
-	this.qualifierEditCell = $( '<td  class="wef_qualifiers_edit_cell"></td>' ).appendTo( this.qualifierRow );
-	this.qualifierRemoveCell = $( '<td class="wef_button_cell"></td>' ).appendTo( this.qualifierRow );
+	qualifierSelect.select.appendTo( $( document.createElement( 'td' ) ).addClass( 'wef_qualifiers_select_cell' ).appendTo( this.qualifierRow ) );
+	this.qualifierEditCell = $( document.createElement( 'td' ) ).addClass( 'wef_qualifiers_edit_cell' ).appendTo( this.qualifierRow );
+	this.qualifierRemoveCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( this.qualifierRow );
 
 	if ( $.isArray( qualifierDefinitions ) ) {
 		$.each( qualifierDefinitions, function( index, qualifierDefinition ) {
@@ -2108,7 +2107,7 @@ var WEF_SelectableQualifierEditor = function( parent, qualifierDefinitions, onRe
 	qualifierSelect.val( null );
 
 	qualifierSelect.hideBehindLabel = function() {
-		var label = $( '<span></span>' );
+		var label = $( document.createElement( 'span' ) );
 		label.css( 'cursor', 'pointer' );
 
 		var code = qualifierSelect.val();
@@ -2245,7 +2244,7 @@ var WEF_ClaimEditor = function( definition ) {
 	var claimEditor = this;
 
 	var getLabel = function() {
-		var label = $( '<label></label>' );
+		var label = $( document.createElement( 'label' ) );
 
 		var updateLabel = function() {
 			var newLabel = '';
@@ -2330,18 +2329,18 @@ var WEF_ClaimEditor = function( definition ) {
 		throw new Error( "Unsupported code: " + definition.code );
 	}
 
-	this.tbody = $( '<tbody class="wef_property_editor_tbody wef_property_editor_' + this.propertyId + '"></tbody>' );
-	var row1 = this.row1 = $( '<tr class="wef_property_editor_row"></tr>' ).appendTo( this.tbody );
-	var flagCell = $( '<td class="wef_property_editor_flag"></td>' ).appendTo( row1 );
-	var labelCell = $( '<th class="wef_property_editor_label"></th>' ).appendTo( row1 );
-	var beforeInputCell = $( '<td class="wef_button_cell"></td>' ).appendTo( row1 );
-	var inputCell = $( '<td class="wef_property_editor_input"></td>' ).appendTo( row1 );
+	this.tbody = $( document.createElement( 'tbody' ) ).addClass( 'wef_property_editor_tbody' ).addClass( 'wef_property_editor_' + this.propertyId );
+	var row1 = this.row1 = $( document.createElement( 'tr' ) ).addClass( 'wef_property_editor_row' ).appendTo( this.tbody );
+	var flagCell = $( document.createElement( 'td' ) ).addClass( 'wef_property_editor_flag' ).appendTo( row1 );
+	var labelCell = $( document.createElement( 'th' ) ).addClass( 'wef_property_editor_label' ).appendTo( row1 );
+	var beforeInputCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( row1 );
+	var inputCell = $( document.createElement( 'td' ) ).addClass( 'wef_property_editor_input' ).appendTo( row1 );
 	var columnTables = this._columnTables = {};
 	if ( !$.isEmpty( definition.columns ) ) {
 		$.each( definition.columns, function( i, columnDefinition ) {
 			if ( !$.isEmpty( columnDefinition.code ) ) {
-				var addColumnQualifierCell = $( '<td class="wef_button_cell wef_button_cell_addColumnQualifier"></td>' ).appendTo( row1 );
-				$( '<button type="button"></button>' ).button( {
+				var addColumnQualifierCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).addClass( 'wef_button_cell_addColumnQualifier' ).appendTo( row1 );
+				$( document.createElement( 'button' ) ).attr( 'type', 'button' ).button( {
 					icons: {
 						primary: 'ui-icon-plus'
 					},
@@ -2352,12 +2351,12 @@ var WEF_ClaimEditor = function( definition ) {
 					qualifierEditor.initWithEmpty( columnDefinition.code, columnDefinition.datatype, columnDefinition.editordatatype );
 				} ).addClass( 'wef_property_button' ).appendTo( addColumnQualifierCell );
 
-				var columnCell = $( '<td class="wef_property_editor_column_cell"></td>' ).appendTo( row1 );
+				var columnCell = $( document.createElement( 'td' ) ).addClass( 'wef_property_editor_column_cell' ).appendTo( row1 );
 				wef_LabelsCache.getOrQueue( columnDefinition.code, function( label, description ) {
 					columnCell.attr( 'title', description );
 				} );
 
-				var columnTable = $( '<table class="wef_property_editor_column_table"></table>' ).appendTo( columnCell );
+				var columnTable = $( document.createElement( 'table' ) ).addClass( 'wef_property_editor_column_table' ).appendTo( columnCell );
 				columnTables[columnDefinition.code] = columnTable;
 			}
 		} );
@@ -2379,7 +2378,7 @@ var WEF_ClaimEditor = function( definition ) {
 
 	/* Label */
 	var labelToDisplay = getLabel( definition );
-	var labelPlaceholder = $( '<label></label>' );
+	var labelPlaceholder = $( document.createElement( 'label' ) );
 
 	labelCell.empty();
 	labelCell.append( labelToDisplay );
@@ -2397,10 +2396,10 @@ var WEF_ClaimEditor = function( definition ) {
 		labelPlaceholder.hide();
 	};
 
-	var row2 = $( '<tr class="wef_property_editor_row"></tr>' ).appendTo( this.tbody );
-	$( '<td class="wef_property_editor_cell_emtpy"></td>' ).appendTo( row2 );
-	var bottomContentCell = $( '<td colspan="100" class="wef_property_editor_bottom_content"></td>' ).appendTo( row2 );
-	this._bottomContentTable = $( '<table class="wef_qualifiers"></table>' ).appendTo( bottomContentCell );
+	var row2 = $( document.createElement( 'tr' ) ).addClass( 'wef_property_editor_row' ).appendTo( this.tbody );
+	$( document.createElement( 'td' ) ).addClass( 'wef_property_editor_cell_emtpy' ).appendTo( row2 );
+	var bottomContentCell = $( document.createElement( 'td' ) ).addClass( 'wef_property_editor_bottom_content' ).attr( 'colspan', '100' ).appendTo( row2 );
+	this._bottomContentTable = $( document.createElement( 'table' ) ).addClass( 'wef_qualifiers' ).appendTo( bottomContentCell );
 
 	this.disabled = false;
 
@@ -2449,8 +2448,7 @@ var WEF_ClaimEditor = function( definition ) {
 
 	/* Add qualifier button */
 	if ( typeof definition.qualifiers !== 'undefined' && definition.qualifiers.length > 0 ) {
-		var newButton = $( '<button type="button"></button>' );
-		newButton.button( {
+		$( document.createElement( 'button' ) ).attr( 'type', 'button' ).addClass( 'wef_property_button' ).button( {
 			icons: {
 				primary: 'ui-icon-tag'
 			},
@@ -2458,8 +2456,7 @@ var WEF_ClaimEditor = function( definition ) {
 			label: i18n.buttonAddQualifier,
 		} ).click( function() {
 			claimEditor.addQualifier();
-		} ).addClass( 'wef_property_button' );
-		beforeInputCell.append( newButton );
+		} ).appendTo( beforeInputCell );
 	}
 };
 /* TBODY */
@@ -2695,57 +2692,47 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 
 		var claimEditor = new WEF_ClaimEditor( definition );
 
-		var buttonAddClaim = ( function() {
-			var newButton = $( '<button type="button"></button>' );
-			newButton.button( {
-				icons: {
-					primary: 'ui-icon-plus'
-				},
-				text: false,
-				label: i18n.buttonAddClaim,
-			} ).click( function() {
-				var editor = propertyEditorsTable.add();
-				editor.initEmpty();
-			} ).addClass( 'wef_property_button' );
-			return newButton;
-		} )();
+		var buttonAddClaim = $( document.createElement( 'button' ) ).attr( 'type', 'button' ).addClass( 'wef_property_button' ).button( {
+			icons: {
+				primary: 'ui-icon-plus'
+			},
+			text: false,
+			label: i18n.buttonAddClaim,
+		} ).click( function() {
+			var editor = propertyEditorsTable.add();
+			editor.initEmpty();
+		} );
 
-		var buttonRemoveClaim = ( function() {
-			var newButton = $( '<button type="button"></button>' );
-			newButton.button( {
-				icons: {
-					primary: 'ui-icon-trash'
-				},
-				text: false,
-				label: i18n.buttonRemoveClaim,
-			} ).click( function() {
+		var buttonRemoveClaim = $( document.createElement( 'button' ) ).attr( 'type', 'button' ).addClass( 'wef_property_button' ).button( {
+			icons: {
+				primary: 'ui-icon-trash'
+			},
+			text: false,
+			label: i18n.buttonRemoveClaim,
+		} ).click( function() {
 
-				var question = i18n.confirmDeleteClaim //
-				.replace( '{code}', definition.label ) //
-				.replace( '{label}', wef_LabelsCache.getLabel( definition.label ) );
+			var question = i18n.confirmDeleteClaim //
+			.replace( '{code}', definition.label ) //
+			.replace( '{label}', wef_LabelsCache.getLabel( definition.label ) );
 
-				var r = !claimEditor.hasData() || confirm( question );
-				if ( r === true ) {
-					claimEditor.removeValue();
-					claimEditor.hide();
+			var r = !claimEditor.hasData() || confirm( question );
+			if ( r === true ) {
+				claimEditor.removeValue();
+				claimEditor.hide();
 
-					/*
-					 * add before removing to insert immediately after last
-					 * existing
-					 */
-					if ( visibleDefinitionRows.length === 1 ) {
-						var editor = propertyEditorsTable.add();
-						editor.initEmpty();
-					}
-
-					visibleDefinitionRows = jQuery.grep( visibleDefinitionRows, function( value ) {
-						return value != claimEditor;
-					} );
+				/*
+				 * add before removing to insert immediately after last existing
+				 */
+				if ( visibleDefinitionRows.length === 1 ) {
+					var editor = propertyEditorsTable.add();
+					editor.initEmpty();
 				}
 
-			} ).addClass( 'wef_property_button' );
-			return newButton;
-		} )();
+				visibleDefinitionRows = jQuery.grep( visibleDefinitionRows, function( value ) {
+					return value != claimEditor;
+				} );
+			}
+		} );
 
 		/** @type {function} */
 		var normalizeF = definition.normalize;
@@ -2753,11 +2740,11 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 		var urlF = definition.url;
 
 		// append before URL and after input cell
-		var buttonsCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
+		var buttonsCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( claimEditor.row1 );
 		{
 			try {
 				if ( definition.datatype === 'url' ) {
-					var newButton = $( '<button class="wef_property_button" type="button"></button>' );
+					var newButton = $( document.createElement( 'button' ) ).addClass( 'wef_property_button' ).attr( 'type', 'button' );
 					newButton.button( {
 						icons: {
 							primary: 'ui-icon-extlink'
@@ -2786,7 +2773,7 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 			}
 			if ( typeof definition.buttons !== 'undefined' ) {
 				$.each( definition.buttons, function( index, buttonDefinition ) {
-					var newButton = $( '<button class="wef_property_button" type="button"></button>' );
+					var newButton = $( document.createElement( 'button' ) ).addClass( 'wef_property_button' ).attr( 'type', 'button' );
 					newButton.button( buttonDefinition );
 					if ( $.isFunction( buttonDefinition.click ) ) {
 						newButton.click( buttonDefinition.click );
@@ -2798,9 +2785,9 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 
 		if ( $.isFunction( urlF ) ) {
 			claimEditor.row1.find( 'td.wef_property_editor_input' ).addClass( 'wef_external_links_before_url_cell' );
-			var urlCell = $( '<td class="wef_external_links_url_cell"></td>' ).appendTo( claimEditor.row1 );
-			var div = $( '<div class="wef_external_links_url_div">&nbsp;</div>' ).appendTo( urlCell );
-			var a = $( '<a class="wef_external_links_url_a"></a>' ).appendTo( div ).attr( 'target', '_blank' );
+			var urlCell = $( document.createElement( 'td' ) ).addClass( 'wef_external_links_url_cell' ).appendTo( claimEditor.row1 );
+			var div = $( '<div>&nbsp;</div>' ).addClass( 'wef_external_links_url_div' ).appendTo( urlCell );
+			var a = $( document.createElement( 'a' ) ).addClass( 'wef_external_links_url_a' ).appendTo( div ).attr( 'target', '_blank' );
 
 			var updateLinkImplF = function( newValue ) {
 				if ( $.isFunction( normalizeF ) ) {
@@ -2845,15 +2832,15 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 			$( claimEditor ).change( updateLinkF );
 
 			// additional placeholder to align buttons after URL fields
-			$( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
+			$( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( claimEditor.row1 );
 		} else {
 			claimEditor.row1.find( 'td.wef_property_editor_input' ).attr( 'colspan', 3 );
 		}
 
-		var beforeCell = $( '<td class="wef_button_cell"></td>' ).prependTo( claimEditor.row1 );
+		var beforeCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).prependTo( claimEditor.row1 );
 		beforeCell.append( buttonAddClaim );
 
-		var afterCell = $( '<td class="wef_button_cell"></td>' ).appendTo( claimEditor.row1 );
+		var afterCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( claimEditor.row1 );
 		afterCell.append( buttonRemoveClaim );
 
 		visibleDefinitionRows.push( claimEditor );
@@ -2904,18 +2891,18 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 
 	function createPlaceholder( target ) {
 		if ( $.isEmpty( definition.columns ) ) {
-			temporaryHolder = $( '<tbody><!-- Temporary holder for ' + definition.code + ' --></tbody>' );
+			temporaryHolder = $( document.createElement( 'tbody' ) ).html( '<!-- Temporary holder for ' + definition.code + ' -->' );
 			return temporaryHolder;
 		}
 
-		var container = $( '<tbody>' );
-		var columnsTable = $( '<table class="wef_columns_table">' ).appendTo( container );
-		var columnsHeader = $( '<tr class="wef_columns_header">' ).appendTo( columnsTable );
+		var container = $( document.createElement( 'tbody' ) );
+		var columnsTable = $( document.createElement( 'table' ) ).addClass( 'wef_columns_table' ).appendTo( container );
+		var columnsHeader = $( document.createElement( 'tr' ) ).addClass( 'wef_columns_header' ).appendTo( columnsTable );
 
 		// empty cell for adding claim button
-		columnsHeader.append( $( '<th class="wef_column_th_empty">' ) );
+		columnsHeader.append( $( document.createElement( 'th' ) ).addClass( 'wef_column_th_empty' ) );
 
-		var propertyName = $( '<th class="wef_column_th">' ).attr( 'colspan', '5' ).appendTo( columnsHeader );
+		var propertyName = $( document.createElement( 'th' ) ).addClass( 'wef_column_th' ).attr( 'colspan', '5' ).appendTo( columnsHeader );
 		if ( typeof definition.label !== 'undefined' ) {
 			wef_LabelsCache.getOrQueue( definition.label, function( label, description ) {
 				propertyName.text( label );
@@ -2924,7 +2911,7 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 		}
 		$.each( definition.columns, function( i, columnDefinition ) {
 			if ( !$.isEmpty( columnDefinition.code ) ) {
-				var columnName = $( '<th class="wef_column_th" colspan="2">' ).appendTo( columnsHeader );
+				var columnName = $( document.createElement( 'th' ) ).addClass( 'wef_column_th' ).attr( 'colspan', '2' ).appendTo( columnsHeader );
 				if ( typeof columnDefinition.label !== 'undefined' ) {
 					wef_LabelsCache.getOrQueue( columnDefinition.label, function( label, description ) {
 						columnName.text( label );
@@ -2934,7 +2921,7 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 			}
 		} );
 
-		temporaryHolder = $( '<tbody><!-- Temporary holder for ' + definition.code + ' --></tbody>' );
+		temporaryHolder = $( document.createElement( 'tbody' ) ).html( '<!-- Temporary holder for ' + definition.code + ' -->' );
 		temporaryHolder.appendTo( columnsTable );
 		return container;
 	}
@@ -3030,22 +3017,27 @@ WEF_ClaimEditorsTable.removeFoundValueClasses = function() {
 };
 
 var WEF_ProgressItem = function( parentUl, text ) {
-	this._span1 = $( '<span></span>' );
-	this._span2 = $( '<span></span>' ).text( text );
-	this._li = $( '<li class="wef_progress_item"></li>' ).append( this._span1 ).append( '&nbsp;' ).append( this._span2 ).appendTo( parentUl );
+	this._span1 = $( document.createElement( 'span' ) );
+	this._span2 = $( document.createElement( 'span' ) ).text( text );
+
+	this._li = $( document.createElement( 'li' ) ).addClass( 'wef_progress_item' ).append( this._span1 ).append( '&nbsp;' ).append( this._span2 ).appendTo( parentUl );
 };
+
 WEF_ProgressItem.prototype.inProgress = function() {
 	this._span1.html( wef_Editors_i18n.htmlInProgress );
 };
+
 WEF_ProgressItem.prototype.success = function() {
 	this._span1.html( wef_Editors_i18n.htmlSuccess );
 };
+
 WEF_ProgressItem.prototype.failure = function( failureReason ) {
 	this._span1.html( wef_Editors_i18n.htmlFailure );
 	if ( failureReason ) {
 		this._span2.append( ': ' + failureReason );
 	}
 };
+
 WEF_ProgressItem.prototype.notNeeded = function() {
 	this._span1.html( wef_Editors_i18n.htmlNotNeeded );
 };
@@ -3059,9 +3051,9 @@ function wef_save( claimEditorTables ) {
 
 	var i18n = wef_Editors_i18n;
 
-	var dialog1 = $( "<div></div>" );
+	var dialog1 = $( document.createElement( 'div' ) );
 	dialog1.attr( 'title', i18n.dialogAnalyzeChangesTitle );
-	var analyzeProgressUl = $( "<ul></ul>" ).appendTo( dialog1 );
+	var analyzeProgressUl = $( document.createElement( 'ul' ) ).appendTo( dialog1 );
 	var analyzeProgress = new WEF_ProgressItem( analyzeProgressUl, i18n.actionAnalyzeChanges );
 	analyzeProgress.inProgress();
 	dialog1.dialog( {
@@ -3083,10 +3075,10 @@ function wef_save( claimEditorTables ) {
 			return;
 		}
 
-		var dialog2 = $( "<div></div>" );
+		var dialog2 = $( document.createElement( 'div' ) );
 		dialog2.attr( 'title', i18n.dialogSaveChangesTitle );
 
-		var progressUl = $( "<ul></ul>" ).appendTo( dialog2 );
+		var progressUl = $( document.createElement( 'ul' ) ).appendTo( dialog2 );
 
 		var executionContext = {
 			centralAuthToken: null,
