@@ -2508,7 +2508,7 @@ WEF_ClaimEditor.prototype.initWithValue = function( claim ) {
 		 * since it's loading time, we assume there is qualifier with specified
 		 * value
 		 */
-		var qualifiers = claim.qualifiers[qualifierPropertyId];
+		var qualifiers = claim.qualifiers[this.qualifierPropertyId];
 		if ( !$.isArray( qualifiers ) ) {
 			throw new Error( 'Qualifiers «' + this.qualifierPropertyId + '» of ' + this.propertyId + '[' + this.propertyValue + '] not found or not an array' );
 		}
