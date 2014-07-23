@@ -23,6 +23,7 @@ var wef_Editors_i18n_en = {
 	buttonAddQualifier: 'add qualifier',
 	buttonRemoveQualifier: 'remove qualifier',
 	buttonUrlNavigate: 'open specified URL',
+	buttonOnWikidata: 'open specified wikidata item',
 
 	checkboxShowJulian: 'show in Julian calendar?',
 	checkboxShowJulianTitle: 'when displaying the date show in julian calendar. This option does not change the input format or the value stored',
@@ -91,6 +92,7 @@ var wef_Editors_i18n_ru = {
 	buttonAddQualifier: 'добавить квалификатор',
 	buttonRemoveQualifier: 'удалить квалификатор',
 	buttonUrlNavigate: 'открыть указанный URL',
+	buttonOnWikidata: 'открыть указанный элемент Викиданных',
 
 	checkboxShowJulian: 'показывать по старому стилю',
 	checkboxShowJulianTitle: 'при отображении даты включать режим отображения по юлинскому календарю. Данная опция не влияет на формат ввода или хранения.',
@@ -158,6 +160,7 @@ var wef_AnyEditor_i18n_en = {
 	dialogButtonSaveLabel: 'Close the dialog and save all changes to Wikidata',
 	dialogButtonCloseText: 'Cancel',
 	dialogButtonCloseLabel: 'Close the dialog and discard all changes (do not save)',
+	dialogTitle: 'WE-Framework',
 
 	fieldsetGeneral: 'general',
 	groupGeneral: 'General',
@@ -174,6 +177,7 @@ var wef_AnyEditor_i18n_fr = {
 	dialogButtonSaveLabel: 'Fermer la fenêtre en enregistrant les modifications sur Wikidata',
 	dialogButtonCloseText: 'Annuler',
 	dialogButtonCloseLabel: 'Fermer la fenêtre sans enregistrer',
+	dialogTitle: 'WE-Framework',
 
 	fieldsetGeneral: 'Général',
 	groupGeneral: 'Général',
@@ -190,6 +194,7 @@ var wef_AnyEditor_i18n_ru = {
 	dialogButtonSaveLabel: 'Закрыть окно и сохранить все изменения в Викиданных',
 	dialogButtonCloseText: 'Отмена',
 	dialogButtonCloseLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
+	dialogTitle: 'WE-Framework',
 
 	fieldsetGeneral: 'основное',
 	groupGeneral: 'Основное',
@@ -912,6 +917,11 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 	var i18n = wef_Editors_i18n;
 	var snakValueEditor = this;
 
+	var _jThis = $( this );
+	function changeF() {
+		_jThis.trigger( 'change' );
+	}
+
 	/** @type {string} */
 	var CALENDAR_GREGORIAN = 'Q1985727';
 	/** @type {string} */
@@ -937,10 +947,6 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 	this.setDataValue = unsupportedF;
 
 	this.getAsLabel = unsupportedF;
-
-	var changeF = function() {
-		$( snakValueEditor ).change();
-	};
 
 	if ( typeof editorDataType === 'undefined' ) {
 		// autodetect enabled
@@ -1006,18 +1012,18 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 	if ( editorDataType === 'commonsMedia' ) {
 		( function() {
-			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_commonsMedia' ).appendTo( snakValueEditor.mainElement );
-			snakValueEditor.setDataValue = function( newDataValue ) {
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_commonsMedia' ).appendTo( this.mainElement );
+			this.setDataValue = function( newDataValue ) {
 				input.val( newDataValue.value );
 			};
-			snakValueEditor.hasValue = function() {
+			this.hasValue = function() {
 				return !$.isEmpty( input.val() );
 			};
-			snakValueEditor.removeValue = function() {
+			this.removeValue = function() {
 				input.val( '' );
 			};
-			snakValueEditor.getDataValue = function() {
-				if ( !snakValueEditor.hasValue() ) {
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
 					throw new Error( 'No value' );
 				}
 				return {
@@ -1025,7 +1031,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					value: input.val(),
 				};
 			};
-			snakValueEditor.getAsLabel = function() {
+			this.getAsLabel = function() {
 				return $( document.createElement( 'a' ) ) //
 				.attr( 'href', '//commons.wikimedia.org/wiki/File:' + encodeURI( input.val() ) ) //
 				.text( input.val() );
@@ -1033,10 +1039,10 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 			input.change( changeF );
 			input.keyup( changeF );
-		} )();
+		} ).call( this );
 	} else if ( editorDataType === 'string' ) {
 		( function() {
-			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_string' ).appendTo( snakValueEditor.mainElement );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_string' ).appendTo( this.mainElement );
 
 			if ( typeof options === "object" && typeof options.autocomplete === "object" ) {
 				input.autocomplete( options.autocomplete );
@@ -1053,17 +1059,17 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				mw.log.warn( 'Unable to attach check pattern to input: ' + err );
 			}
 
-			snakValueEditor.setDataValue = function( newDataValue ) {
+			this.setDataValue = function( newDataValue ) {
 				input.val( newDataValue.value );
 			};
-			snakValueEditor.hasValue = function() {
+			this.hasValue = function() {
 				return !$.isEmpty( input.val() );
 			};
-			snakValueEditor.removeValue = function() {
+			this.removeValue = function() {
 				input.val( '' );
 			};
-			snakValueEditor.getDataValue = function() {
-				if ( !snakValueEditor.hasValue() ) {
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
 					throw new Error( 'No value' );
 				}
 				return {
@@ -1071,17 +1077,17 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					value: input.val(),
 				};
 			};
-			snakValueEditor.getAsLabel = function() {
+			this.getAsLabel = function() {
 				return $( document.createElement( 'span' ) ).text( input.val() );
 			};
 
 			input.change( changeF );
 			input.keyup( changeF );
-		} )();
+		} ).call( this );
 	} else if ( editorDataType === 'time' ) {
 		( function() {
 
-			var table = $( document.createElement( 'table' ) ).addClass( 'wef_time_table' ).appendTo( snakValueEditor.mainElement );
+			var table = $( document.createElement( 'table' ) ).addClass( 'wef_time_table' ).appendTo( this.mainElement );
 
 			var inputTime = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_time' );
 			var inputTimeZone = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_timezone' );
@@ -1116,20 +1122,20 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			addTr( i18n.inputTimePrecisionLabel, i18n.inputTimePrecisionTitle, inputPrecision );
 			addTr( i18n.inputTimeCalendarModelLabel, i18n.inputTimeCalendarModelTitle, inputCalendarModel.select );
 
-			snakValueEditor.setDataValue = function( newDataValue ) {
+			this.setDataValue = function( newDataValue ) {
 				inputTime.val( newDataValue.value.time );
 				inputTimeZone.val( newDataValue.value.timezone );
 				inputPrecision.val( newDataValue.value.precision );
 				inputCalendarModel.val( newDataValue.value.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) );
 			};
-			snakValueEditor.hasValue = function() {
+			this.hasValue = function() {
 				return !$.isEmpty( inputTime.val() );
 			};
-			snakValueEditor.removeValue = function() {
+			this.removeValue = function() {
 				inputTime.val( '' );
 			};
-			snakValueEditor.getDataValue = function() {
-				if ( !snakValueEditor.hasValue() ) {
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
 					throw new Error( 'No value' );
 				}
 				return {
@@ -1144,7 +1150,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					},
 				};
 			};
-			snakValueEditor.getAsLabel = function() {
+			this.getAsLabel = function() {
 				// TODO: format value using server ?
 				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time' ).text( inputTime.val() );
 			};
@@ -1157,13 +1163,13 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			inputPrecision.keyup( changeF );
 			inputCalendarModel.select.change( changeF );
 			inputCalendarModel.select.keyup( changeF );
-		} )();
+		} ).call( this );
 	} else if ( editorDataType === 'time-days' ) {
 		( function() {
 
-			selectDateTimePrecision.appendTo( snakValueEditor.mainElement );
+			selectDateTimePrecision.appendTo( this.mainElement );
 
-			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_date' ).appendTo( snakValueEditor.mainElement );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_date' ).appendTo( this.mainElement );
 			input.datepicker( {
 				dateFormat: 'd MM yy',
 				changeMonth: true,
@@ -1171,7 +1177,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				showButtonPanel: true,
 			} );
 
-			var showJulianSpan = $( document.createElement( 'span' ) ).addClass( 'wef_time_oldstyle_span' ).appendTo( snakValueEditor.mainElement );
+			var showJulianSpan = $( document.createElement( 'span' ) ).addClass( 'wef_time_oldstyle_span' ).appendTo( this.mainElement );
 
 			var showJulianCheckbox = $( document.createElement( 'input' ) ).attr( 'type', 'checkbox' ).addClass( 'wef_time_oldstyle' );
 			showJulianCheckbox.attr( 'title', i18n.checkboxShowJulianTitle );
@@ -1186,7 +1192,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			showJulianCheckboxLabel.text( i18n.checkboxShowJulian );
 			showJulianCheckboxLabel.appendTo( showJulianSpan );
 
-			snakValueEditor.setDataValue = function( newDataValue ) {
+			this.setDataValue = function( newDataValue ) {
 				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
 				}
@@ -1199,14 +1205,14 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				input.datepicker( 'setDate', new Date( parseable ) );
 				showJulianCheckbox.attr( 'checked', newDataValue.value.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) === CALENDAR_JULIAN );
 			};
-			snakValueEditor.hasValue = function() {
+			this.hasValue = function() {
 				return !$.isEmpty( input.val() );
 			};
-			snakValueEditor.removeValue = function() {
+			this.removeValue = function() {
 				input.val( '' );
 			};
-			snakValueEditor.getDataValue = function() {
-				if ( !snakValueEditor.hasValue() ) {
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
 					throw new Error( 'No value' );
 				}
 
@@ -1224,19 +1230,19 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					},
 				};
 			};
-			snakValueEditor.getAsLabel = function() {
+			this.getAsLabel = function() {
 				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_days' ).text( input.val() );
 			};
 
 			input.change( changeF );
 			input.keyup( changeF );
-		} )();
+		} ).call( this );
 	} else if ( editorDataType === 'time-months' ) {
 		( function() {
 
-			selectDateTimePrecision.appendTo( snakValueEditor.mainElement );
+			selectDateTimePrecision.appendTo( this.mainElement );
 
-			var months = $( document.createElement( 'select' ) ).addClass( 'wef_time_month' ).appendTo( snakValueEditor.mainElement );
+			var months = $( document.createElement( 'select' ) ).addClass( 'wef_time_month' ).appendTo( this.mainElement );
 			for ( var i = 1; i <= 12; i++ ) {
 				var option = $( document.createElement( 'option' ) );
 				option.attr( 'value', i );
@@ -1244,8 +1250,8 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				months.append( option );
 			}
 
-			var years = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( snakValueEditor.mainElement );
-			snakValueEditor.setDataValue = function( newDataValue ) {
+			var years = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( this.mainElement );
+			this.setDataValue = function( newDataValue ) {
 				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
 				}
@@ -1257,15 +1263,15 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				months.val( date.getMonth() + 1 );
 				years.val( date.getFullYear() );
 			};
-			snakValueEditor.hasValue = function() {
+			this.hasValue = function() {
 				return !$.isEmpty( months.val() ) || !$.isEmpty( years.val() );
 			};
-			snakValueEditor.removeValue = function() {
+			this.removeValue = function() {
 				months.prop( 'selectedIndex', -1 );
 				years.val( '' );
 			};
-			snakValueEditor.getDataValue = function() {
-				if ( !snakValueEditor.hasValue() ) {
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
 					throw new Error( 'No value' );
 				}
 
@@ -1281,7 +1287,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					},
 				};
 			};
-			snakValueEditor.getAsLabel = function() {
+			this.getAsLabel = function() {
 				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_months' ).text( wgMonthNames[months.val()] + " " + years.val() );
 			};
 
@@ -1289,15 +1295,15 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			months.keyup( changeF );
 			years.change( changeF );
 			years.keyup( changeF );
-		} )();
+		} ).call( this );
 	} else if ( editorDataType === 'time-years' ) {
 		( function() {
 
-			selectDateTimePrecision.appendTo( snakValueEditor.mainElement );
+			selectDateTimePrecision.appendTo( this.mainElement );
 
-			var years = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( snakValueEditor.mainElement );
+			var years = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( this.mainElement );
 
-			snakValueEditor.setDataValue = function( newDataValue ) {
+			this.setDataValue = function( newDataValue ) {
 				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
 				}
@@ -1308,14 +1314,14 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				var date = new Date( parseable );
 				years.val( date.getFullYear() );
 			};
-			snakValueEditor.hasValue = function() {
+			this.hasValue = function() {
 				return !$.isEmpty( years.val() );
 			};
-			snakValueEditor.removeValue = function() {
+			this.removeValue = function() {
 				years.val( '' );
 			};
-			snakValueEditor.getDataValue = function() {
-				if ( !snakValueEditor.hasValue() ) {
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
 					throw new Error( 'No value' );
 				}
 
@@ -1331,18 +1337,18 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					},
 				};
 			};
-			snakValueEditor.getAsLabel = function() {
+			this.getAsLabel = function() {
 				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_years' ).text( years.val() );
 			};
 
 			years.change( changeF );
 			years.keyup( changeF );
-		} )();
+		} ).call( this );
 	} else if ( editorDataType === 'url' ) {
 		( function() {
 
-			var input = $( document.createElement( 'input' ) ).attr( 'type', 'url' ).addClass( 'wef_url' ).appendTo( snakValueEditor.mainElement );
-			snakValueEditor.setDataValue = function( newDataValue ) {
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'url' ).addClass( 'wef_url' ).appendTo( this.mainElement );
+			this.setDataValue = function( newDataValue ) {
 				input.val( WEF_Utils.urlNice( newDataValue.value ) );
 			};
 
@@ -1354,15 +1360,15 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				mw.log.warn( 'Unable to attach check pattern to input: ' + err );
 			}
 
-			snakValueEditor.hasValue = function() {
+			this.hasValue = function() {
 				return !$.isEmpty( input.val() );
 			};
-			snakValueEditor.removeValue = function() {
+			this.removeValue = function() {
 				input.val( '' );
 			};
 
-			snakValueEditor.getDataValue = function() {
-				if ( !snakValueEditor.hasValue() ) {
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
 					throw new Error( 'No value' );
 				}
 
@@ -1371,18 +1377,21 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					value: WEF_Utils.urlUnnice( input.val() ),
 				};
 			};
-			snakValueEditor.getAsLabel = function() {
+			this.getAsLabel = function() {
 				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_url' ).text( input.val() );
 			};
 
 			input.change( changeF );
 			input.keyup( changeF );
-		} )();
+		} ).call( this );
 	} else if ( editorDataType === 'wikibase-item' ) {
 		( function() {
-			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_wikibase-item' ).appendTo( snakValueEditor.mainElement );
+			var table = $( document.createElement( 'table' ) ).addClass( 'wef_wikibase-item_table' ).appendTo( snakValueEditor.mainElement );
+			var tr = $( document.createElement( 'tr' ) ).addClass( 'wef_wikibase-item_tr' ).appendTo( table );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_wikibase-item' ).appendTo(
+					$( document.createElement( 'td' ) ).addClass( 'wef_wikibase-item_td_input' ).appendTo( tr ) );
 
-			snakValueEditor.setDataValue = function( newDataValue ) {
+			this.setDataValue = function( newDataValue ) {
 				var entityId = 'Q' + newDataValue.value['numeric-id'];
 				input.data( 'value-entity-id', entityId );
 				input.data( 'value-entity-label', '' );
@@ -1390,24 +1399,29 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 				wef_LabelsCache.getOrQueue( entityId, function( label, description ) {
 					if ( input.data( 'value-entity-id' ) === entityId ) {
-						input.data( 'value-entity-label', label );
-						input.val( label + ' (' + entityId + ')' );
-						input.attr( 'title', description );
+						// we need to be sure user didn't start to edit field
+						if ( input.val() === '(' + entityId + ')' || input.val() === input.data( 'value-entity-label' ) + ' (' + entityId + ')' ) {
+							input.data( 'value-entity-label', label );
+							input.val( label + ' (' + entityId + ')' );
+							input.attr( 'title', description );
+						}
 					}
 				} );
+
+				changeF();
 			};
 
-			snakValueEditor.hasValue = function() {
+			this.hasValue = function() {
 				return !$.isEmpty( input.data( 'value-entity-id' ) );
 			};
-			snakValueEditor.removeValue = function() {
+			this.removeValue = function() {
 				input.val( '' );
 				input.data( 'value-entity-id', '' );
 				input.data( 'value-entity-label', '' );
 			};
 
-			snakValueEditor.getDataValue = function() {
-				if ( !snakValueEditor.hasValue() ) {
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
 					throw new Error( 'No value' );
 				}
 
@@ -1421,7 +1435,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				dataValue.type = 'wikibase-entityid';
 				return dataValue;
 			};
-			snakValueEditor.getAsLabel = function() {
+			this.getAsLabel = function() {
 				var entityId = input.data( 'value-entity-id' );
 				if ( $.isEmpty( entityId ) ) {
 					return $( document.createElement( 'span' ) );
@@ -1519,6 +1533,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				} else {
 					input.val( label );
 				}
+				changeF();
 			} );
 
 			input.blur( function() {
@@ -1532,6 +1547,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					input.removeData( 'value-entity-id' );
 					input.removeData( 'value-entity-label' );
 				}
+				changeF();
 			} );
 
 			input.data( "autocomplete" )._renderItem = function( ul, item ) {
@@ -1547,15 +1563,37 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				return $( document.createElement( 'li' ) ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
 			};
 
+			var onWikidata = $( document.createElement( 'a' ) ).css( 'cursor', 'pointer' ).attr( 'target', '_blank' ).addClass( 'wef_wikibase-item_button' ).appendTo(
+					$( document.createElement( 'td' ) ).addClass( 'wef_wikibase-item_td_button wef_button_cell' ).appendTo( tr ) );
+			onWikidata.button( {
+				icons: {
+					primary: 'ui-icon-extlink'
+				},
+				text: false,
+				label: wef_Editors_i18n.buttonOnWikidata,
+			} );
+			$( this ).on( 'change', function() {
+				var entityId = input.data( 'value-entity-id' );
+				if ( !$.isEmpty( entityId ) ) {
+					onWikidata.attr( 'href', '//www.wikidata.org/wiki/' + entityId );
+					onWikidata.button( 'enable' );
+				} else {
+					onWikidata.attr( 'href', '' );
+					onWikidata.button( 'disable' );
+				}
+			} );
+
 			input.change( changeF );
 			input.keyup( changeF );
-		} )();
+		} ).call( this );
 	} else {
 		throw new Error( "Unsupported data type: " + editorDataType );
 	}
 
 	if ( typeof initialDataValue !== 'undefined' ) {
 		this.setDataValue( initialDataValue );
+	} else {
+		changeF();
 	}
 };
 
@@ -1875,8 +1913,8 @@ WEF_SnakEditor.prototype.switchToSnakType = function( snakType ) {
 		if ( this.valueEditor === null ) {
 			wef_TypesCache.getPropertyType( snakEditor.propertyId, function( dataType ) {
 				snakEditor._snakTypeLabel.hide();
-				snakEditor.valueEditor = new WEF_SnakValueEditor( td2, dataType, undefined, undefined, options );
-				initValueEditor();
+				snakEditor.valueEditor = new WEF_SnakValueEditor( snakEditor._td2, dataType, undefined, undefined, snakEditor.options );
+				snakEditor._initValueEditor();
 				snakEditor._change();
 			}, function( failureReason ) {
 				alert( "Can't change snak value type bacause property data type is unknown: " + failureReason );
@@ -2243,56 +2281,6 @@ var WEF_ClaimEditor = function( definition ) {
 	var i18n = wef_Editors_i18n;
 	var claimEditor = this;
 
-	var getLabel = function() {
-		var label = $( document.createElement( 'label' ) );
-
-		var updateLabel = function() {
-			var newLabel = '';
-
-			if ( typeof definition.labelPrefix !== "undefined" ) {
-				newLabel += definition.labelPrefix;
-			}
-
-			if ( typeof definition.label !== "undefined" ) {
-				newLabel += wef_LabelsCache.getLabel( definition.label );
-			}
-
-			if ( typeof definition.labelQualifier !== "undefined" ) {
-				if ( $.isArray( definition.labelQualifier ) ) {
-					newLabel += ' (';
-					$.each( definition.labelQualifier, function( index, qualifier ) {
-						if ( index !== 0 ) {
-							newLabel += ', ';
-						}
-						newLabel += wef_LabelsCache.getLabel( qualifier );
-					} );
-					newLabel += ')';
-				} else {
-					newLabel += ' (' + wef_LabelsCache.getLabel( definition.labelQualifier ) + ')';
-				}
-			}
-
-			label.text( newLabel );
-			label.attr( 'title', wef_LabelsCache.getDescription( definition.label ) );
-		};
-
-		if ( typeof definition.label !== "undefined" ) {
-			wef_LabelsCache.getOrQueue( definition.label, updateLabel );
-		}
-		if ( typeof definition.labelQualifier !== "undefined" ) {
-			if ( $.isArray( definition.labelQualifier ) ) {
-				$.each( definition.labelQualifier, function( index, qualifier ) {
-					wef_LabelsCache.getOrQueue( qualifier, updateLabel );
-				} );
-			} else {
-				wef_LabelsCache.getOrQueue( definition.labelQualifier, updateLabel );
-			}
-		}
-
-		updateLabel();
-		return label;
-	};
-
 	this.isPropertyEditor = /^P\d+$/i.test( definition.code );
 	this.isQualifierEditor = /^P\d+\[Q\d+\]\/P\d+$/i.test( definition.code );
 
@@ -2377,24 +2365,12 @@ var WEF_ClaimEditor = function( definition ) {
 	}
 
 	/* Label */
-	var labelToDisplay = getLabel( definition );
-	var labelPlaceholder = $( document.createElement( 'label' ) );
+	this._labelToDisplay = WEF_ClaimEditor._getLabel( definition );
+	this._labelPlaceholder = $( document.createElement( 'label' ) );
 
 	labelCell.empty();
-	labelCell.append( labelToDisplay );
-	labelCell.append( labelPlaceholder );
-
-	this.hideLabel = function( placeholderText ) {
-		if ( typeof placeholderText === 'string' ) {
-			labelPlaceholder.text( placeholderText );
-		}
-		labelToDisplay.hide();
-		labelPlaceholder.show();
-	};
-	this.showLabel = function() {
-		labelToDisplay.show();
-		labelPlaceholder.hide();
-	};
+	labelCell.append( this._labelToDisplay );
+	labelCell.append( this._labelPlaceholder );
 
 	var row2 = $( document.createElement( 'tr' ) ).addClass( 'wef_property_editor_row' ).appendTo( this.tbody );
 	$( document.createElement( 'td' ) ).addClass( 'wef_property_editor_cell_emtpy' ).appendTo( row2 );
@@ -2408,32 +2384,6 @@ var WEF_ClaimEditor = function( definition ) {
 	this.wikidataClaim = null;
 	this.wikidataSnak = null;
 	this.wikidataOldValue = null;
-
-	this.getSnakValue = function() {
-		if ( !this.hasData() ) {
-			throw new Error( 'no data' );
-		}
-
-		var snak = {};
-		snak.snaktype = this.snakEditor.snakTypeMode;
-
-		if ( this.isPropertyEditor ) {
-			snak.property = this.propertyId;
-		}
-		if ( this.isQualifierEditor ) {
-			snak.property = this.qualifierPropertyId;
-			if ( this.wikidataSnak !== null ) {
-				snak.hash = this.wikidataSnak.hash;
-			}
-		}
-
-		snak.datatype = definition.datatype;
-		if ( this.snakEditor.snakTypeMode === 'value' ) {
-			snak.datavalue = this.getDataValue();
-		}
-
-		return snak;
-	};
 
 	$( this.snakEditor ).change( function() {
 		$( claimEditor ).change();
@@ -2459,6 +2409,7 @@ var WEF_ClaimEditor = function( definition ) {
 		} ).appendTo( beforeInputCell );
 	}
 };
+
 /* TBODY */
 WEF_ClaimEditor.prototype.hide = function() {
 	this.tbody.hide();
@@ -2467,26 +2418,115 @@ WEF_ClaimEditor.prototype.show = function() {
 	this.tbody.show();
 };
 
+WEF_ClaimEditor._getLabel = function( definition ) {
+	var label = $( document.createElement( 'label' ) );
+
+	var updateLabel = function() {
+		var newLabel = '';
+
+		if ( typeof definition.labelPrefix !== "undefined" ) {
+			newLabel += definition.labelPrefix;
+		}
+
+		if ( typeof definition.label !== "undefined" ) {
+			newLabel += wef_LabelsCache.getLabel( definition.label );
+		}
+
+		if ( typeof definition.labelQualifier !== "undefined" ) {
+			if ( $.isArray( definition.labelQualifier ) ) {
+				newLabel += ' (';
+				$.each( definition.labelQualifier, function( index, qualifier ) {
+					if ( index !== 0 ) {
+						newLabel += ', ';
+					}
+					newLabel += wef_LabelsCache.getLabel( qualifier );
+				} );
+				newLabel += ')';
+			} else {
+				newLabel += ' (' + wef_LabelsCache.getLabel( definition.labelQualifier ) + ')';
+			}
+		}
+
+		label.text( newLabel );
+		label.attr( 'title', wef_LabelsCache.getDescription( definition.label ) );
+	};
+
+	if ( typeof definition.label !== "undefined" ) {
+		wef_LabelsCache.getOrQueue( definition.label, updateLabel );
+	}
+	if ( typeof definition.labelQualifier !== "undefined" ) {
+		if ( $.isArray( definition.labelQualifier ) ) {
+			$.each( definition.labelQualifier, function( index, qualifier ) {
+				wef_LabelsCache.getOrQueue( qualifier, updateLabel );
+			} );
+		} else {
+			wef_LabelsCache.getOrQueue( definition.labelQualifier, updateLabel );
+		}
+	}
+
+	updateLabel();
+	return label;
+};
+
+WEF_ClaimEditor.prototype.hideLabel = function( placeholderText ) {
+	if ( typeof placeholderText === 'string' ) {
+		this._labelPlaceholder.text( placeholderText );
+	}
+	this._labelToDisplay.hide();
+	this._labelPlaceholder.show();
+};
+WEF_ClaimEditor.prototype.showLabel = function() {
+	this._labelToDisplay.show();
+	this._labelPlaceholder.hide();
+};
+
 WEF_ClaimEditor.prototype.hasData = function() {
 	return this.snakEditor.hasData();
 };
+
 WEF_ClaimEditor.prototype.hasValue = function() {
 	return this.snakEditor.hasValue();
 };
+
 WEF_ClaimEditor.prototype.removeValue = function() {
 	this.snakEditor.removeValue();
 };
+
 WEF_ClaimEditor.prototype.getDataValue = function() {
 	return this.snakEditor.getDataValue();
 };
-WEF_ClaimEditor.prototype.setDataValue = function( newDataValue ) {
-	this.snakEditor.setDataValue( newDataValue );
+
+WEF_ClaimEditor.prototype.getSnakValue = function() {
+	if ( !this.hasData() ) {
+		throw new Error( 'no data' );
+	}
+
+	var snak = {};
+	snak.snaktype = this.snakEditor.snakTypeMode;
+
+	if ( this.isPropertyEditor ) {
+		snak.property = this.propertyId;
+	}
+	if ( this.isQualifierEditor ) {
+		snak.property = this.qualifierPropertyId;
+		if ( this.wikidataSnak !== null ) {
+			snak.hash = this.wikidataSnak.hash;
+		}
+	}
+
+	snak.datatype = this.definition.datatype;
+	if ( this.snakEditor.snakTypeMode === 'value' ) {
+		snak.datavalue = this.getDataValue();
+	}
+
+	return snak;
 };
 
 WEF_ClaimEditor.prototype.initEmpty = function() {
 	// we have definition only
 	this.snakEditor.initEmptyWithDataType( this.isPropertyEditor ? this.propertyId : this.qualifierPropertyId, this.definition.datatype );
 };
+
 WEF_ClaimEditor.prototype.initWithValue = function( claim ) {
 
 	this.wikidataClaim = claim;
@@ -2548,6 +2588,10 @@ WEF_ClaimEditor.prototype.initWithStringValue = function( strValue ) {
 			type: "string"
 		}
 	} );
+};
+
+WEF_ClaimEditor.prototype.setDataValue = function( newDataValue ) {
+	this.snakEditor.setDataValue( newDataValue );
 };
 
 WEF_ClaimEditor.prototype.setStringValue = function( strValue ) {
@@ -3296,6 +3340,7 @@ function wef_save( claimEditorTables ) {
 		actions[currentAction] = actionFinal;
 		analyzeProgress.success();
 	} catch ( error ) {
+		mw.log.warn( i18n.errorAnalyzeChanges + ': ' + error );
 		analyzeProgress.failure( '' + error );
 		alert( i18n.errorAnalyzeChanges + ': ' + error );
 		return;
@@ -3508,4 +3553,71 @@ var WEF_EditorForm = function( title, html, i18n ) {
 	this.open = function() {
 		dialog.dialog( 'open' );
 	};
+};
+
+/**
+ * @class
+ */
+var WEF_Editor = function() {
+
+	this.i18n = {};
+
+	if ( WEF_Utils.isWikidata() ) {
+		this.entityId = mw.config.get( 'wgTitle' );
+	} else {
+		this.entityId = mw.config.get( 'wgWikibaseItemId' );
+	}
+
+	this.enabled = /^Q\d+$/.test( this.entityId );
+	this.dialogForm = null;
+};
+
+WEF_Editor.prototype.addEditButtons = function() {
+	if ( !this.enabled ) {
+		return;
+	}
+
+	var editor = this;
+	var li = $( document.createElement( 'li' ) ).addClass( 'plainlinks' );
+	$( document.createElement( 'a' ) ).css( 'cursor', 'pointer' ).click( function() {
+		editor.edit();
+	} ).text( this.i18n.menuButton ).appendTo( li );
+	$( "#p-tb div ul" ).append( li );
+};
+
+WEF_Editor.prototype.edit = function() {
+	if ( this.dialogForm === null ) {
+
+		var statusDialog = $( '<div></div>' );
+		statusDialog.attr( 'title', this.i18n.dialogTitle );
+		statusDialog.append( $( document.createElement( 'p' ) ).text( this.i18n.statusLoadingWikidata ) );
+		statusDialog.dialog();
+
+		var entityId = this.entityId;
+		var i18n = this.i18n;
+		$.ajax( {
+			type: 'GET',
+			url: WEF_Utils.getWikidataApiPrefix() + '&action=wbgetentities&ids=' + entityId,
+			dataType: "json",
+			success: function( result ) {
+				var dialogForm = new WEF_EditorForm( i18n.dialogTitle, wef_PersonEditor_html, i18n );
+				dialogForm.load( result.entities[entityId] );
+				wef_LabelsCache.receiveLabels();
+				dialogForm.open();
+			},
+			complete: function() {
+				statusDialog.dialog( 'close' );
+			},
+			fail: function() {
+				alert( i18n.errorLoadingWikidata );
+			},
+		} );
+	} else {
+		dialogForm.dialog( 'open' );
+	}
+};
+
+WEF_Editor.prototype.localize = function( i18n_prefix ) {
+	WEF_Utils.localize( this.i18n, 'wef_AnyEditor_i18n_' );
+	WEF_Utils.localize( this.i18n, i18n_prefix );
 };

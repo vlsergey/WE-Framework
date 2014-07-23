@@ -121,6 +121,11 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 	width: 6em;
 }
 
+/*Snak value level -- per types: WIKIBASE-ITEM */
+.wef_wikibase-item_table {
+	width: 100%;
+}
+
 /* Qualifiers only */
 .wef_qualifiers {
 	width: 100%;
