@@ -1347,6 +1347,24 @@ WEF_ExternalLinks = function() {
 			return 'http://www.liveinternet.ru/users/' + id;
 		},
 	} );
+	this.definitions.Q4091875 = new WEF_Definition( {
+		datatype: 'url',
+		flag: 'ru',
+		code: 'P1343[Q4091875]/P854',
+		label: 'Q4091875',
+		check: /^https?:\/\/(www\.)?megabook\.ru\/article\//,
+		buttons: [ {
+			icons: {
+				primary: 'ui-icon-search'
+			},
+			text: false,
+			label: 'Искать в БЭКМ',
+			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
+				return 'http://megabook.ru/article-search?SearchText=' + encodeURIComponent( title );
+			} ),
+		} ],
+		qualifiers: [],
+	} );
 	this.definitions.Q4101720 = new WEF_Definition( {
 		code: 'P553[Q4101720]/P554',
 		label: 'Q4101720',
@@ -1930,6 +1948,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.P1417, // Encyclopædia Britannica online .en
 		d.Q17329836,// Encyclopédique Larousse en ligne .fr
 		d.Q17378135,// Большая советская .ru
+		d.Q4091875, // Большая энциклопедия Кирилла и Мефодия .ru
 		d.Q4239850,// Краткая литературная .ru
 		d.Q2627728,// Кругосвет .ru
 		d.Q4263804,// Литературная .ru
