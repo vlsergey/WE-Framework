@@ -124,7 +124,7 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 }
 
 mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.datepicker', 'jquery.ui.dialog', 'jquery.ui.selectable', 'jquery.ui.tabs' ], function() {
-	addOnloadHook( function() {
+	jQuery( document ).ready( function( $ ) {
 		wef_TaxonEditor = new WEF_TaxonEditor();
 		wef_TaxonEditor.init();
 		wef_TaxonEditor.addEditButtons();

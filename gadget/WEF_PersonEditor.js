@@ -86,66 +86,6 @@ var wef_PersonEditor_i18n_ru = {
 	menuButton: 'WEF: Персона',
 };
 
-/**
- * @class
- */
-var WEF_PersonEditor = function() {
-
-	this.i18n = {};
-	var i18n = this.i18n;
-
-	var URI_PREFIX;
-	var entityId;
-
-	if ( WEF_Utils.isWikidata() ) {
-		entityId = mw.config.get( 'wgTitle' );
-		URI_PREFIX = '//www.wikidata.org/w/api.php?format=json';
-	} else {
-		entityId = mw.config.get( 'wgWikibaseItemId' );
-		URI_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
-	}
-
-	this.enabled = /^Q\d+$/.test( entityId );
-
-	this.init = function() {
-		WEF_Utils.localize( i18n, 'wef_AnyEditor_i18n_' );
-		WEF_Utils.localize( i18n, 'wef_PersonEditor_i18n_' );
-	};
-
-	this.addEditButtons = function() {
-		if ( !this.enabled ) {
-			return;
-		}
-
-		$( "#p-tb div ul" ).append( $( '<li class="plainlinks"><a href="javascript:wef_PersonEditor.edit()">' + i18n.menuButton + '</a></li>' ) );
-	};
-
-	this.edit = function() {
-		var statusDialog = $( '<div></div>' );
-		statusDialog.attr( 'title', i18n.dialogTitle );
-		statusDialog.append( $( '<p></p>' ).text( i18n.statusLoadingWikidata ) );
-		statusDialog.dialog();
-
-		$.ajax( {
-			type: 'GET',
-			url: URI_PREFIX + '&action=wbgetentities&ids=' + entityId,
-			dataType: "json",
-			success: function( result ) {
-				var dialogForm = new WEF_EditorForm( i18n.dialogTitle, wef_PersonEditor_html, i18n );
-				dialogForm.load( result.entities[entityId] );
-				wef_LabelsCache.receiveLabels();
-				dialogForm.open();
-			},
-			complete: function() {
-				statusDialog.dialog( 'close' );
-			},
-			fail: function() {
-				alert( i18n.errorLoadingWikidata );
-			},
-		} );
-	};
-};
-
 if ( wgServerName === 'ru.wikipedia.org' ) {
 	importStylesheet( 'MediaWiki:WEF_PersonEditor.css' );
 
@@ -173,10 +113,11 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 	}
 }
 
-mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.datepicker', 'jquery.ui.dialog', 'jquery.ui.selectable', 'jquery.ui.tabs' ], function() {
-	addOnloadHook( function() {
-		wef_PersonEditor = new WEF_PersonEditor();
-		wef_PersonEditor.init();
+var wef_PersonEditor;
+jQuery( document ).ready( function( $ ) {
+	mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.datepicker', 'jquery.ui.dialog', 'jquery.ui.selectable', 'jquery.ui.tabs' ], function() {
+		wef_PersonEditor = new WEF_Editor();
+		wef_PersonEditor.localize( 'wef_PersonEditor_i18n_' );
 		wef_PersonEditor.addEditButtons();
 	} );
 } );
