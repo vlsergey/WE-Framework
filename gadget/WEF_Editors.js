@@ -146,7 +146,7 @@ var WEF_Editors_i18n = function() {
 	this.htmlFailure = '<img alt="×" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/16px-Red_x.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/24px-Red_x.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/32px-Red_x.svg.png 2x" data-file-width="600" data-file-height="600" height="16" width="16">';
 	this.htmlNotNeeded = '<img alt="(=)" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/15px-Pictogram_voting_neutral.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/23px-Pictogram_voting_neutral.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/30px-Pictogram_voting_neutral.svg.png 2x" data-file-width="250" data-file-height="250" height="15" width="15">';
 
-	this.summary = 'via [[:w:ru:ВП:G/ELE|WE-Framework gadget]]';
+	this.summary = 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' );
 
 	WEF_Utils.localize( this, 'wef_Editors_i18n_' );
 };
@@ -3558,9 +3558,14 @@ var WEF_EditorForm = function( title, html, i18n ) {
 /**
  * @class
  */
-var WEF_Editor = function() {
+var WEF_Editor = function( dialogHtml ) {
+
+	if ( typeof dialogHtml === 'undefined' ) {
+		throw new Error( 'Dialog HTML is not specified' );
+	}
 
 	this.i18n = {};
+	this.dialogHtml = dialogHtml;
 
 	if ( WEF_Utils.isWikidata() ) {
 		this.entityId = mw.config.get( 'wgTitle' );
@@ -3593,6 +3598,7 @@ WEF_Editor.prototype.edit = function() {
 		statusDialog.append( $( document.createElement( 'p' ) ).text( this.i18n.statusLoadingWikidata ) );
 		statusDialog.dialog();
 
+		var dialogHtml = this.dialogHtml;
 		var entityId = this.entityId;
 		var i18n = this.i18n;
 		$.ajax( {
@@ -3600,7 +3606,7 @@ WEF_Editor.prototype.edit = function() {
 			url: WEF_Utils.getWikidataApiPrefix() + '&action=wbgetentities&ids=' + entityId,
 			dataType: "json",
 			success: function( result ) {
-				var dialogForm = new WEF_EditorForm( i18n.dialogTitle, wef_PersonEditor_html, i18n );
+				var dialogForm = new WEF_EditorForm( i18n.dialogTitle, dialogHtml, i18n );
 				dialogForm.load( result.entities[entityId] );
 				wef_LabelsCache.receiveLabels();
 				dialogForm.open();

@@ -114,9 +114,9 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 }
 
 var wef_PersonEditor;
-jQuery( document ).ready( function( $ ) {
-	mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.datepicker', 'jquery.ui.dialog', 'jquery.ui.selectable', 'jquery.ui.tabs' ], function() {
-		wef_PersonEditor = new WEF_Editor();
+mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.datepicker', 'jquery.ui.dialog', 'jquery.ui.selectable', 'jquery.ui.tabs' ], function() {
+	addOnloadHook( function() {
+		wef_PersonEditor = new WEF_Editor( wef_PersonEditor_html );
 		wef_PersonEditor.localize( 'wef_PersonEditor_i18n_' );
 		wef_PersonEditor.addEditButtons();
 	} );

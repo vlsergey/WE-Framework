@@ -35,66 +35,6 @@ var wef_TaxonEditor_i18n_ru = {
 	menuButton: 'WEF: Таксон',
 };
 
-/**
- * @class
- */
-var WEF_TaxonEditor = function() {
-
-	this.i18n = {};
-	var i18n = this.i18n;
-
-	var URI_PREFIX;
-	var entityId;
-
-	if ( WEF_Utils.isWikidata() ) {
-		entityId = mw.config.get( 'wgTitle' );
-		URI_PREFIX = '//www.wikidata.org/w/api.php?format=json';
-	} else {
-		entityId = mw.config.get( 'wgWikibaseItemId' );
-		URI_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
-	}
-
-	this.enabled = /^Q\d+$/.test( entityId );
-
-	this.init = function() {
-		WEF_Utils.localize( i18n, 'wef_AnyEditor_i18n_' );
-		WEF_Utils.localize( i18n, 'wef_TaxonEditor_i18n_' );
-	};
-
-	this.addEditButtons = function() {
-		if ( !this.enabled ) {
-			return;
-		}
-
-		$( "#p-tb div ul" ).append( $( '<li class="plainlinks"><a href="javascript:wef_TaxonEditor.edit()">' + i18n.menuButton + '</a></li>' ) );
-	};
-
-	this.edit = function() {
-		var statusDialog = $( '<div></div>' );
-		statusDialog.attr( 'title', i18n.dialogTitle );
-		statusDialog.append( $( '<p></p>' ).text( i18n.statusLoadingWikidata ) );
-		statusDialog.dialog();
-
-		$.ajax( {
-			type: 'GET',
-			url: URI_PREFIX + '&action=wbgetentities&ids=' + entityId,
-			dataType: "json",
-			success: function( result ) {
-				var dialogForm = new WEF_EditorForm( i18n.dialogTitle, wef_TaxonEditor_html, i18n );
-				dialogForm.load( result.entities[entityId] );
-				wef_LabelsCache.receiveLabels();
-				dialogForm.open();
-			},
-			complete: function() {
-				statusDialog.dialog( 'close' );
-			},
-			fail: function() {
-				alert( i18n.errorLoadingWikidata );
-			},
-		} );
-	};
-};
-
 if ( wgServerName === 'ru.wikipedia.org' ) {
 	importStylesheet( 'MediaWiki:WEF_TaxonEditor.css' );
 
@@ -123,10 +63,11 @@ if ( wgServerName === 'ru.wikipedia.org' ) {
 	}
 }
 
+var wef_TaxonEditor;
 mediaWiki.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.datepicker', 'jquery.ui.dialog', 'jquery.ui.selectable', 'jquery.ui.tabs' ], function() {
-	jQuery( document ).ready( function( $ ) {
-		wef_TaxonEditor = new WEF_TaxonEditor();
-		wef_TaxonEditor.init();
+	addOnloadHook( function() {
+		wef_TaxonEditor = new WEF_Editor( wef_TaxonEditor_html );
+		wef_TaxonEditor.localize( 'wef_TaxonEditor_i18n_' );
 		wef_TaxonEditor.addEditButtons();
 	} );
 } );
