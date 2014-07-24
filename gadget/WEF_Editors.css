@@ -13,7 +13,8 @@
 	padding: 0 0.5em !important;
 }
 
-.wef_single_property_fieldset .wef_property_editor_label {
+.wef_single_property_fieldset .wef_property_editor_label,
+	.wef_columns_table .wef_property_editor_label {
 	display: none;
 }
 
