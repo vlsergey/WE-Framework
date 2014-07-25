@@ -10,12 +10,9 @@
 		</ul>
 		<div id='wef_workEditor_tab_general' class='wef_editor_tab'>
 			<fieldset class='wef_fieldset'>
-				<legend class='wef_i18n_text'>fieldsetGeneral</legend>
 				<table class="wef_table">
 					<!-- instance of -->
 					<tbody class='wef_claim_editors' data-code='P31' data-datatype='wikibase-item' />
-					<!-- image -->
-					<tbody class='wef_claim_editors' data-code='P18' data-datatype='commonsMedia' />
 				</table>
 			</fieldset>
 			<fieldset class='wef_fieldset'>
@@ -40,6 +37,10 @@
 					<tbody class='wef_claim_editors' data-code='P571' data-datatype='time' />
 				</table>
 			</fieldset>
+			<table class="wef_table">
+				<!-- image -->
+				<tbody class='wef_claim_editors' data-code='P18' data-datatype='commonsMedia' />
+			</table>
 		</div>
 		<div id='wef_workEditor_tab_content' class='wef_editor_tab'>
 			<table class="wef_table">
@@ -86,12 +87,12 @@
 				<!-- LibraryThing work identifier -->
 				<tbody class='wef_claim_editors' data-code='P1085' data-datatype='string' data-check='^\d{1,8}$'
 					data-template='http://www.librarything.com/work/$1' />
+				<!-- Universal Decimal Classification -->
+				<tbody class='wef_claim_editors' data-code='P1190' data-datatype='string' />
 				<!-- Chinese Library Classification -->
-				<tbody class='wef_claim_editors' data-code='P1150' data-datatype='string' data-flag='cn' />
+				<tbody class='wef_claim_editors' data-code='P1189' data-datatype='string' data-flag='cn' />
 				<!-- Regensburg Classification -->
 				<tbody class='wef_claim_editors' data-code='P1150' data-datatype='string' data-flag='de' />
-				<!-- Universal Decimal Classification -->
-				<tbody class='wef_claim_editors' data-code='P1190' data-datatype='string' data-flag='ru' />
 				<!-- Library of Congress Classification -->
 				<tbody class='wef_claim_editors' data-code='P1149' data-datatype='string' data-flag='us' />
 			</table>

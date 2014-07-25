@@ -8,12 +8,9 @@
 		</ul>
 		<div id='wef_workEditor_tab_general' class='wef_editor_tab'>
 			<fieldset class='wef_fieldset'>
-				<legend class='wef_i18n_text'>fieldsetGeneral</legend>
 				<table class="wef_table">
 					<!-- instance of -->
 					<tbody class='wef_claim_editors' data-code='P31' data-datatype='wikibase-item' />
-					<!-- image -->
-					<tbody class='wef_claim_editors' data-code='P18' data-datatype='commonsMedia' />
 				</table>
 			</fieldset>
 			<fieldset class='wef_fieldset'>
@@ -44,6 +41,10 @@
 					<tbody class='wef_claim_editors' data-code='P872' data-datatype='wikibase-item' />
 				</table>
 			</fieldset>
+			<table class="wef_table">
+				<!-- image -->
+				<tbody class='wef_claim_editors' data-code='P18' data-datatype='commonsMedia' />
+			</table>
 		</div>
 		<div id='wef_workEditor_tab_inside' class='wef_editor_tab'>
 			<fieldset class='wef_fieldset'>
@@ -76,14 +77,14 @@
 			<table class="wef_table">
 				<!-- ISBN-10 -->
 				<tbody class='wef_claim_editors' data-code='P957' data-datatype='string'
-					data-check='^\d{1,5}(-)\d{1,7}\1\d{1,6}\1[0-9X]$' data-template='//wiki/Special:BookSources/$1'>
+					data-check='^\d{1,5}(-)\d{1,7}\1\d{1,6}\1[0-9X]$' data-template='/wiki/Special:BookSources/$1'>
 					<!-- distribution -->
 					<tr data-code="P437" data-datatype="wikibase-item" />
 				</tbody>
 				<!-- ISBN-13 -->
 				<tbody class='wef_claim_editors' data-code='P212' data-datatype='string'
 					data-check='^97[89]-([0-57]-\d-\d\d\d\d\d\d\d|[0-57]-\d\d-\d\d\d\d\d\d|[0-57]-\d\d\d-\d\d\d\d\d|[0-57]-\d\d\d\d-\d\d\d\d|[0-57]-\d\d\d\d\d-\d\d\d|[0-57]-\d\d\d\d\d\d-\d\d|[0-57]-\d\d\d\d\d\d\d-\d|[89]\d-\d-\d\d\d\d\d\d|[89]\d-\d\d-\d\d\d\d\d|[89]\d-\d\d\d-\d\d\d\d|[89]\d-\d\d\d\d-\d\d\d|[89]\d-\d\d\d\d\d-\d\d|[89]\d-\d\d\d\d\d\d-\d|[69]\d\d-\d-\d\d\d\d\d|[69]\d\d-\d\d-\d\d\d\d|[69]\d\d-\d\d\d-\d\d\d|[69]\d\d-\d\d\d\d-\d\d|[69]\d\d-\d\d\d\d\d-\d|99[0-8]\d-\d-\d\d\d\d|99[0-8]\d-\d\d-\d\d\d|99[0-8]\d-\d\d\d-\d\d|99[0-8]\d-\d\d\d\d-\d|999\d\d-\d-\d\d\d|999\d\d-\d\d-\d\d|999\d\d-\d\d\d-\d)-\d$'
-					data-template='//wiki/Special:BookSources/$1'>
+					data-template='/wiki/Special:BookSources/$1'>
 					<!-- distribution -->
 					<tr data-code="P437" data-datatype="wikibase-item" />
 				</tbody>
