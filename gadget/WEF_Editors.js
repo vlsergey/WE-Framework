@@ -39,6 +39,17 @@ var wef_Editors_i18n_en = {
 	errorUpdateEntity: 'Unable to update entity',
 	errorRemoveClaims: 'Unable to remove outdated statements from entity',
 
+	inputQuantityUnitLabel: 'unit',
+	inputQuantityUnitTitle: '',
+	inputQuantityLowerBoundLabel: 'lower bound',
+	inputQuantityLowerBoundTitle: '',
+	inputQuantityAmountLabel: 'amount',
+	inputQuantityAmountTitle: '',
+	inputQuantityUpperBoundLabel: 'upper bound',
+	inputQuantityUpperBoundTitle: '',
+	inputQuantityModeExact: 'exact',
+	inputQuantityModeOther: 'other',
+
 	inputTimeTimeLabel: 'Time (ISO notation)',
 	inputTimeTimeTitle: 'Date and time in ISO notation, including. E.g. "+00000001994-01-01T00:00:00Z"',
 	inputTimeTimeZoneLabel: 'Timezone (minutes)',
@@ -107,6 +118,17 @@ var wef_Editors_i18n_ru = {
 	errorObtainEditToken: 'Произошла ошибка при получении нового токена редактирования',
 	errorUpdateEntity: 'Произошла ошибка при сохранении изменений в элемент',
 	errorRemoveClaims: 'Произошла ошибка при удалении устаревших утверждений из элемента',
+
+	inputQuantityUnitLabel: 'единица',
+	inputQuantityUnitTitle: '',
+	inputQuantityLowerBoundLabel: 'нижняя граница',
+	inputQuantityLowerBoundTitle: '',
+	inputQuantityAmountLabel: 'количество',
+	inputQuantityAmountTitle: '',
+	inputQuantityUpperBoundLabel: 'верхняя граница',
+	inputQuantityUpperBoundTitle: '',
+	inputQuantityModeExact: 'точно',
+	inputQuantityModeOther: 'другое',
 
 	inputTimeTimeLabel: 'Дата и время (ISO-нотация)',
 	inputTimeTimeTitle: 'Дата и время в ISO-нотации, т. е. «+00000001994-01-01T00:00:00Z» по григорианскому календарю',
@@ -273,24 +295,32 @@ var WEF_Utils = {
 	formatDate: function( year, month, day ) {
 		var time;
 		if ( year >= 0 ) {
-			time = "+" + ( "00000000000" + year ).substr( -11, 11 );
+			time = '+' + ( '00000000000' + year ).substr( -11, 11 );
 		} else {
-			time = "-" + ( "00000000000" + ( -year ) ).substr( -11, 11 );
+			time = '-' + ( '00000000000' + ( -year ) ).substr( -11, 11 );
 		}
-		time += "-";
+		time += '-';
 		if ( typeof month !== 'undefined' ) {
-			time += ( "00" + month ).substr( -2, 2 );
+			time += ( '00' + month ).substr( -2, 2 );
 		} else {
-			time += "01";
+			time += '01';
 		}
-		time += "-";
+		time += '-';
 		if ( typeof day !== 'undefined' ) {
-			time += ( "00" + day ).substr( -2, 2 );
+			time += ( '00' + day ).substr( -2, 2 );
 		} else {
-			time += "01";
+			time += '01';
 		}
-		time += "T00:00:00Z";
+		time += 'T00:00:00Z';
 		return time;
+	},
+
+	formatQuantity: function( value ) {
+		if ( Number( value ) > 0 ) {
+			return '+' + Number( value );
+		} else {
+			return '' + Number( value );
+		}
 	},
 
 	getEntityId: function() {
@@ -417,10 +447,10 @@ var WEF_Utils = {
 	regexpGetHtmlPattern: function( regexp ) {
 		var source = WEF_Utils.regexpGetSource( options.check );
 		if ( source.substr( 0, 1 ) !== '^' ) {
-			source = ".*" + source;
+			source = '.*' + source;
 		}
 		if ( source.substr( source.lenght - 1, 1 ) !== '$' ) {
-			source = source + ".*";
+			source = source + '.*';
 		}
 		return source;
 	},
@@ -551,7 +581,7 @@ var WEF_LabelsCache = function() {
 	 */
 	var assertKeyCorrect = function( key ) {
 		if ( !/^[PQ]\d+$/.test( key ) ) {
-			throw new Error( "Incorrect key: " + key );
+			throw new Error( 'Incorrect key: ' + key );
 		}
 	};
 
@@ -611,7 +641,7 @@ var WEF_LabelsCache = function() {
 
 	/** @private */
 	var isValid = function( value ) {
-		return typeof value !== "undefined" && value !== null;
+		return typeof value !== 'undefined' && value !== null;
 	};
 
 	/**
@@ -627,7 +657,7 @@ var WEF_LabelsCache = function() {
 	this.getOrQueue = function( key, listener ) {
 		assertKeyCorrect( key );
 		if ( typeof listener !== 'function' ) {
-			throw new Error( "Listener not specified or not a function" );
+			throw new Error( 'Listener not specified or not a function' );
 		}
 
 		var getLabel = this.getLabel;
@@ -709,7 +739,7 @@ var WEF_LabelsCache = function() {
 		} );
 
 		function onError( jqXHR, textStatus, errorThrown ) {
-			mw.log.warn( "Unable to load labels and descriptions from Wikidata: " + textStatus );
+			mw.log.warn( 'Unable to load labels and descriptions from Wikidata: ' + textStatus );
 		}
 		function onSuccess( result ) {
 			if ( typeof result.error !== 'undefined' ) {
@@ -720,10 +750,10 @@ var WEF_LabelsCache = function() {
 			$.each( result.entities, function( entityIndex, entity ) {
 				var entityId = entity.id;
 
-				if ( typeof entity.labels !== "undefined" ) {
+				if ( typeof entity.labels !== 'undefined' ) {
 					for ( var l = 0; l < languages.length; l++ ) {
 						var label = entity.labels[languages[l]];
-						if ( typeof label !== "undefined" && !$.isEmpty( label.value ) ) {
+						if ( typeof label !== 'undefined' && !$.isEmpty( label.value ) ) {
 							var title = label.value;
 							cacheLabels[entityId] = title;
 							localStorage[LOCALSTORAGE_PREFIX_LABELS + entityId] = title;
@@ -735,10 +765,10 @@ var WEF_LabelsCache = function() {
 					cacheLabels[entityId] = '';
 				}
 
-				if ( typeof entity.descriptions !== "undefined" ) {
+				if ( typeof entity.descriptions !== 'undefined' ) {
 					for ( var l = 0; l < languages.length; l++ ) {
 						var description = entity.descriptions[languages[l]];
-						if ( typeof description !== "undefined" && !$.isEmpty( description.value ) ) {
+						if ( typeof description !== 'undefined' && !$.isEmpty( description.value ) ) {
 							var title = description.value;
 							cacheDescriptions[entityId] = title;
 							localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + entityId] = title;
@@ -811,7 +841,7 @@ var WEF_TypesCache = function() {
 	 */
 	this.getPropertyType = function( propertyId, onSuccess, onFailure ) {
 		if ( !/^[P]\d+$/.test( propertyId ) ) {
-			throw new Error( "Incorrect property ID: " + propertyId );
+			throw new Error( 'Incorrect property ID: ' + propertyId );
 		}
 
 		var cached = cacheTypes[propertyId];
@@ -832,7 +862,7 @@ var WEF_TypesCache = function() {
 		// TODO: i18n
 		var dialog = $( document.createElement( 'div' ) ).attr( 'title', 'Get Wikidata property type' ).addClass( 'wef_dialog_no_close' );
 		var ul = $( document.createElement( 'ul' ) ).appendTo( dialog );
-		var progress = new WEF_ProgressItem( ul, "Request property type from Wikidata" );
+		var progress = new WEF_ProgressItem( ul, 'Request property type from Wikidata' );
 
 		dialog.dialog( {
 			width: 'auto',
@@ -891,7 +921,7 @@ var WEF_TypesCache = function() {
 
 	this.putInCache = function( propertyId, dataType ) {
 		if ( !/^[P]\d+$/.test( propertyId ) ) {
-			throw new Error( "Incorrect property ID: " + propertyId );
+			throw new Error( 'Incorrect property ID: ' + propertyId );
 		}
 
 		if ( !$.isEmpty( dataType ) ) {
@@ -970,6 +1000,17 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				}
 			}
 		}
+		if ( editorDataType === 'quantity' ) {
+			if ( typeof initialDataValue === 'undefined' || typeof initialDataValue.value === 'undefined' ) {
+				editorDataType = 'quantity-exact';
+			} else {
+				if ( initialDataValue.value.unit === '1' // 
+						&& initialDataValue.value.amount === initialDataValue.value.upperBound //
+						&& initialDataValue.value.amount === initialDataValue.value.lowerBound ) {
+					editorDataType = 'quantity-exact';
+				}
+			}
+		}
 	}
 
 	this.dataDataType = dataDataType;
@@ -981,9 +1022,28 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 		WEF_SnakValueEditor.call( snakValueEditor, parent, snakValueEditor.dataDataType, newEditorDataType, dataValue, options );
 	};
 
-	var selectDateTimePrecision;
+	var selectQuantityMode;
+	if ( editorDataType.substring( 0, 'quantity-'.length ) === 'quantity-' ) {
+		selectQuantityMode = $( document.createElement( 'select' ) ).addClass( 'wef_quantity_mode' );
 
-	if ( editorDataType.substring( 0, 5 ) === "time-" ) {
+		selectQuantityMode.append( $( document.createElement( 'option' ) ).attr( 'value', 'quantity-exact' ).text( i18n.inputQuantityModeExact ) );
+		selectQuantityMode.append( $( document.createElement( 'option' ) ).attr( 'value', 'quantity' ).text( i18n.inputQuantityModeOther ) );
+
+		selectQuantityMode.val( editorDataType );
+		selectQuantityMode.change( function() {
+			var newDataType = selectQuantityMode.val();
+			if ( newDataType !== editorDataType ) {
+				if ( snakValueEditor.hasValue() ) {
+					switchDataType( newDataType, snakValueEditor.getDataValue() );
+				} else {
+					switchDataType( newDataType, undefined );
+				}
+			}
+		} );
+	}
+
+	var selectDateTimePrecision;
+	if ( editorDataType.substring( 0, 5 ) === 'time-' ) {
 		selectDateTimePrecision = $( document.createElement( 'select' ) ).addClass( 'wef_select_date_time_precision' );
 		selectDateTimePrecision.attr( 'title', i18n.inputTimePrecisionTitle );
 		selectDateTimePrecision.append( $( document.createElement( 'option' ) ) //
@@ -1044,15 +1104,15 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 		( function() {
 			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_string' ).appendTo( this.mainElement );
 
-			if ( typeof options === "object" && typeof options.autocomplete === "object" ) {
+			if ( typeof options === 'object' && typeof options.autocomplete === 'object' ) {
 				input.autocomplete( options.autocomplete );
-				input.on( "autocompleteselect", function( event, ui ) {
+				input.on( 'autocompleteselect', function( event, ui ) {
 					input.val( ui.item.value );
 					input.change();
 				} );
 			}
 			try {
-				if ( typeof options === "object" && typeof options.check === "object" ) {
+				if ( typeof options === 'object' && typeof options.check === 'object' ) {
 					input.attr( 'pattern', WEF_Utils.regexpGetHtmlPattern( options.check ) );
 				}
 			} catch ( err ) {
@@ -1083,6 +1143,111 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 
 			input.change( changeF );
 			input.keyup( changeF );
+		} ).call( this );
+	} else if ( editorDataType === 'quantity' ) {
+		( function() {
+
+			var table = $( document.createElement( 'table' ) ).addClass( 'wef_quantity_table' ).appendTo( this.mainElement );
+
+			var inputUnit = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).addClass( 'wef_quantity_unit' );
+			var inputLowerBound = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).addClass( 'wef_quantity_lower_bound' );
+			var inputAmount = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).addClass( 'wef_quantity_amount' );
+			var inputUpperBound = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).addClass( 'wef_quantity_upper_bound' );
+
+			var addTr = function( textLabel, textTitle, input ) {
+				input.uniqueId();
+
+				var tr = $( document.createElement( 'tr' ) ).attr( 'title', textTitle ).appendTo( table );
+				var th = $( document.createElement( 'th' ) ).appendTo( tr );
+				var label = $( document.createElement( 'label' ) ).text( textLabel + ': ' ).attr( 'id', input.attr( 'id' ) ).appendTo( th );
+				var td = $( document.createElement( 'td' ) ).appendTo( tr );
+				td.append( input );
+			};
+
+			addTr( i18n.inputQuantityUnitLabel, i18n.inputQuantityUnitTitle, inputUnit );
+			addTr( i18n.inputQuantityLowerBoundLabel, i18n.inputQuantityLowerBoundTitle, inputLowerBound );
+			addTr( i18n.inputQuantityAmountLabel, i18n.inputQuantityAmountTitle, inputAmount );
+			addTr( i18n.inputQuantityUpperBoundLabel, i18n.inputQuantityUpperBoundTitle, inputUpperBound );
+
+			this.setDataValue = function( newDataValue ) {
+				inputUnit.val( newDataValue.value.unit );
+				inputLowerBound.val( newDataValue.value.lowerBound );
+				inputAmount.val( newDataValue.value.amount );
+				inputUpperBound.val( newDataValue.value.upperBound );
+			};
+			this.hasValue = function() {
+				return !$.isEmpty( inputAmount.val() );
+			};
+			this.removeValue = function() {
+				inputLowerBound.val( '' );
+				inputAmount.val( '' );
+				inputUpperBound.val( '' );
+			};
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
+					throw new Error( 'No value' );
+				}
+				return {
+					type: 'quantity',
+					value: {
+						unit: inputUnit.val(),
+						lowerBound: WEF_Utils.formatQuantity( inputLowerBound.val() ),
+						amount: WEF_Utils.formatQuantity( inputAmount.val() ),
+						upperBound: WEF_Utils.formatQuantity( inputUpperBound.val() ),
+					},
+				};
+			};
+			this.getAsLabel = function() {
+				// TODO: format value using server ?
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time' ).text(
+						lowerBound.val() + ' / ' + inputAmount.val() + ' / ' + inputUpperBound.val() );
+			};
+
+			inputUnit.change( changeF );
+			inputUnit.keyup( changeF );
+			inputLowerBound.change( changeF );
+			inputLowerBound.keyup( changeF );
+			inputAmount.change( changeF );
+			inputAmount.keyup( changeF );
+			inputUpperBound.change( changeF );
+			inputUpperBound.keyup( changeF );
+		} ).call( this );
+	} else if ( editorDataType === 'quantity-exact' ) {
+		( function() {
+
+			selectQuantityMode.appendTo( this.mainElement );
+			var inputAmount = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).addClass( 'wef_quantity_amount' ).appendTo( this.mainElement );
+
+			this.setDataValue = function( newDataValue ) {
+				inputAmount.val( newDataValue.value.amount );
+			};
+			this.hasValue = function() {
+				return !$.isEmpty( inputAmount.val() );
+			};
+			this.removeValue = function() {
+				inputAmount.val( '' );
+			};
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
+					throw new Error( 'No value' );
+				}
+				return {
+					type: 'quantity',
+					value: {
+						unit: '1',
+						lowerBound: WEF_Utils.formatQuantity( inputAmount.val() ),
+						amount: WEF_Utils.formatQuantity( inputAmount.val() ),
+						upperBound: WEF_Utils.formatQuantity( inputAmount.val() ),
+					},
+				};
+			};
+			this.getAsLabel = function() {
+				// TODO: format value using server ?
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time' ).text( inputAmount.val() );
+			};
+
+			inputAmount.change( changeF );
+			inputAmount.keyup( changeF );
 		} ).call( this );
 	} else if ( editorDataType === 'time' ) {
 		( function() {
@@ -1288,7 +1453,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				};
 			};
 			this.getAsLabel = function() {
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_months' ).text( wgMonthNames[months.val()] + " " + years.val() );
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_months' ).text( wgMonthNames[months.val()] + ' ' + years.val() );
 			};
 
 			months.change( changeF );
@@ -1353,7 +1518,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			};
 
 			try {
-				if ( typeof options === "object" && typeof options.check === "object" ) {
+				if ( typeof options === 'object' && typeof options.check === 'object' ) {
 					input.attr( 'pattern', WEF_Utils.regexpGetHtmlPattern( options.check ) );
 				}
 			} catch ( err ) {
@@ -1428,8 +1593,8 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				var dataValue = {};
 				if ( typeof input.data( 'value-entity-id' ) !== 'undefined' ) {
 					dataValue.value = {
-						"entity-type": "item",
-						"numeric-id": input.data( 'value-entity-id' ).substr( 1 ),
+						'entity-type': 'item',
+						'numeric-id': input.data( 'value-entity-id' ).substr( 1 ),
 					};
 				}
 				dataValue.type = 'wikibase-entityid';
@@ -1480,7 +1645,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 								label: entity.label,
 								value: entity.id,
 							};
-							if ( typeof entity.description !== "undefined" ) {
+							if ( typeof entity.description !== 'undefined' ) {
 								item.desc = entity.description;
 							} else if ( $.isArray( entity.aliases ) ) {
 								item.desc = 'a.k.a.: ' + entity.aliases.join( '; ' );
@@ -1499,10 +1664,10 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 					} );
 				},
 				close: function() {
-					$( wef_LabelsCache ).unbind( "change", labelsCacheListener );
+					$( wef_LabelsCache ).unbind( 'change', labelsCacheListener );
 				},
 				open: function() {
-					$( wef_LabelsCache ).bind( "change", labelsCacheListener );
+					$( wef_LabelsCache ).bind( 'change', labelsCacheListener );
 				},
 				select: function( event, ui ) {
 					var item = ui.item;
@@ -1526,7 +1691,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				var id = input.data( 'value-entity-id' );
 				var label = input.data( 'value-entity-label' );
 
-				if ( typeof id === "undefined" || typeof label === "undefined" ) {
+				if ( typeof id === 'undefined' || typeof label === 'undefined' ) {
 					input.val( '' );
 					input.removeData( 'value-entity-id' );
 					input.removeData( 'value-entity-label' );
@@ -1550,7 +1715,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				changeF();
 			} );
 
-			input.data( "autocomplete" )._renderItem = function( ul, item ) {
+			input.data( 'autocomplete' )._renderItem = function( ul, item ) {
 				var a = $( '<a><strong>' + item.label + '</strong> <span style="color: darkgray;">' + item.value + '</span><br>' + '</a>' );
 				var desc = $( document.createElement( 'span' ) ).appendTo( a );
 				if ( !$.isEmpty( item.desc ) ) {
@@ -1587,7 +1752,7 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 			input.keyup( changeF );
 		} ).call( this );
 	} else {
-		throw new Error( "Unsupported data type: " + editorDataType );
+		throw new Error( 'Unsupported data type: ' + editorDataType );
 	}
 
 	if ( typeof initialDataValue !== 'undefined' ) {
@@ -1635,7 +1800,7 @@ var WEF_ItemSelect = function() {
 			select.prop( 'selectedIndex', -1 );
 		} else {
 			select.val( value );
-			var option = select.find( ":selected" );
+			var option = select.find( ':selected' );
 			if ( option.length !== 0 ) {
 				return option;
 			}
@@ -1683,7 +1848,7 @@ var WEF_SelectSnakType = function() {
 	};
 
 	this.text = function() {
-		var option = select.find( ":selected" );
+		var option = select.find( ':selected' );
 		if ( option.length !== 0 ) {
 			return option.text();
 		}
@@ -1701,8 +1866,8 @@ var WEF_SelectSnakType = function() {
 		this.val( value );
 		anchor.after( select );
 		select.show().position( {
-			my: "left top",
-			at: "right top",
+			my: 'left top',
+			at: 'right top',
 			of: anchor,
 		} );
 		this.listener = listener;
@@ -1720,7 +1885,7 @@ mediaWiki.loader.using( [ 'jquery.ui.button' ], function() {
 
 var WEF_SnakEditor = function( parent, options ) {
 	if ( $.isEmpty( parent ) ) {
-		throw new Error( "parent is empty or not specified" );
+		throw new Error( 'parent is empty or not specified' );
 	}
 
 	this.options = options;
@@ -1958,7 +2123,7 @@ function WEF_filterClaims( definition, claims ) {
 		propertyId = 'P' + test[1];
 		propertyValue = 'Q' + test[2];
 	} else {
-		throw new Error( "Unsupported code: " + definition.code );
+		throw new Error( 'Unsupported code: ' + definition.code );
 	}
 
 	if ( typeof claims === 'undefined' || typeof claims[propertyId] === 'undefined' ) {
@@ -1994,7 +2159,7 @@ function WEF_filterClaims( definition, claims ) {
 		return result;
 	}
 
-	throw new Error( "Illegal state" );
+	throw new Error( 'Illegal state' );
 }
 
 var WEF_QualifierEditor = function( parent, propertyId, onRemove ) {
@@ -2314,7 +2479,7 @@ var WEF_ClaimEditor = function( definition ) {
 		this.propertyValue = 'Q' + test[2];
 		this.qualifierPropertyId = 'P' + test[3];
 	} else {
-		throw new Error( "Unsupported code: " + definition.code );
+		throw new Error( 'Unsupported code: ' + definition.code );
 	}
 
 	this.tbody = $( document.createElement( 'tbody' ) ).addClass( 'wef_property_editor_tbody' ).addClass( 'wef_property_editor_' + this.propertyId );
@@ -2360,7 +2525,7 @@ var WEF_ClaimEditor = function( definition ) {
 	this.snakEditor = new WEF_SnakEditor( inputCell, definition );
 
 	/* Flag */
-	if ( definition.flag !== "undefined" && typeof ruWikiFlagsHtml !== 'undefined' && typeof ruWikiFlagsHtml[definition.flag] !== "undefined" ) {
+	if ( definition.flag !== 'undefined' && typeof ruWikiFlagsHtml !== 'undefined' && typeof ruWikiFlagsHtml[definition.flag] !== 'undefined' ) {
 		flagCell.html( ruWikiFlagsHtml[definition.flag] );
 	}
 
@@ -2424,15 +2589,15 @@ WEF_ClaimEditor._getLabel = function( definition ) {
 	var updateLabel = function() {
 		var newLabel = '';
 
-		if ( typeof definition.labelPrefix !== "undefined" ) {
+		if ( typeof definition.labelPrefix !== 'undefined' ) {
 			newLabel += definition.labelPrefix;
 		}
 
-		if ( typeof definition.label !== "undefined" ) {
+		if ( typeof definition.label !== 'undefined' ) {
 			newLabel += wef_LabelsCache.getLabel( definition.label );
 		}
 
-		if ( typeof definition.labelQualifier !== "undefined" ) {
+		if ( typeof definition.labelQualifier !== 'undefined' ) {
 			if ( $.isArray( definition.labelQualifier ) ) {
 				newLabel += ' (';
 				$.each( definition.labelQualifier, function( index, qualifier ) {
@@ -2451,10 +2616,10 @@ WEF_ClaimEditor._getLabel = function( definition ) {
 		label.attr( 'title', wef_LabelsCache.getDescription( definition.label ) );
 	};
 
-	if ( typeof definition.label !== "undefined" ) {
+	if ( typeof definition.label !== 'undefined' ) {
 		wef_LabelsCache.getOrQueue( definition.label, updateLabel );
 	}
-	if ( typeof definition.labelQualifier !== "undefined" ) {
+	if ( typeof definition.labelQualifier !== 'undefined' ) {
 		if ( $.isArray( definition.labelQualifier ) ) {
 			$.each( definition.labelQualifier, function( index, qualifier ) {
 				wef_LabelsCache.getOrQueue( qualifier, updateLabel );
@@ -2557,7 +2722,7 @@ WEF_ClaimEditor.prototype.initWithValue = function( claim ) {
 		this.wikidataSnak = qualifier;
 		this.snakEditor.initWithValue( qualifier );
 	} else {
-		throw new Error( "Unsupported code: " + definition.code );
+		throw new Error( 'Unsupported code: ' + definition.code );
 	}
 
 	this.wikidataOldValue = this.hasData() ? JSON.stringify( this.getSnakValue() ) : null;
@@ -2580,12 +2745,12 @@ WEF_ClaimEditor.prototype.initWithStringValue = function( strValue ) {
 	this.wikidataClaim = null;
 	this.wikidataOldValue = null;
 	this.snakEditor.initWithValue( {
-		snaktype: "value",
+		snaktype: 'value',
 		property: this.isPropertyEditor ? this.propertyId : this.qualifierPropertyId,
-		datatype: "string",
+		datatype: 'string',
 		datavalue: {
 			value: strValue,
-			type: "string"
+			type: 'string'
 		}
 	} );
 };
@@ -2596,12 +2761,12 @@ WEF_ClaimEditor.prototype.setDataValue = function( newDataValue ) {
 
 WEF_ClaimEditor.prototype.setStringValue = function( strValue ) {
 	this.snakEditor.setSnakValue( {
-		snaktype: "value",
+		snaktype: 'value',
 		property: this.isPropertyEditor ? this.propertyId : this.qualifierPropertyId,
-		datatype: "string",
+		datatype: 'string',
 		datavalue: {
 			value: strValue,
-			type: "string"
+			type: 'string'
 		}
 	} );
 };
@@ -2644,15 +2809,15 @@ WEF_ClaimEditor.prototype.collectUpdates = function( updates ) {
 		} else if ( this.isQualifierEditor === true ) {
 			if ( oldClaim === null ) {
 				claim.mainsnak = {
-					snaktype: "value",
+					snaktype: 'value',
 					property: this.propertyId,
-					datatype: "wikibase-item",
+					datatype: 'wikibase-item',
 					datavalue: {
 						value: {
-							"entity-type": "item",
-							"numeric-id": this.propertyValue.substr( 1 ),
+							'entity-type': 'item',
+							'numeric-id': this.propertyValue.substr( 1 ),
 						},
-						type: "wikibase-entityid",
+						type: 'wikibase-entityid',
 					}
 				};
 			}
@@ -2662,7 +2827,7 @@ WEF_ClaimEditor.prototype.collectUpdates = function( updates ) {
 			}
 			WEF_Utils.appendToNamedMap( claim, 'qualifiers', this.qualifierPropertyId, qualifier );
 		} else {
-			throw new Error( "Unsupported code: " + definition.code );
+			throw new Error( 'Unsupported code: ' + definition.code );
 		}
 
 		var needToUpdateClaim = JSON.stringify( newSnak ) !== oldSnakStr;
@@ -2731,7 +2896,7 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 	/** @returns {WEF_ClaimEditor} */
 	this.add = function() {
 		if ( placed === false ) {
-			throw new Error( "Claims edit table is not placed on the form yet" );
+			throw new Error( 'Claims edit table is not placed on the form yet' );
 		}
 
 		var claimEditor = new WEF_ClaimEditor( definition );
@@ -2803,10 +2968,10 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 					} );
 					$( claimEditor ).change( function() {
 						if ( claimEditor.hasValue() ) {
-							newButton.button( "option", "disabled", false );
+							newButton.button( 'option', 'disabled', false );
 							newButton.button( 'enable' );
 						} else {
-							newButton.button( "option", "disabled", true );
+							newButton.button( 'option', 'disabled', true );
 							newButton.button( 'disable' );
 						}
 					} );
@@ -2845,12 +3010,12 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 					var newUrl = urlF( newValue );
 					a.attr( 'href', newUrl );
 					a.text( newUrl );
-					// if ( typeof definition.check !== "undefined" ) {
+					// if ( typeof definition.check !== 'undefined' ) {
 					// var result = definition.check.exec( newValue );
 					// if ( result == null ) {
 					// var tip = i18n.getTip( definition );
 					// var shortLabel = getLabelTextShort( definition );
-					// tip = tip.replace( "{0}", shortLabel );
+					// tip = tip.replace( '{0}', shortLabel );
 
 					// statusAndTips.text( tip );
 					// statusAndTips.addClass( 'ui-state-error' );
@@ -2914,7 +3079,7 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 	 */
 	this.init = function( entity ) {
 		if ( placed === false ) {
-			throw new Error( "Claims edit table is not placed on the form yet" );
+			throw new Error( 'Claims edit table is not placed on the form yet' );
 		}
 
 		/** @type {WEF_Claim[]} */
@@ -2972,7 +3137,7 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 
 	this.appendTo = function( target ) {
 		if ( placed === true ) {
-			throw new Error( "Claims edit table is already placed on the form" );
+			throw new Error( 'Claims edit table is already placed on the form' );
 		}
 		placed = true;
 
@@ -2983,7 +3148,7 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 	/** Replace each target element with the set of matched elements. */
 	this.replaceAll = function( target ) {
 		if ( placed === true ) {
-			throw new Error( "Claims edit table is already placed on the form" );
+			throw new Error( 'Claims edit table is already placed on the form' );
 		}
 		placed = true;
 
@@ -3136,7 +3301,7 @@ function wef_save( claimEditorTables ) {
 				if ( this.isWikidata === true ) {
 					return this.localUrlPrefix;
 				} else {
-					return this.wikidataUrlPrefix + "&centralauthtoken=" + encodeURIComponent( this.centralAuthToken );
+					return this.wikidataUrlPrefix + '&centralauthtoken=' + encodeURIComponent( this.centralAuthToken );
 				}
 			}
 		};
@@ -3437,7 +3602,7 @@ var WEF_EditorForm = function( title, html, i18n ) {
 				counter += claimEditorTable.getHasDataSize();
 			} );
 
-			var newText = anchor.data( DATAKEY_ANCHOR_ORIGINAL_TEXT ) + " (" + counter + ")";
+			var newText = anchor.data( DATAKEY_ANCHOR_ORIGINAL_TEXT ) + ' (' + counter + ')';
 			anchor.text( newText );
 		} catch ( err ) {
 			mw.log.warn( 'Unable to update editors count on tab: ' + err );
@@ -3474,7 +3639,7 @@ var WEF_EditorForm = function( title, html, i18n ) {
 			template: template,
 		} );
 
-		item.find( "tr" ).each( function( k, qItem ) {
+		item.find( 'tr' ).each( function( k, qItem ) {
 			var qualifier = $( qItem );
 			var qDefinition = new WEF_Definition( {
 				code: qualifier.data( 'code' ),
@@ -3539,7 +3704,7 @@ var WEF_EditorForm = function( title, html, i18n ) {
 			text: i18n.dialogButtonCloseText,
 			label: i18n.dialogButtonCloseLabel,
 			click: function() {
-				$( this ).dialog( "close" );
+				$( this ).dialog( 'close' );
 			}
 		} ],
 	} );
@@ -3591,7 +3756,7 @@ WEF_Editor.prototype.addEditButtons = function() {
 	$( document.createElement( 'a' ) ).css( 'cursor', 'pointer' ).click( function() {
 		editor.edit();
 	} ).text( this.i18n.menuButton ).appendTo( li );
-	$( "#p-tb div ul" ).append( li );
+	$( '#p-tb div ul' ).append( li );
 };
 
 WEF_Editor.prototype.edit = function() {
@@ -3608,7 +3773,7 @@ WEF_Editor.prototype.edit = function() {
 		$.ajax( {
 			type: 'GET',
 			url: WEF_Utils.getWikidataApiPrefix() + '&action=wbgetentities&ids=' + entityId,
-			dataType: "json",
+			dataType: 'json',
 			success: function( result ) {
 				var dialogForm = new WEF_EditorForm( i18n.dialogTitle, dialogHtml, i18n );
 				dialogForm.load( result.entities[entityId] );
