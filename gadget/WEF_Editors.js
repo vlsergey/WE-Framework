@@ -360,13 +360,17 @@ var WEF_Utils = {
 	},
 
 	/**
-	 * Analyzes definition.template string and updates definition with new
-	 * functions like url() and normalize()
+	 * Preprocess different aspects of WEF_definition
+	 * <ul>
+	 * <li>Analyzes definition.template string and updates definition with new
+	 * functions like url() and normalize()</li>
+	 * <li>Create standard url function for commonsMedia datatype</li>
+	 * <ul>
 	 * 
 	 * @param definition
 	 *            {WEF_Definition}
 	 */
-	processDefinitionTemplate: function( definition ) {
+	processDefinition: function( definition ) {
 		if ( typeof definition.template !== 'undefined' ) {
 			var newNormFunctions = [];
 			$.each( $.isArray( definition.template ) ? definition.template : [ definition.template ], function( index, template ) {
@@ -429,6 +433,9 @@ var WEF_Utils = {
 				};
 			}
 		}
+		if ( definition.datatype === 'commonsMedia' && typeof definition.url === 'undefined' ) {
+			definition.url = WEF_Utils.urlCommons;
+		}
 	},
 
 	purge: function() {
@@ -457,6 +464,10 @@ var WEF_Utils = {
 
 	regexpGetSource: function( regexp ) {
 		return regexp.toString().replace( /^\/(.*)\/[a-z]*$/, '$1' );
+	},
+
+	urlCommons: function( value ) {
+		return WEF_Utils.urlNice( '//commons.wikimedia.org/wiki/File:' + escape( value ) );
 	},
 
 	/**
@@ -1096,6 +1107,29 @@ var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initia
 				.attr( 'href', '//commons.wikimedia.org/wiki/File:' + encodeURI( input.val() ) ) //
 				.text( input.val() );
 			};
+
+			input.autocomplete( {
+				source: function( request, response ) {
+					var term = request.term;
+					$.ajax(
+							{
+								type: 'GET',
+								dataType: 'json',
+								url: '//commons.wikimedia.org/w/api.php?format=json&origin=' + encodeURIComponent( location.protocol + wgServer )
+										+ '&action=query&list=prefixsearch&psnamespace=6&pslimit=15&pssearch=' + encodeURIComponent( term ),
+							} ).done( function( result ) {
+						var list = [];
+						$.each( result.query.prefixsearch, function( index, p ) {
+							list.push( p.title.substring( 'File:'.length ) );
+						} );
+						response( list );
+					} );
+				},
+				select: function( event, ui ) {
+					input.val( ui.item.value );
+					input.change();
+				},
+			} );
 
 			input.change( changeF );
 			input.keyup( changeF );
@@ -3657,7 +3691,7 @@ var WEF_EditorForm = function( title, html, i18n ) {
 			}
 		} );
 
-		WEF_Utils.processDefinitionTemplate( definition );
+		WEF_Utils.processDefinition( definition );
 
 		var claimEditorTable = new WEF_ClaimEditorsTable( definition );
 		claimEditorsTables.push( claimEditorTable );

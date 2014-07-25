@@ -1613,7 +1613,7 @@ WEF_ExternalLinks = function() {
 			if ( typeof definition.qualifiers === 'undefined' ) {
 				definition.qualifiers = externalLinksEdit.defaultQualifiers;
 			}
-			WEF_Utils.processDefinitionTemplate( definition );
+			WEF_Utils.processDefinition( definition );
 		} );
 
 		var dialogForm = $( '' + '<div class="wef_externalLinks_dialog" id="wefExternalLinksDialog" title="' + i18n.dialogTitle + '">' + '<div id="wefExternalLinksDialogTabs">'
