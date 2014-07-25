@@ -3362,6 +3362,14 @@ var WEF_EditorForm = function( title, html, i18n ) {
 	var dialog = $( html );
 	dialog.attr( 'title', title );
 
+	/**
+	 * @type {string}
+	 * @const
+	 */
+	var DATAKEY_ANCHOR_EDITOR_TABLES = 'wef-achor-editors';
+	var DATAKEY_ANCHOR_ORIGINAL_TEXT = 'wef-original-text';
+	var enableAnchorCounterUpdate = false;
+
 	dialog.find( '.wef_i18n_text' ).each( function( i, htmlItem ) {
 		try {
 			var item = $( htmlItem );
@@ -3387,20 +3395,16 @@ var WEF_EditorForm = function( title, html, i18n ) {
 					item.attr( 'title', description );
 				}
 				item.removeClass( 'wef_i18n_label' );
+
+				if ( item.hasClass( 'wef_editor_tab_anchor' ) ) {
+					item.data( DATAKEY_ANCHOR_ORIGINAL_TEXT, label );
+					updateAnchorCounter( item );
+				}
 			} );
 		} catch ( err ) {
 			mw.log.warn( 'Unable to translate element text: ' + err );
 		}
 	} );
-
-	/**
-	 * @type {string}
-	 * @const
-	 */
-	var DATAKEY_ANCHOR_EDITOR_TABLES = 'wef-achor-editors';
-	var DATAKEY_ANCHOR_ORIGINAL_TEXT = 'wef-original-text';
-
-	var enableAnchorCounterUpdate = false;
 
 	function updateLinkedAnchorCounter() {
 		if ( enableAnchorCounterUpdate === false )
