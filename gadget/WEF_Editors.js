@@ -474,7 +474,7 @@ var WEF_Utils = {
 	 * @returns {string}
 	 */
 	urlNice: ( function() {
-		var abc = 'ёйцукенгшщзхъфывапролджэячсмитьбю';
+		var abc = 'ёйцукенгшщзхъфывапролджэячсмитьбюáñú,';
 		abc = abc + abc.toUpperCase();
 		var patterns = [];
 		var map = {};
@@ -501,7 +501,7 @@ var WEF_Utils = {
 	 * @returns {string}
 	 */
 	urlUnnice: ( function() {
-		var abc = 'ёйцукенгшщзхъфывапролджэячсмитьбю';
+		var abc = 'ёйцукенгшщзхъфывапролджэячсмитьбюáñú,';
 		abc = abc + abc.toUpperCase();
 		var patterns = [];
 		var map = {};
