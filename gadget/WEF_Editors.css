@@ -27,6 +27,15 @@
 }
 
 /*Properties level */
+.wef-claimrankselector-menu {
+	border: 1px solid #CCC;
+	position: absolute;
+	z-index: +1;
+}
+.wef-claimrankselector-menu option {
+	padding: 0.25em;
+}
+
 .wef_property_editor_label {
 	text-align: left;
 	white-space: nowrap;

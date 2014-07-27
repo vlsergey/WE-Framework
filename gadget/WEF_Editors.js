@@ -59,6 +59,13 @@ var wef_Editors_i18n_en = {
 	inputTimePrecisionLabel: 'Precision',
 	inputTimePrecisionTitle: 'To what unit is the given date/time significant?',
 
+	rankDeprecatedValue: 'deprecated',
+	rankDeprecatedTitle: 'used for a statement that contains information that may not be considered reliable or that is known to include errors. (For example, a statement that documents a wrong population figure that was published in some historic document. In this case the statement is not wrong – the historic document that is given as a reference really made the erroneous claim – but the statement should not be used in most cases.)',
+	rankNormalValue: 'normal',
+	rankNormalTitle: 'used for a statement that contains relevant information that is believed to be correct, but may be too extensive to be shown by default. (For example, historic population figures for Berlin over the course of many years.)',
+	rankPreferredValue: 'preferred',
+	rankPreferredTitle: 'used for a statement with the most important and most up-to-date information. Such a statement will be shown to all users and will be displayed in Wikipedia infoboxes by default. (For example, the most recent population figures for Berlin.)',
+
 	snakTypeValue: 'custom value',
 	snakTypeValueTitle: 'is a marker for when there is a known value for the property that can be specified. '
 			+ 'This is the default snak type when creating a snak/claim/statement.',
@@ -138,6 +145,13 @@ var wef_Editors_i18n_ru = {
 	inputTimePrecisionTitle: 'Какая наиболее точная значая единица для данного значения?',
 	inputTimeCalendarModelLabel: 'Календарь для отображения',
 	inputTimeCalendarModelTitle: 'Календарь, например,  юлианский или григорианский',
+
+	rankDeprecatedValue: 'нерекомендуемый',
+	rankDeprecatedTitle: 'используется для утверждений, содержащих информацию, которую нельзя считать надёжной или которая содержит известные ошибки. (Например, утверждение сообщает о неверной численности населения, опубликованной в некоем историческом документе. В этом случае утверждение не является ложным — в историческом документе, указанном в качестве источника, действительно было сделано ошибочное заявление — но такое утверждение в большинстве случаев не стоит использовать.)',
+	rankNormalValue: 'нормальный',
+	rankNormalTitle: ' используется для утверждений, содержащих релевантную информацию, которая считается верной, но которой, возможно, слишком много для отображения по умолчанию. (Например, измерения исторической численности населения Берлина на протяжении множества лет.)',
+	rankPreferredValue: 'предпочтительный',
+	rankPreferredTitle: 'используется для утверждений с наиболее важной и наиболее актуальной информацией. Такое утверждение будет показываться всем участникам и будет отображаться в шаблонах-карточках Википедии по умолчанию. (Например, самые последние сведения о численности населения Берлина.)',
 
 	snakTypeValue: 'своё значение',
 	snakTypeNoValue: 'значение не задано',
@@ -225,6 +239,13 @@ var wef_AnyEditor_i18n_ru = {
 
 	statusLoadingWikidata: 'Загружаем данные элемента с Викиданных',
 };
+
+/** @const */
+var WEF_RANK_PREFERRED = 'preferred';
+/** @const */
+var WEF_RANK_NORMAL = 'normal';
+/** @const */
+var WEF_RANK_DEPRECATED = 'deprecated';
 
 /**
  * @typedef WEF_Entity
@@ -1911,10 +1932,8 @@ var WEF_SelectSnakType = function() {
 
 /** @type {WEF_SelectSnakType} */
 var wef_selectSnakType;
-mediaWiki.loader.using( [ 'jquery.ui.button' ], function() {
-	addOnloadHook( function() {
-		wef_selectSnakType = new WEF_SelectSnakType();
-	} );
+addOnloadHook( function() {
+	wef_selectSnakType = new WEF_SelectSnakType();
 } );
 
 var WEF_SnakEditor = function( parent, options ) {
@@ -2211,6 +2230,7 @@ var WEF_QualifierEditor = function( parent, propertyId, onRemove ) {
 	this.qualifierRemoveCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( this.qualifierRow );
 
 	this._addRemoveButton( this.qualifierRemoveCell );
+	this._onRemove = onRemove;
 };
 
 /**
@@ -2298,7 +2318,7 @@ WEF_QualifierEditor.prototype._addRemoveButton = function( target ) {
 		text: false,
 		label: wef_Editors_i18n.buttonRemoveQualifier,
 	} ).click( function() {
-		onRemove( qualifierEditor );
+		qualifierEditor._onRemove( qualifierEditor );
 	} ).addClass( 'wef_qualifier_button' ).appendTo( target );
 
 	$( this ).on( 'afterHide', function() {
@@ -2411,6 +2431,7 @@ WEF_SelectableQualifierEditor.prototype.initWithValue = function( qualifierSnak 
 	} );
 };
 
+/* Called from drop-down select */
 WEF_SelectableQualifierEditor.prototype._onPropertySelect = function( newPropertyId ) {
 	this.propertyId = newPropertyId;
 
@@ -2427,8 +2448,77 @@ WEF_SelectableQualifierEditor.prototype._onPropertySelect = function( newPropert
 			this.snakEditor.initEmptyWithPropertyId( newPropertyId );
 		}
 	}
-	qualifierSelect.val( newPropertyId );
 };
+
+/** @class */
+var WEF_SelectRank = function() {
+	var i18n = wef_Editors_i18n;
+
+	var select = $( document.createElement( 'select' ) ).addClass( 'wef-claimrankselector-menu' ).attr( 'size', 3 );
+	select.hide();
+	$( document.body ).append( select );
+
+	var _this = this;
+	function changeF() {
+		var value = _this.val();
+		if ( value !== null ) {
+			_this.hide();
+			_this.listener( value );
+		}
+	}
+
+	$( document.createElement( 'option' ) ).attr( 'value', WEF_RANK_PREFERRED ).text( i18n.rankPreferredValue ).attr( 'title', i18n.rankPreferredTitle ).appendTo( select );
+	$( document.createElement( 'option' ) ).attr( 'value', WEF_RANK_NORMAL ).text( i18n.rankNormalValue ).attr( 'title', i18n.rankNormalTitle ).appendTo( select );
+	$( document.createElement( 'option' ) ).attr( 'value', WEF_RANK_DEPRECATED ).text( i18n.rankDeprecatedValue ).attr( 'title', i18n.rankDeprecatedTitle ).appendTo( select );
+
+	select.click( changeF );
+	select.change( changeF );
+
+	this.listener = function( value ) {
+		// no ops
+	};
+
+	this.val = function( value ) {
+		if ( typeof value === 'undefined' ) {
+			return select.val();
+		}
+
+		select.val( value );
+	};
+
+	this.text = function() {
+		var option = select.find( ':selected' );
+		if ( option.length !== 0 ) {
+			return option.text();
+		}
+		return null;
+	};
+
+	this.visible = false;
+
+	this.hide = function() {
+		this.visible = false;
+		select.hide();
+	};
+
+	this.show = function( anchor, value, listener ) {
+		this.val( value );
+		anchor.after( select );
+		select.show().position( {
+			my: 'left top',
+			at: 'right top',
+			of: anchor,
+		} );
+		this.listener = listener;
+		this.visible = true;
+	};
+};
+
+/** @type {WEF_SelectRank} */
+var wef_selectRank;
+addOnloadHook( function() {
+	wef_selectRank = new WEF_SelectRank();
+} );
 
 /**
  * Creates editor from definition. Definition includes:
@@ -2518,6 +2608,7 @@ var WEF_ClaimEditor = function( definition ) {
 
 	this.tbody = $( document.createElement( 'tbody' ) ).addClass( 'wef_property_editor_tbody' ).addClass( 'wef_property_editor_' + this.propertyId );
 	var row1 = this.row1 = $( document.createElement( 'tr' ) ).addClass( 'wef_property_editor_row' ).appendTo( this.tbody );
+	var rankCell = $( document.createElement( 'td' ) ).addClass( 'wef_property_editor_rank wef_button_cell' ).appendTo( row1 );
 	var flagCell = $( document.createElement( 'td' ) ).addClass( 'wef_property_editor_flag' ).appendTo( row1 );
 	var labelCell = $( document.createElement( 'th' ) ).addClass( 'wef_property_editor_label' ).appendTo( row1 );
 	var beforeInputCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( row1 );
@@ -2558,6 +2649,25 @@ var WEF_ClaimEditor = function( definition ) {
 
 	this.snakEditor = new WEF_SnakEditor( inputCell, definition );
 
+	/* Rank */
+	this.rankButton = $( document.createElement( 'button' ) ).attr( 'type', 'button' ).addClass( 'wef_property_button' ).addClass( 'wef_button_rank_normal' ).button( {
+		icons: {
+			primary: 'ui-icon-arrowthick-2-n-s'
+		},
+		text: false,
+		label: i18n.rankNormalValue,
+	} ).appendTo( rankCell );
+	this.rankButton.click( function() {
+		if ( wef_selectRank.visible && wef_selectRank.initiator === this ) {
+			wef_selectRank.hide();
+		} else {
+			wef_selectRank.initiator = this;
+			wef_selectRank.show( claimEditor.rankButton, claimEditor.rank, function( value ) {
+				claimEditor.setRank( value );
+			} );
+		}
+	} );
+
 	/* Flag */
 	if ( definition.flag !== 'undefined' && typeof ruWikiFlagsHtml !== 'undefined' && typeof ruWikiFlagsHtml[definition.flag] !== 'undefined' ) {
 		flagCell.html( ruWikiFlagsHtml[definition.flag] );
@@ -2583,6 +2693,7 @@ var WEF_ClaimEditor = function( definition ) {
 	this.wikidataClaim = null;
 	this.wikidataSnak = null;
 	this.wikidataOldValue = null;
+	this.rank = WEF_RANK_NORMAL;
 
 	$( this.snakEditor ).change( function() {
 		$( claimEditor ).change();
@@ -2729,6 +2840,11 @@ WEF_ClaimEditor.prototype.initEmpty = function() {
 WEF_ClaimEditor.prototype.initWithValue = function( claim ) {
 
 	this.wikidataClaim = claim;
+	if ( typeof claim.rank === 'undefined' ) {
+		this.setRank( WEF_RANK_NORMAL );
+	} else {
+		this.setRank( claim.rank );
+	}
 
 	if ( this.isPropertyEditor ) {
 		// load property main snak
@@ -2759,6 +2875,7 @@ WEF_ClaimEditor.prototype.initWithValue = function( claim ) {
 		throw new Error( 'Unsupported code: ' + definition.code );
 	}
 
+	this.wikidataOldRank = this.rank;
 	this.wikidataOldValue = this.hasData() ? JSON.stringify( this.getSnakValue() ) : null;
 
 	var claimEditor = this;
@@ -2778,6 +2895,7 @@ WEF_ClaimEditor.prototype.initWithValue = function( claim ) {
 WEF_ClaimEditor.prototype.initWithStringValue = function( strValue ) {
 	this.wikidataClaim = null;
 	this.wikidataOldValue = null;
+	this.rank = WEF_RANK_NORMAL;
 	this.snakEditor.initWithValue( {
 		snaktype: 'value',
 		property: this.isPropertyEditor ? this.propertyId : this.qualifierPropertyId,
@@ -2791,6 +2909,30 @@ WEF_ClaimEditor.prototype.initWithStringValue = function( strValue ) {
 
 WEF_ClaimEditor.prototype.setDataValue = function( newDataValue ) {
 	this.snakEditor.setDataValue( newDataValue );
+};
+
+WEF_ClaimEditor.prototype.setRank = function( newRank ) {
+	this.rank = newRank;
+	switch ( newRank ) {
+	case WEF_RANK_PREFERRED:
+		this.rankButton.button( 'option', 'label', wef_Editors_i18n.rankPreferredValue );
+		this.rankButton.button( 'option', 'icons', {
+			primary: 'ui-icon-arrowthickstop-1-n'
+		} );
+		break;
+	case WEF_RANK_NORMAL:
+		this.rankButton.button( 'option', 'label', wef_Editors_i18n.rankNormalValue );
+		this.rankButton.button( 'option', 'icons', {
+			primary: 'ui-icon-arrowthick-2-n-s'
+		} );
+		break;
+	case WEF_RANK_DEPRECATED:
+		this.rankButton.button( 'option', 'label', wef_Editors_i18n.rankDeprecatedValue );
+		this.rankButton.button( 'option', 'icons', {
+			primary: 'ui-icon-arrowthickstop-1-s'
+		} );
+		break;
+	}
 };
 
 WEF_ClaimEditor.prototype.setStringValue = function( strValue ) {
@@ -2821,6 +2963,7 @@ WEF_ClaimEditor.prototype.collectUpdates = function( updates ) {
 	var oldClaim = this.wikidataClaim;
 	var oldSnak = this.wikidataSnak;
 	var oldSnakStr = this.wikidataOldValue;
+	var oldRank = this.wikidataOldRank;
 
 	if ( hasData === false ) {
 		if ( oldClaim !== null ) {
@@ -2833,10 +2976,11 @@ WEF_ClaimEditor.prototype.collectUpdates = function( updates ) {
 			// qualifiers we will refill by ourselfs
 			delete claim.qualifiers;
 			delete claim['qualifiers-order'];
+			delete claim.rank;
 		} else {
 			claim.type = 'statement';
-			claim.rank = 'normal';
 		}
+		claim.rank = this.rank;
 
 		if ( this.isPropertyEditor === true ) {
 			claim.mainsnak = newSnak;
@@ -2864,7 +3008,7 @@ WEF_ClaimEditor.prototype.collectUpdates = function( updates ) {
 			throw new Error( 'Unsupported code: ' + definition.code );
 		}
 
-		var needToUpdateClaim = JSON.stringify( newSnak ) !== oldSnakStr;
+		var needToUpdateClaim = this.rank !== oldRank || JSON.stringify( newSnak ) !== oldSnakStr;
 
 		// save qualifiers
 		$.each( this.qualifiers, function( index, qualifierEditor ) {
@@ -3145,7 +3289,7 @@ var WEF_ClaimEditorsTable = function( definition, options ) {
 		// empty cell for adding claim button
 		columnsHeader.append( $( document.createElement( 'th' ) ).addClass( 'wef_column_th_empty' ) );
 
-		var propertyName = $( document.createElement( 'th' ) ).addClass( 'wef_column_th' ).attr( 'colspan', '5' ).appendTo( columnsHeader );
+		var propertyName = $( document.createElement( 'th' ) ).addClass( 'wef_column_th' ).attr( 'colspan', '6' ).appendTo( columnsHeader );
 		if ( typeof definition.label !== 'undefined' ) {
 			wef_LabelsCache.getOrQueue( definition.label, function( label, description ) {
 				propertyName.text( label );
