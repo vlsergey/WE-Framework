@@ -506,9 +506,6 @@ var WEF_Utils = {
 			map[e] = c;
 		}
 
-		patterns.push( '%20' );
-		map['%20'] = '+';
-
 		var pattern = new RegExp( patterns.join( '|' ), 'g' );
 
 		return function( stored ) {
@@ -532,8 +529,6 @@ var WEF_Utils = {
 			patterns.push( c );
 			map[c] = e;
 		}
-		patterns.push( '\\+' );
-		map['+'] = '%20';
 
 		var pattern = new RegExp( patterns.join( '|' ), 'g' );
 
