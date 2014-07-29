@@ -1017,15 +1017,15 @@ WEF_ExternalLinks = function() {
 		check: /^(anime|company|manga|people|releases)\/(1-9)\d*$/,
 		url: function( id ) {
 			if ( id.indexOf( 'anime/' ) === 0 )
-				return 'http://www.animenewsnetwork.com/encyclopedia/anime.php?id=' + id.subst( 'anime/'.length );
+				return 'http://www.animenewsnetwork.com/encyclopedia/anime.php?id=' + id.substr( 'anime/'.length );
 			if ( id.indexOf( 'company/' ) === 0 )
-				return 'http://www.animenewsnetwork.com/encyclopedia/company.php?id=' + id.subst( 'company/'.length );
+				return 'http://www.animenewsnetwork.com/encyclopedia/company.php?id=' + id.substr( 'company/'.length );
 			if ( id.indexOf( 'manga/' ) === 0 )
-				return 'http://www.animenewsnetwork.com/encyclopedia/manga.php?id=' + id.subst( 'manga/'.length );
+				return 'http://www.animenewsnetwork.com/encyclopedia/manga.php?id=' + id.substr( 'manga/'.length );
 			if ( id.indexOf( 'people/' ) === 0 )
-				return 'http://www.animenewsnetwork.com/encyclopedia/people.php?id=' + id.subst( 'people/'.length );
+				return 'http://www.animenewsnetwork.com/encyclopedia/people.php?id=' + id.substr( 'people/'.length );
 			if ( id.indexOf( 'releases/' ) === 0 )
-				return 'http://www.animenewsnetwork.com/encyclopedia/releases.php?id=' + id.subst( 'releases/'.length );
+				return 'http://www.animenewsnetwork.com/encyclopedia/releases.php?id=' + id.substr( 'releases/'.length );
 			return id;
 		},
 		qualifiers: [],
