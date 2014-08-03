@@ -1,79 +1,28 @@
-/**
- * This script provides a function which is run to evaluate whether or not to
- * continue loading jQuery and the MediaWiki modules. This code should work on
- * even the most ancient of browsers, so be very careful when editing.
- */
-
 var mediaWikiLoadStart = ( new Date() ).getTime();
-
-/**
- * Returns false when run in a black-listed browser
- *
- * This function will be deleted after it's used, so do not expand it to be
- * generally useful beyond startup.
- *
- * See also:
- * - https://www.mediawiki.org/wiki/Compatibility#Browser
- * - http://jquerymobile.com/gbs/
- * - http://jquery.com/browser-support/
- */
-
-/*jshint unused: false */
 function isCompatible( ua ) {
 	if ( ua === undefined ) {
 		ua = navigator.userAgent;
 	}
-
-	// MediaWiki JS or jQuery is known to have issues with:
-	return !(
-		// Internet Explorer < 6
-		( ua.indexOf( 'MSIE' ) !== -1 && parseFloat( ua.split( 'MSIE' )[1] ) < 6 ) ||
-		// Firefox < 3
-		( ua.indexOf( 'Firefox/' ) !== -1 && parseFloat( ua.split( 'Firefox/' )[1] ) < 3 ) ||
-		// BlackBerry < 6
-		ua.match( /BlackBerry[^\/]*\/[1-5]\./ ) ||
-		// Open WebOS < 1.5
-		ua.match( /webOS\/1\.[0-4]/ ) ||
-		// Anything PlayStation based.
-		ua.match( /PlayStation/i ) ||
-		// Any Symbian based browsers
-		ua.match( /SymbianOS|Series60/ ) ||
-		// Any NetFront based browser
-		ua.match( /NetFront/ ) ||
-		// Opera Mini, all versions
-		ua.match( /Opera Mini/ ) ||
-		// Nokia's Ovi Browser
-		ua.match( /S40OviBrowser/ ) ||
-		// Google Glass browser groks JS but UI is too limited
-		( ua.match( /Glass/ ) && ua.match( /Android/ ) )
-	);
+	return !( ( ua.indexOf( 'MSIE' ) !== -1 && parseFloat( ua.split( 'MSIE' )[1] ) < 6 ) || ( ua.indexOf( 'Firefox/' ) !== -1 && parseFloat( ua.split( 'Firefox/' )[1] ) < 3 )
+			|| ua.match( /BlackBerry[^\/]*\/[1-5]\./ ) || ua.match( /webOS\/1\.[0-4]/ ) || ua.match( /PlayStation/i ) || ua.match( /SymbianOS|Series60/ ) || ua.match( /NetFront/ )
+			|| ua.match( /Opera Mini/ ) || ua.match( /S40OviBrowser/ ) || ( ua.match( /Glass/ ) && ua.match( /Android/ ) ) );
 }
-
-/**
- * The startUp() function will be auto-generated and added below.
- */
-var startUp = function () {
-	mw.config = new mw.Map(true);
+var startUp = function() {
+	mw.config = new mw.Map( true );
 	mw.loader.addSource( {
-	    "local": {
-	        "loadScript": "//bits.wikimedia.org/ru.wikipedia.org/load.php",
-	        "apiScript": "/w/api.php"
-	    }
-	} );( function ( name, version, dependencies, group, source ) {
-		/**
-		* EmbedPlayer loader
-		*/
+		"local": {
+			"loadScript": "//bits.wikimedia.org/ru.wikipedia.org/load.php",
+			"apiScript": "/w/api.php"
+		}
+	} );
+	( function( name, version, dependencies, group, source ) {
 		( function( mw, $ ) {
-			/**
-			* Add a DOM ready check for player tags
-			*/
 			$( function() {
 				var $selected = $( mw.config.get( 'EmbedPlayer.RewriteSelector' ) );
 				if ( $selected.length ) {
 					var inx = 0;
 					var checkSetDone = function() {
 						if ( inx < $selected.length ) {
-							// put in timeout to avoid browser lockup, and function stack
 							$selected.slice( inx, inx + 1 ).embedPlayer( function() {
 								setTimeout( function() {
 									checkSetDone();
@@ -82,46 +31,23 @@ var startUp = function () {
 						}
 						inx++;
 					};
-		
 					checkSetDone();
 				}
 			} );
-		
-			/**
-			* Add the mwEmbed jQuery loader wrapper
-			*/
 			$.fn.embedPlayer = function( readyCallback ) {
 				var playerSet = this;
 				mw.log( 'jQuery.fn.embedPlayer :: ' + $( playerSet ).length );
-		
-				// Set up the embed video player class request: (include the skin js as well)
-				var dependencySet = [
-					'mw.EmbedPlayer'
-				];
-		
-				mw.loader.using( 'jquery.client', function() {
+				var dependencySet = [ 'mw.EmbedPlayer' ];
+				mw.loader.using( [ 'jquery.client', 'jquery.mwEmbedUtil', 'mw.MwEmbedSupport' ], function() {
 					$( playerSet ).each( function( inx, playerElement ) {
-						// we have javascript ( disable controls )
 						$( playerElement ).removeAttr( 'controls' );
-						// Add an overlay loader ( firefox has its own native loading spinner )
-		
 						if ( $.client.profile().name !== 'firefox' ) {
-							$( playerElement )
-								.parent()
-								.getAbsoluteOverlaySpinner()
-								.attr('id', 'loadingSpinner_' + $( playerElement ).attr('id') );
+							$( playerElement ).parent().getAbsoluteOverlaySpinner().attr( 'id', 'loadingSpinner_' + $( playerElement ).attr( 'id' ) );
 						}
-						// Allow other modules update the dependencies
-						$( mw ).trigger( 'EmbedPlayerUpdateDependencies',
-								[ playerElement, dependencySet ] );
+						$( mw ).trigger( 'EmbedPlayerUpdateDependencies', [ playerElement, dependencySet ] );
 					} );
-		
-					// Remove any duplicates in the dependencySet:
 					dependencySet = $.uniqueArray( dependencySet );
-		
-					// Do the request and process the playerElements with updated dependency set
 					mw.loader.using( dependencySet, function() {
-						// Setup the enhanced language:
 						mw.processEmbedPlayers( playerSet, readyCallback );
 					}, function( e ) {
 						throw new Error( 'Error loading EmbedPlayer dependency set: ' + e.message );
@@ -129,5955 +55,1453 @@ var startUp = function () {
 				} );
 			};
 		} )( window.mediaWiki, window.jQuery );
-	} )( "EmbedPlayer.loader", "20140626T181644Z", [], null, "local" );( function ( name, version, dependencies, group, source ) {
-		/**
-		* TimedText loader.
-		*/
-		// Scope everything in "mw" ( keeps the global namespace clean )
+	} )( "EmbedPlayer.loader", "20140731T180232Z", [], null, "local" );
+	( function( name, version, dependencies, group, source ) {
 		( function( mw, $ ) {
-		
-			/**
-			* Check if the video tags in the page support timed text
-			* this way we can add our timed text libraries to the player
-			* library request.
-			*/
-			// Update the player loader request with timedText library if the embedPlayer
-			// includes timedText tracks.
 			$( mw ).bind( 'EmbedPlayerUpdateDependencies', function( event, playerElement, classRequest ) {
-				if( mw.isTimedTextSupported( playerElement ) ) {
-					classRequest = $.merge( classRequest, ['mw.TimedText'] );
+				if ( mw.isTimedTextSupported( playerElement ) ) {
+					classRequest = $.merge( classRequest, [ 'mw.TimedText' ] );
 				}
 			} );
-			// On new embed player check if we need to add timedText
-			$( mw ).bind( 'EmbedPlayerNewPlayer', function( event, embedPlayer ){
-				if( mw.isTimedTextSupported( embedPlayer ) ){
+			$( mw ).bind( 'EmbedPlayerNewPlayer', function( event, embedPlayer ) {
+				if ( mw.isTimedTextSupported( embedPlayer ) ) {
 					embedPlayer.timedText = new mw.TimedText( embedPlayer );
 				}
-			});
-		
-			/**
-			 * Check timedText is active for a given embedPlayer
-			 * @param {object} embedPlayer The player to be checked for timedText properties
-			 */
+			} );
 			mw.isTimedTextSupported = function( embedPlayer ) {
-				//EmbedPlayerNewPlayer passes a div with data-mwprovider set,
-				//EmbedPlayerUpdateDependencies passes video element with data attribute
-				//catch both
-				var mwprovider = embedPlayer['data-mwprovider'] || $( embedPlayer ).data('mwprovider');
-				var showInterface = mw.config.get( 'TimedText.ShowInterface.' + mwprovider  ) ||
-					 mw.config.get( 'TimedText.ShowInterface' );
-		
+				var mwprovider = embedPlayer['data-mwprovider'] || $( embedPlayer ).data( 'mwprovider' );
+				var showInterface = mw.config.get( 'TimedText.ShowInterface.' + mwprovider ) || mw.config.get( 'TimedText.ShowInterface' );
 				if ( showInterface == 'always' ) {
 					return true;
 				} else if ( showInterface == 'off' ) {
 					return false;
 				}
-		
-				// Check for standard 'track' attribute:
 				if ( $( embedPlayer ).find( 'track' ).length != 0 ) {
 					return true;
 				} else {
 					return false;
 				}
 			};
-		
 		} )( window.mediaWiki, window.jQuery );
-	} )( "TimedText.loader", "20140626T181644Z", [], null, "local" );( function ( name, version, dependencies, group, source ) {
+	} )( "TimedText.loader", "20140731T180232Z", [], null, "local" );
+	( function( name, version, dependencies, group, source ) {
 		( function( mw, $ ) {
-			// Add MediaWikiSupportPlayer dependency on players with a mediaWiki title
-			$( mw ).bind( 'EmbedPlayerUpdateDependencies', function( event, embedPlayer, dependencySet ){
-				if( $( embedPlayer ).attr( 'data-mwtitle' ) ){
-					$.merge( dependencySet, ['mw.MediaWikiPlayerSupport'] );
+			$( mw ).bind( 'EmbedPlayerUpdateDependencies', function( event, embedPlayer, dependencySet ) {
+				if ( $( embedPlayer ).attr( 'data-mwtitle' ) ) {
+					$.merge( dependencySet, [ 'mw.MediaWikiPlayerSupport' ] );
 				}
-			});
+			} );
 		} )( window.mediaWiki, jQuery );
-	} )( "mw.MediaWikiPlayer.loader", "20140626T181645Z", [], null, "local" );mw.loader.register( [
-	    [
-	        "site",
-	        "1403620640",
-	        [],
-	        "site"
-	    ],
-	    [
-	        "noscript",
-	        "1399494850",
-	        [],
-	        "noscript"
-	    ],
-	    [
-	        "startup",
-	        "1403965901",
-	        [],
-	        "startup"
-	    ],
-	    [
-	        "filepage",
-	        "1386876474"
-	    ],
-	    [
-	        "user.groups",
-	        "1397583263",
-	        [],
-	        "user"
-	    ],
-	    [
-	        "user",
-	        "1403255438",
-	        [],
-	        "user"
-	    ],
-	    [
-	        "user.cssprefs",
-	        "1356998400",
-	        [
-	            "mediawiki.user"
-	        ],
-	        "private"
-	    ],
-	    [
-	        "user.options",
-	        "1356998400",
-	        [],
-	        "private"
-	    ],
-	    [
-	        "user.tokens",
-	        "1356998400",
-	        [],
-	        "private"
-	    ],
-	    [
-	        "mediawiki.language.data",
-	        "1400218529",
-	        [
-	            "mediawiki.language.init"
-	        ]
-	    ],
-	    [
-	        "mediawiki.skinning.elements",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.skinning.content",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.skinning.interface",
-	        "1403806578"
-	    ],
-	    [
-	        "mediawiki.skinning.content.parsoid",
-	        "1403806604"
-	    ],
-	    [
-	        "skins.vector.styles",
-	        "1403806578"
-	    ],
-	    [
-	        "skins.monobook.styles",
-	        "1403806580"
-	    ],
-	    [
-	        "skins.vector.js",
-	        "1403806604",
-	        [
-	            "jquery.tabIndex",
-	            "jquery.throttle-debounce"
-	        ]
-	    ],
-	    [
-	        "jquery",
-	        "1403806584"
-	    ],
-	    [
-	        "jquery.accessKeyLabel",
-	        "1403923162",
-	        [
-	            "jquery.client",
-	            "jquery.mwExtension"
-	        ]
-	    ],
-	    [
-	        "jquery.appear",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.arrowSteps",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.async",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.autoEllipsis",
-	        "1403806604",
-	        [
-	            "jquery.highlightText"
-	        ]
-	    ],
-	    [
-	        "jquery.badge",
-	        "1403806604",
-	        [
-	            "mediawiki.language"
-	        ]
-	    ],
-	    [
-	        "jquery.byteLength",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.byteLimit",
-	        "1403806604",
-	        [
-	            "jquery.byteLength"
-	        ]
-	    ],
-	    [
-	        "jquery.checkboxShiftClick",
-	        "1403806587"
-	    ],
-	    [
-	        "jquery.chosen",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.client",
-	        "1403806580"
-	    ],
-	    [
-	        "jquery.color",
-	        "1403806604",
-	        [
-	            "jquery.colorUtil"
-	        ]
-	    ],
-	    [
-	        "jquery.colorUtil",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.cookie",
-	        "1403806580"
-	    ],
-	    [
-	        "jquery.expandableField",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.farbtastic",
-	        "1403806604",
-	        [
-	            "jquery.colorUtil"
-	        ]
-	    ],
-	    [
-	        "jquery.footHovzer",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.form",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.fullscreen",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.getAttrs",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.hidpi",
-	        "1403806587"
-	    ],
-	    [
-	        "jquery.highlightText",
-	        "1403806583",
-	        [
-	            "jquery.mwExtension"
-	        ]
-	    ],
-	    [
-	        "jquery.hoverIntent",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.json",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.localize",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.makeCollapsible",
-	        "1403923162"
-	    ],
-	    [
-	        "jquery.mockjax",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.mw-jump",
-	        "1403806587"
-	    ],
-	    [
-	        "jquery.mwExtension",
-	        "1403806580"
-	    ],
-	    [
-	        "jquery.placeholder",
-	        "1403806587"
-	    ],
-	    [
-	        "jquery.qunit",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.qunit.completenessTest",
-	        "1403806604",
-	        [
-	            "jquery.qunit"
-	        ]
-	    ],
-	    [
-	        "jquery.spinner",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.jStorage",
-	        "1403806604",
-	        [
-	            "jquery.json"
-	        ]
-	    ],
-	    [
-	        "jquery.suggestions",
-	        "1403806583",
-	        [
-	            "jquery.highlightText"
-	        ]
-	    ],
-	    [
-	        "jquery.tabIndex",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.tablesorter",
-	        "1403923162",
-	        [
-	            "jquery.mwExtension",
-	            "mediawiki.language.months"
-	        ]
-	    ],
-	    [
-	        "jquery.textSelection",
-	        "1403806604",
-	        [
-	            "jquery.client"
-	        ]
-	    ],
-	    [
-	        "jquery.throttle-debounce",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.validate",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.xmldom",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.tipsy",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.ui.core",
-	        "1403806604",
-	        [],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.accordion",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.widget"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.autocomplete",
-	        "1403806604",
-	        [
-	            "jquery.ui.menu"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.button",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.widget"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.datepicker",
-	        "1403806604",
-	        [
-	            "jquery.ui.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.dialog",
-	        "1403806604",
-	        [
-	            "jquery.ui.button",
-	            "jquery.ui.draggable",
-	            "jquery.ui.position",
-	            "jquery.ui.resizable"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.draggable",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.mouse"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.droppable",
-	        "1403806604",
-	        [
-	            "jquery.ui.draggable"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.menu",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.position",
-	            "jquery.ui.widget"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.mouse",
-	        "1403806604",
-	        [
-	            "jquery.ui.widget"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.position",
-	        "1403806604",
-	        [],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.progressbar",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.widget"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.resizable",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.mouse"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.selectable",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.mouse"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.slider",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.mouse"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.sortable",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.mouse"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.spinner",
-	        "1403806604",
-	        [
-	            "jquery.ui.button"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.tabs",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.widget"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.tooltip",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.position",
-	            "jquery.ui.widget"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.ui.widget",
-	        "1403806604",
-	        [],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.core",
-	        "1403806604",
-	        [],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.blind",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.bounce",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.clip",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.drop",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.explode",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.fade",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.fold",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.highlight",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.pulsate",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.scale",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.shake",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.slide",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "jquery.effects.transfer",
-	        "1403806604",
-	        [
-	            "jquery.effects.core"
-	        ],
-	        "jquery.ui"
-	    ],
-	    [
-	        "moment",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki",
-	        "1403806584"
-	    ],
-	    [
-	        "mediawiki.api",
-	        "1403806604",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mediawiki.api.category",
-	        "1403806604",
-	        [
-	            "mediawiki.Title",
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "mediawiki.api.edit",
-	        "1403806604",
-	        [
-	            "mediawiki.Title",
-	            "mediawiki.api",
-	            "user.tokens"
-	        ]
-	    ],
-	    [
-	        "mediawiki.api.login",
-	        "1403806604",
-	        [
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "mediawiki.api.parse",
-	        "1403806604",
-	        [
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "mediawiki.api.watch",
-	        "1403806587",
-	        [
-	            "mediawiki.api",
-	            "user.tokens"
-	        ]
-	    ],
-	    [
-	        "mediawiki.debug",
-	        "1403806604",
-	        [
-	            "jquery.footHovzer",
-	            "jquery.tipsy"
-	        ]
-	    ],
-	    [
-	        "mediawiki.debug.init",
-	        "1403806604",
-	        [
-	            "mediawiki.debug"
-	        ]
-	    ],
-	    [
-	        "mediawiki.feedback",
-	        "1403923162",
-	        [
-	            "jquery.ui.dialog",
-	            "mediawiki.api.edit",
-	            "mediawiki.jqueryMsg"
-	        ]
-	    ],
-	    [
-	        "mediawiki.hidpi",
-	        "1403806587",
-	        [
-	            "jquery.hidpi"
-	        ]
-	    ],
-	    [
-	        "mediawiki.hlist",
-	        "1403806604",
-	        [
-	            "jquery.client"
-	        ]
-	    ],
-	    [
-	        "mediawiki.htmlform",
-	        "1403923162"
-	    ],
-	    [
-	        "mediawiki.icon",
-	        "1403806587"
-	    ],
-	    [
-	        "mediawiki.inspect",
-	        "1403806590",
-	        [
-	            "jquery.byteLength",
-	            "jquery.json"
-	        ]
-	    ],
-	    [
-	        "mediawiki.notification",
-	        "1403806604",
-	        [
-	            "mediawiki.page.startup"
-	        ]
-	    ],
-	    [
-	        "mediawiki.notify",
-	        "1403806580"
-	    ],
-	    [
-	        "mediawiki.searchSuggest",
-	        "1403923162",
-	        [
-	            "jquery.placeholder",
-	            "jquery.suggestions",
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "mediawiki.Title",
-	        "1403806604",
-	        [
-	            "jquery.byteLength",
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mediawiki.toc",
-	        "1403923162",
-	        [
-	            "jquery.cookie"
-	        ]
-	    ],
-	    [
-	        "mediawiki.Uri",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.user",
-	        "1403806604",
-	        [
-	            "jquery.cookie",
-	            "mediawiki.api",
-	            "user.options",
-	            "user.tokens"
-	        ]
-	    ],
-	    [
-	        "mediawiki.util",
-	        "1403806580",
-	        [
-	            "jquery.accessKeyLabel",
-	            "mediawiki.notify"
-	        ]
-	    ],
-	    [
-	        "mediawiki.cookie",
-	        "1403806583",
-	        [
-	            "jquery.cookie"
-	        ]
-	    ],
-	    [
-	        "mediawiki.action.edit",
-	        "1403806604",
-	        [
-	            "jquery.byteLimit",
-	            "jquery.textSelection",
-	            "mediawiki.action.edit.styles"
-	        ]
-	    ],
-	    [
-	        "mediawiki.action.edit.styles",
-	        "1403806582"
-	    ],
-	    [
-	        "mediawiki.action.edit.collapsibleFooter",
-	        "1403806587",
-	        [
-	            "jquery.cookie",
-	            "jquery.makeCollapsible",
-	            "mediawiki.icon"
-	        ]
-	    ],
-	    [
-	        "mediawiki.action.edit.preview",
-	        "1403806604",
-	        [
-	            "jquery.form",
-	            "jquery.spinner",
-	            "mediawiki.action.history.diff"
-	        ]
-	    ],
-	    [
-	        "mediawiki.action.history",
-	        "1403806604",
-	        [],
-	        "mediawiki.action.history"
-	    ],
-	    [
-	        "mediawiki.action.history.diff",
-	        "1403806604",
-	        [],
-	        "mediawiki.action.history"
-	    ],
-	    [
-	        "mediawiki.action.view.dblClickEdit",
-	        "1403806604",
-	        [
-	            "mediawiki.page.startup"
-	        ]
-	    ],
-	    [
-	        "mediawiki.action.view.metadata",
-	        "1403923163"
-	    ],
-	    [
-	        "mediawiki.action.view.postEdit",
-	        "1403923163",
-	        [
-	            "mediawiki.cookie",
-	            "mediawiki.jqueryMsg"
-	        ]
-	    ],
-	    [
-	        "mediawiki.action.view.redirectToFragment",
-	        "1403806604",
-	        [
-	            "jquery.client"
-	        ]
-	    ],
-	    [
-	        "mediawiki.action.view.rightClickEdit",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.action.edit.editWarning",
-	        "1403923163",
-	        [
-	            "mediawiki.jqueryMsg"
-	        ]
-	    ],
-	    [
-	        "mediawiki.action.watch.ajax",
-	        "1356998400",
-	        [
-	            "mediawiki.page.watch.ajax"
-	        ]
-	    ],
-	    [
-	        "mediawiki.language",
-	        "1403806580",
-	        [
-	            "mediawiki.cldr",
-	            "mediawiki.language.data"
-	        ]
-	    ],
-	    [
-	        "mediawiki.cldr",
-	        "1403806580",
-	        [
-	            "mediawiki.libs.pluralruleparser"
-	        ]
-	    ],
-	    [
-	        "mediawiki.libs.pluralruleparser",
-	        "1403806580"
-	    ],
-	    [
-	        "mediawiki.language.init",
-	        "1403806580"
-	    ],
-	    [
-	        "mediawiki.jqueryMsg",
-	        "1403806580",
-	        [
-	            "mediawiki.language",
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mediawiki.language.months",
-	        "1403923162",
-	        [
-	            "mediawiki.language"
-	        ]
-	    ],
-	    [
-	        "mediawiki.language.names",
-	        "1399581451",
-	        [
-	            "mediawiki.language.init"
-	        ]
-	    ],
-	    [
-	        "mediawiki.libs.jpegmeta",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.page.gallery",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.page.ready",
-	        "1403806583",
-	        [
-	            "jquery.checkboxShiftClick",
-	            "jquery.makeCollapsible",
-	            "jquery.mw-jump",
-	            "jquery.placeholder",
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mediawiki.page.startup",
-	        "1403806580",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mediawiki.page.patrol.ajax",
-	        "1403806604",
-	        [
-	            "jquery.spinner",
-	            "mediawiki.Title",
-	            "mediawiki.api",
-	            "mediawiki.page.startup",
-	            "user.tokens"
-	        ]
-	    ],
-	    [
-	        "mediawiki.page.watch.ajax",
-	        "1403923162",
-	        [
-	            "mediawiki.api.watch"
-	        ]
-	    ],
-	    [
-	        "mediawiki.page.image.pagination",
-	        "1403806604",
-	        [
-	            "jquery.spinner"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special",
-	        "1403806584"
-	    ],
-	    [
-	        "mediawiki.special.block",
-	        "1403806604",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.changeemail",
-	        "1403923163",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.changeslist",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.special.changeslist.legend",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.special.changeslist.legend.js",
-	        "1403806604",
-	        [
-	            "jquery.cookie",
-	            "jquery.makeCollapsible"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.changeslist.enhanced",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.special.movePage",
-	        "1403806604",
-	        [
-	            "jquery.byteLimit"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.pagesWithProp",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.special.preferences",
-	        "1403923163",
-	        [
-	            "mediawiki.language"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.recentchanges",
-	        "1403806584",
-	        [
-	            "mediawiki.special"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.search",
-	        "1403923162"
-	    ],
-	    [
-	        "mediawiki.special.undelete",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.special.upload",
-	        "1403923162",
-	        [
-	            "mediawiki.libs.jpegmeta",
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.userlogin.common.styles",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.special.userlogin.signup.styles",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.special.userlogin.login.styles",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.special.userlogin.common.js",
-	        "1403923163"
-	    ],
-	    [
-	        "mediawiki.special.userlogin.signup.js",
-	        "1403923163",
-	        [
-	            "jquery.throttle-debounce",
-	            "mediawiki.api",
-	            "mediawiki.jqueryMsg"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.unwatchedPages",
-	        "1403806604",
-	        [
-	            "mediawiki.Title",
-	            "mediawiki.api.watch"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.javaScriptTest",
-	        "1403806604",
-	        [
-	            "jquery.qunit"
-	        ]
-	    ],
-	    [
-	        "mediawiki.special.version",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.legacy.ajax",
-	        "1403806604",
-	        [
-	            "mediawiki.legacy.wikibits"
-	        ]
-	    ],
-	    [
-	        "mediawiki.legacy.commonPrint",
-	        "1403806578"
-	    ],
-	    [
-	        "mediawiki.legacy.config",
-	        "1403806604",
-	        [
-	            "mediawiki.legacy.wikibits"
-	        ]
-	    ],
-	    [
-	        "mediawiki.legacy.protect",
-	        "1403806604",
-	        [
-	            "jquery.byteLimit"
-	        ]
-	    ],
-	    [
-	        "mediawiki.legacy.shared",
-	        "1403806578"
-	    ],
-	    [
-	        "mediawiki.legacy.oldshared",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.legacy.upload",
-	        "1403806604",
-	        [
-	            "jquery.spinner",
-	            "mediawiki.Title",
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "mediawiki.legacy.wikibits",
-	        "1403806604",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mediawiki.ui",
-	        "1403806582"
-	    ],
-	    [
-	        "mediawiki.ui.button",
-	        "1403806578"
-	    ],
-	    [
-	        "oojs",
-	        "1403806585"
-	    ],
-	    [
-	        "oojs-ui",
-	        "1403923162",
-	        [
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "ext.geshi.language.4cs",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.6502acme",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.6502kickass",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.6502tasm",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.68000devpac",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.abap",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.actionscript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.actionscript3",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.ada",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.algol68",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.apache",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.applescript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.apt_sources",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.arm",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.asm",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.asp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.asymptote",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.autoconf",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.autohotkey",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.autoit",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.avisynth",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.awk",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.bascomavr",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.bash",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.basic4gl",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.bf",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.bibtex",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.blitzbasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.bnf",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.boo",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.c",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.c_loadrunner",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.c_mac",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.caddcl",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.cadlisp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.cfdg",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.cfm",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.chaiscript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.cil",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.clojure",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.cmake",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.cobol",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.coffeescript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.cpp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.cpp-qt",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.csharp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.css",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.cuesheet",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.d",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.dcl",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.dcpu16",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.dcs",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.delphi",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.diff",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.div",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.dos",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.dot",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.e",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.ecmascript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.eiffel",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.email",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.epc",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.erlang",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.euphoria",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.f1",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.falcon",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.fo",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.fortran",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.freebasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.freeswitch",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.fsharp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.gambas",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.gdb",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.genero",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.genie",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.gettext",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.glsl",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.gml",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.gnuplot",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.go",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.groovy",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.gwbasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.haskell",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.haxe",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.hicest",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.hq9plus",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.html4strict",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.html5",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.icon",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.idl",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.ini",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.inno",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.intercal",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.io",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.j",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.java",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.java5",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.javascript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.jquery",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.kixtart",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.klonec",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.klonecpp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.latex",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.lb",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.ldif",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.lisp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.llvm",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.locobasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.logtalk",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.lolcode",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.lotusformulas",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.lotusscript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.lscript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.lsl2",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.lua",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.m68k",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.magiksf",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.make",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.mapbasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.matlab",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.mirc",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.mmix",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.modula2",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.modula3",
-	        "1403647106"
-	    ],
-	    [
-	        "ext.geshi.language.mpasm",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.mxml",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.mysql",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.nagios",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.netrexx",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.newlisp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.nsis",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.oberon2",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.objc",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.objeck",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.ocaml",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.ocaml-brief",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.octave",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.oobas",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.oorexx",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.oracle11",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.oracle8",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.oxygene",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.oz",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.parasail",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.parigp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.pascal",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.pcre",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.per",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.perl",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.perl6",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.pf",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.php",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.php-brief",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.pic16",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.pike",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.pixelbender",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.pli",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.plsql",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.postgresql",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.povray",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.powerbuilder",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.powershell",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.proftpd",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.progress",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.prolog",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.properties",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.providex",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.purebasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.pycon",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.pys60",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.python",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.q",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.qbasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.rails",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.rebol",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.reg",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.rexx",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.robots",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.rpmspec",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.rsplus",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.ruby",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.sas",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.scala",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.scheme",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.scilab",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.sdlbasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.smalltalk",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.smarty",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.spark",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.sparql",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.sql",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.stonescript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.systemverilog",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.tcl",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.teraterm",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.text",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.thinbasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.tsql",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.typoscript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.unicon",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.upc",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.urbi",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.uscript",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.vala",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.vb",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.vbnet",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.vedit",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.verilog",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.vhdl",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.vim",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.visualfoxpro",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.visualprolog",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.whitespace",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.whois",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.winbatch",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.xbasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.xml",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.xorg_conf",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.xpp",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.yaml",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.z80",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.geshi.language.zxbasic",
-	        "1403200916"
-	    ],
-	    [
-	        "ext.gadget.collapserefs",
-	        "1403283915",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "ext.gadget.directLinkToCommons",
-	        "1403370317",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "ext.gadget.referenceTooltips",
-	        "1403898554"
-	    ],
-	    [
-	        "ext.gadget.preview",
-	        "1403532243",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "ext.gadget.urldecoder",
-	        "1403657494",
-	        [
-	            "mediawiki.legacy.wikibits"
-	        ]
-	    ],
-	    [
-	        "ext.gadget.addThisArticles",
-	        "1397946854"
-	    ],
-	    [
-	        "ext.gadget.HideInfobox",
-	        "1398972514"
-	    ],
-	    [
-	        "ext.gadget.HideWikimediaNavigation",
-	        "1399239252"
-	    ],
-	    [
-	        "ext.gadget.HideNavboxes",
-	        "1398972506"
-	    ],
-	    [
-	        "ext.gadget.HideExternalLinks",
-	        "1398973139"
-	    ],
-	    [
-	        "ext.gadget.markadmins",
-	        "1403769644",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "ext.gadget.disableUpdatedMarker",
-	        "1397834246"
-	    ],
-	    [
-	        "ext.gadget.OldDiff",
-	        "1386876474"
-	    ],
-	    [
-	        "ext.gadget.HideFlaggedRevs",
-	        "1386876474"
-	    ],
-	    [
-	        "ext.gadget.roundCorners",
-	        "1399507752"
-	    ],
-	    [
-	        "ext.gadget.dropdown-menus",
-	        "1399984355"
-	    ],
-	    [
-	        "ext.gadget.ajaxQuickDelete",
-	        "1402505002"
-	    ],
-	    [
-	        "ext.gadget.relatedIcons",
-	        "1397035438"
-	    ],
-	    [
-	        "mw.MwEmbedSupport",
-	        "1403806584",
-	        [
-	            "Spinner",
-	            "jquery.loadingSpinner",
-	            "jquery.mwEmbedUtil",
-	            "jquery.triggerQueueCallback",
-	            "mw.MwEmbedSupport.style"
-	        ]
-	    ],
-	    [
-	        "Spinner",
-	        "1403806584"
-	    ],
-	    [
-	        "iScroll",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.loadingSpinner",
-	        "1403806584"
-	    ],
-	    [
-	        "mw.MwEmbedSupport.style",
-	        "1403806587"
-	    ],
-	    [
-	        "mediawiki.UtilitiesTime",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.client",
-	        "1403806604"
-	    ],
-	    [
-	        "mediawiki.absoluteUrl",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.ajaxProxy",
-	        "1403806604"
-	    ],
-	    [
-	        "fullScreenApi",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.embedMenu",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.ui.touchPunch",
-	        "1403806604",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.mouse"
-	        ]
-	    ],
-	    [
-	        "jquery.triggerQueueCallback",
-	        "1403806584"
-	    ],
-	    [
-	        "jquery.mwEmbedUtil",
-	        "1403806584"
-	    ],
-	    [
-	        "jquery.debouncedresize",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.Language.names",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.Api",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.MediaElement",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.MediaPlayer",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.MediaPlayers",
-	        "1403806604",
-	        [
-	            "mw.MediaPlayer"
-	        ]
-	    ],
-	    [
-	        "mw.MediaSource",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.EmbedTypes",
-	        "1403806604",
-	        [
-	            "jquery.client",
-	            "mediawiki.Uri",
-	            "mw.MediaPlayers"
-	        ]
-	    ],
-	    [
-	        "mw.EmbedPlayer",
-	        "1403923162",
-	        [
-	            "fullScreenApi",
-	            "jquery.cookie",
-	            "jquery.debouncedresize",
-	            "jquery.embedMenu",
-	            "jquery.hoverIntent",
-	            "jquery.ui.slider",
-	            "jquery.ui.touchPunch",
-	            "mediawiki.UtilitiesTime",
-	            "mediawiki.absoluteUrl",
-	            "mediawiki.client",
-	            "mediawiki.jqueryMsg",
-	            "mw.EmbedPlayerNative",
-	            "mw.EmbedTypes",
-	            "mw.MediaElement",
-	            "mw.MediaSource",
-	            "mw.PlayerSkinKskin"
-	        ]
-	    ],
-	    [
-	        "mw.EmbedPlayerKplayer",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.EmbedPlayerGeneric",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.EmbedPlayerJava",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.EmbedPlayerNative",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.EmbedPlayerImageOverlay",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.EmbedPlayerVlc",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.PlayerSkinKskin",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.PlayerSkinMvpcf",
-	        "1403806604"
-	    ],
-	    [
-	        "mw.TimedText",
-	        "1403923162",
-	        [
-	            "jquery.ui.dialog",
-	            "mw.EmbedPlayer",
-	            "mw.TextSource"
-	        ]
-	    ],
-	    [
-	        "mw.TextSource",
-	        "1403806604",
-	        [
-	            "mediawiki.UtilitiesTime",
-	            "mw.ajaxProxy"
-	        ]
-	    ],
-	    [
-	        "schema.Popups",
-	        "1364535356",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "ext.popups",
-	        "1403923162",
-	        [
-	            "mediawiki.api",
-	            "mediawiki.jqueryMsg",
-	            "moment",
-	            "schema.Popups"
-	        ]
-	    ],
-	    [
-	        "schema.GuidedTourGuiderImpression",
-	        "1365692795",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.GuidedTourGuiderHidden",
-	        "1365688949",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.GuidedTourButtonClick",
-	        "1365688950",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.GuidedTourInternalLinkActivation",
-	        "1365688953",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.GuidedTourExternalLinkActivation",
-	        "1365688960",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.GuidedTourExited",
-	        "1365688966",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.MediaViewer",
-	        "1365934062",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.MultimediaViewerNetworkPerformance",
-	        "1364916296",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.MultimediaViewerDuration",
-	        "1365571041",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "skins.modern",
-	        "1403806604"
-	    ],
-	    [
-	        "skins.cologneblue",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.wikihiero",
-	        "1403806578"
-	    ],
-	    [
-	        "ext.wikihiero.Special",
-	        "1403923162",
-	        [
-	            "jquery.spinner"
-	        ]
-	    ],
-	    [
-	        "ext.cite",
-	        "1403923162"
-	    ],
-	    [
-	        "ext.cite.popups",
-	        "1403806604",
-	        [
-	            "jquery.tooltip"
-	        ]
-	    ],
-	    [
-	        "jquery.tooltip",
-	        "1403911970"
-	    ],
-	    [
-	        "ext.rtlcite",
-	        "1403806583"
-	    ],
-	    [
-	        "ext.specialcite",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.inputBox.styles",
-	        "1403806597"
-	    ],
-	    [
-	        "ext.geshi.local",
-	        "1403806582"
-	    ],
-	    [
-	        "ext.flaggedRevs.basic",
-	        "1403806578"
-	    ],
-	    [
-	        "ext.flaggedRevs.advanced",
-	        "1403923162",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "ext.flaggedRevs.review",
-	        "1403923162",
-	        [
-	            "mediawiki.jqueryMsg",
-	            "mediawiki.user"
-	        ]
-	    ],
-	    [
-	        "ext.categoryTree",
-	        "1403923162"
-	    ],
-	    [
-	        "ext.categoryTree.css",
-	        "1403806592"
-	    ],
-	    [
-	        "mediawiki.api.titleblacklist",
-	        "1403806604",
-	        [
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "ext.nuke",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.confirmEdit.fancyCaptcha.styles",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.confirmEdit.fancyCaptcha",
-	        "1403806604",
-	        [
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "ext.confirmEdit.fancyCaptchaMobile",
-	        "1403806604",
-	        [
-	            "mobile.startup"
-	        ]
-	    ],
-	    [
-	        "ext.centralauth",
-	        "1403923162",
-	        [
-	            "jquery.spinner",
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "ext.centralauth.centralautologin",
-	        "1403806604",
-	        [
-	            "mediawiki.jqueryMsg"
-	        ]
-	    ],
-	    [
-	        "ext.centralauth.centralautologin.clearcookie",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.centralauth.noflash",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.centralauth.globalusers",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.centralauth.globalgrouppermissions",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.dismissableSiteNotice",
-	        "1403806604",
-	        [
-	            "jquery.cookie",
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "jquery.ui.multiselect",
-	        "1403806604",
-	        [
-	            "jquery.ui.droppable",
-	            "jquery.ui.sortable",
-	            "mediawiki.jqueryMsg"
-	        ]
-	    ],
-	    [
-	        "ext.centralNotice.adminUi",
-	        "1403806604",
-	        [
-	            "jquery.ui.datepicker",
-	            "jquery.ui.multiselect"
-	        ]
-	    ],
-	    [
-	        "ext.centralNotice.adminUi.bannerManager",
-	        "1403806604",
-	        [
-	            "ext.centralNotice.adminUi",
-	            "jquery.ui.dialog"
-	        ]
-	    ],
-	    [
-	        "ext.centralNotice.adminUi.bannerEditor",
-	        "1403806604",
-	        [
-	            "ext.centralNotice.adminUi",
-	            "jquery.ui.dialog"
-	        ]
-	    ],
-	    [
-	        "ext.centralNotice.bannerStats",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.centralNotice.bannerController",
-	        "1403806604",
-	        [
-	            "jquery.cookie"
-	        ]
-	    ],
-	    [
-	        "ext.centralNotice.adminUi.campaignManager",
-	        "1403806604",
-	        [
-	            "ext.centralNotice.adminUi",
-	            "jquery.ui.dialog",
-	            "jquery.ui.slider"
-	        ]
-	    ],
-	    [
-	        "ext.collection.jquery.jstorage",
-	        "1403806604",
-	        [
-	            "jquery.json"
-	        ]
-	    ],
-	    [
-	        "ext.collection.suggest",
-	        "1403806604",
-	        [
-	            "ext.collection.bookcreator"
-	        ]
-	    ],
-	    [
-	        "ext.collection",
-	        "1403806604",
-	        [
-	            "ext.collection.bookcreator",
-	            "jquery.ui.sortable",
-	            "mediawiki.language"
-	        ]
-	    ],
-	    [
-	        "ext.collection.bookcreator",
-	        "1403806604",
-	        [
-	            "ext.collection.jquery.jstorage"
-	        ]
-	    ],
-	    [
-	        "ext.collection.checkLoadFromLocalStorage",
-	        "1403806604",
-	        [
-	            "ext.collection.jquery.jstorage"
-	        ]
-	    ],
-	    [
-	        "ext.abuseFilter",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.abuseFilter.edit",
-	        "1403923162",
-	        [
-	            "jquery.spinner",
-	            "jquery.textSelection",
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "ext.abuseFilter.tools",
-	        "1403806604",
-	        [
-	            "jquery.spinner",
-	            "mediawiki.api",
-	            "user.tokens"
-	        ]
-	    ],
-	    [
-	        "ext.abuseFilter.examine",
-	        "1403923162",
-	        [
-	            "jquery.spinner",
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "jquery.wikiEditor",
-	        "1403923162",
-	        [
-	            "jquery.textSelection"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "jquery.wikiEditor.dialogs",
-	        "1403806604",
-	        [
-	            "jquery.tabIndex",
-	            "jquery.ui.dialog",
-	            "jquery.wikiEditor.toolbar"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "jquery.wikiEditor.dialogs.config",
-	        "1403923163",
-	        [
-	            "jquery.suggestions",
-	            "jquery.wikiEditor.dialogs",
-	            "mediawiki.Title",
-	            "mediawiki.jqueryMsg"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "jquery.wikiEditor.preview",
-	        "1403806604",
-	        [
-	            "jquery.wikiEditor"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "jquery.wikiEditor.previewDialog",
-	        "1403806604",
-	        [
-	            "jquery.wikiEditor.dialogs"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "jquery.wikiEditor.publish",
-	        "1403806604",
-	        [
-	            "jquery.wikiEditor.dialogs"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "jquery.wikiEditor.toolbar",
-	        "1403806604",
-	        [
-	            "jquery.async",
-	            "jquery.cookie",
-	            "jquery.wikiEditor",
-	            "jquery.wikiEditor.toolbar.i18n"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "jquery.wikiEditor.toolbar.config",
-	        "1403806604",
-	        [
-	            "jquery.wikiEditor.toolbar"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "jquery.wikiEditor.toolbar.i18n",
-	        "1356998400",
-	        [],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.wikiEditor",
-	        "1403806604",
-	        [
-	            "jquery.wikiEditor"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.wikiEditor.dialogs",
-	        "1403806604",
-	        [
-	            "ext.wikiEditor.toolbar",
-	            "jquery.wikiEditor.dialogs.config"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.wikiEditor.preview",
-	        "1403806604",
-	        [
-	            "ext.wikiEditor",
-	            "jquery.wikiEditor.preview"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.wikiEditor.previewDialog",
-	        "1403806604",
-	        [
-	            "ext.wikiEditor",
-	            "jquery.wikiEditor.previewDialog"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.wikiEditor.publish",
-	        "1403806604",
-	        [
-	            "ext.wikiEditor",
-	            "jquery.wikiEditor.publish"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.wikiEditor.tests.toolbar",
-	        "1403806604",
-	        [
-	            "ext.wikiEditor.toolbar"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.wikiEditor.toolbar",
-	        "1403806604",
-	        [
-	            "ext.wikiEditor",
-	            "jquery.wikiEditor.toolbar.config"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.wikiEditor.toolbar.styles",
-	        "1403806587",
-	        [],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.wikiEditor.toolbar.hideSig",
-	        "1403806604",
-	        [],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.MassMessage.special.js",
-	        "1403923162",
-	        [
-	            "jquery.byteLimit",
-	            "jquery.throttle-debounce",
-	            "jquery.ui.autocomplete",
-	            "mediawiki.jqueryMsg"
-	        ]
-	    ],
-	    [
-	        "ext.MassMessage.special",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.betaFeatures",
-	        "1403806604",
-	        [
-	            "jquery.client"
-	        ]
-	    ],
-	    [
-	        "ext.betaFeatures.popup",
-	        "1403806604",
-	        [
-	            "jquery.tipsy"
-	        ]
-	    ],
-	    [
-	        "mmv.lightboximage",
-	        "1403806604",
-	        [
-	            "mmv.base"
-	        ]
-	    ],
-	    [
-	        "mmv.lightboxinterface",
-	        "1403923162",
-	        [
-	            "mmv.ui.canvas",
-	            "mmv.ui.canvasButtons",
-	            "mmv.ui.metadataPanel"
-	        ]
-	    ],
-	    [
-	        "mmv.ThumbnailWidthCalculator",
-	        "1403806604",
-	        [
-	            "jquery.hidpi",
-	            "mmv.model.ThumbnailWidth"
-	        ]
-	    ],
-	    [
-	        "mmv.HtmlUtils",
-	        "1403806583",
-	        [
-	            "mmv.base"
-	        ]
-	    ],
-	    [
-	        "mmv.model",
-	        "1403806604",
-	        [
-	            "mmv.base",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.model.EmbedFileInfo",
-	        "1403806604",
-	        [
-	            "mmv.model"
-	        ]
-	    ],
-	    [
-	        "mmv.model.License",
-	        "1403806604",
-	        [
-	            "mmv.HtmlUtils",
-	            "mmv.model"
-	        ]
-	    ],
-	    [
-	        "mmv.model.FileUsage",
-	        "1403806604",
-	        [
-	            "mmv.model"
-	        ]
-	    ],
-	    [
-	        "mmv.model.Image",
-	        "1403806604",
-	        [
-	            "mmv.model.License"
-	        ]
-	    ],
-	    [
-	        "mmv.model.Repo",
-	        "1403806604",
-	        [
-	            "mmv.model"
-	        ]
-	    ],
-	    [
-	        "mmv.model.Thumbnail",
-	        "1403806604",
-	        [
-	            "mmv.model"
-	        ]
-	    ],
-	    [
-	        "mmv.model.ThumbnailWidth",
-	        "1403806604",
-	        [
-	            "mmv.model"
-	        ]
-	    ],
-	    [
-	        "mmv.model.User",
-	        "1403806604",
-	        [
-	            "mmv.model"
-	        ]
-	    ],
-	    [
-	        "mmv.model.TaskQueue",
-	        "1403806604",
-	        [
-	            "mmv.model"
-	        ]
-	    ],
-	    [
-	        "mmv.provider",
-	        "1403806604",
-	        [
-	            "mediawiki.Title",
-	            "mmv.model.FileUsage",
-	            "mmv.model.Image",
-	            "mmv.model.Repo",
-	            "mmv.model.Thumbnail",
-	            "mmv.model.User",
-	            "mmv.performance"
-	        ]
-	    ],
-	    [
-	        "mmv.routing",
-	        "1403806604",
-	        [
-	            "mediawiki.Title",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.base",
-	        "1403806604",
-	        [
-	            "jquery.client"
-	        ]
-	    ],
-	    [
-	        "mmv.ui",
-	        "1403806604",
-	        [
-	            "mmv.base"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.canvas",
-	        "1403923162",
-	        [
-	            "mmv.ThumbnailWidthCalculator",
-	            "mmv.ui"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.categories",
-	        "1403923162",
-	        [
-	            "mmv.ui",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.stripeButtons",
-	        "1403923162",
-	        [
-	            "jquery.tipsy",
-	            "mediawiki.jqueryMsg",
-	            "mmv.ui",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.description",
-	        "1403806604",
-	        [
-	            "mmv.HtmlUtils",
-	            "mmv.ui",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.fileUsage",
-	        "1403923162",
-	        [
-	            "mediawiki.Uri",
-	            "mediawiki.jqueryMsg",
-	            "mmv.ui",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.permission",
-	        "1403923162",
-	        [
-	            "jquery.color",
-	            "mediawiki.jqueryMsg",
-	            "mmv.ActionLogger",
-	            "mmv.HtmlUtils",
-	            "mmv.ui"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.truncatableTextField",
-	        "1403806604",
-	        [
-	            "mmv.HtmlUtils",
-	            "mmv.ui",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.progressBar",
-	        "1403806604",
-	        [
-	            "mmv.ui",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.metadataPanel",
-	        "1403923162",
-	        [
-	            "mediawiki.user",
-	            "mmv.ui.categories",
-	            "mmv.ui.description",
-	            "mmv.ui.fileUsage",
-	            "mmv.ui.permission",
-	            "mmv.ui.progressBar",
-	            "mmv.ui.reuse.dialog",
-	            "mmv.ui.stripeButtons",
-	            "mmv.ui.truncatableTextField"
-	        ]
-	    ],
-	    [
-	        "mmv.embedFileFormatter",
-	        "1403923162",
-	        [
-	            "mmv.HtmlUtils",
-	            "mmv.routing"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.reuse.dialog",
-	        "1403806604",
-	        [
-	            "mmv.ui",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.reuse.utils",
-	        "1403806604",
-	        [
-	            "mmv.HtmlUtils",
-	            "mmv.ui",
-	            "oojs-ui"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.reuse.tab",
-	        "1403806604",
-	        [
-	            "mmv.ui",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.reuse.share",
-	        "1403923162",
-	        [
-	            "mmv.routing",
-	            "mmv.ui.reuse.tab",
-	            "mmv.ui.reuse.utils"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.reuse.embed",
-	        "1403923162",
-	        [
-	            "mediawiki.user",
-	            "mmv.embedFileFormatter",
-	            "mmv.model.EmbedFileInfo",
-	            "mmv.ui.reuse.tab",
-	            "mmv.ui.reuse.utils"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.reuse.download",
-	        "1403923162",
-	        [
-	            "mediawiki.ui",
-	            "mediawiki.ui.button",
-	            "mmv.ui.reuse.tab",
-	            "mmv.ui.reuse.utils"
-	        ]
-	    ],
-	    [
-	        "mmv.ui.canvasButtons",
-	        "1403923162",
-	        [
-	            "mmv.ui",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.logger",
-	        "1403806583",
-	        [
-	            "mmv.base"
-	        ]
-	    ],
-	    [
-	        "mmv.performance",
-	        "1403806604",
-	        [
-	            "ext.eventLogging",
-	            "mmv.logger",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.api",
-	        "1403806604",
-	        [
-	            "mediawiki.api",
-	            "mmv.base",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.Config",
-	        "1403806583",
-	        [
-	            "mediawiki.user",
-	            "mmv.base"
-	        ]
-	    ],
-	    [
-	        "mmv",
-	        "1403923162",
-	        [
-	            "jquery.fullscreen",
-	            "jquery.scrollTo",
-	            "jquery.throttle-debounce",
-	            "mmv.DurationLogger",
-	            "mmv.api",
-	            "mmv.lightboximage",
-	            "mmv.lightboxinterface",
-	            "mmv.model.TaskQueue",
-	            "mmv.provider",
-	            "mmv.routing"
-	        ]
-	    ],
-	    [
-	        "mmv.bootstrap",
-	        "1403923162",
-	        [
-	            "jquery.hashchange",
-	            "jquery.scrollTo",
-	            "mediawiki.Title",
-	            "mmv.ActionLogger",
-	            "mmv.Config",
-	            "mmv.DurationLogger",
-	            "mmv.HtmlUtils"
-	        ]
-	    ],
-	    [
-	        "mmv.bootstrap.autostart",
-	        "1403806583",
-	        [
-	            "mmv.bootstrap"
-	        ]
-	    ],
-	    [
-	        "mmv.ActionLogger",
-	        "1403806583",
-	        [
-	            "ext.eventLogging",
-	            "mmv.logger",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.DurationLogger",
-	        "1403806583",
-	        [
-	            "ext.eventLogging",
-	            "mediawiki.user",
-	            "mmv.logger",
-	            "oojs"
-	        ]
-	    ],
-	    [
-	        "mmv.head",
-	        "1403806604",
-	        [
-	            "mediawiki.user",
-	            "mmv.base"
-	        ]
-	    ],
-	    [
-	        "jquery.scrollTo",
-	        "1403806587"
-	    ],
-	    [
-	        "jquery.hashchange",
-	        "1403806587"
-	    ],
-	    [
-	        "skins.vector.beta",
-	        "1403806604"
-	    ],
-	    [
-	        "skins.vector.header.beta",
-	        "1403806604",
-	        [],
-	        "other"
-	    ],
-	    [
-	        "skins.vector.headerjs.beta",
-	        "1403806604",
-	        [
-	            "jquery.throttle-debounce"
-	        ]
-	    ],
-	    [
-	        "skins.vector.compactPersonalBar.trackClick",
-	        "1403806604",
-	        [
-	            "mediawiki.user",
-	            "skins.vector.compactPersonalBar.schema"
-	        ]
-	    ],
-	    [
-	        "skins.vector.compactPersonalBar.defaultTracking",
-	        "1403806604",
-	        [
-	            "skins.vector.compactPersonalBar.trackClick"
-	        ]
-	    ],
-	    [
-	        "skins.vector.compactPersonalBar",
-	        "1403923163",
-	        [
-	            "skins.vector.compactPersonalBar.trackClick"
-	        ]
-	    ],
-	    [
-	        "ext.parsoid.styles",
-	        "1403806604"
-	    ],
-	    [
-	        "rangy",
-	        "1403806604"
-	    ],
-	    [
-	        "jquery.visibleText",
-	        "1403806604"
-	    ],
-	    [
-	        "unicodejs.wordbreak",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.visualEditor.editPageInit",
-	        "1356998400",
-	        [
-	            "ext.visualEditor.viewPageTarget"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.viewPageTarget.icons",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.visualEditor.viewPageTarget.init",
-	        "1403923163",
-	        [
-	            "mediawiki.Title",
-	            "mediawiki.Uri",
-	            "mediawiki.page.startup",
-	            "user.options"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.viewPageTarget.noscript",
-	        "1403806578"
-	    ],
-	    [
-	        "ext.visualEditor.viewPageTarget",
-	        "1403923163",
-	        [
-	            "ext.visualEditor.core.desktop",
-	            "ext.visualEditor.mediawiki",
-	            "jquery.placeholder",
-	            "mediawiki.feedback"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.base",
-	        "1403806604",
-	        [
-	            "oojs-ui",
-	            "unicodejs.wordbreak"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mediawiki",
-	        "1403806604",
-	        [
-	            "ext.visualEditor.base",
-	            "jquery.visibleText",
-	            "mediawiki.Title",
-	            "mediawiki.Uri",
-	            "mediawiki.user"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.standalone",
-	        "1403806604",
-	        [
-	            "ext.visualEditor.base",
-	            "jquery.i18n"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.data",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.base"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.core",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.base",
-	            "jquery.uls.data",
-	            "rangy"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.core.desktop",
-	        "1403806604",
-	        [
-	            "ext.visualEditor.core"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwcore",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.core",
-	            "jquery.autoEllipsis",
-	            "jquery.byteLimit",
-	            "mediawiki.Title",
-	            "mediawiki.action.history.diff",
-	            "mediawiki.jqueryMsg",
-	            "mediawiki.skinning.content.parsoid",
-	            "mediawiki.user"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwformatting",
-	        "1403923163",
-	        [
-	            "ext.visualEditor.mwcore"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwimage.core",
-	        "1403806604",
-	        [
-	            "ext.visualEditor.mwcore"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwimage",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.mwimage.core"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwlink",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.mwcore"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwmeta",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.mwlink"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwreference",
-	        "1403923163",
-	        [
-	            "ext.visualEditor.mwtransclusion"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwtransclusion",
-	        "1403923163",
-	        [
-	            "ext.visualEditor.mwcore"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.language",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.core",
-	            "mediawiki.language.names"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwalienextension",
-	        "1403806605",
-	        [
-	            "ext.visualEditor.mwcore"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwgallery",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.mwcore"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.mwhiero",
-	        "1403806605",
-	        [
-	            "ext.visualEditor.mwcore"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.experimental",
-	        "1356998400",
-	        [
-	            "ext.visualEditor.language",
-	            "ext.visualEditor.mwalienextension",
-	            "ext.visualEditor.mwhiero"
-	        ]
-	    ],
-	    [
-	        "ext.visualEditor.icons",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.templateData",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.templateDataGenerator.editPage",
-	        "1403806605",
-	        [
-	            "ext.templateDataGenerator.core"
-	        ]
-	    ],
-	    [
-	        "ext.templateDataGenerator.core",
-	        "1403806605",
-	        [
-	            "jquery.ui.dialog"
-	        ]
-	    ],
-	    [
-	        "mediawiki.libs.guiders",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.guidedTour.styles",
-	        "1403806605",
-	        [
-	            "mediawiki.libs.guiders",
-	            "mediawiki.ui.button"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.siteStyles",
-	        "1399581249",
-	        [
-	            "ext.guidedTour.styles"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.lib.internal",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.guidedTour.lib",
-	        "1403923162",
-	        [
-	            "ext.guidedTour.lib.internal",
-	            "ext.guidedTour.siteStyles",
-	            "mediawiki.Title",
-	            "mediawiki.jqueryMsg",
-	            "mediawiki.user",
-	            "schema.GuidedTourButtonClick",
-	            "schema.GuidedTourExited",
-	            "schema.GuidedTourExternalLinkActivation",
-	            "schema.GuidedTourGuiderHidden",
-	            "schema.GuidedTourGuiderImpression",
-	            "schema.GuidedTourInternalLinkActivation"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.launcher",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.guidedTour",
-	        "1403806605",
-	        [
-	            "ext.guidedTour.lib"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.tour.firstedit",
-	        "1403923163",
-	        [
-	            "ext.guidedTour"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.tour.firsteditve",
-	        "1403923163",
-	        [
-	            "ext.guidedTour"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.tour.test",
-	        "1403806605",
-	        [
-	            "ext.guidedTour"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.tour.uprightdownleft",
-	        "1403806605",
-	        [
-	            "ext.guidedTour"
-	        ]
-	    ],
-	    [
-	        "mobile.app.site",
-	        "1400781945"
-	    ],
-	    [
-	        "mobile.app.pagestyles.android",
-	        "1403806605"
-	    ],
-	    [
-	        "mobile.app.pagestyles.ios",
-	        "1403806605"
-	    ],
-	    [
-	        "mobile.app.preview",
-	        "1403806605"
-	    ],
-	    [
-	        "mobile.templates",
-	        "1403806605"
-	    ],
-	    [
-	        "mobile.bridge",
-	        "1403806605"
-	    ],
-	    [
-	        "mobile.file.scripts",
-	        "1403806605",
-	        [
-	            "mobile.startup"
-	        ]
-	    ],
-	    [
-	        "mobile.styles.mainpage",
-	        "1403806605",
-	        [],
-	        "other"
-	    ],
-	    [
-	        "mobile.pagelist.styles",
-	        "1403806581"
-	    ],
-	    [
-	        "mobile.pagelist.scripts",
-	        "1403806605",
-	        [
-	            "mobile.watchstar"
-	        ]
-	    ],
-	    [
-	        "skins.minerva.tablet.styles",
-	        "1403806581"
-	    ],
-	    [
-	        "mobile.toc",
-	        "1403923162",
-	        [
-	            "mobile.loggingSchemas",
-	            "mobile.toggling"
-	        ]
-	    ],
-	    [
-	        "tablet.scripts",
-	        "1356998400",
-	        [
-	            "mobile.toc"
-	        ]
-	    ],
-	    [
-	        "skins.minerva.chrome.styles",
-	        "1403806581"
-	    ],
-	    [
-	        "skins.minerva.content.styles",
-	        "1403806581"
-	    ],
-	    [
-	        "skins.minerva.chrome.styles.beta",
-	        "1403806605"
-	    ],
-	    [
-	        "skins.minerva.drawers.styles",
-	        "1403806581"
-	    ],
-	    [
-	        "mobile.head",
-	        "1403923162",
-	        [
-	            "mediawiki.jqueryMsg"
-	        ]
-	    ],
-	    [
-	        "mobile.startup",
-	        "1403923162",
-	        [
-	            "mobile.redlinks",
-	            "mobile.templates",
-	            "mobile.user"
-	        ]
-	    ],
-	    [
-	        "mobile.redlinks",
-	        "1403806605",
-	        [
-	            "mediawiki.user",
-	            "mobile.head"
-	        ]
-	    ],
-	    [
-	        "mobile.user",
-	        "1403806605",
-	        [
-	            "mediawiki.user",
-	            "mobile.head"
-	        ]
-	    ],
-	    [
-	        "mobile.editor",
-	        "1403806605",
-	        [
-	            "mobile.stable.common"
-	        ]
-	    ],
-	    [
-	        "mobile.editor.api",
-	        "1403923162",
-	        [
-	            "mobile.stable"
-	        ]
-	    ],
-	    [
-	        "mobile.editor.common",
-	        "1403923162",
-	        [
-	            "mobile.editor.api"
-	        ]
-	    ],
-	    [
-	        "mobile.editor.ve",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.mobileViewTarget",
-	            "mobile.beta",
-	            "mobile.editor.common"
-	        ]
-	    ],
-	    [
-	        "mobile.editor.overlay",
-	        "1403923162",
-	        [
-	            "mobile.editor.common"
-	        ]
-	    ],
-	    [
-	        "mobile.uploads",
-	        "1403923162",
-	        [
-	            "mobile.editor.api"
-	        ]
-	    ],
-	    [
-	        "mobile.beta.common",
-	        "1356998400",
-	        [
-	            "mobile.loggingSchemas",
-	            "mobile.stable.common"
-	        ]
-	    ],
-	    [
-	        "mobile.keepgoing",
-	        "1403806605",
-	        [
-	            "mobile.beta"
-	        ]
-	    ],
-	    [
-	        "mobile.random",
-	        "1403923162",
-	        [
-	            "mobile.stable.common"
-	        ]
-	    ],
-	    [
-	        "mobile.geonotahack",
-	        "1403923162",
-	        [
-	            "mobile.loggingSchemas",
-	            "mobile.stable.common"
-	        ]
-	    ],
-	    [
-	        "mobile.talk",
-	        "1403923162",
-	        [
-	            "mobile.beta.common",
-	            "mobile.stable"
-	        ]
-	    ],
-	    [
-	        "mobile.beta",
-	        "1403806605",
-	        [
-	            "mobile.beta.common",
-	            "mobile.stable"
-	        ]
-	    ],
-	    [
-	        "mobile.search",
-	        "1403923162",
-	        [
-	            "mobile.pagelist.scripts"
-	        ]
-	    ],
-	    [
-	        "mobile.search.stable",
-	        "1356998400",
-	        [
-	            "mobile.search"
-	        ]
-	    ],
-	    [
-	        "mobile.talk.common",
-	        "1403923162",
-	        [
-	            "mobile.talk"
-	        ]
-	    ],
-	    [
-	        "mobile.ajaxpages",
-	        "1403806605",
-	        [
-	            "mobile.startup"
-	        ]
-	    ],
-	    [
-	        "mobile.mediaViewer",
-	        "1403923162",
-	        [
-	            "mobile.overlays"
-	        ]
-	    ],
-	    [
-	        "mobile.alpha",
-	        "1403806605",
-	        [
-	            "mobile.ajaxpages",
-	            "mobile.beta"
-	        ]
-	    ],
-	    [
-	        "mobile.toast.styles",
-	        "1403806605"
-	    ],
-	    [
-	        "mobile.stable.styles",
-	        "1403806605"
-	    ],
-	    [
-	        "mobile.overlays",
-	        "1403923162",
-	        [
-	            "mobile.startup"
-	        ]
-	    ],
-	    [
-	        "mobile.stable.common",
-	        "1403923162",
-	        [
-	            "mobile.overlays",
-	            "mobile.toast.styles"
-	        ]
-	    ],
-	    [
-	        "mobile.references",
-	        "1403806605",
-	        [
-	            "mobile.stable.common"
-	        ]
-	    ],
-	    [
-	        "mobile.toggling",
-	        "1403806605",
-	        [
-	            "mobile.startup"
-	        ]
-	    ],
-	    [
-	        "mobile.contentOverlays",
-	        "1403806605",
-	        [
-	            "mobile.overlays"
-	        ]
-	    ],
-	    [
-	        "mobile.newusers",
-	        "1403923162",
-	        [
-	            "mobile.contentOverlays",
-	            "mobile.editor",
-	            "mobile.loggingSchemas"
-	        ]
-	    ],
-	    [
-	        "mobile.watchstar",
-	        "1403923162",
-	        [
-	            "mobile.stable.common"
-	        ]
-	    ],
-	    [
-	        "mobile.stable",
-	        "1403923162",
-	        [
-	            "mobile.loggingSchemas",
-	            "mobile.pagelist.scripts",
-	            "mobile.references",
-	            "mobile.stable.styles"
-	        ]
-	    ],
-	    [
-	        "mobile.languages",
-	        "1403923162",
-	        [
-	            "mobile.overlays"
-	        ]
-	    ],
-	    [
-	        "mobile.issues",
-	        "1403923162",
-	        [
-	            "mobile.overlays"
-	        ]
-	    ],
-	    [
-	        "mobile.nearby",
-	        "1403923162",
-	        [
-	            "mobile.loggingSchemas",
-	            "mobile.pagelist.scripts",
-	            "mobile.special.nearby.styles"
-	        ]
-	    ],
-	    [
-	        "mobile.notifications",
-	        "1403806605",
-	        [
-	            "mobile.overlays"
-	        ]
-	    ],
-	    [
-	        "mobile.notifications.overlay",
-	        "1403923163",
-	        [
-	            "ext.echo.base",
-	            "mobile.stable"
-	        ]
-	    ],
-	    [
-	        "mobile.desktop",
-	        "1403806583",
-	        [
-	            "jquery.cookie"
-	        ]
-	    ],
-	    [
-	        "mobile.special.app.scripts",
-	        "1403806605",
-	        [
-	            "mobile.ajaxpages",
-	            "mobile.search",
-	            "mobile.stable.styles"
-	        ]
-	    ],
-	    [
-	        "mobile.special.app.styles",
-	        "1403806605"
-	    ],
-	    [
-	        "mobile.special.mobileoptions.scripts",
-	        "1403923163",
-	        [
-	            "mobile.startup"
-	        ]
-	    ],
-	    [
-	        "mobile.special.nearby.styles",
-	        "1403806605"
-	    ],
-	    [
-	        "mobile.special.nearby.beta",
-	        "1403923162",
-	        [
-	            "mobile.beta.common",
-	            "mobile.nearby"
-	        ]
-	    ],
-	    [
-	        "mobile.special.nearby.scripts",
-	        "1403923163",
-	        [
-	            "mobile.nearby"
-	        ]
-	    ],
-	    [
-	        "mobile.special.uploads.scripts",
-	        "1403923163",
-	        [
-	            "mobile.stable.common",
-	            "mobile.stable.styles"
-	        ]
-	    ],
-	    [
-	        "mobile.special.mobilediff.scripts",
-	        "1403806605",
-	        [
-	            "mobile.loggingSchemas",
-	            "mobile.stable.common"
-	        ]
-	    ],
-	    [
-	        "zerobanner.config.styles",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.math.styles",
-	        "1403806590"
-	    ],
-	    [
-	        "ext.math.mathjax.enabler",
-	        "1403806590"
-	    ],
-	    [
-	        "ext.math.mathjax.mathjax",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.math.mathjax.localization",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.mathjax"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.config",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.mathjax"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.extensions.ui",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.mathjax"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.extensions.TeX",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.mathjax"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.extensions.mml2jax",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.mathjax"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.extensions",
-	        "1356998400",
-	        [
-	            "ext.math.mathjax.extensions.TeX",
-	            "ext.math.mathjax.extensions.mml2jax",
-	            "ext.math.mathjax.extensions.ui"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.element.mml.optable",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.element.mml"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.element.mml",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.mathjax"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.input.MathML",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.config",
-	            "ext.math.mathjax.jax.element.mml"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.input.TeX",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.config",
-	            "ext.math.mathjax.jax.element.mml"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.NativeMML",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.config",
-	            "ext.math.mathjax.jax.element.mml"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.HTML-CSS.autoload",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.HTML-CSS"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.HTML-CSS",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.config",
-	            "ext.math.mathjax.jax.element.mml"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.HTML-CSS"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.SVG.autoload",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.SVG"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.SVG",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.config",
-	            "ext.math.mathjax.jax.element.mml"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.SVG"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.MainJS",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.Main",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.AMS",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.Extra",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.SVG.fonts.TeX.MainJS",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.SVG.fonts.TeX.Main",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.SVG.fonts.TeX.AMS",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata"
-	        ]
-	    ],
-	    [
-	        "ext.math.mathjax.jax.output.SVG.fonts.TeX.Extra",
-	        "1403806605",
-	        [
-	            "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata"
-	        ]
-	    ],
-	    [
-	        "ext.math.editbutton.enabler",
-	        "1403923162",
-	        [
-	            "mediawiki.action.edit"
-	        ]
-	    ],
-	    [
-	        "ext.math.visualEditor",
-	        "1403923162",
-	        [
-	            "ext.visualEditor.mwcore"
-	        ]
-	    ],
-	    [
-	        "ext.babel",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.vipsscaler",
-	        "1403806605",
-	        [
-	            "jquery.ucompare"
-	        ]
-	    ],
-	    [
-	        "jquery.ucompare",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.apiSandbox",
-	        "1403923162",
-	        [
-	            "jquery.ui.button",
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "ext.interwiki.specialpage",
-	        "1403806605",
-	        [
-	            "jquery.makeCollapsible"
-	        ]
-	    ],
-	    [
-	        "ext.echo.base",
-	        "1403923162",
-	        [
-	            "schema.Echo",
-	            "schema.EchoInteraction",
-	            "schema.EchoMail"
-	        ]
-	    ],
-	    [
-	        "ext.echo.desktop",
-	        "1403806587",
-	        [
-	            "ext.echo.base",
-	            "mediawiki.Uri",
-	            "mediawiki.jqueryMsg",
-	            "mediawiki.user"
-	        ]
-	    ],
-	    [
-	        "ext.echo.overlay",
-	        "1403923162",
-	        [
-	            "ext.echo.desktop"
-	        ]
-	    ],
-	    [
-	        "ext.echo.special",
-	        "1403923162",
-	        [
-	            "ext.echo.desktop",
-	            "mediawiki.ui.button"
-	        ]
-	    ],
-	    [
-	        "ext.echo.alert",
-	        "1403806604"
-	    ],
-	    [
-	        "ext.echo.badge",
-	        "1403806578"
-	    ],
-	    [
-	        "ext.thanks",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.thanks.revthank",
-	        "1403923162",
-	        [
-	            "ext.thanks",
-	            "jquery.ui.dialog",
-	            "mediawiki.api",
-	            "mediawiki.jqueryMsg",
-	            "user.tokens"
-	        ]
-	    ],
-	    [
-	        "ext.thanks.mobilediff",
-	        "1403923162",
-	        [
-	            "mobile.special.mobilediff.scripts"
-	        ]
-	    ],
-	    [
-	        "ext.thanks.flowthank",
-	        "1403806605",
-	        [
-	            "ext.thanks",
-	            "mediawiki.api",
-	            "mediawiki.jqueryMsg",
-	            "user.tokens"
-	        ]
-	    ],
-	    [
-	        "ext.disambiguator.visualEditor",
-	        "1403923163",
-	        [
-	            "ext.visualEditor.mediawiki",
-	            "ext.visualEditor.mwmeta"
-	        ]
-	    ],
-	    [
-	        "ext.codeEditor",
-	        "1403806605",
-	        [
-	            "ext.wikiEditor.toolbar",
-	            "jquery.codeEditor"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "jquery.codeEditor",
-	        "1403923162",
-	        [
-	            "ext.codeEditor.ace",
-	            "jquery.ui.resizable",
-	            "jquery.wikiEditor",
-	            "mediawiki.api",
-	            "user.options"
-	        ],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.codeEditor.ace",
-	        "1403806605",
-	        [],
-	        "ext.codeEditor.ace"
-	    ],
-	    [
-	        "ext.codeEditor.ace.modes",
-	        "1403806605",
-	        [
-	            "ext.codeEditor.ace"
-	        ],
-	        "ext.codeEditor.ace"
-	    ],
-	    [
-	        "ext.codeEditor.geshi",
-	        "1403806605",
-	        [],
-	        "ext.wikiEditor"
-	    ],
-	    [
-	        "ext.scribunto",
-	        "1403923162",
-	        [
-	            "jquery.ui.dialog"
-	        ]
-	    ],
-	    [
-	        "ext.scribunto.edit",
-	        "1403923162",
-	        [
-	            "ext.scribunto",
-	            "jquery.spinner",
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "schema.GettingStartedNavbarNoArticle",
-	        "1362481517",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.GettingStartedRedirectImpression",
-	        "1364353952",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.tour.gettingstartedtasktoolbar",
-	        "1403806605",
-	        [
-	            "ext.gettingstarted.logging",
-	            "ext.guidedTour"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.tour.gettingstartedtasktoolbarve",
-	        "1403806605",
-	        [
-	            "ext.gettingstarted.logging",
-	            "ext.guidedTour"
-	        ]
-	    ],
-	    [
-	        "ext.gettingstarted.logging",
-	        "1403806605",
-	        [
-	            "jquery.json",
-	            "mediawiki.Title",
-	            "mediawiki.action.view.postEdit",
-	            "mediawiki.user"
-	        ]
-	    ],
-	    [
-	        "ext.gettingstarted.api",
-	        "1403806605",
-	        [
-	            "mediawiki.Title",
-	            "mediawiki.api"
-	        ]
-	    ],
-	    [
-	        "ext.gettingstarted.taskToolbar",
-	        "1403806605",
-	        [
-	            "ext.gettingstarted.api",
-	            "ext.gettingstarted.logging",
-	            "ext.guidedTour.lib"
-	        ]
-	    ],
-	    [
-	        "ext.gettingstarted.return",
-	        "1403923162",
-	        [
-	            "ext.gettingstarted.api",
-	            "ext.gettingstarted.logging",
-	            "ext.guidedTour.lib",
-	            "mediawiki.Uri",
-	            "schema.GettingStartedNavbarNoArticle",
-	            "schema.GettingStartedRedirectImpression"
-	        ]
-	    ],
-	    [
-	        "ext.gettingstarted.user",
-	        "1403806605",
-	        [
-	            "mediawiki.user"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.tour.anonymouseditoracquisitionpreedit",
-	        "1403806605",
-	        [
-	            "ext.gettingstarted.anonymousEditorAcquisition",
-	            "ext.guidedTour",
-	            "schema.SignupExpCTAImpression"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.tour.anonymouseditoracquisitionpreeditve",
-	        "1403806605",
-	        [
-	            "ext.gettingstarted.anonymousEditorAcquisition",
-	            "ext.guidedTour",
-	            "schema.SignupExpCTAImpression"
-	        ]
-	    ],
-	    [
-	        "ext.guidedTour.tour.anonymouseditoracquisitionpostedit",
-	        "1403806605",
-	        [
-	            "ext.guidedTour",
-	            "schema.SignupExpCTAImpression"
-	        ]
-	    ],
-	    [
-	        "ext.gettingstarted.anonymousEditorAcquisition",
-	        "1403806605",
-	        [
-	            "ext.gettingstarted.user",
-	            "ext.guidedTour.launcher",
-	            "mediawiki.Title",
-	            "mediawiki.Uri",
-	            "mediawiki.cookie",
-	            "schema.SignupExpCTAButtonClick",
-	            "schema.SignupExpPageLinkClick"
-	        ]
-	    ],
-	    [
-	        "schema.SignupExpPageLinkClick",
-	        "1365100092",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.SignupExpCTAImpression",
-	        "1365100116",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.SignupExpCTAButtonClick",
-	        "1365101019",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "ext.gettingstarted.assignToken",
-	        "1403806605",
-	        [
-	            "ext.gettingstarted.user"
-	        ]
-	    ],
-	    [
-	        "ext.eventLogging",
-	        "1403806583",
-	        [
-	            "jquery.json",
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "ext.eventLogging.subscriber",
-	        "1403806587"
-	    ],
-	    [
-	        "ext.eventLogging.jsonSchema",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.campaigns",
-	        "1403806605",
-	        [
-	            "jquery.cookie"
-	        ]
-	    ],
-	    [
-	        "schema.TimingData",
-	        "1364253208",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.DeprecatedUsage",
-	        "1364904587",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.JQMigrateUsage",
-	        "1365771847",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "ext.wikimediaEvents.ve",
-	        "1403806605",
-	        [
-	            "ext.visualEditor.base"
-	        ]
-	    ],
-	    [
-	        "ext.wikimediaEvents.deprecate",
-	        "1403806587"
-	    ],
-	    [
-	        "schema.NavigationTiming",
-	        "1365363652",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "ext.navigationTiming",
-	        "1403900583",
-	        [
-	            "schema.NavigationTiming"
-	        ]
-	    ],
-	    [
-	        "ext.uls.languagenames",
-	        "1399581250"
-	    ],
-	    [
-	        "ext.uls.messages",
-	        "1403200950",
-	        [
-	            "ext.uls.i18n"
-	        ]
-	    ],
-	    [
-	        "ext.uls.buttons",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.uls.displaysettings",
-	        "1403806605",
-	        [
-	            "ext.uls.languagesettings",
-	            "ext.uls.mediawiki",
-	            "ext.uls.webfonts",
-	            "mediawiki.api.parse"
-	        ]
-	    ],
-	    [
-	        "ext.uls.geoclient",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.uls.ime",
-	        "1403923162",
-	        [
-	            "ext.uls.mediawiki",
-	            "ext.uls.preferences",
-	            "jquery.ime"
-	        ]
-	    ],
-	    [
-	        "ext.uls.nojs",
-	        "1403806578"
-	    ],
-	    [
-	        "ext.uls.init",
-	        "1403806605",
-	        [
-	            "jquery.client",
-	            "jquery.cookie",
-	            "jquery.json",
-	            "mediawiki.Uri"
-	        ]
-	    ],
-	    [
-	        "ext.uls.eventlogger",
-	        "1403806583",
-	        [
-	            "mediawiki.user",
-	            "schema.UniversalLanguageSelector",
-	            "schema.UniversalLanguageSelector-tofu"
-	        ]
-	    ],
-	    [
-	        "ext.uls.i18n",
-	        "1403806605",
-	        [
-	            "jquery.i18n",
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "ext.uls.inputsettings",
-	        "1403806605",
-	        [
-	            "ext.uls.ime",
-	            "ext.uls.languagesettings"
-	        ]
-	    ],
-	    [
-	        "ext.uls.interface",
-	        "1403923162",
-	        [
-	            "ext.uls.webfonts",
-	            "jquery.tipsy",
-	            "mediawiki.jqueryMsg"
-	        ]
-	    ],
-	    [
-	        "ext.uls.languagesettings",
-	        "1403806605",
-	        [
-	            "ext.uls.buttons",
-	            "ext.uls.messages",
-	            "ext.uls.preferences",
-	            "jquery.uls.grid"
-	        ]
-	    ],
-	    [
-	        "ext.uls.preferences",
-	        "1403806605",
-	        [
-	            "mediawiki.user"
-	        ]
-	    ],
-	    [
-	        "ext.uls.compactlinks",
-	        "1403806605",
-	        [
-	            "ext.uls.mediawiki",
-	            "jquery.uls.compact",
-	            "mediawiki.language",
-	            "mediawiki.ui.button"
-	        ]
-	    ],
-	    [
-	        "ext.uls.webfonts",
-	        "1403806605",
-	        [
-	            "ext.uls.init",
-	            "ext.uls.preferences"
-	        ]
-	    ],
-	    [
-	        "ext.uls.webfonts.fonts",
-	        "1356998400",
-	        [
-	            "ext.uls.webfonts.repository",
-	            "jquery.uls.data",
-	            "jquery.webfonts"
-	        ]
-	    ],
-	    [
-	        "ext.uls.webfonts.repository",
-	        "1403806605"
-	    ],
-	    [
-	        "jquery.i18n",
-	        "1403806605",
-	        [
-	            "mediawiki.libs.pluralruleparser"
-	        ]
-	    ],
-	    [
-	        "jquery.ime",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.uls.mediawiki",
-	        "1403806605",
-	        [
-	            "ext.uls.init",
-	            "ext.uls.languagenames",
-	            "ext.uls.messages",
-	            "jquery.uls"
-	        ]
-	    ],
-	    [
-	        "jquery.uls",
-	        "1403806605",
-	        [
-	            "jquery.i18n",
-	            "jquery.uls.data",
-	            "jquery.uls.grid"
-	        ]
-	    ],
-	    [
-	        "jquery.uls.compact",
-	        "1403806605",
-	        [
-	            "jquery.uls"
-	        ]
-	    ],
-	    [
-	        "jquery.uls.data",
-	        "1403806605"
-	    ],
-	    [
-	        "jquery.uls.grid",
-	        "1403806605"
-	    ],
-	    [
-	        "jquery.webfonts",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.uls.pt",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.uls.interlanguage",
-	        "1403806587"
-	    ],
-	    [
-	        "rangy.core",
-	        "1403806605"
-	    ],
-	    [
-	        "globeCoordinate.js",
-	        "1403806605"
-	    ],
-	    [
-	        "qunit.parameterize",
-	        "1403806605",
-	        [
-	            "jquery.qunit"
-	        ]
-	    ],
-	    [
-	        "time.js",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "time.js.validTimeDefinitions",
-	        "1403806605",
-	        [
-	            "time.js"
-	        ]
-	    ],
-	    [
-	        "util.inherit",
-	        "1403806605"
-	    ],
-	    [
-	        "dataValues",
-	        "1403806605"
-	    ],
-	    [
-	        "dataValues.DataValue",
-	        "1403806605",
-	        [
-	            "dataValues",
-	            "jquery",
-	            "util.inherit"
-	        ]
-	    ],
-	    [
-	        "dataValues.values",
-	        "1403806605",
-	        [
-	            "dataValues.DataValue",
-	            "globeCoordinate.js",
-	            "time.js"
-	        ]
-	    ],
-	    [
-	        "mw.ext.dataValues",
-	        "1403806605",
-	        [
-	            "dataValues.values",
-	            "mediawiki"
-	        ]
-	    ],
-	    [
-	        "valueFormatters",
-	        "1403806605"
-	    ],
-	    [
-	        "valueFormatters.ValueFormatter",
-	        "1403806605",
-	        [
-	            "jquery",
-	            "util.inherit",
-	            "valueFormatters"
-	        ]
-	    ],
-	    [
-	        "valueFormatters.ValueFormatterStore",
-	        "1403806605",
-	        [
-	            "valueFormatters"
-	        ]
-	    ],
-	    [
-	        "valueFormatters.formatters",
-	        "1403806605",
-	        [
-	            "dataValues.values",
-	            "valueFormatters.ValueFormatter"
-	        ]
-	    ],
-	    [
-	        "valueParsers",
-	        "1403806605"
-	    ],
-	    [
-	        "valueParsers.ValueParser",
-	        "1403806605",
-	        [
-	            "jquery",
-	            "util.inherit",
-	            "valueParsers"
-	        ]
-	    ],
-	    [
-	        "valueParsers.ValueParserStore",
-	        "1403806605",
-	        [
-	            "jquery",
-	            "valueParsers"
-	        ]
-	    ],
-	    [
-	        "valueParsers.parsers",
-	        "1403806605",
-	        [
-	            "dataValues.values",
-	            "valueParsers.ValueParser"
-	        ]
-	    ],
-	    [
-	        "dataTypes.DataType",
-	        "1403806605"
-	    ],
-	    [
-	        "dataTypes.DataTypeStore",
-	        "1403806605"
-	    ],
-	    [
-	        "dependencies",
-	        "1356998400"
-	    ],
-	    [
-	        "jquery.animateWithEvent",
-	        "1403806605",
-	        [
-	            "jquery.AnimationEvent"
-	        ]
-	    ],
-	    [
-	        "jquery.AnimationEvent",
-	        "1403806605",
-	        [
-	            "jquery.PurposedCallbacks"
-	        ]
-	    ],
-	    [
-	        "jquery.autocompletestring",
-	        "1403806605",
-	        [
-	            "jquery.util.adaptlettercase"
-	        ]
-	    ],
-	    [
-	        "jquery.focusAt",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "jquery.inputautoexpand",
-	        "1403806605",
-	        [
-	            "jquery.event.special.eachchange"
-	        ]
-	    ],
-	    [
-	        "jquery.NativeEventHandler",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "jquery.PurposedCallbacks",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "jquery.event.special.eachchange",
-	        "1403806605",
-	        [
-	            "jquery",
-	            "jquery.client"
-	        ]
-	    ],
-	    [
-	        "jquery.ui.inputextender",
-	        "1403806605",
-	        [
-	            "jquery.animateWithEvent",
-	            "jquery.event.special.eachchange",
-	            "jquery.ui.position",
-	            "jquery.ui.widget"
-	        ]
-	    ],
-	    [
-	        "jquery.ui.listrotator",
-	        "1403806605",
-	        [
-	            "jquery",
-	            "jquery.ui.autocomplete"
-	        ]
-	    ],
-	    [
-	        "jquery.ui.ooMenu",
-	        "1403806605",
-	        [
-	            "jquery.ui.widget",
-	            "jquery.util.getscrollbarwidth",
-	            "util.inherit"
-	        ]
-	    ],
-	    [
-	        "jquery.ui.preview",
-	        "1403806605",
-	        [
-	            "jquery",
-	            "jquery.ui.widget"
-	        ]
-	    ],
-	    [
-	        "jquery.ui.suggester",
-	        "1403806605",
-	        [
-	            "jquery.ui.core",
-	            "jquery.ui.ooMenu",
-	            "jquery.ui.position"
-	        ]
-	    ],
-	    [
-	        "jquery.ui.suggestCommons",
-	        "1403806605",
-	        [
-	            "jquery.ui.suggester",
-	            "jquery.util.highlightMatchingCharacters"
-	        ]
-	    ],
-	    [
-	        "jquery.ui.toggler",
-	        "1403806605",
-	        [
-	            "jquery.animateWithEvent",
-	            "jquery.ui.widget"
-	        ]
-	    ],
-	    [
-	        "jquery.util.adaptlettercase",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "jquery.util.highlightMatchingCharacters",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "jquery.util.getscrollbarwidth",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "util.MessageProvider",
-	        "1403806605"
-	    ],
-	    [
-	        "util.Notifier",
-	        "1403806605"
-	    ],
-	    [
-	        "util.Extendable",
-	        "1403806605"
-	    ],
-	    [
-	        "jquery.valueview",
-	        "1403806605",
-	        [
-	            "jquery.valueview.valueview"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.Expert",
-	        "1403806605",
-	        [
-	            "jquery",
-	            "util.Extendable",
-	            "util.MessageProvider",
-	            "util.Notifier",
-	            "util.inherit"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.ExpertStore",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.experts",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.valueview",
-	        "1403806605",
-	        [
-	            "dataValues.DataValue",
-	            "jquery.ui.widget",
-	            "jquery.valueview.ExpertStore",
-	            "jquery.valueview.ViewState",
-	            "jquery.valueview.experts.EmptyValue",
-	            "jquery.valueview.experts.UnsupportedValue",
-	            "valueFormatters.ValueFormatterStore",
-	            "valueParsers.ValueParserStore"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.ViewState",
-	        "1403806605",
-	        [
-	            "jquery"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.experts.CommonsMediaType",
-	        "1403806605",
-	        [
-	            "jquery.ui.suggestCommons",
-	            "jquery.valueview.experts.StringValue"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.experts.EmptyValue",
-	        "1403806605",
-	        [
-	            "jquery.valueview.Expert",
-	            "jquery.valueview.experts"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.experts.GlobeCoordinateInput",
-	        "1403806605",
-	        [
-	            "globeCoordinate.js",
-	            "jquery.valueview.ExpertExtender.Container",
-	            "jquery.valueview.ExpertExtender.Listrotator",
-	            "jquery.valueview.ExpertExtender.Preview",
-	            "jquery.valueview.ExpertExtender.Toggler",
-	            "jquery.valueview.experts.StringValue"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.experts.StringValue",
-	        "1403806605",
-	        [
-	            "jquery.focusAt",
-	            "jquery.inputautoexpand",
-	            "jquery.valueview.Expert",
-	            "jquery.valueview.experts"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.experts.SuggestedStringValue",
-	        "1403806605",
-	        [
-	            "jquery.ui.suggester",
-	            "jquery.valueview.experts.StringValue"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.experts.TimeInput",
-	        "1403806605",
-	        [
-	            "jquery.valueview.ExpertExtender.CalendarHint",
-	            "jquery.valueview.ExpertExtender.Container",
-	            "jquery.valueview.ExpertExtender.Listrotator",
-	            "jquery.valueview.ExpertExtender.Preview",
-	            "jquery.valueview.ExpertExtender.Toggler"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.experts.UnsupportedValue",
-	        "1403806605",
-	        [
-	            "jquery.valueview.Expert",
-	            "jquery.valueview.experts"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.ExpertExtender",
-	        "1403806605",
-	        [
-	            "jquery.ui.inputextender",
-	            "jquery.valueview"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.ExpertExtender.CalendarHint",
-	        "1403806605",
-	        [
-	            "jquery.valueview.ExpertExtender",
-	            "time.js"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.ExpertExtender.Container",
-	        "1403806605",
-	        [
-	            "jquery.valueview.ExpertExtender"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.ExpertExtender.Listrotator",
-	        "1403806605",
-	        [
-	            "jquery.ui.listrotator",
-	            "jquery.valueview.ExpertExtender"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.ExpertExtender.Preview",
-	        "1403806605",
-	        [
-	            "jquery.ui.preview",
-	            "jquery.valueview.ExpertExtender"
-	        ]
-	    ],
-	    [
-	        "jquery.valueview.ExpertExtender.Toggler",
-	        "1403806605",
-	        [
-	            "jquery.ui.toggler",
-	            "jquery.valueview.ExpertExtender"
-	        ]
-	    ],
-	    [
-	        "wikibase.common",
-	        "1403806605"
-	    ],
-	    [
-	        "wikibase.sites",
-	        "1356998400"
-	    ],
-	    [
-	        "wikibase.repoAccess",
-	        "1356998400"
-	    ],
-	    [
-	        "wikibase",
-	        "1403923162",
-	        [
-	            "ext.uls.mediawiki",
-	            "wikibase.common",
-	            "wikibase.sites",
-	            "wikibase.templates"
-	        ]
-	    ],
-	    [
-	        "wikibase.dataTypes",
-	        "1403806605",
-	        [
-	            "dataTypes.DataType",
-	            "dataTypes.DataTypeStore",
-	            "jquery",
-	            "mw.config.values.wbDataTypes",
-	            "wikibase"
-	        ]
-	    ],
-	    [
-	        "mw.config.values.wbDataTypes",
-	        "1356998400"
-	    ],
-	    [
-	        "wikibase.datamodel",
-	        "1403806605",
-	        [
-	            "mw.ext.dataValues",
-	            "wikibase.dataTypes"
-	        ]
-	    ],
-	    [
-	        "wikibase.serialization",
-	        "1403806605",
-	        [
-	            "util.inherit",
-	            "wikibase"
-	        ]
-	    ],
-	    [
-	        "wikibase.serialization.entities",
-	        "1403806605",
-	        [
-	            "wikibase.datamodel",
-	            "wikibase.serialization"
-	        ]
-	    ],
-	    [
-	        "wikibase.serialization.fetchedcontent",
-	        "1403806605",
-	        [
-	            "wikibase.serialization",
-	            "wikibase.store.FetchedContent"
-	        ]
-	    ],
-	    [
-	        "wikibase.store",
-	        "1403806605",
-	        [
-	            "wikibase"
-	        ]
-	    ],
-	    [
-	        "wikibase.store.FetchedContent",
-	        "1403806605",
-	        [
-	            "mediawiki.Title",
-	            "wikibase.store"
-	        ]
-	    ],
-	    [
-	        "wikibase.store.EntityStore",
-	        "1403806605",
-	        [
-	            "wikibase.AbstractedRepoApi",
-	            "wikibase.store.FetchedContent"
-	        ]
-	    ],
-	    [
-	        "wikibase.compileEntityStoreFromMwConfig",
-	        "1403806605",
-	        [
-	            "wikibase.serialization.entities",
-	            "wikibase.serialization.fetchedcontent"
-	        ]
-	    ],
-	    [
-	        "wikibase.AbstractedRepoApi",
-	        "1403806605",
-	        [
-	            "wikibase.RepoApi",
-	            "wikibase.serialization.entities"
-	        ]
-	    ],
-	    [
-	        "wikibase.RepoApi",
-	        "1403806605",
-	        [
-	            "mediawiki.api",
-	            "user.tokens",
-	            "wikibase",
-	            "wikibase.repoAccess"
-	        ]
-	    ],
-	    [
-	        "wikibase.RepoApiError",
-	        "1403923162",
-	        [
-	            "util.inherit",
-	            "wikibase"
-	        ]
-	    ],
-	    [
-	        "wikibase.utilities",
-	        "1403806605",
-	        [
-	            "jquery.tipsy",
-	            "mediawiki.language",
-	            "util.inherit",
-	            "wikibase"
-	        ]
-	    ],
-	    [
-	        "wikibase.utilities.GuidGenerator",
-	        "1403806605",
-	        [
-	            "wikibase.utilities"
-	        ]
-	    ],
-	    [
-	        "wikibase.utilities.ClaimGuidGenerator",
-	        "1403806605",
-	        [
-	            "wikibase.datamodel",
-	            "wikibase.utilities.GuidGenerator"
-	        ]
-	    ],
-	    [
-	        "wikibase.utilities.jQuery",
-	        "1403806605",
-	        [
-	            "wikibase.utilities"
-	        ]
-	    ],
-	    [
-	        "wikibase.utilities.jQuery.ui.tagadata",
-	        "1403806605",
-	        [
-	            "jquery.effects.blind",
-	            "jquery.inputautoexpand",
-	            "jquery.ui.widget"
-	        ]
-	    ],
-	    [
-	        "wikibase.ui.Base",
-	        "1403806605",
-	        [
-	            "wikibase.utilities"
-	        ]
-	    ],
-	    [
-	        "wikibase.ui.PropertyEditTool",
-	        "1403806605",
-	        [
-	            "jquery.NativeEventHandler",
-	            "jquery.tablesorter",
-	            "jquery.wikibase.entityselector",
-	            "jquery.wikibase.siteselector",
-	            "jquery.wikibase.toolbareditgroup",
-	            "mediawiki.Title",
-	            "mediawiki.jqueryMsg",
-	            "wikibase.AbstractedRepoApi",
-	            "wikibase.ui.Base",
-	            "wikibase.utilities.jQuery",
-	            "wikibase.utilities.jQuery.ui.tagadata"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.toolbarcontroller",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.addtoolbar",
-	            "jquery.wikibase.edittoolbar",
-	            "jquery.wikibase.movetoolbar",
-	            "jquery.wikibase.removetoolbar"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.toolbarbase",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.toolbareditgroup"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.addtoolbar",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.toolbarbase"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.edittoolbar",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.toolbarbase"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.movetoolbar",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.toolbarbase"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.removetoolbar",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.toolbarbase"
-	        ]
-	    ],
-	    [
-	        "wikibase.templates",
-	        "1403806605"
-	    ],
-	    [
-	        "jquery.ui.TemplatedWidget",
-	        "1403806605",
-	        [
-	            "jquery.ui.widget",
-	            "util.inherit",
-	            "wikibase.templates"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.siteselector",
-	        "1403806605",
-	        [
-	            "jquery.event.special.eachchange",
-	            "jquery.ui.suggester"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.listview",
-	        "1403806605",
-	        [
-	            "jquery.NativeEventHandler",
-	            "jquery.ui.TemplatedWidget"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.snaklistview",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.listview",
-	            "jquery.wikibase.snakview"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.snakview",
-	        "1403806605",
-	        [
-	            "jquery.NativeEventHandler",
-	            "jquery.ui.TemplatedWidget",
-	            "mediawiki.legacy.shared",
-	            "wikibase.experts",
-	            "wikibase.formatters",
-	            "wikibase.parsers",
-	            "wikibase.utilities"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.claimview",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.snaklistview",
-	            "jquery.wikibase.toolbarcontroller",
-	            "wikibase.AbstractedRepoApi"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.referenceview",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.snaklistview",
-	            "jquery.wikibase.toolbarcontroller",
-	            "wikibase.AbstractedRepoApi"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.statementview",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.claimview",
-	            "jquery.wikibase.referenceview"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.claimlistview",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.statementview",
-	            "wikibase.utilities.ClaimGuidGenerator"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.claimgrouplistview",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.claimlistview"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.entityview",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.claimgrouplistview"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.entityselector",
-	        "1403806605",
-	        [
-	            "jquery.event.special.eachchange",
-	            "jquery.ui.suggester"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.claimgrouplabelscroll",
-	        "1403806605",
-	        [
-	            "jquery.ui.widget"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.toolbarlabel",
-	        "1403806605",
-	        [
-	            "jquery.ui.widget",
-	            "wikibase.utilities"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.toolbarbutton",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.toolbarlabel"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.toolbar",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.toolbarbutton"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.toolbareditgroup",
-	        "1403806605",
-	        [
-	            "jquery.wikibase.toolbar",
-	            "jquery.wikibase.wbtooltip"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.wbtooltip",
-	        "1403923162",
-	        [
-	            "jquery.tipsy",
-	            "jquery.ui.toggler",
-	            "wikibase.RepoApiError"
-	        ]
-	    ],
-	    [
-	        "wikibase.experts",
-	        "1403806605",
-	        [
-	            "jquery.valueview.experts.CommonsMediaType",
-	            "jquery.valueview.experts.GlobeCoordinateInput",
-	            "jquery.valueview.experts.TimeInput",
-	            "wikibase.experts.EntityIdInput"
-	        ]
-	    ],
-	    [
-	        "wikibase.experts.EntityIdInput",
-	        "1403806605",
-	        [
-	            "jquery.valueview.experts.StringValue",
-	            "jquery.wikibase.entityselector",
-	            "wikibase.datamodel"
-	        ]
-	    ],
-	    [
-	        "wikibase.formatters.api",
-	        "1403806605",
-	        [
-	            "wikibase.RepoApi",
-	            "wikibase.dataTypes"
-	        ]
-	    ],
-	    [
-	        "wikibase.ApiBasedValueFormatter",
-	        "1403806605",
-	        [
-	            "valueFormatters.ValueFormatter",
-	            "wikibase.formatters.api"
-	        ]
-	    ],
-	    [
-	        "wikibase.formatters",
-	        "1403806605",
-	        [
-	            "valueFormatters.ValueFormatterStore",
-	            "valueFormatters.formatters",
-	            "wikibase.ApiBasedValueFormatter",
-	            "wikibase.datamodel"
-	        ]
-	    ],
-	    [
-	        "wikibase.parsers.api",
-	        "1403806605",
-	        [
-	            "wikibase.RepoApi"
-	        ]
-	    ],
-	    [
-	        "wikibase.ApiBasedValueParser",
-	        "1403806605",
-	        [
-	            "valueParsers.ValueParser",
-	            "wikibase.parsers.api"
-	        ]
-	    ],
-	    [
-	        "wikibase.EntityIdParser",
-	        "1403806605",
-	        [
-	            "valueParsers.ValueParser",
-	            "wikibase.datamodel"
-	        ]
-	    ],
-	    [
-	        "wikibase.GlobeCoordinateParser",
-	        "1403806605",
-	        [
-	            "wikibase.ApiBasedValueParser"
-	        ]
-	    ],
-	    [
-	        "wikibase.QuantityParser",
-	        "1403806605",
-	        [
-	            "wikibase.ApiBasedValueParser"
-	        ]
-	    ],
-	    [
-	        "wikibase.TimeParser",
-	        "1403806605",
-	        [
-	            "wikibase.ApiBasedValueParser"
-	        ]
-	    ],
-	    [
-	        "wikibase.parsers",
-	        "1403806605",
-	        [
-	            "valueParsers.ValueParserStore",
-	            "valueParsers.parsers",
-	            "wikibase.EntityIdParser",
-	            "wikibase.GlobeCoordinateParser",
-	            "wikibase.QuantityParser",
-	            "wikibase.TimeParser"
-	        ]
-	    ],
-	    [
-	        "wikibase.client.init",
-	        "1403806578"
-	    ],
-	    [
-	        "wikibase.client.nolanglinks",
-	        "1403806580"
-	    ],
-	    [
-	        "wikibase.client.currentSite",
-	        "1356998400"
-	    ],
-	    [
-	        "wikibase.client.page-move",
-	        "1403806605"
-	    ],
-	    [
-	        "wikibase.client.changeslist.css",
-	        "1403806605"
-	    ],
-	    [
-	        "wikibase.client.linkitem.init",
-	        "1403923163",
-	        [
-	            "jquery.spinner",
-	            "mediawiki.notify"
-	        ]
-	    ],
-	    [
-	        "wikibase.client.PageConnector",
-	        "1403806605",
-	        [
-	            "wikibase.RepoApi"
-	        ]
-	    ],
-	    [
-	        "jquery.wikibase.linkitem",
-	        "1403923162",
-	        [
-	            "jquery.spinner",
-	            "jquery.ui.dialog",
-	            "jquery.wikibase.siteselector",
-	            "jquery.wikibase.wbtooltip",
-	            "mediawiki.Title",
-	            "mediawiki.jqueryMsg",
-	            "wikibase.client.PageConnector",
-	            "wikibase.client.currentSite"
-	        ]
-	    ],
-	    [
-	        "ext.TemplateSandbox",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.MWOAuth.BasicStyles",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.MWOAuth.AuthorizeForm",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.MWOAuth.AuthorizeDialog",
-	        "1403806605",
-	        [
-	            "jquery.ui.dialog"
-	        ]
-	    ],
-	    [
-	        "ext.MWOAuth.WikiSelect",
-	        "1403806605",
-	        [
-	            "jquery.ui.autocomplete"
-	        ]
-	    ],
-	    [
-	        "ext.checkUser",
-	        "1403806605",
-	        [
-	            "mediawiki.util"
-	        ]
-	    ],
-	    [
-	        "mw.PopUpMediaTransform",
-	        "1403806582",
-	        [
-	            "mediawiki.Title",
-	            "mw.MwEmbedSupport"
-	        ]
-	    ],
-	    [
-	        "mw.TMHGalleryHook.js",
-	        "1403806605"
-	    ],
-	    [
-	        "embedPlayerIframeStyle",
-	        "1403806605"
-	    ],
-	    [
-	        "ext.tmh.transcodetable",
-	        "1403923162"
-	    ],
-	    [
-	        "mw.MediaWikiPlayerSupport",
-	        "1403806605",
-	        [
-	            "mw.Api"
-	        ]
-	    ],
-	    [
-	        "schema.UniversalLanguageSelector",
-	        "1364325841",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.UniversalLanguageSelector-tofu",
-	        "1364627964",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "skins.vector.compactPersonalBar.schema",
-	        "1364827528",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "mobile.uploads.schema",
-	        "1365207443",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "mobile.editing.schema",
-	        "1365597425",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.MobileWebCta",
-	        "1362971084",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.MobileWebClickTracking",
-	        "1362928348",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.MobileLeftNavbarEditCTA",
-	        "1364073052",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "mobile.loggingSchemas",
-	        "1403806605",
-	        [
-	            "mobile.editing.schema",
-	            "mobile.startup",
-	            "mobile.uploads.schema",
-	            "schema.MobileLeftNavbarEditCTA",
-	            "schema.MobileWebClickTracking",
-	            "schema.MobileWebCta"
-	        ]
-	    ],
-	    [
-	        "schema.Echo",
-	        "1364729716",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.EchoMail",
-	        "1362466050",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ],
-	    [
-	        "schema.EchoInteraction",
-	        "1362780687",
-	        [
-	            "ext.eventLogging"
-	        ]
-	    ]
-	] );
-	mw.config.set({"wgLoadScript":"//bits.wikimedia.org/ru.wikipedia.org/load.php","debug":true,"skin":"vector","stylepath":"//bits.wikimedia.org/static-1.24wmf10/skins","wgUrlProtocols":"bitcoin\\:|ftp\\:\\/\\/|ftps\\:\\/\\/|geo\\:|git\\:\\/\\/|gopher\\:\\/\\/|http\\:\\/\\/|https\\:\\/\\/|irc\\:\\/\\/|ircs\\:\\/\\/|magnet\\:|mailto\\:|mms\\:\\/\\/|news\\:|nntp\\:\\/\\/|redis\\:\\/\\/|sftp\\:\\/\\/|sip\\:|sips\\:|sms\\:|ssh\\:\\/\\/|svn\\:\\/\\/|tel\\:|telnet\\:\\/\\/|urn\\:|worldwind\\:\\/\\/|xmpp\\:|\\/\\/","wgArticlePath":"/wiki/$1","wgScriptPath":"/w","wgScriptExtension":".php","wgScript":"/w/index.php","wgSearchType":"LuceneSearch","wgVariantArticlePath":false,"wgActionPaths":{},"wgServer":"//ru.wikipedia.org","wgServerName":"ru.wikipedia.org","wgUserLanguage":"ru","wgContentLanguage":"ru","wgVersion":"1.24wmf10","wgEnableAPI":true,"wgEnableWriteAPI":true,"wgMainPageTitle":"Заглавная страница","wgFormattedNamespaces":{"-2":"Медиа","-1":"Служебная","0":"","1":"Обсуждение","2":"Участник","3":"Обсуждение участника","4":"Википедия","5":"Обсуждение Википедии","6":"Файл","7":"Обсуждение файла","8":"MediaWiki","9":"Обсуждение MediaWiki","10":"Шаблон","11":"Обсуждение шаблона","12":"Справка","13":"Обсуждение справки","14":"Категория","15":"Обсуждение категории","100":"Портал","101":"Обсуждение портала","102":"Инкубатор","103":"Обсуждение Инкубатора","104":"Проект","105":"Обсуждение проекта","106":"Арбитраж","107":"Обсуждение арбитража","828":"Модуль","829":"Обсуждение модуля"},"wgNamespaceIds":{"медиа":-2,"служебная":-1,"":0,"обсуждение":1,"участник":2,"обсуждение_участника":3,"википедия":4,"обсуждение_википедии":5,"файл":6,"обсуждение_файла":7,"mediawiki":8,"обсуждение_mediawiki":9,"шаблон":10,"обсуждение_шаблона":11,"справка":12,"обсуждение_справки":13,"категория":14,"обсуждение_категории":15,"портал":100,"обсуждение_портала":101,"инкубатор":102,"обсуждение_инкубатора":103,"проект":104,"обсуждение_проекта":105,"арбитраж":106,"обсуждение_арбитража":107,"модуль":828,"обсуждение_модуля":829,"изображение":6,"обсуждение_изображения":7,"участница":2,"обсуждение_участницы":3,"у":2,"ш":10,"t":10,"к":14,"вп":4,"и":102,"про":104,"ак":106,"incubator":102,"incubator_talk":103,"wikiproject":104,"wikiproject_talk":105,"arbcom":106,"image":6,"image_talk":7,"media":-2,"special":-1,"talk":1,"user":2,"user_talk":3,"project":4,"project_talk":5,"file":6,"file_talk":7,"mediawiki_talk":9,"template":10,"template_talk":11,"help":12,"help_talk":13,"category":14,"category_talk":15,"module":828,"module_talk":829},"wgContentNamespaces":[0],"wgSiteName":"Википедия","wgFileExtensions":["png","gif","jpg","jpeg","tiff","tif","xcf","pdf","mid","ogg","ogv","svg","djvu","oga","flac","wav","webm"],"wgDBname":"ruwiki","wgFileCanRotate":true,"wgAvailableSkins":{"modern":"Modern","cologneblue":"CologneBlue","minerva":"Minerva","monobook":"MonoBook","vector":"Vector"},"wgExtensionAssetsPath":"//bits.wikimedia.org/static-1.24wmf10/extensions","wgCookiePrefix":"ruwiki","wgCookieDomain":"","wgCookiePath":"/","wgCookieExpiration":2592000,"wgResourceLoaderMaxQueryLength":-1,"wgCaseSensitiveNamespaces":[],"wgLegalTitleChars":" %!\"$\u0026'()*,\\-./0-9:;=?@A-Z\\\\\\^_`a-z~+\\u0080-\\uFFFF","wgResourceLoaderStorageVersion":1,"wgResourceLoaderStorageEnabled":true,"EmbedPlayer.DirectFileLinkWarning":true,"EmbedPlayer.EnableOptionsMenu":true,"EmbedPlayer.DisableJava":false,"EmbedPlayer.DisableHTML5FlashFallback":true,"TimedText.ShowInterface":"always","TimedText.ShowAddTextLink":true,"EmbedPlayer.WebPath":"//bits.wikimedia.org/static-1.24wmf10/extensions/TimedMediaHandler/MwEmbedModules/EmbedPlayer","wgCortadoJarFile":false,"TimedText.ShowInterface.local":"off","AjaxRequestTimeout":30,"MediaWiki.DefaultProvider":"local","MediaWiki.ApiProviders":{"wikimediacommons":{"url":"//commons.wikimedia.org/w/api.php"}},"MediaWiki.ApiPostActions":["login","purge","rollback","delete","undelete","protect","block","unblock","move","edit","upload","emailuser","import","userrights"],"EmbedPlayer.OverlayControls":true,"EmbedPlayer.CodecPreference":["webm","h264","ogg"],"EmbedPlayer.DisableVideoTagSupport":false,"EmbedPlayer.ReplaceSources":null,"EmbedPlayer.EnableFlavorSelector":false,"EmbedPlayer.EnableIpadHTMLControls":true,"EmbedPlayer.WebKitPlaysInline":false,"EmbedPlayer.EnableIpadNativeFullscreen":false,"EmbedPlayer.iPhoneShowHTMLPlayScreen":true,"EmbedPlayer.ForceLargeReplayButton":false,"EmbedPlayer.LibraryPage":"http://www.kaltura.org/project/HTML5_Video_Media_JavaScript_Library","EmbedPlayer.RewriteSelector":"video,audio,playlist","EmbedPlayer.DefaultSize":"400x300","EmbedPlayer.ControlsHeight":31,"EmbedPlayer.TimeDisplayWidth":85,"EmbedPlayer.KalturaAttribution":true,"EmbedPlayer.AttributionButton":{"title":"Kaltura html5 video library","href":"http://www.kaltura.com","class":"kaltura-icon","style":[],"iconurl":false},"EmbedPlayer.EnableRightClick":true,"EmbedPlayer.EnabledOptionsMenuItems":["playerSelect","download","share","aboutPlayerLibrary"],"EmbedPlayer.WaitForMeta":true,"EmbedPlayer.ShowNativeWarning":true,"EmbedPlayer.ShowPlayerAlerts":true,"EmbedPlayer.EnableFullscreen":true,"EmbedPlayer.EnableTimeDisplay":true,"EmbedPlayer.EnableVolumeControl":true,"EmbedPlayer.NewWindowFullscreen":false,"EmbedPlayer.FullscreenTip":true,"EmbedPlayer.FirefoxLink":"http://www.mozilla.com/en-US/firefox/upgrade.html?from=mwEmbed","EmbedPlayer.NativeControls":false,"EmbedPlayer.NativeControlsMobileSafari":true,"EmbedPlayer.FullScreenZIndex":999998,"EmbedPlayer.ShareEmbedMode":"iframe","EmbedPlayer.SkinList":["mvpcf","kskin"],"EmbedPlayer.DefaultSkin":"mvpcf","EmbedPlayer.MonitorRate":250,"EmbedPlayer.UseFlashOnAndroid":false,"EmbedPlayer.EnableURLTimeEncoding":"flash","EmbedPLayer.IFramePlayer.DomainWhiteList":"*","EmbedPlayer.EnableIframeApi":true,"EmbedPlayer.PageDomainIframe":true,"EmbedPlayer.NotPlayableDownloadLink":true,"EmbedPlayer.BlackPixel":"data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%01%00%00%00%01%08%02%00%00%00%90wS%DE%00%00%00%01sRGB%00%AE%CE%1C%E9%00%00%00%09pHYs%00%00%0B%13%00%00%0B%13%01%00%9A%9C%18%00%00%00%07tIME%07%DB%0B%0A%17%041%80%9B%E7%F2%00%00%00%19tEXtComment%00Created%20with%20GIMPW%81%0E%17%00%00%00%0CIDAT%08%D7c%60%60%60%00%00%00%04%00%01'4'%0A%00%00%00%00IEND%AEB%60%82","TimedText.ShowRequestTranscript":false,"TimedText.NeedsTranscriptCategory":"Videos needing subtitles","TimedText.BottomPadding":10,"TimedText.BelowVideoBlackBoxHeight":40,"wgCentralAuthCheckLoggedInURL":"//login.wikimedia.org/wiki/Special:CentralAutoLogin/checkLoggedIn?type=script\u0026wikiid=ruwiki","wgWikiEditorMagicWords":{"redirect":"#перенаправление","img_right":"справа","img_left":"слева","img_none":"без","img_center":"центр","img_thumbnail":"мини","img_framed":"обрамить","img_frameless":"безрамки"},"wgMultimediaViewer":{"infoLink":"//mediawiki.org/wiki/Special:MyLanguage/Multimedia/About_Media_Viewer","discussionLink":"//mediawiki.org/wiki/Special:MyLanguage/Talk:Multimedia/About_Media_Viewer","helpLink":"//mediawiki.org/wiki/Special:MyLanguage/Multimedia/Media_Viewer/Help","globalUsageAvailable":true,"useThumbnailGuessing":true,"showSurvey":false,"durationSamplingFactor":1000,"networkPerformanceSamplingFactor":1000,"actionLoggingSamplingFactorMap":{"default":1,"close":1000,"defullscreen":10,"enlarge":6,"fullscreen":20,"hash-load":10,"history-navigation":200,"image-view":2000,"metadata-close":6,"metadata-open":6,"next-image":800,"prev-image":200,"thumbnail":1000},"tooltipDelay":1000},"wgMediaViewer":true,"wgMediaViewerIsInBeta":false,"wgVisualEditorConfig":{"disableForAnons":false,"preferenceModules":{"visualeditor-enable-experimental":"ext.visualEditor.experimental","visualeditor-enable-language":"ext.visualEditor.language"},"namespaces":[0,2,2,6,12,14],"pluginModules":["ext.math.visualEditor","ext.wikimediaEvents.ve","ext.disambiguator.visualEditor"],"defaultUserOptions":{"betatempdisable":0,"enable":1,"defaultthumbsize":220,"visualeditor-enable-experimental":0,"visualeditor-enable-language":0},"blacklist":{"msie":null,"android":[["\u003C",3]],"firefox":[["\u003C=",14]],"opera":[["\u003C",12]],"blackberry":null,"silk":null},"skins":["vector","apex","monobook","minerva"],"tabPosition":"before","tabMessages":{"edit":null,"editsource":"visualeditor-ca-editsource","create":null,"createsource":"visualeditor-ca-createsource","editlocaldescriptionsource":"visualeditor-ca-editlocaldescriptionsource","createlocaldescriptionsource":"visualeditor-ca-createlocaldescriptionsource","editsection":null,"editsectionsource":"visualeditor-ca-editsource-section","editappendix":null,"editsourceappendix":null,"createappendix":null,"createsourceappendix":null,"editsectionappendix":null,"editsectionsourceappendix":null},"showBetaWelcome":true,"enableTocWidget":false},"wgStopMobileRedirectCookie":{"name":"stopMobileRedirect","duration":30,"domain":".wikipedia.org","path":"/"},"wgMFNearbyEndpoint":"","wgMFContentNamespace":0,"wgMFKeepGoing":false,"wgMFLicenseLink":"\u003Ca href=\"https://creativecommons.org/licenses/by-sa/3.0/\" title=\"Формулировка лицензии Creative Commons Attribution/Share-Alike\" target=\"_blank\"\u003ECC BY-SA 3.0\u003C/a\u003E и \u003Ca href=\"https://www.gnu.org/licenses/fdl.html\" title=\"Формулировка GFDL\" target=\"_blank\"\u003EGFDL\u003C/a\u003E","wgMFUploadLicenseLink":"\u003Ca class=\"external\" rel=\"nofollow\" href=\"//creativecommons.org/licenses/by-sa/3.0/\"\u003ECC BY-SA 3.0\u003C/a\u003E","wgGettingStartedConfig":{"hasCategories":true},"wgEventLoggingBaseUri":"//bits.wikimedia.org/event.gif","wgNavigationTimingSamplingFactor":1000,"wgULSIMEEnabled":true,"wgULSWebfontsEnabled":false,"wgULSPosition":"interlanguage","wgULSAnonCanChangeLanguage":false,"wgULSEventLogging":true,"wgULSTofuLoggingChance":0,"wgULSTofuLoggingMaxTime":0,"wgULSImeSelectors":["input:not([type])","input[type=text]","input[type=search]","textarea","[contenteditable]"],"wgULSNoImeSelectors":["#wpCaptchaWord",".ve-ce-documentNode",".ace_editor textarea"],"wgULSNoWebfontsSelectors":["#p-lang li.interlanguage-link \u003E a"],"wgULSFontRepositoryBasePath":"//bits.wikimedia.org/static-current/extensions/UniversalLanguageSelector/data/fontrepo/fonts/","wgNoticeFundraisingUrl":"https://donate.wikimedia.org/wiki/Special:LandingCheck","wgCentralPagePath":"//meta.wikimedia.org/w/index.php","wgCentralBannerDispatcher":"//meta.wikimedia.org/wiki/Special:BannerRandom","wgCentralBannerRecorder":"//meta.wikimedia.org/wiki/Special:RecordImpression","wgNoticeXXCountries":["XX","EU","AP","A1","A2","O1"],"wgNoticeNumberOfBuckets":4,"wgNoticeBucketExpiry":7,"wgNoticeNumberOfControllerBuckets":2,"wgNoticeCookieShortExpiry":1209600,"wgNoticeHideUrls":["//en.wikipedia.org/wiki/Special:HideBanners","//meta.wikimedia.org/wiki/Special:HideBanners","//commons.wikimedia.org/wiki/Special:HideBanners","//species.wikimedia.org/wiki/Special:HideBanners","//en.wikibooks.org/wiki/Special:HideBanners","//en.wikiquote.org/wiki/Special:HideBanners","//en.wikisource.org/wiki/Special:HideBanners","//en.wikinews.org/wiki/Special:HideBanners","//en.wikiversity.org/wiki/Special:HideBanners","//www.mediawiki.org/wiki/Special:HideBanners"]});};
+	} )( "mw.MediaWikiPlayer.loader", "20140731T180233Z", [], null, "local" );
+	mw.loader
+			.register( [
+					[ "site", "1406655292", [], "site" ],
+					[ "noscript", "1399494850", [], "noscript" ],
+					[ "startup", "1406987610", [], "startup" ],
+					[ "filepage", "1386876474" ],
+					[ "user.groups", "1397583263", [], "user" ],
+					[ "user", "1403255438", [], "user" ],
+					[ "user.cssprefs", "1356998400", [ "mediawiki.user" ], "private" ],
+					[ "user.options", "1356998400", [], "private" ],
+					[ "user.tokens", "1356998400", [], "private" ],
+					[ "mediawiki.language.data", "1400218529", [ "mediawiki.language.init" ] ],
+					[ "mediawiki.skinning.elements", "1406829752" ],
+					[ "mediawiki.skinning.content", "1406829752" ],
+					[ "mediawiki.skinning.interface", "1406829734" ],
+					[ "mediawiki.skinning.content.parsoid", "1406829752" ],
+					[ "jquery", "1406829752" ],
+					[ "jquery.accessKeyLabel", "1406951688", [ "jquery.client", "jquery.mwExtension" ] ],
+					[ "jquery.appear", "1406829752" ],
+					[ "jquery.arrowSteps", "1406829752" ],
+					[ "jquery.async", "1406829752" ],
+					[ "jquery.autoEllipsis", "1406829752", [ "jquery.highlightText" ] ],
+					[ "jquery.badge", "1406829752", [ "mediawiki.language" ] ],
+					[ "jquery.byteLength", "1406829752" ],
+					[ "jquery.byteLimit", "1406829752", [ "jquery.byteLength" ] ],
+					[ "jquery.checkboxShiftClick", "1406829736" ],
+					[ "jquery.chosen", "1406829752" ],
+					[ "jquery.client", "1406829752" ],
+					[ "jquery.color", "1406829752", [ "jquery.colorUtil" ] ],
+					[ "jquery.colorUtil", "1406829752" ],
+					[ "jquery.cookie", "1406829752" ],
+					[ "jquery.expandableField", "1406829752" ],
+					[ "jquery.farbtastic", "1406829752", [ "jquery.colorUtil" ] ],
+					[ "jquery.footHovzer", "1406829752" ],
+					[ "jquery.form", "1406829752" ],
+					[ "jquery.fullscreen", "1406829752" ],
+					[ "jquery.getAttrs", "1406829752" ],
+					[ "jquery.hidpi", "1406829736" ],
+					[ "jquery.highlightText", "1406829736", [ "jquery.mwExtension" ] ],
+					[ "jquery.hoverIntent", "1406829752" ],
+					[ "jquery.json", "1406829752" ],
+					[ "jquery.localize", "1406829752" ],
+					[ "jquery.makeCollapsible", "1406951688" ],
+					[ "jquery.mockjax", "1406829752" ],
+					[ "jquery.mw-jump", "1406829736" ],
+					[ "jquery.mwExtension", "1406829752" ],
+					[ "jquery.placeholder", "1406829736" ],
+					[ "jquery.qunit", "1406829752" ],
+					[ "jquery.qunit.completenessTest", "1406829752", [ "jquery.qunit" ] ],
+					[ "jquery.spinner", "1406829749" ],
+					[ "jquery.jStorage", "1406829752", [ "json" ] ],
+					[ "jquery.suggestions", "1406829736", [ "jquery.highlightText" ] ],
+					[ "jquery.tabIndex", "1406829752" ],
+					[ "jquery.tablesorter", "1406951688", [ "jquery.mwExtension", "mediawiki.language.months" ] ],
+					[ "jquery.textSelection", "1406829752", [ "jquery.client" ] ],
+					[ "jquery.throttle-debounce", "1406829752" ],
+					[ "jquery.validate", "1406829752" ],
+					[ "jquery.xmldom", "1406829752" ],
+					[ "jquery.tipsy", "1406829752" ],
+					[ "jquery.ui.core", "1406829752", [], "jquery.ui" ],
+					[ "jquery.ui.accordion", "1406829752", [ "jquery.ui.core", "jquery.ui.widget" ], "jquery.ui" ],
+					[ "jquery.ui.autocomplete", "1406829752", [ "jquery.ui.menu" ], "jquery.ui" ],
+					[ "jquery.ui.button", "1406829752", [ "jquery.ui.core", "jquery.ui.widget" ], "jquery.ui" ],
+					[ "jquery.ui.datepicker", "1406829752", [ "jquery.ui.core" ], "jquery.ui" ],
+					[ "jquery.ui.dialog", "1406829752", [ "jquery.ui.button", "jquery.ui.draggable", "jquery.ui.position", "jquery.ui.resizable" ], "jquery.ui" ],
+					[ "jquery.ui.draggable", "1406829752", [ "jquery.ui.core", "jquery.ui.mouse" ], "jquery.ui" ],
+					[ "jquery.ui.droppable", "1406829752", [ "jquery.ui.draggable" ], "jquery.ui" ],
+					[ "jquery.ui.menu", "1406829752", [ "jquery.ui.core", "jquery.ui.position", "jquery.ui.widget" ], "jquery.ui" ],
+					[ "jquery.ui.mouse", "1406829752", [ "jquery.ui.widget" ], "jquery.ui" ],
+					[ "jquery.ui.position", "1406883984", [], "jquery.ui" ],
+					[ "jquery.ui.progressbar", "1406829752", [ "jquery.ui.core", "jquery.ui.widget" ], "jquery.ui" ],
+					[ "jquery.ui.resizable", "1406829752", [ "jquery.ui.core", "jquery.ui.mouse" ], "jquery.ui" ],
+					[ "jquery.ui.selectable", "1406829752", [ "jquery.ui.core", "jquery.ui.mouse" ], "jquery.ui" ],
+					[ "jquery.ui.slider", "1406829752", [ "jquery.ui.core", "jquery.ui.mouse" ], "jquery.ui" ],
+					[ "jquery.ui.sortable", "1406829752", [ "jquery.ui.core", "jquery.ui.mouse" ], "jquery.ui" ],
+					[ "jquery.ui.spinner", "1406829752", [ "jquery.ui.button" ], "jquery.ui" ],
+					[ "jquery.ui.tabs", "1406829752", [ "jquery.ui.core", "jquery.ui.widget" ], "jquery.ui" ],
+					[ "jquery.ui.tooltip", "1406829752", [ "jquery.ui.core", "jquery.ui.position", "jquery.ui.widget" ], "jquery.ui" ],
+					[ "jquery.ui.widget", "1406829752", [], "jquery.ui" ],
+					[ "jquery.effects.core", "1406829752", [], "jquery.ui" ],
+					[ "jquery.effects.blind", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.bounce", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.clip", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.drop", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.explode", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.fade", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.fold", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.highlight", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.pulsate", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.scale", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.shake", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.slide", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "jquery.effects.transfer", "1406829752", [ "jquery.effects.core" ], "jquery.ui" ],
+					[ "json", "1406829752", [], null, "local", "return!!(window.JSON\u0026\u0026JSON.stringify\u0026\u0026JSON.parse);" ],
+					[ "moment", "1406829752" ],
+					[ "mediawiki", "1406829752" ],
+					[ "mediawiki.api", "1406829742", [ "mediawiki.util" ] ],
+					[ "mediawiki.api.category", "1406829752", [ "mediawiki.Title", "mediawiki.api" ] ],
+					[ "mediawiki.api.edit", "1406829752", [ "mediawiki.Title", "mediawiki.api", "user.tokens" ] ],
+					[ "mediawiki.api.login", "1406829752", [ "mediawiki.api" ] ],
+					[ "mediawiki.api.parse", "1406829752", [ "mediawiki.api" ] ],
+					[ "mediawiki.api.watch", "1406829752", [ "mediawiki.api", "user.tokens" ] ],
+					[ "mediawiki.debug", "1406829752", [ "jquery.footHovzer", "jquery.tipsy" ] ],
+					[ "mediawiki.debug.init", "1406829752", [ "mediawiki.debug" ] ],
+					[ "mediawiki.feedback", "1406951688", [ "jquery.ui.dialog", "mediawiki.api.edit", "mediawiki.jqueryMsg" ] ],
+					[ "mediawiki.hidpi", "1406829736", [ "jquery.hidpi" ], null, "local", "return'srcset'in new Image();" ],
+					[ "mediawiki.hlist", "1406829752", [ "jquery.client" ] ],
+					[ "mediawiki.htmlform", "1406951688" ],
+					[ "mediawiki.icon", "1406829752" ],
+					[ "mediawiki.inspect", "1406829752", [ "jquery.byteLength", "json" ] ],
+					[ "mediawiki.notification", "1406829752", [ "mediawiki.page.startup" ] ],
+					[ "mediawiki.notify", "1406829752" ],
+					[ "mediawiki.searchSuggest", "1406951688", [ "jquery.placeholder", "jquery.suggestions", "mediawiki.api" ] ],
+					[ "mediawiki.Title", "1406867413", [ "jquery.byteLength", "mediawiki.util" ] ],
+					[ "mediawiki.toc", "1406951687", [ "jquery.cookie" ] ],
+					[ "mediawiki.Uri", "1406829752" ],
+					[ "mediawiki.user", "1406829743", [ "jquery.cookie", "mediawiki.api", "user.options", "user.tokens" ] ],
+					[ "mediawiki.util", "1406829752", [ "jquery.accessKeyLabel", "mediawiki.notify" ] ],
+					[ "mediawiki.cookie", "1406829736", [ "jquery.cookie" ] ],
+					[ "mediawiki.action.edit", "1406829752", [ "jquery.byteLimit", "jquery.textSelection", "mediawiki.action.edit.styles" ] ],
+					[ "mediawiki.action.edit.styles", "1406829748" ],
+					[ "mediawiki.action.edit.collapsibleFooter", "1406829752", [ "jquery.cookie", "jquery.makeCollapsible", "mediawiki.icon" ] ],
+					[ "mediawiki.action.edit.preview", "1406829752", [ "jquery.form", "jquery.spinner", "mediawiki.action.history.diff" ] ],
+					[ "mediawiki.action.history", "1406829752", [], "mediawiki.action.history" ],
+					[ "mediawiki.action.history.diff", "1406829748", [], "mediawiki.action.history" ],
+					[ "mediawiki.action.view.dblClickEdit", "1406829752", [ "mediawiki.page.startup" ] ],
+					[ "mediawiki.action.view.metadata", "1406951688" ],
+					[ "mediawiki.action.view.postEdit", "1406951688", [ "mediawiki.cookie", "mediawiki.jqueryMsg" ] ],
+					[ "mediawiki.action.view.redirectToFragment", "1406829752", [ "jquery.client" ] ],
+					[ "mediawiki.action.view.rightClickEdit", "1406829752" ],
+					[ "mediawiki.action.edit.editWarning", "1406951688", [ "mediawiki.jqueryMsg" ] ],
+					[ "mediawiki.language", "1406829752", [ "mediawiki.cldr", "mediawiki.language.data" ] ],
+					[ "mediawiki.cldr", "1406829752", [ "mediawiki.libs.pluralruleparser" ] ],
+					[ "mediawiki.libs.pluralruleparser", "1406829752" ],
+					[ "mediawiki.language.init", "1406829752" ],
+					[ "mediawiki.jqueryMsg", "1406829752", [ "mediawiki.language", "mediawiki.util" ] ],
+					[ "mediawiki.language.months", "1406951688", [ "mediawiki.language" ] ],
+					[ "mediawiki.language.names", "1406225859", [ "mediawiki.language.init" ] ],
+					[ "mediawiki.libs.jpegmeta", "1406829752" ],
+					[ "mediawiki.page.gallery", "1406829752" ],
+					[ "mediawiki.page.ready", "1406829736", [ "jquery.checkboxShiftClick", "jquery.makeCollapsible", "jquery.mw-jump", "jquery.placeholder", "mediawiki.util" ] ],
+					[ "mediawiki.page.startup", "1406829752", [ "mediawiki.util" ] ],
+					[ "mediawiki.page.patrol.ajax", "1406829752", [ "jquery.spinner", "mediawiki.Title", "mediawiki.api", "mediawiki.page.startup", "user.tokens" ] ],
+					[ "mediawiki.page.watch.ajax", "1406951688", [ "mediawiki.api.watch" ] ],
+					[ "mediawiki.page.image.pagination", "1406829752", [ "jquery.spinner", "mediawiki.Uri", "mediawiki.util" ] ],
+					[ "mediawiki.special", "1406829752" ],
+					[ "mediawiki.special.block", "1406829752", [ "mediawiki.util" ] ],
+					[ "mediawiki.special.changeemail", "1406951688", [ "mediawiki.util" ] ],
+					[ "mediawiki.special.changeslist", "1406829752" ],
+					[ "mediawiki.special.changeslist.legend", "1406829752" ],
+					[ "mediawiki.special.changeslist.legend.js", "1406829752", [ "jquery.cookie", "jquery.makeCollapsible" ] ],
+					[ "mediawiki.special.changeslist.enhanced", "1406829752" ],
+					[ "mediawiki.special.movePage", "1406829752", [ "jquery.byteLimit" ] ],
+					[ "mediawiki.special.pageLanguage", "1406829752" ],
+					[ "mediawiki.special.pagesWithProp", "1406829752" ],
+					[ "mediawiki.special.preferences", "1406951688", [ "mediawiki.language" ] ],
+					[ "mediawiki.special.recentchanges", "1406829752", [ "mediawiki.special" ] ],
+					[ "mediawiki.special.search", "1406951688" ],
+					[ "mediawiki.special.undelete", "1406829752" ],
+					[ "mediawiki.special.upload", "1406951688", [ "mediawiki.libs.jpegmeta", "mediawiki.util" ] ],
+					[ "mediawiki.special.userlogin.common.styles", "1406829752" ],
+					[ "mediawiki.special.userlogin.signup.styles", "1406829752" ],
+					[ "mediawiki.special.userlogin.login.styles", "1406829752" ],
+					[ "mediawiki.special.userlogin.common.js", "1406951688" ],
+					[ "mediawiki.special.userlogin.signup.js", "1406951688", [ "jquery.throttle-debounce", "mediawiki.api", "mediawiki.jqueryMsg" ] ],
+					[ "mediawiki.special.unwatchedPages", "1406951688", [ "mediawiki.Title", "mediawiki.api.watch" ] ],
+					[ "mediawiki.special.javaScriptTest", "1406829752", [ "jquery.qunit" ] ],
+					[ "mediawiki.special.version", "1406829752" ],
+					[ "mediawiki.legacy.ajax", "1406829752", [ "mediawiki.legacy.wikibits" ] ],
+					[ "mediawiki.legacy.commonPrint", "1406829734" ],
+					[ "mediawiki.legacy.config", "1406829752", [ "mediawiki.legacy.wikibits" ] ],
+					[ "mediawiki.legacy.protect", "1406829752", [ "jquery.byteLimit" ] ],
+					[ "mediawiki.legacy.shared", "1406829734" ],
+					[ "mediawiki.legacy.oldshared", "1406829752" ],
+					[ "mediawiki.legacy.upload", "1406829752", [ "jquery.spinner", "mediawiki.Title", "mediawiki.api" ] ],
+					[ "mediawiki.legacy.wikibits", "1406829752", [ "mediawiki.util" ] ],
+					[ "mediawiki.ui", "1406829752" ],
+					[ "mediawiki.ui.button", "1406829734" ],
+					[ "es5-shim", "1406829738", [], null, "local", "return(function(){'use strict';return!this\u0026\u0026!!Function.prototype.bind;}());" ],
+					[ "oojs", "1406829736", [ "es5-shim", "json" ] ],
+					[ "oojs-ui", "1406951687", [ "oojs" ] ],
+					[ "ext.geshi.language.4cs", "1406762728" ],
+					[ "ext.geshi.language.6502acme", "1406762728" ],
+					[ "ext.geshi.language.6502kickass", "1406762728" ],
+					[ "ext.geshi.language.6502tasm", "1406762728" ],
+					[ "ext.geshi.language.68000devpac", "1406762728" ],
+					[ "ext.geshi.language.abap", "1406762728" ],
+					[ "ext.geshi.language.actionscript", "1406762728" ],
+					[ "ext.geshi.language.actionscript3", "1406762728" ],
+					[ "ext.geshi.language.ada", "1406762728" ],
+					[ "ext.geshi.language.algol68", "1406762728" ],
+					[ "ext.geshi.language.apache", "1406762728" ],
+					[ "ext.geshi.language.applescript", "1406762728" ],
+					[ "ext.geshi.language.apt_sources", "1406762728" ],
+					[ "ext.geshi.language.arm", "1406762728" ],
+					[ "ext.geshi.language.asm", "1406762728" ],
+					[ "ext.geshi.language.asp", "1406762728" ],
+					[ "ext.geshi.language.asymptote", "1406762728" ],
+					[ "ext.geshi.language.autoconf", "1406762728" ],
+					[ "ext.geshi.language.autohotkey", "1406762728" ],
+					[ "ext.geshi.language.autoit", "1406762728" ],
+					[ "ext.geshi.language.avisynth", "1406762728" ],
+					[ "ext.geshi.language.awk", "1406762728" ],
+					[ "ext.geshi.language.bascomavr", "1406762728" ],
+					[ "ext.geshi.language.bash", "1406762728" ],
+					[ "ext.geshi.language.basic4gl", "1406762728" ],
+					[ "ext.geshi.language.bf", "1406762728" ],
+					[ "ext.geshi.language.bibtex", "1406762728" ],
+					[ "ext.geshi.language.blitzbasic", "1406762728" ],
+					[ "ext.geshi.language.bnf", "1406762728" ],
+					[ "ext.geshi.language.boo", "1406762728" ],
+					[ "ext.geshi.language.c", "1406762728" ],
+					[ "ext.geshi.language.c_loadrunner", "1406762728" ],
+					[ "ext.geshi.language.c_mac", "1406762728" ],
+					[ "ext.geshi.language.caddcl", "1406762728" ],
+					[ "ext.geshi.language.cadlisp", "1406762728" ],
+					[ "ext.geshi.language.cfdg", "1406762728" ],
+					[ "ext.geshi.language.cfm", "1406762728" ],
+					[ "ext.geshi.language.chaiscript", "1406762728" ],
+					[ "ext.geshi.language.cil", "1406762728" ],
+					[ "ext.geshi.language.clojure", "1406762728" ],
+					[ "ext.geshi.language.cmake", "1406762728" ],
+					[ "ext.geshi.language.cobol", "1406762728" ],
+					[ "ext.geshi.language.coffeescript", "1406762728" ],
+					[ "ext.geshi.language.cpp", "1406762728" ],
+					[ "ext.geshi.language.cpp-qt", "1406762728" ],
+					[ "ext.geshi.language.csharp", "1406762728" ],
+					[ "ext.geshi.language.css", "1406762728" ],
+					[ "ext.geshi.language.cuesheet", "1406762728" ],
+					[ "ext.geshi.language.d", "1406762728" ],
+					[ "ext.geshi.language.dcl", "1406762728" ],
+					[ "ext.geshi.language.dcpu16", "1406762728" ],
+					[ "ext.geshi.language.dcs", "1406762728" ],
+					[ "ext.geshi.language.delphi", "1406821132" ],
+					[ "ext.geshi.language.diff", "1406762728" ],
+					[ "ext.geshi.language.div", "1406762728" ],
+					[ "ext.geshi.language.dos", "1406762728" ],
+					[ "ext.geshi.language.dot", "1406762728" ],
+					[ "ext.geshi.language.e", "1406762728" ],
+					[ "ext.geshi.language.ecmascript", "1406762728" ],
+					[ "ext.geshi.language.eiffel", "1406762728" ],
+					[ "ext.geshi.language.email", "1406762728" ],
+					[ "ext.geshi.language.epc", "1406762728" ],
+					[ "ext.geshi.language.erlang", "1406762728" ],
+					[ "ext.geshi.language.euphoria", "1406762728" ],
+					[ "ext.geshi.language.f1", "1406762728" ],
+					[ "ext.geshi.language.falcon", "1406762728" ],
+					[ "ext.geshi.language.fo", "1406762728" ],
+					[ "ext.geshi.language.fortran", "1406762728" ],
+					[ "ext.geshi.language.freebasic", "1406762728" ],
+					[ "ext.geshi.language.freeswitch", "1406762728" ],
+					[ "ext.geshi.language.fsharp", "1406762728" ],
+					[ "ext.geshi.language.gambas", "1406762728" ],
+					[ "ext.geshi.language.gdb", "1406762728" ],
+					[ "ext.geshi.language.genero", "1406762728" ],
+					[ "ext.geshi.language.genie", "1406762728" ],
+					[ "ext.geshi.language.gettext", "1406762728" ],
+					[ "ext.geshi.language.glsl", "1406762728" ],
+					[ "ext.geshi.language.gml", "1406762728" ],
+					[ "ext.geshi.language.gnuplot", "1406762728" ],
+					[ "ext.geshi.language.go", "1406762728" ],
+					[ "ext.geshi.language.groovy", "1406762728" ],
+					[ "ext.geshi.language.gwbasic", "1406762728" ],
+					[ "ext.geshi.language.haskell", "1406762728" ],
+					[ "ext.geshi.language.haxe", "1406762728" ],
+					[ "ext.geshi.language.hicest", "1406762728" ],
+					[ "ext.geshi.language.hq9plus", "1406762728" ],
+					[ "ext.geshi.language.html4strict", "1406762728" ],
+					[ "ext.geshi.language.html5", "1406762728" ],
+					[ "ext.geshi.language.icon", "1406762728" ],
+					[ "ext.geshi.language.idl", "1406762728" ],
+					[ "ext.geshi.language.ini", "1406762728" ],
+					[ "ext.geshi.language.inno", "1406762728" ],
+					[ "ext.geshi.language.intercal", "1406762728" ],
+					[ "ext.geshi.language.io", "1406762728" ],
+					[ "ext.geshi.language.j", "1406762728" ],
+					[ "ext.geshi.language.java", "1406762728" ],
+					[ "ext.geshi.language.java5", "1406762728" ],
+					[ "ext.geshi.language.javascript", "1406762728" ],
+					[ "ext.geshi.language.jquery", "1406762728" ],
+					[ "ext.geshi.language.kixtart", "1406762728" ],
+					[ "ext.geshi.language.klonec", "1406762728" ],
+					[ "ext.geshi.language.klonecpp", "1406762728" ],
+					[ "ext.geshi.language.latex", "1406762728" ],
+					[ "ext.geshi.language.lb", "1406762728" ],
+					[ "ext.geshi.language.ldif", "1406762728" ],
+					[ "ext.geshi.language.lisp", "1406762728" ],
+					[ "ext.geshi.language.llvm", "1406762728" ],
+					[ "ext.geshi.language.locobasic", "1406762728" ],
+					[ "ext.geshi.language.logtalk", "1406762728" ],
+					[ "ext.geshi.language.lolcode", "1406762728" ],
+					[ "ext.geshi.language.lotusformulas", "1406762728" ],
+					[ "ext.geshi.language.lotusscript", "1406762728" ],
+					[ "ext.geshi.language.lscript", "1406762728" ],
+					[ "ext.geshi.language.lsl2", "1406762728" ],
+					[ "ext.geshi.language.lua", "1406762728" ],
+					[ "ext.geshi.language.m68k", "1406762728" ],
+					[ "ext.geshi.language.magiksf", "1406762728" ],
+					[ "ext.geshi.language.make", "1406762728" ],
+					[ "ext.geshi.language.mapbasic", "1406762728" ],
+					[ "ext.geshi.language.matlab", "1406762728" ],
+					[ "ext.geshi.language.mirc", "1406762728" ],
+					[ "ext.geshi.language.mmix", "1406762728" ],
+					[ "ext.geshi.language.modula2", "1406762728" ],
+					[ "ext.geshi.language.modula3", "1406762728" ],
+					[ "ext.geshi.language.mpasm", "1406762728" ],
+					[ "ext.geshi.language.mxml", "1406762728" ],
+					[ "ext.geshi.language.mysql", "1406762728" ],
+					[ "ext.geshi.language.nagios", "1406762728" ],
+					[ "ext.geshi.language.netrexx", "1406762728" ],
+					[ "ext.geshi.language.newlisp", "1406762728" ],
+					[ "ext.geshi.language.nsis", "1406762728" ],
+					[ "ext.geshi.language.oberon2", "1406762728" ],
+					[ "ext.geshi.language.objc", "1406762728" ],
+					[ "ext.geshi.language.objeck", "1406762728" ],
+					[ "ext.geshi.language.ocaml", "1406762728" ],
+					[ "ext.geshi.language.ocaml-brief", "1406762728" ],
+					[ "ext.geshi.language.octave", "1406762728" ],
+					[ "ext.geshi.language.oobas", "1406762728" ],
+					[ "ext.geshi.language.oorexx", "1406762728" ],
+					[ "ext.geshi.language.oracle11", "1406762728" ],
+					[ "ext.geshi.language.oracle8", "1406762728" ],
+					[ "ext.geshi.language.oxygene", "1406762728" ],
+					[ "ext.geshi.language.oz", "1406762728" ],
+					[ "ext.geshi.language.parasail", "1406762728" ],
+					[ "ext.geshi.language.parigp", "1406762728" ],
+					[ "ext.geshi.language.pascal", "1406762728" ],
+					[ "ext.geshi.language.pcre", "1406762728" ],
+					[ "ext.geshi.language.per", "1406762728" ],
+					[ "ext.geshi.language.perl", "1406762728" ],
+					[ "ext.geshi.language.perl6", "1406762728" ],
+					[ "ext.geshi.language.pf", "1406762728" ],
+					[ "ext.geshi.language.php", "1406762728" ],
+					[ "ext.geshi.language.php-brief", "1406762728" ],
+					[ "ext.geshi.language.pic16", "1406762728" ],
+					[ "ext.geshi.language.pike", "1406762728" ],
+					[ "ext.geshi.language.pixelbender", "1406762728" ],
+					[ "ext.geshi.language.pli", "1406762728" ],
+					[ "ext.geshi.language.plsql", "1406762728" ],
+					[ "ext.geshi.language.postgresql", "1406762728" ],
+					[ "ext.geshi.language.povray", "1406762728" ],
+					[ "ext.geshi.language.powerbuilder", "1406762728" ],
+					[ "ext.geshi.language.powershell", "1406762728" ],
+					[ "ext.geshi.language.proftpd", "1406762728" ],
+					[ "ext.geshi.language.progress", "1406762728" ],
+					[ "ext.geshi.language.prolog", "1406762728" ],
+					[ "ext.geshi.language.properties", "1406762728" ],
+					[ "ext.geshi.language.providex", "1406762728" ],
+					[ "ext.geshi.language.purebasic", "1406762728" ],
+					[ "ext.geshi.language.pycon", "1406762728" ],
+					[ "ext.geshi.language.pys60", "1406762728" ],
+					[ "ext.geshi.language.python", "1406762728" ],
+					[ "ext.geshi.language.q", "1406762728" ],
+					[ "ext.geshi.language.qbasic", "1406762728" ],
+					[ "ext.geshi.language.rails", "1406762728" ],
+					[ "ext.geshi.language.rebol", "1406762728" ],
+					[ "ext.geshi.language.reg", "1406762728" ],
+					[ "ext.geshi.language.rexx", "1406762728" ],
+					[ "ext.geshi.language.robots", "1406762728" ],
+					[ "ext.geshi.language.rpmspec", "1406762728" ],
+					[ "ext.geshi.language.rsplus", "1406762728" ],
+					[ "ext.geshi.language.ruby", "1406762728" ],
+					[ "ext.geshi.language.sas", "1406762728" ],
+					[ "ext.geshi.language.scala", "1406762728" ],
+					[ "ext.geshi.language.scheme", "1406762728" ],
+					[ "ext.geshi.language.scilab", "1406762728" ],
+					[ "ext.geshi.language.sdlbasic", "1406762728" ],
+					[ "ext.geshi.language.smalltalk", "1406762728" ],
+					[ "ext.geshi.language.smarty", "1406762728" ],
+					[ "ext.geshi.language.spark", "1406762728" ],
+					[ "ext.geshi.language.sparql", "1406762728" ],
+					[ "ext.geshi.language.sql", "1406762728" ],
+					[ "ext.geshi.language.stonescript", "1406762728" ],
+					[ "ext.geshi.language.systemverilog", "1406762728" ],
+					[ "ext.geshi.language.tcl", "1406762728" ],
+					[ "ext.geshi.language.teraterm", "1406762728" ],
+					[ "ext.geshi.language.text", "1406762728" ],
+					[ "ext.geshi.language.thinbasic", "1406762728" ],
+					[ "ext.geshi.language.tsql", "1406762728" ],
+					[ "ext.geshi.language.typoscript", "1406762728" ],
+					[ "ext.geshi.language.unicon", "1406762728" ],
+					[ "ext.geshi.language.upc", "1406762728" ],
+					[ "ext.geshi.language.urbi", "1406762728" ],
+					[ "ext.geshi.language.uscript", "1406762728" ],
+					[ "ext.geshi.language.vala", "1406762728" ],
+					[ "ext.geshi.language.vb", "1406762728" ],
+					[ "ext.geshi.language.vbnet", "1406762728" ],
+					[ "ext.geshi.language.vedit", "1406762728" ],
+					[ "ext.geshi.language.verilog", "1406762728" ],
+					[ "ext.geshi.language.vhdl", "1406762728" ],
+					[ "ext.geshi.language.vim", "1406762728" ],
+					[ "ext.geshi.language.visualfoxpro", "1406762728" ],
+					[ "ext.geshi.language.visualprolog", "1406762728" ],
+					[ "ext.geshi.language.whitespace", "1406762728" ],
+					[ "ext.geshi.language.whois", "1406762728" ],
+					[ "ext.geshi.language.winbatch", "1406762728" ],
+					[ "ext.geshi.language.xbasic", "1406762728" ],
+					[ "ext.geshi.language.xml", "1406762728" ],
+					[ "ext.geshi.language.xorg_conf", "1406762728" ],
+					[ "ext.geshi.language.xpp", "1406762728" ],
+					[ "ext.geshi.language.yaml", "1406762728" ],
+					[ "ext.geshi.language.z80", "1406762728" ],
+					[ "ext.geshi.language.zxbasic", "1406762728" ],
+					[ "ext.gadget.collapserefs", "1405682864", [ "mediawiki.util" ] ],
+					[ "ext.gadget.directLinkToCommons", "1406538447", [ "mediawiki.util" ] ],
+					[ "ext.gadget.referenceTooltips", "1406776336" ],
+					[ "ext.gadget.preview", "1403532243", [ "mediawiki.util" ] ],
+					[ "ext.gadget.urldecoder", "1405449302", [ "mediawiki.legacy.wikibits" ] ],
+					[ "ext.gadget.addThisArticles", "1397946854" ],
+					[ "ext.gadget.HideInfobox", "1398972514" ],
+					[ "ext.gadget.HideWikimediaNavigation", "1399239252" ],
+					[ "ext.gadget.HideNavboxes", "1398972506" ],
+					[ "ext.gadget.HideExternalLinks", "1398973139" ],
+					[ "ext.gadget.markadmins", "1406384562", [ "mediawiki.util" ] ],
+					[ "ext.gadget.disableUpdatedMarker", "1397834246" ],
+					[ "ext.gadget.OldDiff", "1386876474" ],
+					[ "ext.gadget.HideFlaggedRevs", "1386876474" ],
+					[ "ext.gadget.roundCorners", "1405668012" ],
+					[ "ext.gadget.dropdown-menus", "1406530019" ],
+					[ "ext.gadget.ajaxQuickDelete", "1402505002" ],
+					[ "ext.gadget.relatedIcons", "1406912048" ],
+					[ "mw.MwEmbedSupport", "1406951688", [ "Spinner", "jquery.loadingSpinner", "jquery.mwEmbedUtil", "jquery.triggerQueueCallback", "mw.MwEmbedSupport.style" ] ],
+					[ "Spinner", "1406829752" ],
+					[ "iScroll", "1406829752" ],
+					[ "jquery.loadingSpinner", "1406829752" ],
+					[ "mw.MwEmbedSupport.style", "1406829736" ],
+					[ "mediawiki.UtilitiesTime", "1406829752" ],
+					[ "mediawiki.client", "1406829752" ],
+					[ "mediawiki.absoluteUrl", "1406829752" ],
+					[ "mw.ajaxProxy", "1406829752" ],
+					[ "fullScreenApi", "1406829752" ],
+					[ "jquery.embedMenu", "1406829752" ],
+					[ "jquery.ui.touchPunch", "1406829752", [ "jquery.ui.core", "jquery.ui.mouse" ] ],
+					[ "jquery.triggerQueueCallback", "1406829752" ],
+					[ "jquery.mwEmbedUtil", "1406829752" ],
+					[ "jquery.debouncedresize", "1406829752" ],
+					[ "mw.Language.names", "1406829752" ],
+					[ "mw.Api", "1406829752" ],
+					[ "mw.MediaElement", "1406829752" ],
+					[ "mw.MediaPlayer", "1406829752" ],
+					[ "mw.MediaPlayers", "1406829752", [ "mw.MediaPlayer" ] ],
+					[ "mw.MediaSource", "1406829752" ],
+					[ "mw.EmbedTypes", "1406829752", [ "jquery.client", "mediawiki.Uri", "mw.MediaPlayers" ] ],
+					[
+							"mw.EmbedPlayer",
+							"1406951688",
+							[ "fullScreenApi", "jquery.cookie", "jquery.debouncedresize", "jquery.embedMenu", "jquery.hoverIntent", "jquery.ui.slider", "jquery.ui.touchPunch",
+									"mediawiki.UtilitiesTime", "mediawiki.absoluteUrl", "mediawiki.client", "mediawiki.jqueryMsg", "mw.EmbedPlayerNative", "mw.EmbedTypes",
+									"mw.MediaElement", "mw.MediaSource", "mw.PlayerSkinKskin" ] ],
+					[ "mw.EmbedPlayerKplayer", "1406829752" ],
+					[ "mw.EmbedPlayerGeneric", "1406829752" ],
+					[ "mw.EmbedPlayerJava", "1406829752" ],
+					[ "mw.EmbedPlayerNative", "1406829752" ],
+					[ "mw.EmbedPlayerVLCApp", "1406829752", [ "mediawiki.Uri" ] ],
+					[ "mw.EmbedPlayerImageOverlay", "1406829752" ],
+					[ "mw.EmbedPlayerVlc", "1406829752" ],
+					[ "mw.PlayerSkinKskin", "1406829752" ],
+					[ "mw.PlayerSkinMvpcf", "1406829752" ],
+					[ "mw.TimedText", "1406951687", [ "jquery.ui.dialog", "mw.EmbedPlayer", "mw.TextSource" ] ],
+					[ "mw.TextSource", "1406829752", [ "mediawiki.UtilitiesTime", "mw.ajaxProxy" ] ],
+					[ "schema.Popups", "1364535356", [ "ext.eventLogging" ] ],
+					[ "ext.popups", "1406951687", [ "mediawiki.api", "mediawiki.jqueryMsg", "moment", "schema.Popups" ] ],
+					[ "schema.GuidedTourGuiderImpression", "1365692795", [ "ext.eventLogging" ] ],
+					[ "schema.GuidedTourGuiderHidden", "1365688949", [ "ext.eventLogging" ] ],
+					[ "schema.GuidedTourButtonClick", "1365688950", [ "ext.eventLogging" ] ],
+					[ "schema.GuidedTourInternalLinkActivation", "1365688953", [ "ext.eventLogging" ] ],
+					[ "schema.GuidedTourExternalLinkActivation", "1365688960", [ "ext.eventLogging" ] ],
+					[ "schema.GuidedTourExited", "1365688966", [ "ext.eventLogging" ] ],
+					[ "schema.MediaViewer", "1365934062", [ "ext.eventLogging" ] ],
+					[ "schema.MultimediaViewerNetworkPerformance", "1364916296", [ "ext.eventLogging" ] ],
+					[ "schema.MultimediaViewerDuration", "1365571041", [ "ext.eventLogging" ] ],
+					[ "skins.modern", "1406829747" ],
+					[ "skins.cologneblue", "1406829752" ],
+					[ "ext.wikihiero", "1406829734" ],
+					[ "ext.wikihiero.Special", "1406951688", [ "jquery.spinner" ] ],
+					[ "ext.cite", "1406951687" ],
+					[ "ext.rtlcite", "1406829734" ],
+					[ "ext.specialcite", "1406829752" ],
+					[ "ext.inputBox.styles", "1406829752" ],
+					[ "ext.geshi.local", "1403806582" ],
+					[ "ext.flaggedRevs.basic", "1406829734" ],
+					[ "ext.flaggedRevs.advanced", "1406951688", [ "mediawiki.util" ] ],
+					[ "ext.flaggedRevs.review", "1406951688", [ "mediawiki.jqueryMsg", "mediawiki.user" ] ],
+					[ "ext.categoryTree", "1406951688" ],
+					[ "ext.categoryTree.css", "1406829749" ],
+					[ "mediawiki.api.titleblacklist", "1406829752", [ "mediawiki.api" ] ],
+					[ "ext.securepoll.htmlform", "1406829752" ],
+					[ "ext.securepoll", "1406829752" ],
+					[ "ext.nuke", "1406829752" ],
+					[ "ext.confirmEdit.fancyCaptcha.styles", "1406829752" ],
+					[ "ext.confirmEdit.fancyCaptcha", "1406829752", [ "mediawiki.api" ] ],
+					[ "ext.confirmEdit.fancyCaptchaMobile", "1406829752", [ "mobile.startup" ] ],
+					[ "ext.centralauth", "1406951688", [ "jquery.spinner", "mediawiki.util" ] ],
+					[ "ext.centralauth.centralautologin", "1406829752", [ "mediawiki.jqueryMsg" ] ],
+					[ "ext.centralauth.centralautologin.clearcookie", "1406829752" ],
+					[ "ext.centralauth.noflash", "1406829752" ],
+					[ "ext.centralauth.globalusers", "1406829752" ],
+					[ "ext.centralauth.globalgrouppermissions", "1406829752" ],
+					[ "ext.centralauth.globalrenameuser", "1406829752", [ "mediawiki.util" ] ],
+					[ "ext.dismissableSiteNotice", "1406829752", [ "jquery.cookie", "mediawiki.util" ] ],
+					[ "jquery.ui.multiselect", "1406829752", [ "jquery.ui.droppable", "jquery.ui.sortable", "mediawiki.jqueryMsg" ] ],
+					[ "ext.centralNotice.adminUi", "1406829752", [ "jquery.ui.datepicker", "jquery.ui.multiselect" ] ],
+					[ "ext.centralNotice.adminUi.bannerManager", "1406829752", [ "ext.centralNotice.adminUi", "jquery.ui.dialog" ] ],
+					[ "ext.centralNotice.adminUi.bannerEditor", "1406829752", [ "ext.centralNotice.adminUi", "jquery.ui.dialog" ] ],
+					[ "ext.centralNotice.bannerStats", "1406829752" ],
+					[ "ext.centralNotice.bannerController", "1406829752", [ "jquery.cookie", "jquery.json" ] ],
+					[ "ext.centralNotice.adminUi.campaignManager", "1406829752", [ "ext.centralNotice.adminUi", "jquery.ui.dialog", "jquery.ui.slider" ] ],
+					[ "ext.collection.jquery.jstorage", "1406829752", [ "jquery.json" ] ],
+					[ "ext.collection.suggest", "1406829752", [ "ext.collection.bookcreator" ] ],
+					[ "ext.collection", "1406829752", [ "ext.collection.bookcreator", "jquery.ui.sortable", "mediawiki.language" ] ],
+					[ "ext.collection.bookcreator", "1406829752", [ "ext.collection.jquery.jstorage" ] ],
+					[ "ext.collection.checkLoadFromLocalStorage", "1406829752", [ "ext.collection.jquery.jstorage" ] ],
+					[ "ext.abuseFilter", "1406829752" ],
+					[ "ext.abuseFilter.edit", "1406951688", [ "jquery.spinner", "jquery.textSelection", "mediawiki.api" ] ],
+					[ "ext.abuseFilter.tools", "1406829752", [ "jquery.spinner", "mediawiki.api", "user.tokens" ] ],
+					[ "ext.abuseFilter.examine", "1406951688", [ "jquery.spinner", "mediawiki.api" ] ],
+					[ "jquery.wikiEditor", "1406951688", [ "jquery.textSelection" ], "ext.wikiEditor" ],
+					[ "jquery.wikiEditor.dialogs", "1406829752", [ "jquery.tabIndex", "jquery.ui.dialog", "jquery.wikiEditor.toolbar" ], "ext.wikiEditor" ],
+					[ "jquery.wikiEditor.dialogs.config", "1406951688", [ "jquery.suggestions", "jquery.wikiEditor.dialogs", "mediawiki.Title", "mediawiki.jqueryMsg" ],
+							"ext.wikiEditor" ],
+					[ "jquery.wikiEditor.preview", "1406829752", [ "jquery.wikiEditor" ], "ext.wikiEditor" ],
+					[ "jquery.wikiEditor.previewDialog", "1406829752", [ "jquery.wikiEditor.dialogs" ], "ext.wikiEditor" ],
+					[ "jquery.wikiEditor.publish", "1406829752", [ "jquery.wikiEditor.dialogs" ], "ext.wikiEditor" ],
+					[ "jquery.wikiEditor.toolbar", "1406829752", [ "jquery.async", "jquery.cookie", "jquery.wikiEditor", "jquery.wikiEditor.toolbar.i18n" ], "ext.wikiEditor" ],
+					[ "jquery.wikiEditor.toolbar.config", "1406829752", [ "jquery.wikiEditor.toolbar" ], "ext.wikiEditor" ],
+					[ "jquery.wikiEditor.toolbar.i18n", "1356998400", [], "ext.wikiEditor" ],
+					[ "ext.wikiEditor", "1406829752", [ "jquery.wikiEditor" ], "ext.wikiEditor" ],
+					[ "ext.wikiEditor.dialogs", "1406829752", [ "ext.wikiEditor.toolbar", "jquery.wikiEditor.dialogs.config" ], "ext.wikiEditor" ],
+					[ "ext.wikiEditor.preview", "1406829752", [ "ext.wikiEditor", "jquery.wikiEditor.preview" ], "ext.wikiEditor" ],
+					[ "ext.wikiEditor.previewDialog", "1406829752", [ "ext.wikiEditor", "jquery.wikiEditor.previewDialog" ], "ext.wikiEditor" ],
+					[ "ext.wikiEditor.publish", "1406829752", [ "ext.wikiEditor", "jquery.wikiEditor.publish" ], "ext.wikiEditor" ],
+					[ "ext.wikiEditor.tests.toolbar", "1406829752", [ "ext.wikiEditor.toolbar" ], "ext.wikiEditor" ],
+					[ "ext.wikiEditor.toolbar", "1406829752", [ "ext.wikiEditor", "jquery.wikiEditor.toolbar.config" ], "ext.wikiEditor" ],
+					[ "ext.wikiEditor.toolbar.styles", "1406829751", [], "ext.wikiEditor" ],
+					[ "ext.wikiEditor.toolbar.hideSig", "1406829752", [], "ext.wikiEditor" ],
+					[ "ext.MassMessage.special.js", "1406951688", [ "jquery.byteLimit", "jquery.throttle-debounce", "jquery.ui.autocomplete", "mediawiki.jqueryMsg" ] ],
+					[ "ext.MassMessage.special", "1406829752" ],
+					[ "ext.betaFeatures", "1406829752", [ "jquery.client" ] ],
+					[ "ext.betaFeatures.popup", "1406829752", [ "jquery.tipsy" ] ],
+					[ "mmv.lightboximage", "1406829752", [ "mmv.base" ] ],
+					[ "mmv.lightboxinterface", "1406951688", [ "mmv.ui.canvas", "mmv.ui.canvasButtons", "mmv.ui.metadataPanel" ] ],
+					[ "mmv.ThumbnailWidthCalculator", "1406829752", [ "jquery.hidpi", "mmv.model.ThumbnailWidth" ] ],
+					[ "mmv.HtmlUtils", "1406829736", [ "mmv.base" ] ],
+					[ "mmv.model", "1406829752", [ "mmv.base", "oojs" ] ],
+					[ "mmv.model.IwTitle", "1406829752", [ "mmv.model" ] ],
+					[ "mmv.model.EmbedFileInfo", "1406829752", [ "mmv.model" ] ],
+					[ "mmv.model.License", "1406829752", [ "mmv.HtmlUtils", "mmv.model" ] ],
+					[ "mmv.model.FileUsage", "1406829752", [ "mmv.model" ] ],
+					[ "mmv.model.Image", "1406829752", [ "mmv.model.License" ] ],
+					[ "mmv.model.Repo", "1406829752", [ "mmv.model" ] ],
+					[ "mmv.model.Thumbnail", "1406829752", [ "mmv.model" ] ],
+					[ "mmv.model.ThumbnailWidth", "1406829752", [ "mmv.model" ] ],
+					[ "mmv.model.User", "1406829752", [ "mmv.model" ] ],
+					[ "mmv.model.TaskQueue", "1406829752", [ "mmv.model" ] ],
+					[
+							"mmv.provider",
+							"1406829752",
+							[ "mediawiki.Title", "mmv.model.FileUsage", "mmv.model.Image", "mmv.model.IwTitle", "mmv.model.Repo", "mmv.model.Thumbnail", "mmv.model.User",
+									"mmv.performance" ] ],
+					[ "mmv.routing", "1406829752", [ "mediawiki.Title", "oojs" ] ],
+					[ "mmv.base", "1406829752" ],
+					[ "mmv.ui", "1406829752", [ "mmv.base" ] ],
+					[ "mmv.ui.canvas", "1406951687", [ "mmv.ThumbnailWidthCalculator", "mmv.ui" ] ],
+					[ "mmv.ui.categories", "1406951688", [ "mmv.ui", "oojs" ] ],
+					[ "mmv.ui.stripeButtons", "1406951688", [ "jquery.throttle-debounce", "jquery.tipsy", "mediawiki.jqueryMsg", "mmv.ui", "oojs" ] ],
+					[ "mmv.ui.description", "1406829752", [ "mmv.HtmlUtils", "mmv.ui", "oojs" ] ],
+					[ "mmv.ui.fileUsage", "1406951688", [ "mediawiki.Uri", "mediawiki.jqueryMsg", "mmv.model.IwTitle", "mmv.ui" ] ],
+					[ "mmv.ui.permission", "1406951688", [ "jquery.color", "mediawiki.jqueryMsg", "mmv.ActionLogger", "mmv.HtmlUtils", "mmv.ui" ] ],
+					[ "mmv.ui.truncatableTextField", "1406829752", [ "mmv.HtmlUtils", "mmv.ui", "oojs" ] ],
+					[ "mmv.ui.progressBar", "1406829752", [ "mmv.ui", "oojs" ] ],
+					[
+							"mmv.ui.metadataPanel",
+							"1406951688",
+							[ "mediawiki.user", "mmv.ui.categories", "mmv.ui.description", "mmv.ui.fileUsage", "mmv.ui.permission", "mmv.ui.progressBar", "mmv.ui.reuse.dialog",
+									"mmv.ui.stripeButtons", "mmv.ui.truncatableTextField" ] ],
+					[ "mmv.embedFileFormatter", "1406951688", [ "mmv.HtmlUtils", "mmv.routing" ] ],
+					[ "mmv.ui.reuse.dialog", "1406829752", [ "mmv.ui", "oojs" ] ],
+					[ "mmv.ui.reuse.utils", "1406829752", [ "mmv.HtmlUtils", "mmv.ui", "oojs-ui" ] ],
+					[ "mmv.ui.reuse.tab", "1406829752", [ "mmv.ui", "oojs" ] ],
+					[ "mmv.ui.reuse.share", "1406951688", [ "mmv.routing", "mmv.ui.reuse.tab", "mmv.ui.reuse.utils" ] ],
+					[ "mmv.ui.reuse.embed", "1406951688", [ "mediawiki.user", "mmv.embedFileFormatter", "mmv.model.EmbedFileInfo", "mmv.ui.reuse.tab", "mmv.ui.reuse.utils" ] ],
+					[ "mmv.ui.reuse.download", "1406951688", [ "mediawiki.ui", "mediawiki.ui.button", "mmv.embedFileFormatter", "mmv.ui.reuse.tab", "mmv.ui.reuse.utils" ] ],
+					[ "mmv.ui.canvasButtons", "1406951688", [ "mmv.ui", "oojs" ] ],
+					[ "mmv.logger", "1406829736", [ "mmv.base" ] ],
+					[ "mmv.performance", "1406829752", [ "ext.eventLogging", "mmv.logger", "oojs" ] ],
+					[ "mmv.api", "1406829752", [ "mediawiki.api", "mmv.base", "oojs" ] ],
+					[ "mmv.Config", "1406829736", [ "mediawiki.user", "mmv.base" ] ],
+					[
+							"mmv",
+							"1406951687",
+							[ "jquery.fullscreen", "jquery.scrollTo", "mmv.DurationLogger", "mmv.api", "mmv.lightboximage", "mmv.lightboxinterface", "mmv.model.TaskQueue",
+									"mmv.provider", "mmv.routing" ] ],
+					[ "mmv.bootstrap", "1406951687",
+							[ "jquery.hashchange", "jquery.scrollTo", "mediawiki.Title", "mmv.ActionLogger", "mmv.Config", "mmv.DurationLogger", "mmv.HtmlUtils" ] ],
+					[ "mmv.bootstrap.autostart", "1406868960", [ "mmv.bootstrap" ] ],
+					[ "mmv.ActionLogger", "1406829736", [ "ext.eventLogging", "mmv.logger", "oojs" ] ],
+					[ "mmv.DurationLogger", "1406829736", [ "ext.eventLogging", "mediawiki.user", "mmv.logger", "oojs" ] ],
+					[ "mmv.head", "1406829752", [ "mediawiki.user", "mmv.base" ] ],
+					[ "jquery.scrollTo", "1406829736" ],
+					[ "jquery.hashchange", "1406897280" ],
+					[ "skins.vector.beta", "1406829752" ],
+					[ "skins.vector.header.beta", "1406829752", [], "other" ],
+					[ "skins.vector.headerjs.beta", "1406829752", [ "jquery.throttle-debounce" ] ],
+					[ "skins.vector.compactPersonalBar.trackClick", "1406829752", [ "mediawiki.user", "skins.vector.compactPersonalBar.schema" ] ],
+					[ "skins.vector.compactPersonalBar.defaultTracking", "1406829752", [ "skins.vector.compactPersonalBar.trackClick" ] ],
+					[ "skins.vector.compactPersonalBar", "1406951688", [ "skins.vector.compactPersonalBar.trackClick" ] ],
+					[ "ext.parsoid.styles", "1406829752" ],
+					[ "rangy", "1406829752" ],
+					[ "jquery.visibleText", "1406829752" ],
+					[ "Base64.js", "1406829752" ],
+					[ "easy-deflate.core", "1406829752", [ "Base64.js" ] ],
+					[ "easy-deflate.deflate", "1406829752", [ "easy-deflate.core" ] ],
+					[ "unicodejs.wordbreak", "1406829752" ],
+					[ "ext.visualEditor.viewPageTarget.icons", "1406829752" ],
+					[ "ext.visualEditor.viewPageTarget.init", "1406951688", [ "mediawiki.Title", "mediawiki.Uri", "mediawiki.page.startup", "user.options" ] ],
+					[ "ext.visualEditor.viewPageTarget.noscript", "1406934524" ],
+					[ "ext.visualEditor.viewPageTarget", "1406951688",
+							[ "ext.visualEditor.core.desktop", "ext.visualEditor.mediawiki", "jquery.placeholder", "mediawiki.feedback" ] ],
+					[ "ext.visualEditor.base", "1406829752", [ "oojs-ui", "unicodejs.wordbreak" ] ],
+					[ "ext.visualEditor.mediawiki", "1406829752",
+							[ "easy-deflate.deflate", "ext.visualEditor.base", "jquery.visibleText", "mediawiki.Title", "mediawiki.Uri", "mediawiki.user" ] ],
+					[ "ext.visualEditor.standalone", "1406829752", [ "ext.visualEditor.base", "jquery.i18n" ] ],
+					[ "ext.visualEditor.data", "1406951688", [ "ext.visualEditor.base" ] ],
+					[ "ext.visualEditor.core", "1406951688", [ "ext.visualEditor.base", "jquery.uls.data", "rangy" ] ],
+					[ "ext.visualEditor.core.desktop", "1406829752", [ "ext.visualEditor.core" ] ],
+					[
+							"ext.visualEditor.mwcore",
+							"1406951688",
+							[ "ext.visualEditor.core", "jquery.autoEllipsis", "jquery.byteLimit", "mediawiki.Title", "mediawiki.action.history.diff", "mediawiki.jqueryMsg",
+									"mediawiki.skinning.content.parsoid", "mediawiki.user" ] ],
+					[ "ext.visualEditor.mwformatting", "1406951688", [ "ext.visualEditor.mwcore" ] ],
+					[ "ext.visualEditor.mwimage.core", "1406829752", [ "ext.visualEditor.mwcore" ] ],
+					[ "ext.visualEditor.mwimage", "1406951688", [ "ext.visualEditor.mwimage.core" ] ],
+					[ "ext.visualEditor.mwlink", "1406951688", [ "ext.visualEditor.mwcore" ] ],
+					[ "ext.visualEditor.mwmeta", "1406951688", [ "ext.visualEditor.mwlink" ] ],
+					[ "ext.visualEditor.mwreference.core", "1406951688", [ "ext.visualEditor.mwcore" ] ],
+					[ "ext.visualEditor.mwreference", "1406951688", [ "ext.visualEditor.mwreference.core", "ext.visualEditor.mwtransclusion" ] ],
+					[ "ext.visualEditor.mwtransclusion.core", "1406829752", [ "ext.visualEditor.mwcore" ] ],
+					[ "ext.visualEditor.mwtransclusion", "1406951688", [ "ext.visualEditor.mwtransclusion.core" ] ],
+					[ "ext.visualEditor.language", "1406951688", [ "ext.visualEditor.core", "mediawiki.language.names" ] ],
+					[ "ext.visualEditor.mwalienextension", "1406829752", [ "ext.visualEditor.mwcore" ] ],
+					[ "ext.visualEditor.mwgallery", "1406951688", [ "ext.visualEditor.mwcore" ] ],
+					[ "ext.visualEditor.experimental", "1356998400", [ "ext.visualEditor.language", "ext.visualEditor.mwalienextension" ] ],
+					[ "ext.visualEditor.icons", "1406829752" ],
+					[ "ext.visualEditor.iehacks", "1406829752" ],
+					[ "ext.templateData", "1406829752" ],
+					[ "ext.templateDataGenerator.editPage", "1406951688", [ "ext.templateDataGenerator.core" ] ],
+					[ "ext.templateDataGenerator.core", "1406951688", [ "jquery.ui.dialog" ] ],
+					[ "mediawiki.libs.guiders", "1406829752" ],
+					[ "ext.guidedTour.styles", "1406829752", [ "mediawiki.libs.guiders", "mediawiki.ui.button" ] ],
+					[ "ext.guidedTour.siteStyles", "1399581249", [ "ext.guidedTour.styles" ] ],
+					[ "ext.guidedTour.lib.internal", "1406829752" ],
+					[
+							"ext.guidedTour.lib",
+							"1406951688",
+							[ "ext.guidedTour.lib.internal", "ext.guidedTour.siteStyles", "mediawiki.Title", "mediawiki.jqueryMsg", "mediawiki.user",
+									"schema.GuidedTourButtonClick", "schema.GuidedTourExited", "schema.GuidedTourExternalLinkActivation", "schema.GuidedTourGuiderHidden",
+									"schema.GuidedTourGuiderImpression", "schema.GuidedTourInternalLinkActivation" ] ],
+					[ "ext.guidedTour.launcher", "1406829752" ],
+					[ "ext.guidedTour", "1406829752", [ "ext.guidedTour.lib" ] ],
+					[ "ext.guidedTour.tour.firstedit", "1406951688", [ "ext.guidedTour" ] ],
+					[ "ext.guidedTour.tour.firsteditve", "1406951688", [ "ext.guidedTour" ] ],
+					[ "ext.guidedTour.tour.test", "1406829752", [ "ext.guidedTour" ] ],
+					[ "ext.guidedTour.tour.uprightdownleft", "1406829752", [ "ext.guidedTour" ] ],
+					[ "mobile.app.site", "1400781945" ],
+					[ "mobile.app.pagestyles.android", "1406829752" ],
+					[ "mobile.app.pagestyles.android.night", "1406829752" ],
+					[ "mobile.app.pagestyles.ios", "1406829752" ],
+					[ "mobile.app.preview", "1406829752" ],
+					[ "ext.mantle", "1406829752" ],
+					[ "ext.mantle.modules", "1406829752", [ "ext.mantle" ] ],
+					[ "ext.mantle.templates", "1406829752", [ "ext.mantle" ] ],
+					[ "ext.mantle.hogan", "1406829752", [ "ext.mantle.templates" ] ],
+					[ "ext.mantle.handlebars", "1406829752", [ "ext.mantle.templates" ] ],
+					[ "ext.mantle.oo", "1406829752", [ "ext.mantle.modules" ] ],
+					[ "ext.mantle.views", "1406829752", [ "ext.mantle.oo", "ext.mantle.templates" ] ],
+					[ "mobile.templates", "1406829743" ],
+					[ "mobile.bridge", "1406829752" ],
+					[ "mobile.file.scripts", "1406829752", [ "mobile.startup" ] ],
+					[ "mobile.styles.mainpage", "1406829768", [], "other" ],
+					[ "mobile.pagelist.styles", "1406829752" ],
+					[ "mobile.pagelist.scripts", "1406829743", [ "mobile.watchstar" ] ],
+					[ "skins.minerva.tablet.styles", "1406829752" ],
+					[ "mobile.toc", "1406951687", [ "mobile.loggingSchemas", "mobile.toggling" ] ],
+					[ "tablet.scripts", "1356998400", [ "mobile.toc" ] ],
+					[ "skins.minerva.chrome.styles", "1406829752" ],
+					[ "skins.minerva.content.styles", "1406829752" ],
+					[ "skins.minerva.chrome.styles.beta", "1406829752" ],
+					[ "skins.minerva.drawers.styles", "1406951345" ],
+					[ "mobile.head", "1406951687", [ "mediawiki.jqueryMsg" ] ],
+					[ "mobile.startup", "1406951687", [ "mobile.redlinks", "mobile.templates", "mobile.user" ] ],
+					[ "mobile.redlinks", "1406829743", [ "mediawiki.user", "mobile.head" ] ],
+					[ "mobile.user", "1406829743", [ "mediawiki.user", "mobile.head" ] ],
+					[ "mobile.editor", "1406829743", [ "mobile.stable.common" ] ],
+					[ "mobile.editor.api", "1406951688", [ "mobile.stable" ] ],
+					[ "mobile.editor.common", "1406951688", [ "mobile.editor.api" ] ],
+					[ "mobile.editor.ve", "1406951688", [ "ext.visualEditor.mobileViewTarget", "mobile.beta", "mobile.editor.common" ] ],
+					[ "mobile.editor.overlay", "1406951688", [ "mobile.editor.common" ] ],
+					[ "mobile.uploads", "1406951688", [ "mobile.editor.api" ] ],
+					[ "mobile.beta.common", "1356998400", [ "mobile.loggingSchemas", "mobile.stable.common" ] ],
+					[ "mobile.geonotahack", "1406951688", [ "mobile.loggingSchemas", "mobile.stable.common" ] ],
+					[ "mobile.talk", "1406951687", [ "mobile.beta.common", "mobile.stable" ] ],
+					[ "mobile.beta", "1406829752", [ "mobile.beta.common", "mobile.stable" ] ],
+					[ "mobile.search", "1406951687", [ "mobile.pagelist.scripts" ] ],
+					[ "mobile.search.stable", "1356998400", [ "mobile.search" ] ],
+					[ "mobile.talk.common", "1406951688", [ "mobile.talk" ] ],
+					[ "mobile.ajaxpages", "1406829752", [ "mobile.startup" ] ],
+					[ "mobile.mediaViewer", "1406951688", [ "mobile.overlays" ] ],
+					[ "mobile.alpha", "1406829752", [ "mobile.ajaxpages", "mobile.beta" ] ],
+					[ "mobile.toast.styles", "1406829743" ],
+					[ "mobile.stable.styles", "1406829743" ],
+					[ "mobile.overlays", "1406951688", [ "mobile.startup" ] ],
+					[ "mobile.stable.common", "1406951688", [ "mobile.overlays", "mobile.toast.styles" ] ],
+					[ "mobile.references", "1406829743", [ "mobile.stable.common" ] ],
+					[ "mobile.toggling", "1406829743", [ "mobile.startup" ] ],
+					[ "mobile.contentOverlays", "1406829743", [ "mobile.overlays" ] ],
+					[ "mobile.newusers", "1406951688", [ "mobile.contentOverlays", "mobile.editor", "mobile.loggingSchemas" ] ],
+					[ "mobile.watchstar", "1406951688", [ "mobile.stable.common" ] ],
+					[ "mobile.stable", "1406951687", [ "mobile.loggingSchemas", "mobile.pagelist.scripts", "mobile.references", "mobile.stable.styles" ] ],
+					[ "mobile.languages", "1406951688", [ "mobile.overlays" ] ],
+					[ "mobile.issues", "1406951687", [ "mobile.overlays" ] ],
+					[ "mobile.nearby", "1406951687", [ "jquery.json", "mobile.loggingSchemas", "mobile.pagelist.scripts", "mobile.special.nearby.styles" ] ],
+					[ "mobile.notifications", "1406829743", [ "mobile.overlays" ] ],
+					[ "mobile.notifications.overlay", "1406951688", [ "ext.echo.base", "mobile.stable" ] ],
+					[ "mobile.desktop", "1406829736", [ "jquery.cookie" ] ],
+					[ "mobile.special.app.scripts", "1406829752", [ "mobile.ajaxpages", "mobile.search", "mobile.stable.styles" ] ],
+					[ "mobile.special.app.styles", "1406829752" ],
+					[ "mobile.special.mobileoptions.scripts", "1406951688", [ "mobile.startup" ] ],
+					[ "mobile.special.nearby.styles", "1406829752" ],
+					[ "mobile.special.nearby.beta", "1406951688", [ "mobile.beta.common", "mobile.nearby" ] ],
+					[ "mobile.special.nearby.scripts", "1406951688", [ "mobile.nearby" ] ],
+					[ "mobile.special.uploads.scripts", "1406951688", [ "mobile.stable" ] ],
+					[ "mobile.special.mobilediff.scripts", "1406829752", [ "mobile.loggingSchemas", "mobile.stable.common" ] ],
+					[ "zerobanner.config.styles", "1406829752" ],
+					[ "ext.math.styles", "1406829747" ],
+					[ "ext.math.mathjax.enabler", "1406829743" ],
+					[ "ext.math.mathjax.mathjax", "1406829752" ],
+					[ "ext.math.mathjax.localization", "1406829752", [ "ext.math.mathjax.mathjax" ] ],
+					[ "ext.math.mathjax.jax.config", "1406829752", [ "ext.math.mathjax.mathjax" ] ],
+					[ "ext.math.mathjax.extensions.ui", "1406829752", [ "ext.math.mathjax.mathjax" ] ],
+					[ "ext.math.mathjax.extensions.TeX", "1406829752", [ "ext.math.mathjax.mathjax" ] ],
+					[ "ext.math.mathjax.extensions.mml2jax", "1406829752", [ "ext.math.mathjax.mathjax" ] ],
+					[ "ext.math.mathjax.extensions", "1356998400", [ "ext.math.mathjax.extensions.TeX", "ext.math.mathjax.extensions.mml2jax", "ext.math.mathjax.extensions.ui" ] ],
+					[ "ext.math.mathjax.jax.element.mml.optable", "1406829752", [ "ext.math.mathjax.jax.element.mml" ] ],
+					[ "ext.math.mathjax.jax.element.mml", "1406829752", [ "ext.math.mathjax.mathjax" ] ],
+					[ "ext.math.mathjax.jax.input.MathML", "1406829752", [ "ext.math.mathjax.jax.config", "ext.math.mathjax.jax.element.mml" ] ],
+					[ "ext.math.mathjax.jax.input.TeX", "1406829752", [ "ext.math.mathjax.jax.config", "ext.math.mathjax.jax.element.mml" ] ],
+					[ "ext.math.mathjax.jax.output.NativeMML", "1406829752", [ "ext.math.mathjax.jax.config", "ext.math.mathjax.jax.element.mml" ] ],
+					[ "ext.math.mathjax.jax.output.HTML-CSS.autoload", "1406829752", [ "ext.math.mathjax.jax.output.HTML-CSS" ] ],
+					[ "ext.math.mathjax.jax.output.HTML-CSS", "1406829752", [ "ext.math.mathjax.jax.config", "ext.math.mathjax.jax.element.mml" ] ],
+					[ "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata", "1406829752", [ "ext.math.mathjax.jax.output.HTML-CSS" ] ],
+					[ "ext.math.mathjax.jax.output.SVG.autoload", "1406829752", [ "ext.math.mathjax.jax.output.SVG" ] ],
+					[ "ext.math.mathjax.jax.output.SVG", "1406829752", [ "ext.math.mathjax.jax.config", "ext.math.mathjax.jax.element.mml" ] ],
+					[ "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata", "1406829752", [ "ext.math.mathjax.jax.output.SVG" ] ],
+					[ "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.MainJS", "1406829752", [ "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata" ] ],
+					[ "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.Main", "1406829752", [ "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata" ] ],
+					[ "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.AMS", "1406829752", [ "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata" ] ],
+					[ "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.Extra", "1406829752", [ "ext.math.mathjax.jax.output.HTML-CSS.fonts.TeX.fontdata" ] ],
+					[ "ext.math.mathjax.jax.output.SVG.fonts.TeX.MainJS", "1406829752", [ "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata" ] ],
+					[ "ext.math.mathjax.jax.output.SVG.fonts.TeX.Main", "1406829752", [ "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata" ] ],
+					[ "ext.math.mathjax.jax.output.SVG.fonts.TeX.AMS", "1406829752", [ "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata" ] ],
+					[ "ext.math.mathjax.jax.output.SVG.fonts.TeX.Extra", "1406829752", [ "ext.math.mathjax.jax.output.SVG.fonts.TeX.fontdata" ] ],
+					[ "ext.math.editbutton.enabler", "1406951688", [ "mediawiki.action.edit" ] ],
+					[ "ext.math.visualEditor", "1406951688", [ "ext.visualEditor.mwcore" ] ],
+					[ "ext.babel", "1406829752" ],
+					[ "ext.vipsscaler", "1406829752", [ "jquery.ucompare" ] ],
+					[ "jquery.ucompare", "1406829752" ],
+					[ "ext.apiSandbox", "1406951687", [ "jquery.ui.button", "mediawiki.util" ] ],
+					[ "ext.interwiki.specialpage", "1406829752", [ "jquery.makeCollapsible" ] ],
+					[ "ext.echo.base", "1406951687", [ "schema.Echo", "schema.EchoInteraction", "schema.EchoMail" ] ],
+					[ "ext.echo.desktop", "1406829752", [ "ext.echo.base", "mediawiki.Uri", "mediawiki.jqueryMsg", "mediawiki.user" ] ],
+					[ "ext.echo.overlay", "1406951688", [ "ext.echo.desktop" ] ],
+					[ "ext.echo.special", "1406951688", [ "ext.echo.desktop", "mediawiki.ui.button" ] ],
+					[ "ext.echo.alert", "1406829752" ],
+					[ "ext.echo.badge", "1406829746" ],
+					[ "ext.thanks", "1406829752" ],
+					[ "ext.thanks.revthank", "1406951688", [ "ext.thanks", "jquery.ui.dialog", "mediawiki.api", "mediawiki.jqueryMsg", "user.tokens" ] ],
+					[ "ext.thanks.mobilediff", "1406951688", [ "mobile.special.mobilediff.scripts" ] ],
+					[ "ext.thanks.flowthank", "1406829752", [ "ext.thanks", "mediawiki.api", "mediawiki.jqueryMsg", "user.tokens" ] ],
+					[ "ext.disambiguator.visualEditor", "1406951688", [ "ext.visualEditor.mediawiki", "ext.visualEditor.mwmeta" ] ],
+					[ "ext.codeEditor", "1406829752", [ "ext.wikiEditor.toolbar", "jquery.codeEditor" ], "ext.wikiEditor" ],
+					[ "jquery.codeEditor", "1406951688", [ "ext.codeEditor.ace", "jquery.ui.resizable", "jquery.wikiEditor", "mediawiki.api", "user.options" ], "ext.wikiEditor" ],
+					[ "ext.codeEditor.ace", "1406829752", [], "ext.codeEditor.ace" ],
+					[ "ext.codeEditor.ace.modes", "1406829752", [ "ext.codeEditor.ace" ], "ext.codeEditor.ace" ],
+					[ "ext.codeEditor.geshi", "1406829752", [], "ext.wikiEditor" ],
+					[ "ext.scribunto", "1406951687", [ "jquery.ui.dialog" ] ],
+					[ "ext.scribunto.edit", "1406951688", [ "ext.scribunto", "jquery.spinner", "mediawiki.api" ] ],
+					[ "schema.GettingStartedNavbarNoArticle", "1362481517", [ "ext.eventLogging" ] ],
+					[ "schema.GettingStartedRedirectImpression", "1364353952", [ "ext.eventLogging" ] ],
+					[ "ext.guidedTour.tour.gettingstartedtasktoolbar", "1406829752", [ "ext.gettingstarted.logging", "ext.guidedTour" ] ],
+					[ "ext.guidedTour.tour.gettingstartedtasktoolbarve", "1406829752", [ "ext.gettingstarted.logging", "ext.guidedTour" ] ],
+					[ "ext.gettingstarted.logging", "1406829752", [ "json", "mediawiki.Title", "mediawiki.action.view.postEdit", "mediawiki.user" ] ],
+					[ "ext.gettingstarted.api", "1406829752", [ "mediawiki.Title", "mediawiki.api" ] ],
+					[ "ext.gettingstarted.taskToolbar", "1406829752", [ "ext.gettingstarted.api", "ext.gettingstarted.logging", "ext.guidedTour.lib" ] ],
+					[
+							"ext.gettingstarted.return",
+							"1406951688",
+							[ "ext.gettingstarted.api", "ext.gettingstarted.logging", "ext.guidedTour.lib", "mediawiki.Uri", "schema.GettingStartedNavbarNoArticle",
+									"schema.GettingStartedRedirectImpression" ] ],
+					[ "ext.gettingstarted.user", "1406829736", [ "mediawiki.user" ] ],
+					[ "ext.guidedTour.tour.anonymouseditoracquisitionpreeditv1", "1406829752",
+							[ "ext.gettingstarted.anonymousEditorAcquisition", "ext.guidedTour", "schema.SignupExpCTAImpression" ] ],
+					[ "ext.guidedTour.tour.anonymouseditoracquisitionpreeditv2", "1406829752",
+							[ "ext.gettingstarted.anonymousEditorAcquisition", "ext.guidedTour", "schema.SignupExpCTAImpression" ] ],
+					[
+							"ext.gettingstarted.anonymousEditorAcquisition",
+							"1406829752",
+							[ "ext.gettingstarted.user", "ext.guidedTour.launcher", "mediawiki.Title", "mediawiki.Uri", "mediawiki.cookie", "schema.SignupExpCTAButtonClick",
+									"schema.SignupExpPageLinkClick" ] ],
+					[ "schema.SignupExpPageLinkClick", "1365963414", [ "ext.eventLogging" ] ],
+					[ "schema.SignupExpCTAImpression", "1365963423", [ "ext.eventLogging" ] ],
+					[ "schema.SignupExpCTAButtonClick", "1365963428", [ "ext.eventLogging" ] ],
+					[ "ext.gettingstarted.assignToken", "1406829736", [ "ext.gettingstarted.user" ] ],
+					[ "ext.eventLogging", "1406829736", [ "json", "mediawiki.util" ] ],
+					[ "ext.eventLogging.subscriber", "1406829736" ],
+					[ "ext.eventLogging.jsonSchema", "1406829752" ],
+					[ "ext.campaigns", "1406829752", [ "jquery.cookie" ] ],
+					[ "schema.TimingData", "1364253208", [ "ext.eventLogging" ] ],
+					[ "schema.DeprecatedUsage", "1364904587", [ "ext.eventLogging" ] ],
+					[ "schema.JQMigrateUsage", "1365771847", [ "ext.eventLogging" ] ],
+					[ "ext.wikimediaEvents.ve", "1406829752", [ "ext.visualEditor.base" ] ],
+					[ "ext.wikimediaEvents.deprecate", "1406829752" ],
+					[ "schema.NavigationTiming", "1365363652", [ "ext.eventLogging" ] ],
+					[ "ext.navigationTiming", "1406829736", [ "schema.NavigationTiming" ] ],
+					[ "ext.uls.languagenames", "1406225859" ],
+					[ "ext.uls.messages", "1406222527", [ "ext.uls.i18n" ] ],
+					[ "ext.uls.buttons", "1406829752" ],
+					[ "ext.uls.displaysettings", "1406829752", [ "ext.uls.languagesettings", "ext.uls.mediawiki", "ext.uls.webfonts", "mediawiki.api.parse" ] ],
+					[ "ext.uls.geoclient", "1406829752" ],
+					[ "ext.uls.ime", "1406951687", [ "ext.uls.mediawiki", "ext.uls.preferences", "jquery.ime" ] ],
+					[ "ext.uls.nojs", "1406829734" ],
+					[ "ext.uls.init", "1406829752", [ "jquery.client", "jquery.cookie", "mediawiki.Uri" ] ],
+					[ "ext.uls.eventlogger", "1406829736", [ "mediawiki.user", "schema.UniversalLanguageSelector" ] ],
+					[ "ext.uls.i18n", "1406829752", [ "jquery.i18n", "mediawiki.util" ] ],
+					[ "ext.uls.inputsettings", "1406829752", [ "ext.uls.ime", "ext.uls.languagesettings" ] ],
+					[ "ext.uls.interface", "1406951688", [ "ext.uls.webfonts", "jquery.tipsy", "mediawiki.jqueryMsg" ] ],
+					[ "ext.uls.languagesettings", "1406829752", [ "ext.uls.buttons", "ext.uls.messages", "ext.uls.preferences", "jquery.uls.grid" ] ],
+					[ "ext.uls.preferences", "1406829752", [ "mediawiki.user" ] ],
+					[ "ext.uls.compactlinks", "1406829752", [ "ext.uls.mediawiki", "jquery.uls.compact", "mediawiki.language", "mediawiki.ui.button" ] ],
+					[ "ext.uls.webfonts", "1406829752", [ "ext.uls.init", "ext.uls.preferences" ] ],
+					[ "ext.uls.webfonts.fonts", "1356998400", [ "ext.uls.webfonts.repository", "jquery.uls.data", "jquery.webfonts" ] ],
+					[ "ext.uls.webfonts.repository", "1406829752" ],
+					[ "jquery.i18n", "1406829752", [ "mediawiki.libs.pluralruleparser" ] ],
+					[ "jquery.ime", "1406829752" ],
+					[ "ext.uls.mediawiki", "1406829752", [ "ext.uls.init", "ext.uls.languagenames", "ext.uls.messages", "jquery.uls" ] ],
+					[ "jquery.uls", "1406829752", [ "jquery.i18n", "jquery.uls.data", "jquery.uls.grid" ] ],
+					[ "jquery.uls.compact", "1406829752", [ "jquery.uls" ] ],
+					[ "jquery.uls.data", "1406829752" ],
+					[ "jquery.uls.grid", "1406829752" ],
+					[ "jquery.webfonts", "1406829752" ],
+					[ "ext.uls.pt", "1406829752" ],
+					[ "ext.uls.interlanguage", "1406829736" ],
+					[ "rangy.core", "1406829752" ],
+					[ "globeCoordinate.js", "1406829752" ],
+					[ "qunit.parameterize", "1406829752", [ "jquery.qunit" ] ],
+					[ "time.js", "1406829752", [ "jquery" ] ],
+					[ "time.js.validTimeDefinitions", "1406829752", [ "time.js" ] ],
+					[ "util.inherit", "1406829752" ],
+					[ "dataValues", "1406829752" ],
+					[ "dataValues.DataValue", "1406829752", [ "dataValues", "jquery", "util.inherit" ] ],
+					[ "dataValues.values", "1406829752", [ "dataValues.DataValue", "globeCoordinate.js", "time.js" ] ],
+					[ "mw.ext.dataValues", "1406987610", [ "dataValues.values", "mediawiki" ] ],
+					[ "valueFormatters", "1406829752" ],
+					[ "valueFormatters.ValueFormatter", "1406829752", [ "jquery", "util.inherit", "valueFormatters" ] ],
+					[ "valueFormatters.ValueFormatterStore", "1406829752", [ "valueFormatters" ] ],
+					[ "valueFormatters.formatters", "1406829752", [ "dataValues.values", "valueFormatters.ValueFormatter" ] ],
+					[ "valueParsers", "1406829752" ],
+					[ "valueParsers.ValueParser", "1406829752", [ "jquery", "util.inherit", "valueParsers" ] ],
+					[ "valueParsers.ValueParserStore", "1406829752", [ "jquery", "valueParsers" ] ],
+					[ "valueParsers.parsers", "1406829752", [ "dataValues.values", "valueParsers.ValueParser" ] ],
+					[ "wikibase.datamodel", "1406829752", [ "wikibase.datamodel.Snak.newFromMap" ] ],
+					[ "wikibase.datamodel.__namespace", "1406829752", [ "wikibase" ] ],
+					[ "wikibase.datamodel.PropertyNoValueSnak", "1406829752", [ "wikibase.datamodel.Snak" ] ],
+					[ "wikibase.datamodel.PropertySomeValueSnak", "1406829752", [ "wikibase.datamodel.Snak" ] ],
+					[ "wikibase.datamodel.PropertyValueSnak", "1406829752", [ "wikibase.datamodel.Snak" ] ],
+					[ "wikibase.datamodel.Snak", "1406829752", [ "mw.ext.dataValues", "wikibase.datamodel.__namespace" ] ],
+					[ "wikibase.datamodel.Snak.newFromMap", "1406829752",
+							[ "wikibase.datamodel.PropertyNoValueSnak", "wikibase.datamodel.PropertySomeValueSnak", "wikibase.datamodel.PropertyValueSnak" ] ],
+					[ "wikibase.serialization", "1406829752", [ "util.inherit", "wikibase" ] ],
+					[ "wikibase.serialization.entities", "1406829752", [ "wikibase.datamodel", "wikibase.serialization" ] ],
+					[ "dataTypes.DataType", "1406829752" ],
+					[ "dataTypes.DataTypeStore", "1406829752" ],
+					[ "dependencies", "1356998400" ],
+					[ "jquery.animateWithEvent", "1406829752", [ "jquery.AnimationEvent" ] ],
+					[ "jquery.AnimationEvent", "1406829752", [ "jquery.PurposedCallbacks" ] ],
+					[ "jquery.autocompletestring", "1406829752", [ "jquery.util.adaptlettercase" ] ],
+					[ "jquery.focusAt", "1406829752", [ "jquery" ] ],
+					[ "jquery.inputautoexpand", "1406829752", [ "jquery.event.special.eachchange" ] ],
+					[ "jquery.NativeEventHandler", "1406829752", [ "jquery" ] ],
+					[ "jquery.PurposedCallbacks", "1406829752", [ "jquery" ] ],
+					[ "jquery.event.special.eachchange", "1406829752", [ "jquery", "jquery.client" ] ],
+					[ "jquery.ui.inputextender", "1406829752", [ "jquery.animateWithEvent", "jquery.event.special.eachchange", "jquery.ui.position", "jquery.ui.widget" ] ],
+					[ "jquery.ui.listrotator", "1406987610", [ "jquery", "jquery.ui.autocomplete" ] ],
+					[ "jquery.ui.ooMenu", "1406829753", [ "jquery.ui.widget", "jquery.util.getscrollbarwidth", "util.inherit" ] ],
+					[ "jquery.ui.preview", "1406829753", [ "jquery", "jquery.ui.widget" ] ],
+					[ "jquery.ui.suggester", "1406829753", [ "jquery.ui.core", "jquery.ui.ooMenu", "jquery.ui.position" ] ],
+					[ "jquery.ui.suggestCommons", "1406829753", [ "jquery.ui.suggester", "jquery.util.highlightMatchingCharacters" ] ],
+					[ "jquery.ui.toggler", "1406829753", [ "jquery.animateWithEvent", "jquery.ui.widget" ] ],
+					[ "jquery.util.adaptlettercase", "1406829753", [ "jquery" ] ],
+					[ "jquery.util.highlightMatchingCharacters", "1406829753", [ "jquery" ] ],
+					[ "jquery.util.getscrollbarwidth", "1406829753", [ "jquery" ] ],
+					[ "util.MessageProvider", "1406829753" ],
+					[ "util.Notifier", "1406829753" ],
+					[ "util.Extendable", "1406829753" ],
+					[ "jquery.valueview", "1406829753", [ "jquery.valueview.valueview" ] ],
+					[ "jquery.valueview.Expert", "1406829753", [ "jquery", "util.Extendable", "util.MessageProvider", "util.Notifier", "util.inherit" ] ],
+					[ "jquery.valueview.ExpertStore", "1406829753", [ "jquery" ] ],
+					[ "jquery.valueview.experts", "1406829753", [ "jquery" ] ],
+					[
+							"jquery.valueview.valueview",
+							"1406829753",
+							[ "dataValues.DataValue", "jquery.ui.widget", "jquery.valueview.ExpertStore", "jquery.valueview.ViewState", "jquery.valueview.experts.EmptyValue",
+									"jquery.valueview.experts.UnsupportedValue", "valueFormatters.ValueFormatterStore", "valueParsers.ValueParserStore" ] ],
+					[ "jquery.valueview.ViewState", "1406829753", [ "jquery" ] ],
+					[ "jquery.valueview.experts.CommonsMediaType", "1406829753", [ "jquery.ui.suggestCommons", "jquery.valueview.experts.StringValue" ] ],
+					[ "jquery.valueview.experts.EmptyValue", "1406980435", [ "jquery.valueview.Expert", "jquery.valueview.experts" ] ],
+					[
+							"jquery.valueview.experts.GlobeCoordinateInput",
+							"1406987610",
+							[ "globeCoordinate.js", "jquery.valueview.ExpertExtender.Container", "jquery.valueview.ExpertExtender.Listrotator",
+									"jquery.valueview.ExpertExtender.Preview", "jquery.valueview.ExpertExtender.Toggler", "jquery.valueview.experts.StringValue" ] ],
+					[ "jquery.valueview.experts.MonolingualText", "1406829753", [
+                                     "jquery.valueview.ExpertExtender.LanguageSelector", "jquery.valueview.experts.StringValue" ] ],
+					[ "jquery.valueview.experts.StringValue", "1406829753", [ "jquery.focusAt", "jquery.inputautoexpand", "jquery.valueview.Expert", "jquery.valueview.experts" ] ],
+					[ "jquery.valueview.experts.SuggestedStringValue", "1406829753", [ "jquery.ui.suggester", "jquery.valueview.experts.StringValue" ] ],
+					[
+							"jquery.valueview.experts.TimeInput",
+							"1406987610",
+							[ "jquery.valueview.ExpertExtender.CalendarHint", "jquery.valueview.ExpertExtender.Container", "jquery.valueview.ExpertExtender.Listrotator",
+									"jquery.valueview.ExpertExtender.Preview", "jquery.valueview.ExpertExtender.Toggler" ] ],
+					[ "jquery.valueview.experts.UnsupportedValue", "1406980435", [ "jquery.valueview.Expert", "jquery.valueview.experts" ] ],
+					[ "jquery.valueview.ExpertExtender", "1406829753", [ "jquery.ui.inputextender", "jquery.valueview" ] ],
+					[ "jquery.valueview.ExpertExtender.CalendarHint", "1406987610", [ "jquery.valueview.ExpertExtender", "time.js" ] ],
+					[ "jquery.valueview.ExpertExtender.Container", "1406829753", [ "jquery.valueview.ExpertExtender" ] ],
+					[ "jquery.valueview.ExpertExtender.LanguageSelector", "1406987610", [ "jquery.ui.suggester", "jquery.uls.data", "jquery.valueview.ExpertExtender" ] ],
+					[ "jquery.valueview.ExpertExtender.Listrotator", "1406829753", [ "jquery.ui.listrotator", "jquery.valueview.ExpertExtender" ] ],
+					[ "jquery.valueview.ExpertExtender.Preview", "1406987610", [ "jquery.ui.preview", "jquery.valueview.ExpertExtender" ] ],
+					[ "jquery.valueview.ExpertExtender.Toggler", "1406987610", [ "jquery.ui.toggler", "jquery.valueview.ExpertExtender" ] ],
+					[ "wikibase.common", "1406829753" ],
+					[ "wikibase.sites", "1406762639" ],
+					[ "mw.config.values.wbRepo", "1356998400" ],
+					[ "wikibase", "1406951687", [ "ext.uls.mediawiki", "wikibase.common", "wikibase.sites", "wikibase.templates" ] ],
+					[ "wikibase.dataTypes", "1406829753", [ 
+                                    "dataTypes.DataType", "dataTypes.DataTypeStore", "jquery", "mw.config.values.wbDataTypes", "wikibase" ] ],
+					[ "mw.config.values.wbDataTypes", "1356998400" ],
+					[ "wikibase.store", "1406829753", [ "wikibase" ] ],
+					[ "wikibase.store.FetchedContent", "1406829753", [ "mediawiki.Title", "wikibase.store" ] ],
+					[ "wikibase.store.FetchedContentUnserializer", "1406829753", [ "wikibase.serialization", "wikibase.store.FetchedContent" ] ],
+					[ "wikibase.store.EntityStore", "1406829753", [ "wikibase.store.FetchedContent" ] ],
+					[ "wikibase.compileEntityStoreFromMwConfig", "1406829753", [ "json", "wikibase.serialization.entities", "wikibase.store.FetchedContentUnserializer" ] ],
+					[ "wikibase.AbstractedRepoApi", "1406829753", [ "wikibase.RepoApi", "wikibase.serialization.entities" ] ],
+					[ "wikibase.RepoApi", "1406829753", [
+                             "json", "mediawiki", "mediawiki.api", "mw.config.values.wbRepo", "user.tokens", "wikibase" ] ],
+					[ "wikibase.RepoApiError", "1406951688", [ "util.inherit", "wikibase" ] ],
+					[ "wikibase.utilities", "1406829753", [ "jquery.tipsy", "mediawiki.language", "util.inherit", "wikibase" ] ],
+					[ "wikibase.utilities.GuidGenerator", "1406829753", [ "wikibase.utilities" ] ],
+					[ "wikibase.utilities.ClaimGuidGenerator", "1406829753", [ "wikibase.utilities.GuidGenerator" ] ],
+					[ "wikibase.utilities.jQuery", "1406829753", [ "wikibase.utilities" ] ],
+					[ "wikibase.utilities.jQuery.ui.tagadata", "1406829753", [ "jquery.effects.blind", "jquery.inputautoexpand", "jquery.ui.widget" ] ],
+					[ "wikibase.ui.Base", "1406829753", [ "wikibase.utilities" ] ],
+					[
+							"wikibase.ui.PropertyEditTool",
+							"1406829753",
+							[ "jquery.NativeEventHandler", "jquery.tablesorter", "jquery.wikibase.entityselector", "jquery.wikibase.siteselector",
+									"jquery.wikibase.toolbareditgroup", "mediawiki.Title", "mediawiki.jqueryMsg", "wikibase.AbstractedRepoApi", "wikibase.ui.Base",
+									"wikibase.utilities.jQuery", "wikibase.utilities.jQuery.ui.tagadata" ] ],
+					[ "jquery.wikibase.toolbarcontroller", "1406829753",
+							[ "jquery.wikibase.addtoolbar", "jquery.wikibase.edittoolbar", "jquery.wikibase.movetoolbar", "jquery.wikibase.removetoolbar" ] ],
+					[ "jquery.wikibase.toolbarbase", "1406829753", [ "jquery.wikibase.toolbareditgroup" ] ],
+					[ "jquery.wikibase.addtoolbar", "1406829753", [ "jquery.wikibase.toolbarbase" ] ],
+					[ "jquery.wikibase.edittoolbar", "1406829753", [ "jquery.wikibase.toolbarbase" ] ],
+					[ "jquery.wikibase.movetoolbar", "1406829753", [ "jquery.wikibase.toolbarbase" ] ],
+					[ "jquery.wikibase.removetoolbar", "1406829753", [ "jquery.wikibase.toolbarbase" ] ],
+					[ "wikibase.templates", "1406829753" ],
+					[ "wikibase.ValueViewBuilder", "1406829753", [ "jquery.valueview", "wikibase" ] ],
+					[ "jquery.ui.TemplatedWidget", "1406829753", [ "jquery.ui.widget", "util.inherit", "wikibase.templates" ] ],
+					[ "jquery.wikibase.siteselector", "1406829753", [ "jquery.event.special.eachchange", "jquery.ui.suggester" ] ],
+					[ "jquery.wikibase.listview", "1406829753", [ "jquery.NativeEventHandler", "jquery.ui.TemplatedWidget" ] ],
+					[ "jquery.wikibase.snaklistview", "1406829753", [ "jquery.wikibase.listview", "jquery.wikibase.snakview" ] ],
+					[
+							"jquery.wikibase.snakview",
+							"1406829753",
+							[ "jquery.NativeEventHandler",
+							  "jquery.ui.TemplatedWidget", 
+							  "jquery.wikibase.entityselector",
+							  "mediawiki.legacy.shared",
+							  "wikibase.dataTypes",
+									"wikibase.datamodel", 
+									"wikibase.utilities" ] ],
+					[ "jquery.wikibase.claimview", "1406829753", [ "jquery.wikibase.snaklistview", "jquery.wikibase.toolbarcontroller", "wikibase.AbstractedRepoApi" ] ],
+					[ "jquery.wikibase.referenceview", "1406829753", [ "jquery.wikibase.snaklistview", "jquery.wikibase.toolbarcontroller", "wikibase.AbstractedRepoApi" ] ],
+					[ "jquery.wikibase.statementview", "1406829753", [ "jquery.wikibase.claimview", "jquery.wikibase.referenceview" ] ],
+					[ "jquery.wikibase.claimlistview", "1406829753", [ "jquery.wikibase.statementview", "wikibase.utilities.ClaimGuidGenerator" ] ],
+					[ "jquery.wikibase.claimgrouplistview", "1406829753", [ "jquery.wikibase.claimlistview" ] ],
+					[ "jquery.wikibase.entityview", "1406829753", [ "jquery.wikibase.claimgrouplistview" ] ],
+					[ "jquery.wikibase.entityselector", "1406987610", [ "jquery.event.special.eachchange", "jquery.ui.suggester" ] ],
+					[ "jquery.wikibase.claimgrouplabelscroll", "1406829753", [ "jquery.ui.widget" ] ],
+					[ "jquery.wikibase.toolbarlabel", "1406829753", [ "jquery.ui.widget", "wikibase.utilities" ] ],
+					[ "jquery.wikibase.toolbarbutton", "1406829753", [ "jquery.wikibase.toolbarlabel" ] ],
+					[ "jquery.wikibase.toolbar", "1406829753", [ "jquery.wikibase.toolbarbutton" ] ],
+					[ "jquery.wikibase.toolbareditgroup", "1406829753", [ "jquery.wikibase.toolbar", "jquery.wikibase.wbtooltip" ] ],
+					[ "jquery.wikibase.wbtooltip", "1406951688", [ "jquery.tipsy", "jquery.ui.toggler", "wikibase.RepoApiError" ] ],
+					[ "wikibase.api.__namespace", "1406829753", [ "wikibase" ] ],
+					[ "wikibase.api.FormatValueCaller", "1406829753", [ "jquery", "json", "wikibase.api.__namespace" ] ],
+					[
+							"wikibase.experts",
+							"1406829753",
+							[ "jquery.valueview.experts.CommonsMediaType",
+							  "jquery.valueview.experts.GlobeCoordinateInput",
+							  "jquery.valueview.experts.MonolingualText",
+									"jquery.valueview.experts.TimeInput",
+									"wikibase.dataTypes",
+									"wikibase.datamodel",
+									"wikibase.experts.EntityIdInput" ] ],
+					[ "wikibase.experts.EntityIdInput", "1406829753", [ "jquery.valueview.experts.StringValue", "jquery.wikibase.entityselector", "wikibase" ] ],
+					[ "wikibase.formatters.getApiBasedValueFormatterConstructor", "1406829753", [ 
+                                                          "valueFormatters.ValueFormatter", "wikibase.dataTypes" ] ],
+					[
+							"wikibase.formatters.getStore",
+							"1406829753",
+							[ "valueFormatters.ValueFormatterStore", "valueFormatters.formatters", "wikibase.api.FormatValueCaller", "wikibase.datamodel",
+									"wikibase.formatters.getApiBasedValueFormatterConstructor" ] ],
+					[ "wikibase.parsers.api", "1406829753", [ "dataValues", "jquery", "wikibase.RepoApi" ] ],
+					[ "wikibase.ApiBasedValueParser", "1406829753", [ "valueParsers.ValueParser", "wikibase.parsers.api" ] ],
+					[ "wikibase.EntityIdParser", "1406829753", [ "valueParsers.ValueParser", "wikibase.datamodel" ] ],
+					[ "wikibase.parsers", "1406829753", [
+                             "valueParsers.ValueParserStore", "valueParsers.parsers", "wikibase.ApiBasedValueParser", "wikibase.EntityIdParser" ] ],
+					[ "wikibase.client.init", "1406829734" ],
+					[ "wikibase.client.nolanglinks", "1406829734" ],
+					[ "wikibase.client.currentSite", "1356998400" ],
+					[ "wikibase.client.page-move", "1406829753" ],
+					[ "wikibase.client.changeslist.css", "1406829753" ],
+					[ "wikibase.client.linkitem.init", "1406951688", [ "jquery.spinner", "mediawiki.notify" ] ],
+					[ "wikibase.client.PageConnector", "1406829753", [ "wikibase.RepoApi" ] ],
+					[
+							"jquery.wikibase.linkitem",
+							"1406951688",
+							[ "jquery.spinner", "jquery.ui.dialog", "jquery.wikibase.siteselector", "jquery.wikibase.wbtooltip", "mediawiki.jqueryMsg",
+									"wikibase.client.PageConnector", "wikibase.client.currentSite" ] ],
+					[ "ext.TemplateSandbox", "1406829753" ],
+					[ "ext.MWOAuth.BasicStyles", "1406829753" ],
+					[ "ext.MWOAuth.AuthorizeForm", "1406829753" ],
+					[ "ext.MWOAuth.AuthorizeDialog", "1406829753", [ "jquery.ui.dialog" ] ],
+					[ "ext.MWOAuth.WikiSelect", "1406829753", [ "jquery.ui.autocomplete" ] ],
+					[ "ext.checkUser", "1406829753", [ "mediawiki.util" ] ],
+					[ "skins.monobook.styles", "1406829748" ],
+					[ "skins.vector.styles", "1406829734" ],
+					[ "skins.vector.js", "1406829753", [ "jquery.tabIndex", "jquery.throttle-debounce" ] ],
+					[ "mw.PopUpMediaTransform", "1406829753", [ "mediawiki.Title", "mw.MwEmbedSupport" ] ],
+					[ "mw.TMHGalleryHook.js", "1406829753" ],
+					[ "embedPlayerIframeStyle", "1406829753" ],
+					[ "ext.tmh.transcodetable", "1406951688" ],
+					[ "mw.MediaWikiPlayerSupport", "1406829753", [ "mw.Api" ] ],
+					[ "schema.UniversalLanguageSelector", "1364325841", [ "ext.eventLogging" ] ],
+					[ "skins.vector.compactPersonalBar.schema", "1364827528", [ "ext.eventLogging" ] ],
+					[ "mobile.uploads.schema", "1365207443", [ "ext.eventLogging" ] ],
+					[ "mobile.editing.schema", "1365597425", [ "ext.eventLogging" ] ],
+					[ "schema.MobileWebCta", "1362971084", [ "ext.eventLogging" ] ],
+					[ "schema.MobileWebClickTracking", "1362928348", [ "ext.eventLogging" ] ],
+					[ "schema.MobileLeftNavbarEditCTA", "1364073052", [ "ext.eventLogging" ] ],
+					[
+							"mobile.loggingSchemas",
+							"1406829743",
+							[ "mobile.editing.schema", "mobile.startup", "mobile.uploads.schema", "schema.MobileLeftNavbarEditCTA", "schema.MobileWebClickTracking",
+									"schema.MobileWebCta" ] ], [ "schema.Echo", "1364729716", [ "ext.eventLogging" ] ],
+					[ "schema.EchoMail", "1362466050", [ "ext.eventLogging" ] ], [ "schema.EchoInteraction", "1362780687", [ "ext.eventLogging" ] ] ] );
+	mw.config
+			.set( {
+				"wgLoadScript": "//bits.wikimedia.org/ru.wikipedia.org/load.php",
+				"debug": false,
+				"skin": "vector",
+				"stylepath": "//bits.wikimedia.org/static-1.24wmf15/skins",
+				"wgUrlProtocols": "bitcoin\\:|ftp\\:\\/\\/|ftps\\:\\/\\/|geo\\:|git\\:\\/\\/|gopher\\:\\/\\/|http\\:\\/\\/|https\\:\\/\\/|irc\\:\\/\\/|ircs\\:\\/\\/|magnet\\:|mailto\\:|mms\\:\\/\\/|news\\:|nntp\\:\\/\\/|redis\\:\\/\\/|sftp\\:\\/\\/|sip\\:|sips\\:|sms\\:|ssh\\:\\/\\/|svn\\:\\/\\/|tel\\:|telnet\\:\\/\\/|urn\\:|worldwind\\:\\/\\/|xmpp\\:|\\/\\/",
+				"wgArticlePath": "/wiki/$1",
+				"wgScriptPath": "/w",
+				"wgScriptExtension": ".php",
+				"wgScript": "/w/index.php",
+				"wgSearchType": "LuceneSearch",
+				"wgVariantArticlePath": false,
+				"wgActionPaths": {},
+				"wgServer": "//ru.wikipedia.org",
+				"wgServerName": "ru.wikipedia.org",
+				"wgUserLanguage": "ru",
+				"wgContentLanguage": "ru",
+				"wgVersion": "1.24wmf15",
+				"wgEnableAPI": true,
+				"wgEnableWriteAPI": true,
+				"wgMainPageTitle": "Заглавная страница",
+				"wgFormattedNamespaces": {
+					"-2": "Медиа",
+					"-1": "Служебная",
+					"0": "",
+					"1": "Обсуждение",
+					"2": "Участник",
+					"3": "Обсуждение участника",
+					"4": "Википедия",
+					"5": "Обсуждение Википедии",
+					"6": "Файл",
+					"7": "Обсуждение файла",
+					"8": "MediaWiki",
+					"9": "Обсуждение MediaWiki",
+					"10": "Шаблон",
+					"11": "Обсуждение шаблона",
+					"12": "Справка",
+					"13": "Обсуждение справки",
+					"14": "Категория",
+					"15": "Обсуждение категории",
+					"100": "Портал",
+					"101": "Обсуждение портала",
+					"102": "Инкубатор",
+					"103": "Обсуждение Инкубатора",
+					"104": "Проект",
+					"105": "Обсуждение проекта",
+					"106": "Арбитраж",
+					"107": "Обсуждение арбитража",
+					"828": "Модуль",
+					"829": "Обсуждение модуля"
+				},
+				"wgNamespaceIds": {
+					"медиа": -2,
+					"служебная": -1,
+					"": 0,
+					"обсуждение": 1,
+					"участник": 2,
+					"обсуждение_участника": 3,
+					"википедия": 4,
+					"обсуждение_википедии": 5,
+					"файл": 6,
+					"обсуждение_файла": 7,
+					"mediawiki": 8,
+					"обсуждение_mediawiki": 9,
+					"шаблон": 10,
+					"обсуждение_шаблона": 11,
+					"справка": 12,
+					"обсуждение_справки": 13,
+					"категория": 14,
+					"обсуждение_категории": 15,
+					"портал": 100,
+					"обсуждение_портала": 101,
+					"инкубатор": 102,
+					"обсуждение_инкубатора": 103,
+					"проект": 104,
+					"обсуждение_проекта": 105,
+					"арбитраж": 106,
+					"обсуждение_арбитража": 107,
+					"модуль": 828,
+					"обсуждение_модуля": 829,
+					"изображение": 6,
+					"обсуждение_изображения": 7,
+					"участница": 2,
+					"обсуждение_участницы": 3,
+					"у": 2,
+					"u": 2,
+					"оу": 3,
+					"ut": 3,
+					"ш": 10,
+					"t": 10,
+					"к": 14,
+					"вп": 4,
+					"и": 102,
+					"про": 104,
+					"ак": 106,
+					"incubator": 102,
+					"incubator_talk": 103,
+					"wikiproject": 104,
+					"wikiproject_talk": 105,
+					"arbcom": 106,
+					"image": 6,
+					"image_talk": 7,
+					"media": -2,
+					"special": -1,
+					"talk": 1,
+					"user": 2,
+					"user_talk": 3,
+					"project": 4,
+					"project_talk": 5,
+					"file": 6,
+					"file_talk": 7,
+					"mediawiki_talk": 9,
+					"template": 10,
+					"template_talk": 11,
+					"help": 12,
+					"help_talk": 13,
+					"category": 14,
+					"category_talk": 15,
+					"module": 828,
+					"module_talk": 829
+				},
+				"wgContentNamespaces": [ 0 ],
+				"wgSiteName": "Википедия",
+				"wgFileExtensions": [ "png", "gif", "jpg", "jpeg", "tiff", "tif", "xcf", "pdf", "mid", "ogg", "ogv", "svg", "djvu", "oga", "flac", "wav", "webm" ],
+				"wgDBname": "ruwiki",
+				"wgFileCanRotate": true,
+				"wgAvailableSkins": {
+					"modern": "Modern",
+					"cologneblue": "CologneBlue",
+					"minerva": "Minerva",
+					"monobook": "MonoBook",
+					"vector": "Vector"
+				},
+				"wgExtensionAssetsPath": "//bits.wikimedia.org/static-1.24wmf15/extensions",
+				"wgCookiePrefix": "ruwiki",
+				"wgCookieDomain": "",
+				"wgCookiePath": "/",
+				"wgCookieExpiration": 2592000,
+				"wgResourceLoaderMaxQueryLength": -1,
+				"wgCaseSensitiveNamespaces": [],
+				"wgLegalTitleChars": " %!\"$\u0026'()*,\\-./0-9:;=?@A-Z\\\\\\^_`a-z~+\\u0080-\\uFFFF",
+				"wgResourceLoaderStorageVersion": 1,
+				"wgResourceLoaderStorageEnabled": true,
+				"EmbedPlayer.DirectFileLinkWarning": true,
+				"EmbedPlayer.EnableOptionsMenu": true,
+				"EmbedPlayer.DisableJava": false,
+				"EmbedPlayer.DisableHTML5FlashFallback": true,
+				"TimedText.ShowInterface": "always",
+				"TimedText.ShowAddTextLink": true,
+				"EmbedPlayer.WebPath": "//bits.wikimedia.org/static-1.24wmf15/extensions/TimedMediaHandler/MwEmbedModules/EmbedPlayer",
+				"wgCortadoJarFile": false,
+				"TimedText.ShowInterface.local": "off",
+				"AjaxRequestTimeout": 30,
+				"MediaWiki.DefaultProvider": "local",
+				"MediaWiki.ApiProviders": {
+					"wikimediacommons": {
+						"url": "//commons.wikimedia.org/w/api.php"
+					}
+				},
+				"MediaWiki.ApiPostActions": [ "login", "purge", "rollback", "delete", "undelete", "protect", "block", "unblock", "move", "edit", "upload", "emailuser", "import",
+						"userrights" ],
+				"EmbedPlayer.OverlayControls": true,
+				"EmbedPlayer.CodecPreference": [ "webm", "h264", "ogg" ],
+				"EmbedPlayer.DisableVideoTagSupport": false,
+				"EmbedPlayer.ReplaceSources": null,
+				"EmbedPlayer.EnableFlavorSelector": false,
+				"EmbedPlayer.EnableIpadHTMLControls": true,
+				"EmbedPlayer.WebKitPlaysInline": false,
+				"EmbedPlayer.EnableIpadNativeFullscreen": false,
+				"EmbedPlayer.iPhoneShowHTMLPlayScreen": true,
+				"EmbedPlayer.ForceLargeReplayButton": false,
+				"EmbedPlayer.LibraryPage": "http://www.kaltura.org/project/HTML5_Video_Media_JavaScript_Library",
+				"EmbedPlayer.RewriteSelector": "video,audio,playlist",
+				"EmbedPlayer.DefaultSize": "400x300",
+				"EmbedPlayer.ControlsHeight": 31,
+				"EmbedPlayer.TimeDisplayWidth": 85,
+				"EmbedPlayer.KalturaAttribution": true,
+				"EmbedPlayer.AttributionButton": {
+					"title": "Kaltura html5 video library",
+					"href": "http://www.kaltura.com",
+					"class": "kaltura-icon",
+					"style": [],
+					"iconurl": false
+				},
+				"EmbedPlayer.EnableRightClick": true,
+				"EmbedPlayer.EnabledOptionsMenuItems": [ "playerSelect", "download", "share", "aboutPlayerLibrary" ],
+				"EmbedPlayer.WaitForMeta": true,
+				"EmbedPlayer.ShowNativeWarning": true,
+				"EmbedPlayer.ShowPlayerAlerts": true,
+				"EmbedPlayer.EnableFullscreen": true,
+				"EmbedPlayer.EnableTimeDisplay": true,
+				"EmbedPlayer.EnableVolumeControl": true,
+				"EmbedPlayer.NewWindowFullscreen": false,
+				"EmbedPlayer.FullscreenTip": true,
+				"EmbedPlayer.FirefoxLink": "http://www.mozilla.com/en-US/firefox/upgrade.html?from=mwEmbed",
+				"EmbedPlayer.NativeControls": false,
+				"EmbedPlayer.NativeControlsMobileSafari": true,
+				"EmbedPlayer.FullScreenZIndex": 999998,
+				"EmbedPlayer.ShareEmbedMode": "iframe",
+				"EmbedPlayer.SkinList": [ "mvpcf", "kskin" ],
+				"EmbedPlayer.DefaultSkin": "mvpcf",
+				"EmbedPlayer.MonitorRate": 250,
+				"EmbedPlayer.UseFlashOnAndroid": false,
+				"EmbedPlayer.EnableURLTimeEncoding": "flash",
+				"EmbedPLayer.IFramePlayer.DomainWhiteList": "*",
+				"EmbedPlayer.EnableIframeApi": true,
+				"EmbedPlayer.PageDomainIframe": true,
+				"EmbedPlayer.NotPlayableDownloadLink": true,
+				"EmbedPlayer.BlackPixel": "data:image/png,%89PNG%0D%0A%1A%0A%00%00%00%0DIHDR%00%00%00%01%00%00%00%01%08%02%00%00%00%90wS%DE%00%00%00%01sRGB%00%AE%CE%1C%E9%00%00%00%09pHYs%00%00%0B%13%00%00%0B%13%01%00%9A%9C%18%00%00%00%07tIME%07%DB%0B%0A%17%041%80%9B%E7%F2%00%00%00%19tEXtComment%00Created%20with%20GIMPW%81%0E%17%00%00%00%0CIDAT%08%D7c%60%60%60%00%00%00%04%00%01'4'%0A%00%00%00%00IEND%AEB%60%82",
+				"TimedText.ShowRequestTranscript": false,
+				"TimedText.NeedsTranscriptCategory": "Videos needing subtitles",
+				"TimedText.BottomPadding": 10,
+				"TimedText.BelowVideoBlackBoxHeight": 40,
+				"wgCentralAuthCheckLoggedInURL": "//login.wikimedia.org/wiki/Special:CentralAutoLogin/checkLoggedIn?type=script\u0026wikiid=ruwiki",
+				"wgWikiEditorMagicWords": {
+					"redirect": "#перенаправление",
+					"img_right": "справа",
+					"img_left": "слева",
+					"img_none": "без",
+					"img_center": "центр",
+					"img_thumbnail": "мини",
+					"img_framed": "обрамить",
+					"img_frameless": "безрамки"
+				},
+				"wgMultimediaViewer": {
+					"infoLink": "//mediawiki.org/wiki/Special:MyLanguage/Multimedia/About_Media_Viewer",
+					"discussionLink": "//mediawiki.org/wiki/Special:MyLanguage/Talk:Multimedia/About_Media_Viewer",
+					"helpLink": "//mediawiki.org/wiki/Special:MyLanguage/Multimedia/Media_Viewer/Help",
+					"globalUsageAvailable": true,
+					"useThumbnailGuessing": true,
+					"durationSamplingFactor": 1000,
+					"networkPerformanceSamplingFactor": 1000,
+					"actionLoggingSamplingFactorMap": {
+						"default": 1,
+						"close": 1000,
+						"defullscreen": 10,
+						"enlarge": 6,
+						"fullscreen": 20,
+						"hash-load": 10,
+						"history-navigation": 200,
+						"image-view": 2000,
+						"metadata-close": 6,
+						"metadata-open": 6,
+						"next-image": 800,
+						"prev-image": 200,
+						"thumbnail": 1000
+					},
+					"tooltipDelay": 1000
+				},
+				"wgMediaViewer": true,
+				"wgMediaViewerIsInBeta": false,
+				"wgVisualEditorConfig": {
+					"disableForAnons": false,
+					"preferenceModules": {
+						"visualeditor-enable-experimental": "ext.visualEditor.experimental",
+						"visualeditor-enable-language": "ext.visualEditor.language"
+					},
+					"namespaces": [ 0, 2, 2, 6, 12, 14 ],
+					"pluginModules": [ "ext.math.visualEditor", "ext.wikimediaEvents.ve", "ext.disambiguator.visualEditor" ],
+					"defaultUserOptions": {
+						"betatempdisable": 0,
+						"enable": 1,
+						"defaultthumbsize": 220,
+						"visualeditor-enable-experimental": 0,
+						"visualeditor-enable-language": 0
+					},
+					"blacklist": {
+						"msie": null,
+						"android": [ [ "\u003C", 3 ] ],
+						"firefox": [ [ "\u003C=", 14 ] ],
+						"opera": [ [ "\u003C", 12 ] ],
+						"blackberry": null,
+						"silk": null
+					},
+					"skins": [ "vector", "apex", "monobook", "minerva" ],
+					"tabPosition": "before",
+					"tabMessages": {
+						"edit": null,
+						"editsource": "visualeditor-ca-editsource",
+						"create": null,
+						"createsource": "visualeditor-ca-createsource",
+						"editlocaldescriptionsource": "visualeditor-ca-editlocaldescriptionsource",
+						"createlocaldescriptionsource": "visualeditor-ca-createlocaldescriptionsource",
+						"editsection": null,
+						"editsectionsource": "visualeditor-ca-editsource-section",
+						"editappendix": null,
+						"editsourceappendix": null,
+						"createappendix": null,
+						"createsourceappendix": null,
+						"editsectionappendix": null,
+						"editsectionsourceappendix": null
+					},
+					"showBetaWelcome": true,
+					"enableTocWidget": false
+				},
+				"wgStopMobileRedirectCookie": {
+					"name": "stopMobileRedirect",
+					"duration": 30,
+					"domain": ".wikipedia.org",
+					"path": "/"
+				},
+				"wgMFNearbyEndpoint": "",
+				"wgMFContentNamespace": 0,
+				"wgMFLicenseLink": "\u003Ca href=\"https://creativecommons.org/licenses/by-sa/3.0/\" title=\"Формулировка лицензии Creative Commons Attribution/Share-Alike\" target=\"_blank\"\u003ECC BY-SA 3.0\u003C/a\u003E и \u003Ca href=\"https://www.gnu.org/licenses/fdl.html\" title=\"Формулировка GFDL\" target=\"_blank\"\u003EGFDL\u003C/a\u003E",
+				"wgMFUploadLicenseLink": "\u003Ca class=\"external\" rel=\"nofollow\" href=\"//creativecommons.org/licenses/by-sa/3.0/\"\u003ECC BY-SA 3.0\u003C/a\u003E",
+				"wgGettingStartedConfig": {
+					"hasCategories": true
+				},
+				"wgEventLoggingBaseUri": "//bits.wikimedia.org/event.gif",
+				"wgNavigationTimingSamplingFactor": 1000,
+				"wgULSIMEEnabled": true,
+				"wgULSWebfontsEnabled": false,
+				"wgULSPosition": "interlanguage",
+				"wgULSAnonCanChangeLanguage": false,
+				"wgULSEventLogging": true,
+				"wgULSImeSelectors": [ "input:not([type])", "input[type=text]", "input[type=search]", "textarea", "[contenteditable]" ],
+				"wgULSNoImeSelectors": [ "#wpCaptchaWord", ".ve-ce-documentNode", ".ace_editor textarea" ],
+				"wgULSNoWebfontsSelectors": [ "#p-lang li.interlanguage-link \u003E a" ],
+				"wgULSFontRepositoryBasePath": "//bits.wikimedia.org/static-current/extensions/UniversalLanguageSelector/data/fontrepo/fonts/",
+				"wgNoticeFundraisingUrl": "https://donate.wikimedia.org/wiki/Special:LandingCheck",
+				"wgCentralPagePath": "//meta.wikimedia.org/w/index.php",
+				"wgCentralBannerDispatcher": "//meta.wikimedia.org/wiki/Special:BannerRandom",
+				"wgCentralBannerRecorder": "//meta.wikimedia.org/wiki/Special:RecordImpression",
+				"wgNoticeXXCountries": [ "XX", "EU", "AP", "A1", "A2", "O1" ],
+				"wgNoticeNumberOfBuckets": 4,
+				"wgNoticeBucketExpiry": 7,
+				"wgNoticeNumberOfControllerBuckets": 2,
+				"wgNoticeCookieDurations": {
+					"close": 1209600,
+					"donate": 25920000
+				},
+				"wgNoticeHideUrls": [ "//en.wikipedia.org/wiki/Special:HideBanners", "//meta.wikimedia.org/wiki/Special:HideBanners",
+						"//commons.wikimedia.org/wiki/Special:HideBanners", "//species.wikimedia.org/wiki/Special:HideBanners", "//en.wikibooks.org/wiki/Special:HideBanners",
+						"//en.wikiquote.org/wiki/Special:HideBanners", "//en.wikisource.org/wiki/Special:HideBanners", "//en.wikinews.org/wiki/Special:HideBanners",
+						"//en.wikiversity.org/wiki/Special:HideBanners", "//www.mediawiki.org/wiki/Special:HideBanners" ]
+			} );
+};
 if ( isCompatible() ) {
-	document.write("\u003Cscript src=\"//bits.wikimedia.org/ru.wikipedia.org/load.php?debug=true\u0026amp;lang=ru\u0026amp;modules=jquery%2Cmediawiki%2CSpinner%7Cjquery.triggerQueueCallback%2CloadingSpinner%2CmwEmbedUtil%7Cmw.MwEmbedSupport\u0026amp;only=scripts\u0026amp;skin=vector\u0026amp;version=20140626T181624Z\"\u003E\u003C/script\u003E");};
+	document
+			.write( "\u003Cscript src=\"//bits.wikimedia.org/ru.wikipedia.org/load.php?debug=false\u0026amp;lang=ru\u0026amp;modules=jquery%2Cmediawiki\u0026amp;only=scripts\u0026amp;skin=vector\u0026amp;version=20140731T180232Z\"\u003E\u003C/script\u003E" );
+};
+/*
+ * cache key:
+ * ruwiki:resourceloader:filter:minify-js:7:c929eb4efe934c1adfe7ab9186d5d2bb
+ */
