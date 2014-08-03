@@ -1966,7 +1966,7 @@ var WEF_SnakEditor = function( parent, options ) {
 	this._tr = $( document.createElement( 'tr' ) ).appendTo( this.table );
 	this._td1 = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( this._tr );
 	this._td2 = $( document.createElement( 'td' ) ).addClass( 'wef_snak_table_value_editor_cell' ).appendTo( this._tr );
-	this._snakTypeLabel = $( document.createElement( 'span' ) ).addClass( 'wef_snak_type_label' ).appendTo( this._td2 );
+	this._snakTypeLabel = $( document.createElement( 'span' ) ).addClass( 'wef_snak_type_label' ).appendTo( this._td2 ).hide();
 
 	this._td1.append( this._butttonSelectSnakType );
 
