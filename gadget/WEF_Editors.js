@@ -3891,7 +3891,7 @@ var WEF_EditorForm = function( title, html, i18n ) {
 			label: i18n.dialogButtonSaveLabel,
 			click: function() {
 				dialog.dialog( 'close' );
-				wef_analyze_and_save( claimEditorTables );
+				wef_analyze_and_save( claimEditorsTables );
 			},
 		}, {
 			text: i18n.dialogButtonCloseText,
