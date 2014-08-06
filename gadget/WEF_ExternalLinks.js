@@ -1703,7 +1703,7 @@ WEF_ExternalLinks = function() {
 				label: i18n.dialogButtonSaveLabel,
 				click: function() {
 					dialogForm.dialog( 'close' );
-					wef_save( externalLinksEdit.editors );
+					wef_analyze_and_save( externalLinksEdit.editors );
 				}
 			}, {
 				text: i18n.dialogButtonCloseText,

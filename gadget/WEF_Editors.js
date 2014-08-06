@@ -463,6 +463,12 @@ var WEF_Utils = {
 		window.location.replace( wgServer + wgScriptPath + '/index.php?action=purge&title=' + encodeURIComponent( wgPageName ) );
 	},
 
+	purgeAsync: function() {
+		$.ajax( {
+			url: wgServer + wgScriptPath + '/api.php?action=purge&titles=' + encodeURIComponent( wgPageName ),
+		} );
+	},
+
 	/**
 	 * @param s
 	 *            {string} string to escapse
@@ -3429,22 +3435,21 @@ var WEF_Updates = function() {
 	this.removedClaims = [];
 };
 
-function wef_save( claimEditorTables ) {
-
+function wef_analyze_and_save( claimEditorTables ) {
 	var i18n = wef_Editors_i18n;
 
-	var dialog1 = $( document.createElement( 'div' ) );
-	dialog1.attr( 'title', i18n.dialogAnalyzeChangesTitle );
-	var analyzeProgressUl = $( document.createElement( 'ul' ) ).appendTo( dialog1 );
+	var dialog = $( document.createElement( 'div' ) );
+	dialog.attr( 'title', i18n.dialogAnalyzeChangesTitle );
+	var analyzeProgressUl = $( document.createElement( 'ul' ) ).appendTo( dialog );
 	var analyzeProgress = new WEF_ProgressItem( analyzeProgressUl, i18n.actionAnalyzeChanges );
 	analyzeProgress.inProgress();
-	dialog1.dialog( {
+	dialog.dialog( {
 		height: 'auto',
 		width: 'auto'
 	} );
 
+	var updates = new WEF_Updates();
 	try {
-		var updates = new WEF_Updates();
 		$.each( claimEditorTables, function( i, claimEditorTable ) {
 			claimEditorTable.collectUpdates( updates );
 		} );
@@ -3457,225 +3462,6 @@ function wef_save( claimEditorTables ) {
 			return;
 		}
 
-		var dialog2 = $( document.createElement( 'div' ) );
-		dialog2.attr( 'title', i18n.dialogSaveChangesTitle );
-
-		var progressUl = $( document.createElement( 'ul' ) ).appendTo( dialog2 );
-
-		var executionContext = {
-			centralAuthToken: null,
-			editToken: null,
-			entityId: WEF_Utils.getEntityId(),
-			isWikidata: WEF_Utils.isWikidata(),
-			localUrlPrefix: wgServer + wgScriptPath + '/api.php' + '?format=json',
-			wikidataUrlPrefix: '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json',
-
-			getPrefixWithCentralAuthToken: function() {
-				if ( this.isWikidata === true ) {
-					return this.localUrlPrefix;
-				} else {
-					return this.wikidataUrlPrefix + '&centralauthtoken=' + encodeURIComponent( this.centralAuthToken );
-				}
-			}
-		};
-
-		var actions = [];
-		var actionFinal = function() {
-			dialog2.dialog( 'close' );
-			if ( wgAction === 'view' ) {
-				WEF_Utils.purge();
-			}
-		};
-
-		function createObtainCentralAuthTokenAction( onSuccessActionIndex, onFailureActionIndex ) {
-			var progressItem = new WEF_ProgressItem( progressUl, i18n.actionObtainCentralAuthToken );
-			return function() {
-				var onFailureAction = typeof onFailureActionIndex === 'undefined' ? actionFinal : actions[onFailureActionIndex];
-				var onSuccessAction = actions[onSuccessActionIndex];
-				progressItem.inProgress();
-				$.ajax( {
-					type: 'GET',
-					url: executionContext.localUrlPrefix + '&action=tokens&type=centralauth',
-					error: function( jqXHR, textStatus, errorThrown ) {
-						alert( i18n.errorObtainCentralAuthToken + ': ' + textStatus );
-						progressItem.failure( textStatus );
-						onFailureAction();
-						return;
-					},
-					success: function( result ) {
-						if ( result.error ) {
-							progressItem.failure( result.error.info );
-							alert( i18n.errorObtainCentralAuthToken + ': ' + result.error.info );
-							onFailureAction();
-							return;
-						}
-						if ( !result.tokens || !result.tokens.centralauthtoken ) {
-							progressItem.failure();
-							alert( i18n.errorObtainCentralAuthToken );
-							onFailureAction();
-							return;
-						}
-						executionContext.centralAuthToken = result.tokens.centralauthtoken;
-						progressItem.success();
-						onSuccessAction();
-					},
-				} );
-			};
-		}
-
-		var currentAction = 0;
-
-		if ( WEF_Utils.isWikidata() === false ) {
-			actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1 );
-			currentAction++;
-		}
-
-		/*
-		 * Edit token obtains once for all edit actions on the same element so
-		 * far
-		 */
-		( function() {
-			var nextAction = currentAction + 1;
-			var progressItem = new WEF_ProgressItem( progressUl, i18n.actionObtainEditToken );
-			actions[currentAction] = function() {
-				var onFailureAction = actionFinal;
-				var onSuccessAction = actions[nextAction];
-				progressItem.inProgress();
-				$.ajax( {
-					type: 'GET',
-					url: executionContext.getPrefixWithCentralAuthToken() // 
-							+ '&action=query' //
-							+ '&prop=info' //
-							+ '&intoken=edit' // 
-							+ '&titles=' + executionContext.entityId,
-					error: function( jqXHR, textStatus, errorThrown ) {
-						progressItem.failure( textStatus );
-						alert( i18n.errorObtainEditToken + ': ' + textStatus );
-						onFailureAction();
-						return;
-					},
-					success: function( result ) {
-						if ( result.error ) {
-							progressItem.failure( result.error.info );
-							alert( i18n.errorObtainEditToken + ': ' + result.error.info );
-							onFailureAction();
-							return;
-						}
-
-						var pageInfo = WEF_Utils.getFirstObjectValue( result.query.pages );
-						executionContext.editToken = pageInfo.edittoken;
-						if ( !executionContext.editToken ) {
-							progressItem.failure();
-							alert( i18n.errorObtainEditToken );
-							onFailureAction();
-							return;
-						}
-						progressItem.success();
-						onSuccessAction();
-					}
-				} );
-			};
-			currentAction++;
-		} )();
-
-		/* Saving changes in entity, if required */
-		if ( !$.isEmptyObject( updates.data ) ) {
-			/*
-			 * Each action (including obtaining edit token) need separate auth
-			 * token, because it's expiring in 10 seconds
-			 */
-			if ( WEF_Utils.isWikidata() === false ) {
-				actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1, currentAction + 2 );
-				currentAction++;
-			}
-			( function() {
-				var nextAction = currentAction + 1;
-				var progressItem = new WEF_ProgressItem( progressUl, i18n.actionUpdateEntity );
-				actions[currentAction] = function() {
-					var onFailureAction = actions[nextAction];
-					var onSuccessAction = actions[nextAction];
-					progressItem.inProgress();
-					$.ajax( {
-						type: 'POST',
-						url: executionContext.getPrefixWithCentralAuthToken() // 
-								+ '&token=' + encodeURIComponent( executionContext.editToken ) // 
-								+ '&action=wbeditentity' // 
-								+ '&id=' + executionContext.entityId //
-								+ '&summary=' + encodeURIComponent( i18n.summary ) //
-						,
-						data: {
-							data: JSON.stringify( updates.data ),
-						},
-						error: function( jqXHR, textStatus, errorThrown ) {
-							progressItem.failure( textStatus );
-							alert( i18n.errorUpdateEntity + ': ' + textStatus );
-							onFailureAction();
-							return;
-						},
-						success: function( result ) {
-							if ( result.error ) {
-								progressItem.failure( result.error.info );
-								alert( i18n.errorUpdateEntity + ': ' + result.error.info );
-								onFailureAction();
-								return;
-							}
-							progressItem.success();
-							onSuccessAction();
-						},
-					} );
-				};
-				currentAction++;
-			} )();
-		}
-
-		/* Remove claims in separate request */
-		if ( updates.removedClaims.length !== 0 ) {
-			/*
-			 * Each action (including obtaining edit token) need separate auth
-			 * token, because it's expiring in 10 seconds
-			 */
-			if ( WEF_Utils.isWikidata() === false ) {
-				actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1, currentAction + 2 );
-				currentAction++;
-			}
-			( function() {
-				var nextAction = currentAction + 1;
-				var progressItem = new WEF_ProgressItem( progressUl, i18n.actionRemoveClaims );
-				actions[currentAction] = function() {
-					var onFailureAction = actions[nextAction];
-					var onSuccessAction = actions[nextAction];
-					progressItem.inProgress();
-					$.ajax( {
-						type: 'POST',
-						url: executionContext.getPrefixWithCentralAuthToken() // 
-								+ '&token=' + encodeURIComponent( executionContext.editToken ) // 
-								+ '&action=wbremoveclaims' // 
-								+ '&claim=' + encodeURIComponent( updates.removedClaims.join( '|' ) ) //
-								+ '&summary=' + encodeURIComponent( i18n.summary ) //
-						,
-						error: function( jqXHR, textStatus, errorThrown ) {
-							progressItem.failure( textStatus );
-							alert( i18n.errorRemoveClaims + ': ' + textStatus );
-							onFailureAction();
-							return;
-						},
-						success: function( result ) {
-							if ( result.error ) {
-								progressItem.failure( result.error.info );
-								alert( i18n.errorRemoveClaims + ': ' + result.error.info );
-								onFailureAction();
-								return;
-							}
-							progressItem.success();
-							onSuccessAction();
-						},
-					} );
-				};
-				currentAction++;
-			} )();
-		}
-
-		actions[currentAction] = actionFinal;
 		analyzeProgress.success();
 	} catch ( error ) {
 		mw.log.warn( i18n.errorAnalyzeChanges + ': ' + error );
@@ -3683,9 +3469,243 @@ function wef_save( claimEditorTables ) {
 		alert( i18n.errorAnalyzeChanges + ': ' + error );
 		return;
 	}
+	dialog.dialog( 'close' );
 
-	dialog1.dialog( 'close' );
-	dialog2.dialog( {
+	wef_save( updates, function() {
+		WEF_Utils.purge();
+	} );
+}
+
+function wef_save( updates, onComplete ) {
+
+	if ( !( updates instanceof WEF_Updates ) ) {
+		throw new Error( 'WEF_Updates object is expected' );
+	}
+
+	var i18n = wef_Editors_i18n;
+
+	var dialog = $( document.createElement( 'div' ) );
+	dialog.attr( 'title', i18n.dialogSaveChangesTitle );
+
+	var progressUl = $( document.createElement( 'ul' ) ).appendTo( dialog );
+
+	var executionContext = {
+		centralAuthToken: null,
+		editToken: null,
+		entityId: WEF_Utils.getEntityId(),
+		isWikidata: WEF_Utils.isWikidata(),
+		localUrlPrefix: wgServer + wgScriptPath + '/api.php' + '?format=json',
+		wikidataUrlPrefix: '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json',
+
+		getPrefixWithCentralAuthToken: function() {
+			if ( this.isWikidata === true ) {
+				return this.localUrlPrefix;
+			} else {
+				return this.wikidataUrlPrefix + '&centralauthtoken=' + encodeURIComponent( this.centralAuthToken );
+			}
+		}
+	};
+
+	var actions = [];
+	var actionFinal = function() {
+		dialog.dialog( 'close' );
+		if ( wgAction === 'view' ) {
+			if ( typeof onComplete === 'function' ) {
+				onComplete();
+			}
+		}
+	};
+
+	function createObtainCentralAuthTokenAction( onSuccessActionIndex, onFailureActionIndex ) {
+		var progressItem = new WEF_ProgressItem( progressUl, i18n.actionObtainCentralAuthToken );
+		return function() {
+			var onFailureAction = typeof onFailureActionIndex === 'undefined' ? actionFinal : actions[onFailureActionIndex];
+			var onSuccessAction = actions[onSuccessActionIndex];
+			progressItem.inProgress();
+			$.ajax( {
+				type: 'GET',
+				url: executionContext.localUrlPrefix + '&action=tokens&type=centralauth',
+				error: function( jqXHR, textStatus, errorThrown ) {
+					alert( i18n.errorObtainCentralAuthToken + ': ' + textStatus );
+					progressItem.failure( textStatus );
+					onFailureAction();
+					return;
+				},
+				success: function( result ) {
+					if ( result.error ) {
+						progressItem.failure( result.error.info );
+						alert( i18n.errorObtainCentralAuthToken + ': ' + result.error.info );
+						onFailureAction();
+						return;
+					}
+					if ( !result.tokens || !result.tokens.centralauthtoken ) {
+						progressItem.failure();
+						alert( i18n.errorObtainCentralAuthToken );
+						onFailureAction();
+						return;
+					}
+					executionContext.centralAuthToken = result.tokens.centralauthtoken;
+					progressItem.success();
+					onSuccessAction();
+				},
+			} );
+		};
+	}
+
+	var currentAction = 0;
+
+	if ( WEF_Utils.isWikidata() === false ) {
+		actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1 );
+		currentAction++;
+	}
+
+	/*
+	 * Edit token obtains once for all edit actions on the same element so far
+	 */
+	( function() {
+		var nextAction = currentAction + 1;
+		var progressItem = new WEF_ProgressItem( progressUl, i18n.actionObtainEditToken );
+		actions[currentAction] = function() {
+			var onFailureAction = actionFinal;
+			var onSuccessAction = actions[nextAction];
+			progressItem.inProgress();
+			$.ajax( {
+				type: 'GET',
+				url: executionContext.getPrefixWithCentralAuthToken() // 
+						+ '&action=query' //
+						+ '&prop=info' //
+						+ '&intoken=edit' // 
+						+ '&titles=' + executionContext.entityId,
+				error: function( jqXHR, textStatus, errorThrown ) {
+					progressItem.failure( textStatus );
+					alert( i18n.errorObtainEditToken + ': ' + textStatus );
+					onFailureAction();
+					return;
+				},
+				success: function( result ) {
+					if ( result.error ) {
+						progressItem.failure( result.error.info );
+						alert( i18n.errorObtainEditToken + ': ' + result.error.info );
+						onFailureAction();
+						return;
+					}
+
+					var pageInfo = WEF_Utils.getFirstObjectValue( result.query.pages );
+					executionContext.editToken = pageInfo.edittoken;
+					if ( !executionContext.editToken ) {
+						progressItem.failure();
+						alert( i18n.errorObtainEditToken );
+						onFailureAction();
+						return;
+					}
+					progressItem.success();
+					onSuccessAction();
+				}
+			} );
+		};
+		currentAction++;
+	} )();
+
+	/* Saving changes in entity, if required */
+	if ( !$.isEmptyObject( updates.data ) ) {
+		/*
+		 * Each action (including obtaining edit token) need separate auth
+		 * token, because it's expiring in 10 seconds
+		 */
+		if ( WEF_Utils.isWikidata() === false ) {
+			actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1, currentAction + 2 );
+			currentAction++;
+		}
+		( function() {
+			var nextAction = currentAction + 1;
+			var progressItem = new WEF_ProgressItem( progressUl, i18n.actionUpdateEntity );
+			actions[currentAction] = function() {
+				var onFailureAction = actions[nextAction];
+				var onSuccessAction = actions[nextAction];
+				progressItem.inProgress();
+				$.ajax( {
+					type: 'POST',
+					url: executionContext.getPrefixWithCentralAuthToken() // 
+							+ '&token=' + encodeURIComponent( executionContext.editToken ) // 
+							+ '&action=wbeditentity' // 
+							+ '&id=' + executionContext.entityId //
+							+ '&summary=' + encodeURIComponent( i18n.summary ) //
+					,
+					data: {
+						data: JSON.stringify( updates.data ),
+					},
+					error: function( jqXHR, textStatus, errorThrown ) {
+						progressItem.failure( textStatus );
+						alert( i18n.errorUpdateEntity + ': ' + textStatus );
+						onFailureAction();
+						return;
+					},
+					success: function( result ) {
+						if ( result.error ) {
+							progressItem.failure( result.error.info );
+							alert( i18n.errorUpdateEntity + ': ' + result.error.info );
+							onFailureAction();
+							return;
+						}
+						progressItem.success();
+						onSuccessAction();
+					},
+				} );
+			};
+			currentAction++;
+		} )();
+	}
+
+	/* Remove claims in separate request */
+	if ( updates.removedClaims.length !== 0 ) {
+		/*
+		 * Each action (including obtaining edit token) need separate auth
+		 * token, because it's expiring in 10 seconds
+		 */
+		if ( WEF_Utils.isWikidata() === false ) {
+			actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1, currentAction + 2 );
+			currentAction++;
+		}
+		( function() {
+			var nextAction = currentAction + 1;
+			var progressItem = new WEF_ProgressItem( progressUl, i18n.actionRemoveClaims );
+			actions[currentAction] = function() {
+				var onFailureAction = actions[nextAction];
+				var onSuccessAction = actions[nextAction];
+				progressItem.inProgress();
+				$.ajax( {
+					type: 'POST',
+					url: executionContext.getPrefixWithCentralAuthToken() // 
+							+ '&token=' + encodeURIComponent( executionContext.editToken ) // 
+							+ '&action=wbremoveclaims' // 
+							+ '&claim=' + encodeURIComponent( updates.removedClaims.join( '|' ) ) //
+							+ '&summary=' + encodeURIComponent( i18n.summary ) //
+					,
+					error: function( jqXHR, textStatus, errorThrown ) {
+						progressItem.failure( textStatus );
+						alert( i18n.errorRemoveClaims + ': ' + textStatus );
+						onFailureAction();
+						return;
+					},
+					success: function( result ) {
+						if ( result.error ) {
+							progressItem.failure( result.error.info );
+							alert( i18n.errorRemoveClaims + ': ' + result.error.info );
+							onFailureAction();
+							return;
+						}
+						progressItem.success();
+						onSuccessAction();
+					},
+				} );
+			};
+			currentAction++;
+		} )();
+	}
+
+	actions[currentAction] = actionFinal;
+
+	dialog.dialog( {
 		height: 'auto',
 		width: 'auto',
 	} );
@@ -3871,7 +3891,7 @@ var WEF_EditorForm = function( title, html, i18n ) {
 			label: i18n.dialogButtonSaveLabel,
 			click: function() {
 				dialog.dialog( 'close' );
-				wef_save( claimEditorsTables );
+				wef_analyze_and_save( claimEditorTables );
 			},
 		}, {
 			text: i18n.dialogButtonCloseText,
