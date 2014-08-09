@@ -3,7 +3,7 @@ if ( !window.wef_loadingMarker_Editors ) {
 	importStylesheet( 'MediaWiki:WEF_Editors.css' );
 }
 
-mediaWiki.loader.using( [ 'wikibase.formatters.getStore', 'wikibase.experts', 'wikibase.parsers' ], function() {
+mediaWiki.loader.using( [ 'jquery.ui.button', 'wikibase.formatters.getStore', 'wikibase.experts', 'wikibase.parsers' ], function() {
 	addOnloadHook( function() {
 
 		( function( mw, wb, $, vv ) {
@@ -126,12 +126,18 @@ mediaWiki.loader.using( [ 'wikibase.formatters.getStore', 'wikibase.experts', 'w
 					icons: {
 						primary: 'ui-icon-pencil',
 					},
-				} ).css( 'position', 'absolute' );
+				} ).css( {
+					'position': 'absolute',
+					'z-index': 1,
+				} );
 				editButton.click( function() {
 					editButton.data( 'click' )();
 				} );
 
-				var saveCancelButtons = $( document.createElement( 'div' ) ).css( 'position', 'absolute' );
+				var saveCancelButtons = $( document.createElement( 'div' ) ).css( {
+					'position': 'absolute',
+					'z-index': 1,
+				} );
 				saveCancelButtons.append( $( document.createElement( 'button' ) ).button( {
 					label: 'save',
 					icons: {
