@@ -8,14 +8,14 @@
 		<div id='wef_taxonEditor_tab_general' class='wef_editor_tab'>
 			<fieldset class='wef_fieldset'>
 				<legend class='wef_i18n_text'>fieldsetGeneral</legend>
-				<table>
+				<table class='wef_table'>
 					<!-- instance of -->
 					<tbody class='wef_claim_editors' data-code='P31' data-datatype='wikibase-item' />
 				</table>
 			</fieldset>
 			<fieldset class='wef_fieldset'>
 				<legend class='wef_i18n_text'>fieldsetScientificNane</legend>
-				<table>
+				<table class='wef_table'>
 					<!-- taxon name -->
 					<tbody class='wef_claim_editors' data-code='P225' data-datatype='string'>
 						<!--  taxon author -->
@@ -41,11 +41,15 @@
 					<tbody class='wef_claim_editors' data-code='P944' data-datatype='wikibase-item' />
 				</table>
 			</fieldset>
+			<table class='wef_table'>
+				<!-- image -->
+				<tbody class='wef_claim_editors' data-code='P18' data-datatype='commonsMedia' />
+			</table>
 		</div>
 		<div id='wef_taxonEditor_tab_biology' class='wef_editor_tab'>
 			<fieldset class='wef_fieldset'>
 				<legend class='wef_i18n_text'>fieldsetSystematics</legend>
-				<table>
+				<table class='wef_table'>
 					<!-- taxon rank -->
 					<tbody class='wef_claim_editors' data-code='P105' data-datatype='wikibase-item' />
 					<!-- parent taxon -->
@@ -57,12 +61,12 @@
 			</fieldset>
 			<fieldset class='wef_fieldset'>
 				<legend class='wef_i18n_text'>fieldsetRedListStatus</legend>
-				<table>
+				<table class='wef_table'>
 					<!-- IUCN conservation status -->
 					<tbody class='wef_claim_editors' data-code='P141' data-datatype='wikibase-item' />
 				</table>
 			</fieldset>
-			<table>
+			<table class='wef_table'>
 				<!-- range map image -->
 				<tbody class='wef_claim_editors' data-code='P181' data-datatype='commonsMedia' />
 				<!-- endemic to -->
@@ -76,7 +80,7 @@
 			</table>
 		</div>
 		<div id='wef_taxonEditor_tab_databases' class='wef_editor_tab'>
-			<table>
+			<table  class='wef_table'>
 				<tbody class='wef_claim_editors' data-code='P687' data-datatype='string' data-check='^\d+$'
 					data-template='http://biodiversitylibrary.org/page/$1' />
 				<tbody class='wef_claim_editors' data-code='P830' data-datatype='string' data-check='^\d+$'
