@@ -8,7 +8,7 @@
  * @author vlsergey
  */
 
-var wef_Editors_i18n_en = {
+window.wef_Editors_i18n_en = {
 
 	actionAnalyzeChanges: 'Collecting and analyzing changes to entity',
 	actionNoChangesPurge: 'No changes found, purge and refresh current page',
@@ -95,7 +95,7 @@ var wef_Editors_i18n_en = {
 	timePrecisionOther: 'other',
 };
 
-var wef_Editors_i18n_ru = {
+window.wef_Editors_i18n_ru = {
 
 	actionAnalyzeChanges: 'Сбор и анализ изменений в элементе',
 	actionNoChangesPurge: 'Изменения не найдены, перезагрузка текущей страницы',
@@ -175,7 +175,7 @@ var wef_Editors_i18n_ru = {
 	timePrecisionOther: 'другое',
 };
 
-var WEF_Editors_i18n = function() {
+window.WEF_Editors_i18n = function() {
 
 	this.htmlInProgress = '<img alt="⌚" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/17px-Pictogram_voting_wait.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/26px-Pictogram_voting_wait.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/34px-Pictogram_voting_wait.svg.png 2x" data-file-width="250" data-file-height="250" height="17" width="17">';
 	this.htmlSuccess = '<img alt="✔" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/15px-Yes_check.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/23px-Yes_check.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/30px-Yes_check.svg.png 2x" data-file-width="600" data-file-height="600" height="15" width="15">';
@@ -188,7 +188,7 @@ var WEF_Editors_i18n = function() {
 };
 
 /* Some commons i18n strings for all editors */
-var wef_AnyEditor_i18n_en = {
+window.wef_AnyEditor_i18n_en = {
 
 	dialogButtonUpdateLabelsText: 'Update labels',
 	dialogButtonUpdateLabelsLabel: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
@@ -206,7 +206,7 @@ var wef_AnyEditor_i18n_en = {
 	statusLoadingWikidata: 'Loading element data from Wikidata',
 };
 
-var wef_AnyEditor_i18n_fr = {
+window.wef_AnyEditor_i18n_fr = {
 	dialogButtonUpdateLabelsText: 'Mettre à jour les libellés',
 	dialogButtonUpdateLabelsLabel: 'Recharger les labels et descriptions des propriétés, qualificatifs et objets',
 	dialogButtonSaveText: 'Enregistrer',
@@ -223,7 +223,7 @@ var wef_AnyEditor_i18n_fr = {
 	statusLoadingWikidata: 'Chargement des données de Wikidata',
 };
 
-var wef_AnyEditor_i18n_ru = {
+window.wef_AnyEditor_i18n_ru = {
 	dialogButtonUpdateLabelsText: 'Обновить названия',
 	dialogButtonUpdateLabelsLabel: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
 	dialogButtonSaveText: 'Сохранить',
@@ -241,11 +241,11 @@ var wef_AnyEditor_i18n_ru = {
 };
 
 /** @const */
-var WEF_RANK_PREFERRED = 'preferred';
+window.WEF_RANK_PREFERRED = 'preferred';
 /** @const */
-var WEF_RANK_NORMAL = 'normal';
+window.WEF_RANK_NORMAL = 'normal';
 /** @const */
-var WEF_RANK_DEPRECATED = 'deprecated';
+window.WEF_RANK_DEPRECATED = 'deprecated';
 
 /**
  * @typedef WEF_Entity
@@ -278,7 +278,7 @@ var WEF_RANK_DEPRECATED = 'deprecated';
  *            {WEF_Definition}
  * @class
  */
-var WEF_Definition = function( args ) {
+window.WEF_Definition = function( args ) {
 	/** @type {string} */
 	this.datatype = 'string';
 	/** @type {string} */
@@ -297,7 +297,7 @@ var WEF_Definition = function( args ) {
 	$.extend( this, args );
 };
 
-var WEF_Utils = {
+window.WEF_Utils = {
 
 	appendToNamedMap: function( element, mapName, key, obj ) {
 		if ( typeof element === 'undefined' ) {
@@ -546,7 +546,7 @@ var WEF_Utils = {
 	} )(),
 };
 
-var wef_Editors_i18n = new WEF_Editors_i18n();
+window.wef_Editors_i18n = new WEF_Editors_i18n();
 
 /**
  * Wikidata labels and description cache using local user storage (i.e.
@@ -555,7 +555,7 @@ var wef_Editors_i18n = new WEF_Editors_i18n();
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
  */
-var WEF_LabelsCache = function() {
+window.WEF_LabelsCache = function() {
 
 	/**
 	 * @const
@@ -845,7 +845,7 @@ var WEF_LabelsCache = function() {
 		}
 	};
 };
-var wef_LabelsCache = new WEF_LabelsCache();
+window.wef_LabelsCache = new WEF_LabelsCache();
 
 /**
  * Caches types of properties. Required because sometimes entity contains the
@@ -854,7 +854,7 @@ var wef_LabelsCache = new WEF_LabelsCache();
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
  */
-var WEF_TypesCache = function() {
+window.WEF_TypesCache = function() {
 
 	/**
 	 * @const
@@ -963,7 +963,7 @@ var WEF_TypesCache = function() {
 		}
 	};
 };
-var wef_TypesCache = new WEF_TypesCache();
+window.wef_TypesCache = new WEF_TypesCache();
 
 /**
  * @param dataValue
@@ -971,7 +971,7 @@ var wef_TypesCache = new WEF_TypesCache();
  *            will be created
  * @class
  */
-var WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDataValue, options ) {
+window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDataValue, options ) {
 
 	if ( typeof dataDataType === 'undefined' ) {
 		throw new Error( 'DataType is not specified' );
@@ -1830,7 +1830,7 @@ WEF_SnakValueEditor.prototype.show = function() {
  * extending values based on load external values. Uses {@link WEF_LabelsCache}
  * and JQuery autoselect
  */
-var WEF_ItemSelect = function() {
+window.WEF_ItemSelect = function() {
 	var select = $( document.createElement( 'select' ) ).addClass( 'wef_item_select' );
 	this.select = select;
 
@@ -1932,12 +1932,11 @@ var WEF_SelectSnakType = function() {
 };
 
 /** @type {WEF_SelectSnakType} */
-var wef_selectSnakType;
 addOnloadHook( function() {
-	wef_selectSnakType = new WEF_SelectSnakType();
+	window.wef_selectSnakType = new WEF_SelectSnakType();
 } );
 
-var WEF_SnakEditor = function( parent, options ) {
+window.WEF_SnakEditor = function( parent, options ) {
 	if ( $.isEmpty( parent ) ) {
 		throw new Error( 'parent is empty or not specified' );
 	}
@@ -2158,7 +2157,7 @@ WEF_SnakEditor.prototype.switchToSnakType = function( snakType ) {
  *            Wikidata entity JSON
  * @returns {WEF_Claim[]}
  */
-function WEF_filterClaims( definition, claims ) {
+window.WEF_filterClaims = function( definition, claims ) {
 	var isPropertyEditor = /^P\d+$/i.test( definition.code );
 	var isQualifierEditor = /^P\d+\[Q\d+\]\/P\d+$/i.test( definition.code );
 
@@ -2214,9 +2213,9 @@ function WEF_filterClaims( definition, claims ) {
 	}
 
 	throw new Error( 'Illegal state' );
-}
+};
 
-var WEF_QualifierEditor = function( parent, propertyId, onRemove ) {
+window.WEF_QualifierEditor = function( parent, propertyId, onRemove ) {
 	/** @type {string} */
 	this.propertyId = null;
 	/** @type {WEF_SnakEditor} */
@@ -2330,7 +2329,7 @@ WEF_QualifierEditor.prototype._addRemoveButton = function( target ) {
 	} );
 };
 
-var WEF_SelectableQualifierEditor = function( parent, qualifierDefinitions, onRemove ) {
+window.WEF_SelectableQualifierEditor = function( parent, qualifierDefinitions, onRemove ) {
 
 	/** @type {string} */
 	this.propertyId = null;
@@ -2452,7 +2451,7 @@ WEF_SelectableQualifierEditor.prototype._onPropertySelect = function( newPropert
 };
 
 /** @class */
-var WEF_SelectRank = function() {
+window.WEF_SelectRank = function() {
 	var i18n = wef_Editors_i18n;
 
 	var select = $( document.createElement( 'select' ) ).addClass( 'wef-claimrankselector-menu' ).attr( 'size', 3 );
@@ -2516,9 +2515,8 @@ var WEF_SelectRank = function() {
 };
 
 /** @type {WEF_SelectRank} */
-var wef_selectRank;
 addOnloadHook( function() {
-	wef_selectRank = new WEF_SelectRank();
+	window.wef_selectRank = new WEF_SelectRank();
 } );
 
 /**
@@ -3404,7 +3402,7 @@ WEF_ClaimEditorsTable.removeFoundValueClasses = function() {
 	$( '.wef-lookup-found-new' ).removeClass( 'wef-lookup-found-new' );
 };
 
-var WEF_ProgressItem = function( parentUl, text ) {
+window.WEF_ProgressItem = function( parentUl, text ) {
 	this._span1 = $( document.createElement( 'span' ) );
 	this._span2 = $( document.createElement( 'span' ) ).text( text );
 
@@ -3430,12 +3428,12 @@ WEF_ProgressItem.prototype.notNeeded = function() {
 	this._span1.html( wef_Editors_i18n.htmlNotNeeded );
 };
 
-var WEF_Updates = function() {
+window.WEF_Updates = function() {
 	this.data = {};
 	this.removedClaims = [];
 };
 
-function wef_analyze_and_save( claimEditorTables ) {
+window.wef_analyze_and_save = function( claimEditorTables ) {
 	var i18n = wef_Editors_i18n;
 
 	var dialog = $( document.createElement( 'div' ) );
@@ -3474,9 +3472,9 @@ function wef_analyze_and_save( claimEditorTables ) {
 	wef_save( updates, function() {
 		WEF_Utils.purge();
 	} );
-}
+};
 
-function wef_save( updates, onComplete ) {
+window.wef_save = function( updates, onComplete ) {
 
 	if ( !( updates instanceof WEF_Updates ) ) {
 		throw new Error( 'WEF_Updates object is expected' );
@@ -3710,9 +3708,9 @@ function wef_save( updates, onComplete ) {
 		width: 'auto',
 	} );
 	actions[0]();
-}
+};
 
-var WEF_EditorForm = function( title, html, i18n ) {
+window.WEF_EditorForm = function( title, html, i18n ) {
 
 	/** @type {WEF_ClaimEditorsTable[]} */
 	var claimEditorsTables = [];
@@ -3920,7 +3918,7 @@ var WEF_EditorForm = function( title, html, i18n ) {
 /**
  * @class
  */
-var WEF_Editor = function( dialogHtml ) {
+window.WEF_Editor = function( dialogHtml ) {
 
 	if ( typeof dialogHtml === 'undefined' ) {
 		throw new Error( 'Dialog HTML is not specified' );
