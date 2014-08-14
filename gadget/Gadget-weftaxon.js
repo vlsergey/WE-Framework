@@ -151,7 +151,7 @@ window.wef_TaxonEditor_i18n_ru = {
 	menuButton: 'WEF: Таксон',
 };
 
-mw.loader.using( [ 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
+mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
 	window.wef_TaxonEditor = new WEF_Editor( wef_TaxonEditor_html );
 	window.wef_TaxonEditor.localize( 'wef_TaxonEditor_i18n_' );
 	window.wef_TaxonEditor.addEditButtons();

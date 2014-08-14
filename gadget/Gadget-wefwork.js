@@ -151,7 +151,7 @@ window.wef_WorkEditor_i18n_ru = {
 	menuButton: 'WEF: FRBR работа',
 };
 
-mw.loader.using( [ 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
+mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
 	window.wef_WorkEditor = new WEF_Editor( wef_WorkEditor_html );
 	window.wef_WorkEditor.localize( 'wef_WorkEditor_i18n_' );
 	window.wef_WorkEditor.addEditButtons();

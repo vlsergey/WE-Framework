@@ -2000,7 +2000,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 	} );
 };
 
-mw.loader.using( [ 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
+mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
 	window.externalLinksEdit = new WEF_ExternalLinks();
 	window.externalLinksEdit.init();
 	window.externalLinksEdit.setup();

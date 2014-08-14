@@ -395,7 +395,7 @@ window.wef_PersonEditor_i18n_ru = {
 	menuButton: 'WEF: Персона',
 };
 
-mw.loader.using( [ 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
+mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
 	window.wef_PersonEditor = new WEF_Editor( wef_PersonEditor_html );
 	wef_PersonEditor.localize( 'wef_PersonEditor_i18n_' );
 	wef_PersonEditor.addEditButtons();

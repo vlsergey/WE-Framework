@@ -176,7 +176,7 @@ window.wef_EditionEditor_i18n_ru = {
 	menuButton: 'WEF: FRBR издание',
 };
 
-mw.loader.using( [ 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
+mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
 	window.wef_EditionEditor = new WEF_Editor( wef_EditionEditor_html );
 	window.wef_EditionEditor.localize( 'wef_EditionEditor_i18n_' );
 	window.wef_EditionEditor.addEditButtons();
