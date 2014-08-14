@@ -19,5 +19,5 @@ try {
 	// already registered
 }
 
-mw.loader.register( 'ext.gadget.wef-ExternalLinks', 64774955, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+mw.loader.register( 'ext.gadget.wef-ExternalLinks', 1408041420, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 mw.loader.using( 'ext.gadget.wef-ExternalLinks' );

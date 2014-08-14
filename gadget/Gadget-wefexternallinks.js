@@ -1725,7 +1725,7 @@ window.WEF_ExternalLinks = function() {
 				label: i18n.dialogButtonSaveLabel,
 				click: function() {
 					dialogForm.dialog( 'close' );
-					wef_save( externalLinksEdit.editors );
+					 wef_analyze_and_save( externalLinksEdit.editors );
 				}
 			}, {
 				text: i18n.dialogButtonCloseText,
@@ -1971,7 +1971,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q17329836,// Encyclopédique Larousse en ligne .fr
 		d.Q17378135,// Большая советская .ru
 		d.Q4091875, // Большая энциклопедия Кирилла и Мефодия .ru
-		d.Q1967250,// Краткая еврейская .ru
+		d.P1438,// Краткая еврейская .ru
 		d.Q4239850,// Краткая литературная .ru
 		d.Q2627728,// Кругосвет .ru
 		d.Q4263804,// Литературная .ru
