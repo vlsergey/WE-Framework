@@ -390,6 +390,10 @@ window.WEF_ExternalLinks = function() {
 		template: 'http://ci.nii.ac.jp/author/$1',
 		qualifiers: [],
 	} );
+	/* pages; страницы */
+	this.definitions.P304 = new WEF_Definition( {
+		datatype: 'string',
+	} );
 	this.definitions.P345 = new WEF_Definition( {
 		label: 'Q37312',
 		normalize: function( id ) {
@@ -435,7 +439,7 @@ window.WEF_ExternalLinks = function() {
 	/* title; название */
 	this.definitions.P357 = new WEF_Definition( {
 		datatype: 'string',
-	} );
+	} );	
 	this.definitions.P373 = new WEF_Definition( {
 		label: 'Q565',
 		autocomplete: {
@@ -1066,6 +1070,24 @@ window.WEF_ExternalLinks = function() {
 		check: /^([1-9]\d{0,2}|[1-5]\d{3})$/,
 		template: 'http://ta.sandrart.net/en/person/view/$1',
 		qualifiers: [],
+	} );
+	this.definitions.P1438 = new WEF_Definition( {
+		datatype: 'string',
+		flag: 'ru',
+		label: 'Q1967250',
+		buttons: [ {
+			icons: {
+				primary: 'ui-icon-search'
+			},
+			text: false,
+			label: 'Search on eleven.co.il',
+			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
+				return '//google.com/search?q=site%3Awww.eleven.co.il%2Farticle%2F+' + encodeURIComponent( title );
+			} ),
+		} ],
+		check: /^\d+$/,
+		template: 'http://www.eleven.co.il/article/$1',
+		qualifiers: [ d.P304, d.P478 ],
 	} );
 
 	this.definitions.Q355 = new WEF_Definition( {
@@ -1949,6 +1971,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q17329836,// Encyclopédique Larousse en ligne .fr
 		d.Q17378135,// Большая советская .ru
 		d.Q4091875, // Большая энциклопедия Кирилла и Мефодия .ru
+		d.Q1967250,// Краткая еврейская .ru
 		d.Q4239850,// Краткая литературная .ru
 		d.Q2627728,// Кругосвет .ru
 		d.Q4263804,// Литературная .ru

@@ -3054,7 +3054,7 @@ WEF_ClaimEditor.prototype.addQualifier = function( qualifierId ) {
  *            {WEF_Definition}
  * @class
  */
-var WEF_ClaimEditorsTable = function( definition, options ) {
+window.WEF_ClaimEditorsTable = function( definition, options ) {
 
 	var propertyEditorsTable = this;
 	var i18n = wef_Editors_i18n;
