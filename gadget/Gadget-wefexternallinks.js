@@ -203,7 +203,7 @@ window.WEF_ExternalLinks = function() {
 		URI_PREFIX = '//www.wikidata.org/w/api.php?format=json';
 	} else {
 		entityId = mw.config.get( 'wgWikibaseItemId' );
-		URI_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
+		URI_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json';
 	}
 
 	this.i18n = wef_ExternalLinks_i18n;
@@ -244,14 +244,14 @@ window.WEF_ExternalLinks = function() {
 				}
 			} );
 			if ( title === null ) {
-				title = wgTitle;
+				title = mw.config.get( 'wgTitle' );
 			}
 			window.open( urlFunction( title ), '_blank' );
 		};
 	};
 
 	var regexpPath = /^[\w\.\-\~\$\&\'\(\)\*\+\,\;\=\:\@А-ЯЁа-яё]+$/;
-	var regexpTitle = new RegExp( '^[' + wgLegalTitleChars + ']+$' );
+	var regexpTitle = new RegExp( '^[' + mw.config.get( 'wgLegalTitleChars' ) + ']+$' );
 
 	/* author, автор */
 	this.definitions.P50 = new WEF_Definition( {
@@ -449,7 +449,7 @@ window.WEF_ExternalLinks = function() {
 						{
 							type: 'GET',
 							dataType: 'json',
-							url: '//commons.wikimedia.org/w/api.php?format=json&origin=' + encodeURIComponent( location.protocol + wgServer )
+							url: '//commons.wikimedia.org/w/api.php?format=json&origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) )
 									+ '&action=query&list=prefixsearch&psnamespace=14&pslimit=15&pssearch=' + encodeURIComponent( term ),
 						} ).done( function( result ) {
 					var list = [];
@@ -1848,7 +1848,7 @@ window.WEF_ExternalLinks = function() {
 	};
 
 	this.purge = function() {
-		window.location.replace( wgServer + wgScriptPath + '/index.php?action=purge&title=' + encodeURIComponent( wgPageName ) );
+		window.location.replace( mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/index.php?action=purge&title=' + encodeURIComponent( mw.config.get( 'wgPageName' ) ) );
 		return;
 	};
 };

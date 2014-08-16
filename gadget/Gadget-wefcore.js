@@ -359,20 +359,20 @@ window.WEF_Utils = {
 
 	/** @returns {string} */
 	getWikidataApiPrefix: function() {
-		if ( wgSiteName === 'Wikidata' ) {
-			return wgServer + wgScriptPath + '/api.php' + '?format=json';
+		if ( mw.config.get( 'wgSiteName' ) === 'Wikidata' ) {
+			return mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php' + '?format=json';
 		} else {
-			return '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json';
+			return '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json';
 		}
 	},
 
 	/** @returns {Boolean} */
 	isWikidata: function() {
-		return wgSiteName === 'Wikidata';
+		return mw.config.get( 'wgSiteName' ) === 'Wikidata';
 	},
 
 	localize: function( targetObject, globalVariablesPrefix ) {
-		var languages = [ 'ru', 'en', wgContentLanguage, wgUserLanguage ];
+		var languages = [ 'ru', 'en', mw.config.get( 'wgContentLanguage' ), mw.config.get( 'wgUserLanguage' ) ];
 		$.each( languages, function( i, lang ) {
 			if ( window[globalVariablesPrefix + lang] ) {
 				$.extend( targetObject, window[globalVariablesPrefix + lang] );
@@ -460,12 +460,12 @@ window.WEF_Utils = {
 	},
 
 	purge: function() {
-		window.location.replace( wgServer + wgScriptPath + '/index.php?action=purge&title=' + encodeURIComponent( wgPageName ) );
+		window.location.replace( mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/index.php?action=purge&title=' + encodeURIComponent( mw.config.get( 'wgPageName' ) ) );
 	},
 
 	purgeAsync: function() {
 		$.ajax( {
-			url: wgServer + wgScriptPath + '/api.php?action=purge&titles=' + encodeURIComponent( wgPageName ),
+			url: mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php?action=purge&titles=' + encodeURIComponent( mw.config.get( 'wgPageName' ) ),
 		} );
 	},
 
@@ -742,8 +742,8 @@ window.WEF_LabelsCache = function() {
 			return;
 		}
 
-		var languages = [ wgUserLanguage, wgContentLanguage, 'en', 'ru' ];
-		var languagesString = encodeURIComponent( wgUserLanguage + '|' + wgContentLanguage + '|en|ru' );
+		var languages = [ mw.config.get( 'wgUserLanguage' ), mw.config.get( 'wgContentLanguage' ), 'en', 'ru' ];
+		var languagesString = encodeURIComponent( mw.config.get( 'wgUserLanguage' ) + '|' + mw.config.get( 'wgContentLanguage' ) + '|en|ru' );
 
 		// remove already known
 		queue = jQuery.grep( queue, function( key ) {
@@ -1137,7 +1137,7 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 							{
 								type: 'GET',
 								dataType: 'json',
-								url: '//commons.wikimedia.org/w/api.php?format=json&origin=' + encodeURIComponent( location.protocol + wgServer )
+								url: '//commons.wikimedia.org/w/api.php?format=json&origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) )
 										+ '&action=query&list=prefixsearch&psnamespace=6&pslimit=15&pssearch=' + encodeURIComponent( term ),
 							} ).done( function( result ) {
 						var list = [];
@@ -1467,7 +1467,7 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 			for ( var i = 1; i <= 12; i++ ) {
 				var option = $( document.createElement( 'option' ) );
 				option.attr( 'value', i );
-				option.text( wgMonthNames[i] );
+				option.text( mw.config.get( 'wgMonthNames' )[i] );
 				months.append( option );
 			}
 
@@ -1509,7 +1509,7 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 				};
 			};
 			this.getAsLabel = function() {
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_months' ).text( wgMonthNames[months.val()] + ' ' + years.val() );
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_months' ).text( mw.config.get( 'wgMonthNames' )[months.val()] + ' ' + years.val() );
 			};
 
 			months.change( changeF );
@@ -1691,7 +1691,7 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 						dataType: 'json',
 						url: WEF_Utils.getWikidataApiPrefix() // 
 								+ '&action=wbsearchentities' //
-								+ '&language=' + encodeURIComponent( wgUserLanguage ) // 
+								+ '&language=' + encodeURIComponent( mw.config.get( 'wgUserLanguage' ) ) // 
 								+ '&limit=15' //
 								+ '&search=' + encodeURIComponent( term ),
 					} ).done( function( result ) {
@@ -3492,8 +3492,8 @@ window.wef_save = function( updates, onComplete ) {
 		editToken: null,
 		entityId: WEF_Utils.getEntityId(),
 		isWikidata: WEF_Utils.isWikidata(),
-		localUrlPrefix: wgServer + wgScriptPath + '/api.php' + '?format=json',
-		wikidataUrlPrefix: '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + wgServer ) + '&format=json',
+		localUrlPrefix: mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php' + '?format=json',
+		wikidataUrlPrefix: '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json',
 
 		getPrefixWithCentralAuthToken: function() {
 			if ( this.isWikidata === true ) {
@@ -3507,7 +3507,7 @@ window.wef_save = function( updates, onComplete ) {
 	var actions = [];
 	var actionFinal = function() {
 		dialog.dialog( 'close' );
-		if ( wgAction === 'view' ) {
+		if ( mw.config.get( 'wgAction' ) === 'view' ) {
 			if ( typeof onComplete === 'function' ) {
 				onComplete();
 			}
