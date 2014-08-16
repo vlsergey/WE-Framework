@@ -1,5 +1,5 @@
 /**
- * This JavaScrtipt is a implementation of JavaScript Gadget to edit FRBR work
+ * This JavaScript is a implementation of JavaScript Gadget to edit FRBR work
  * information on Wikidata. This script is based on WE-Framework.
  * 
  * @see https://github.com/vlsergey/WE-Framework

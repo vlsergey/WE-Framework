@@ -1,5 +1,5 @@
 /**
- * This JavaScrtipt is a loader of TaxonEditor from WE-Framework, works only for
+ * This JavaScript is a loader of TaxonEditor from WE-Framework, works only for
  * other sites (ruwiki users should use local gadgets)
  * 
  * @see https://github.com/vlsergey/WE-Framework

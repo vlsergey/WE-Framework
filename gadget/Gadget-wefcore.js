@@ -1,5 +1,5 @@
 /**
- * Those JavaScrtipt classes are main core of WE-Framework to edit Wikidata
+ * Those JavaScript classes are main core of WE-Framework to edit Wikidata
  * using JQuery dialogs. They provide classes to edit snak values, snaks,
  * claims, and claim groups (of the same property). For the examples how to use
  * those classes see "WEF_ExternalLinks.js" and "WEF_PersonEditor.js".

@@ -1,5 +1,5 @@
 /**
- * This JavaScrtipt is a loader of External Links Editor from WE-Framework,
+ * This JavaScript is a loader of External Links Editor from WE-Framework,
  * works only for other sites (ruwiki users should use local gadgets)
  * 
  * @see https://github.com/vlsergey/WE-Framework
