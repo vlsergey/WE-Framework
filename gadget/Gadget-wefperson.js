@@ -1,5 +1,5 @@
 /**
- * This JavaScrtipt is a implementation of JavaScript Gadget to edit personal
+ * This JavaScript is a implementation of JavaScript Gadget to edit personal
  * information on Wikidata. This script is based on WE-Framework.
  * 
  * @see https://github.com/vlsergey/WE-Framework
