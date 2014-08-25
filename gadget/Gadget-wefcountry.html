@@ -1,0 +1,211 @@
+<div class='wef_countryEditor_dialog'>
+	<div class='wef_tabs'>
+		<ul>
+			<li><a href='#wef_countryEditor_tab_general' class='wef_editor_tab_anchor wef_i18n_text'>groupGeneral</a></li>
+			<li><a href='#wef_countryEditor_tab_media' class='wef_editor_tab_anchor wef_i18n_text'>groupMedia</a></li>
+			<li><a href='#wef_countryEditor_tab_history' class='wef_editor_tab_anchor wef_i18n_label'>Q309</a></li>
+			<li><a href='#wef_countryEditor_tab_geography' class='wef_editor_tab_anchor wef_i18n_label'>Q1071</a></li>
+			<li><a href='#wef_countryEditor_tab_politic' class='wef_editor_tab_anchor wef_i18n_label'>Q7163</a></li>
+			<li><a href='#wef_countryEditor_tab_subdivisions' class='wef_editor_tab_anchor wef_i18n_label'>P150</a></li>
+			<li><a href='#wef_countryEditor_tab_demography' class='wef_editor_tab_anchor wef_i18n_label'>P1082</a></li>
+			<li><a href='#wef_countryEditor_tab_clubs' class='wef_editor_tab_anchor wef_i18n_text'>groupClubs</a></li>
+			<li><a href='#wef_countryEditor_tab_iso' class='wef_editor_tab_anchor wef_i18n_label'>Q25275</a></li>
+		</ul>
+
+		<div id='wef_countryEditor_tab_general' class='wef_editor_tab'>
+			<fieldset class='wef_fieldset'>
+				<legend class='wef_i18n_text'>fieldsetGeneral</legend>
+				<table class='wef_table'>
+					<!-- instance of -->
+					<tbody class='wef_claim_editors' data-code='P31' data-datatype='wikibase-item' />
+					<!-- part of -->
+					<tbody class='wef_claim_editors' data-code='P361' data-datatype='wikibase-item' />
+				</table>
+			</fieldset>
+			<fieldset class='wef_fieldset'>
+				<table class='wef_table'>
+					<!-- official language -->
+					<tbody class='wef_claim_editors' data-code='P37' data-datatype='wikibase-item' />
+					<!-- currency -->
+					<tbody class='wef_claim_editors' data-code='P38' data-datatype='wikibase-item' />
+				</table>
+			</fieldset>
+			<fieldset class='wef_fieldset'>
+				<table class='wef_table'>
+					<!-- song -->
+					<tbody class='wef_claim_editors' data-code='P85' data-datatype='wikibase-item' />
+				</table>
+			</fieldset>
+		</div>
+
+		<div id='wef_countryEditor_tab_media' class='wef_editor_tab'>
+			<table class='wef_table'>
+				<!-- commons -->
+				<tbody class='wef_claim_editors' data-code='P373' data-datatype='string' />
+			</table>
+			<fieldset class='wef_fieldset'>
+				<legend class='wef_i18n_label'>Q14660</legend>
+				<table class='wef_table'>
+					<!-- flag image -->
+					<tbody class='wef_claim_editors' data-code='P41' data-datatype='commonsMedia'>
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' />
+					</tbody>
+					<!-- flag -->
+					<tbody class='wef_claim_editors' data-code='P163' data-datatype='wikibase-item' />
+				</table>
+			</fieldset>
+			<fieldset class='wef_fieldset'>
+				<legend class='wef_i18n_label'>Q14659</legend>
+				<table class='wef_table'>
+					<!-- coat of arms image -->
+					<tbody class='wef_claim_editors' data-code='P94' data-datatype='commonsMedia'>
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' />
+					</tbody>
+					<!-- coat of arms -->
+					<tbody class='wef_claim_editors' data-code='P237' data-datatype='wikibase-item' />
+				</table>
+			</fieldset>
+		</div>
+
+		<div id='wef_countryEditor_tab_history' class='wef_editor_tab'>
+			<fieldset class='wef_fieldset'>
+				<table class='wef_table'>
+					<!-- est. date -->
+					<tbody class='wef_claim_editors' data-code='P571' data-datatype='time' />
+					<!-- previous -->
+					<tbody class='wef_claim_editors' data-code='P155' data-datatype='wikibase-item' />
+					<!-- next -->
+					<tbody class='wef_claim_editors' data-code='P156' data-datatype='wikibase-item' />
+				</table>
+			</fieldset>
+			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+				<legend class='wef_i18n_label'>P138</legend>
+				<table class='wef_table'>
+					<!-- named after -->
+					<tbody class='wef_claim_editors' data-code='P138' data-datatype='wikibase-item'>
+						<!-- language -->
+						<tr data-code='P407' data-datatype='wikibase-item' />
+					</tbody>
+				</table>
+			</fieldset>
+			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+				<legend class='wef_i18n_label'>P793</legend>
+				<table class='wef_table'>
+					<!-- significant event -->
+					<tbody class='wef_claim_editors' data-code='P793' data-datatype='wikibase-item'>
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' />
+					</tbody>
+				</table>
+			</fieldset>
+		</div>
+
+		<div id='wef_countryEditor_tab_geography' class='wef_editor_tab'>
+			<table class='wef_table'>
+				<!-- continent -->
+				<tbody class='wef_claim_editors' data-code='P30' data-datatype='wikibase-item' />
+				<!-- capital -->
+				<tbody class='wef_claim_editors' data-code='P36' data-datatype='wikibase-item'>
+					<!-- start date -->
+					<tr data-code='P580' data-datatype='time' />
+					<!-- end date -->
+					<tr data-code='P582' data-datatype='time' />
+				</tbody>
+				<!-- time zone -->
+				<tbody class='wef_claim_editors' data-code='P421' data-datatype='wikibase-item' />
+			</table>
+			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+				<legend class='wef_i18n_label'>P47</legend>
+				<table class='wef_table'>
+					<!-- shares border with -->
+					<tbody class='wef_claim_editors' data-code='P47' data-datatype='wikibase-item'>
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' />
+						<!-- subject -->
+						<tr data-code='P805' data-datatype='wikibase-item' />
+					</tbody>
+				</table>
+			</fieldset>
+		</div>
+
+		<div id='wef_countryEditor_tab_politic' class='wef_editor_tab'>
+			<table class='wef_table'>
+				<!-- basic form of government -->
+				<tbody class='wef_claim_editors' data-code='P122' data-datatype='wikibase-item' />
+				<!-- legislative body -->
+				<tbody class='wef_claim_editors' data-code='P194' data-datatype='wikibase-item' />
+				<!-- highest judicial authority -->
+				<tbody class='wef_claim_editors' data-code='P209' data-datatype='wikibase-item' />
+			</table>
+		</div>
+
+		<div id='wef_countryEditor_tab_subdivisions' class='wef_editor_tab'>
+			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+				<legend class='wef_i18n_label'>P150</legend>
+				<table class='wef_table'>
+					<!-- member of -->
+					<tbody class='wef_claim_editors' data-code='P150' data-datatype='wikibase-item'>
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' />
+						<!-- subject -->
+						<tr data-code='P805' data-datatype='wikibase-item' />
+					</tbody>
+				</table>
+			</fieldset>
+		</div>
+
+		<div id='wef_countryEditor_tab_demography' class='wef_editor_tab'>
+			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+				<legend class='wef_i18n_label'>P1082</legend>
+				<table class='wef_table'>
+					<!-- member of -->
+					<tbody class='wef_claim_editors' data-code='P1082' data-datatype='quantity'>
+						<!-- point in time -->
+						<tr data-code='P585' data-datatype='time' data-as-column='true' />
+					</tbody>
+				</table>
+			</fieldset>
+		</div>
+
+		<div id='wef_countryEditor_tab_clubs' class='wef_editor_tab'>
+			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+				<legend class='wef_i18n_label'>P463</legend>
+				<table class='wef_table'>
+					<!-- member of -->
+					<tbody class='wef_claim_editors' data-code='P463' data-datatype='wikibase-item'>
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' data-as-column='true' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' data-as-column='true' />
+						<!-- subject -->
+						<tr data-code='P805' data-datatype='wikibase-item' />
+					</tbody>
+				</table>
+			</fieldset>
+		</div>
+
+		<div id='wef_countryEditor_tab_iso' class='wef_editor_tab'>
+			<table class='wef_table'>
+				<!-- ISO 3166-1 alpha-2 -->
+				<tbody class='wef_claim_editors' data-code='P297' data-datatype='string' />
+				<!-- ISO 3166-1 alpha-3 -->
+				<tbody class='wef_claim_editors' data-code='P298' data-datatype='string' />
+				<!-- ISO 3166-1 numeric -->
+				<tbody class='wef_claim_editors' data-code='P299' data-datatype='string' />
+			</table>
+		</div>
+
+	</div>
+</div>
