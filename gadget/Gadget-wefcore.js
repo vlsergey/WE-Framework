@@ -199,7 +199,7 @@ window.wef_AnyEditor_i18n_en = {
 	dialogTitle: 'WE-Framework',
 
 	fieldsetGeneral: 'general',
-	groupGeneral: 'General',
+	groupGeneral: 'general',
 
 	errorLoadingWikidata: 'Unable to load element data from Wikidata',
 
@@ -215,8 +215,8 @@ window.wef_AnyEditor_i18n_fr = {
 	dialogButtonCloseLabel: 'Fermer la fenêtre sans enregistrer',
 	dialogTitle: 'WE-Framework',
 
-	fieldsetGeneral: 'Général',
-	groupGeneral: 'Général',
+	fieldsetGeneral: 'général',
+	groupGeneral: 'général',
 
 	errorLoadingWikidata: 'Échec du chargement des données de Wikidata',
 
@@ -233,7 +233,7 @@ window.wef_AnyEditor_i18n_ru = {
 	dialogTitle: 'WE-Framework',
 
 	fieldsetGeneral: 'основное',
-	groupGeneral: 'Основное',
+	groupGeneral: 'основное',
 
 	errorLoadingWikidata: 'Невозможно загрузить информацию с Викиданных',
 
@@ -241,11 +241,11 @@ window.wef_AnyEditor_i18n_ru = {
 };
 
 /** @const */
-window.WEF_RANK_PREFERRED = 'preferred';
+WEF_RANK_PREFERRED = 'preferred';
 /** @const */
-window.WEF_RANK_NORMAL = 'normal';
+WEF_RANK_NORMAL = 'normal';
 /** @const */
-window.WEF_RANK_DEPRECATED = 'deprecated';
+WEF_RANK_DEPRECATED = 'deprecated';
 
 /**
  * @typedef WEF_Entity
@@ -310,6 +310,11 @@ window.WEF_Utils = {
 			element[mapName][key] = [];
 		}
 		element[mapName][key].push( obj );
+	},
+
+	/** @returns {string} */
+	formatCentury: function( century ) {
+		return this.formatDate( century * 100 );
 	},
 
 	/** @returns {string} */
@@ -492,6 +497,34 @@ window.WEF_Utils = {
 	regexpGetSource: function( regexp ) {
 		return regexp.toString().replace( /^\/(.*)\/[a-z]*$/, '$1' );
 	},
+
+	toRoman: ( function() {
+		"use strict";
+		var limit = 3999;
+		var v = [ 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 ];
+		var r = [ 'M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX', 'V', 'IV', 'I' ];
+
+		return function( src ) {
+			var n = Math.floor( src );
+			var val = 0;
+			var s = '';
+			var i = 0;
+
+			if ( n < 1 || n > limit )
+				return '';
+			while ( i < 13 ) {
+				val = v[i];
+				while ( n >= val ) {
+					n -= val;
+					s += r[i];
+				}
+				if ( n == 0 )
+					return s;
+				++i;
+			}
+			return '';
+		};
+	} )(),
 
 	urlCommons: function( value ) {
 		return WEF_Utils.urlNice( '//commons.wikimedia.org/wiki/File:' + escape( value ) );
@@ -997,6 +1030,7 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 	var PRECISION_DAYS = 11;
 	var PRECISION_MONTHS = 10;
 	var PRECISION_YEARS = 9;
+	var PRECISION_CENTURIES = 7;
 
 	this.mainElement = $( document.createElement( 'span' ) ).appendTo( parent );
 
@@ -1023,7 +1057,9 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 					editorDataType = 'time';
 				} else if ( !$.isEmpty( initialValue ) && !$.isEmpty( initialValue.precision ) ) {
 					var precision = initialValue.precision;
-					if ( precision === PRECISION_YEARS && initialValue.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) === CALENDAR_GREGORIAN ) {
+					if ( precision === PRECISION_CENTURIES && initialValue.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) === CALENDAR_GREGORIAN ) {
+						editorDataType = 'time-centuries';
+					} else if ( precision === PRECISION_YEARS && initialValue.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) === CALENDAR_GREGORIAN ) {
 						editorDataType = 'time-years';
 					} else if ( precision === PRECISION_MONTHS && initialValue.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) === CALENDAR_GREGORIAN ) {
 						editorDataType = 'time-months';
@@ -1085,6 +1121,8 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 		.attr( 'value', 'time-months' ).data( 'precision', PRECISION_MONTHS ).text( i18n['timePrecision' + PRECISION_MONTHS] ) );
 		selectDateTimePrecision.append( $( document.createElement( 'option' ) ) //
 		.attr( 'value', 'time-years' ).data( 'precision', PRECISION_YEARS ).text( i18n['timePrecision' + PRECISION_YEARS] ) );
+		selectDateTimePrecision.append( $( document.createElement( 'option' ) ) //
+		.attr( 'value', 'time-centuries' ).data( 'precision', PRECISION_CENTURIES ).text( i18n['timePrecision' + PRECISION_CENTURIES] ) );
 		selectDateTimePrecision.append( $( document.createElement( 'option' ) ).attr( 'value', 'time' ).text( i18n.timePrecisionOther ) );
 		selectDateTimePrecision.val( editorDataType );
 		selectDateTimePrecision.change( function() {
@@ -1537,6 +1575,69 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 
 			years.change( changeF );
 			years.keyup( changeF );
+		} ).call( this );
+	} else if ( editorDataType === 'time-centuries' ) {
+		( function() {
+
+			selectDateTimePrecision.appendTo( this.mainElement );
+
+			var centuries = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( this.mainElement );
+
+			this.setDataValue = function( newDataValue ) {
+				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
+					switchDataType( 'time', newDataValue );
+				}
+				var parseable = newDataValue.value.time.replace( /^([\\+\\-])00000/, '$1' );
+				if ( isNaN( Date.parse( parseable ) ) ) {
+					switchDataType( 'time', newDataValue );
+				}
+				var date = new Date( parseable );
+				var year = date.getUTCFullYear();
+				var century;
+				if ( date.getUTCFullYear() < 0 ) {
+					century = Math.floor( ( Math.abs( year ) - 1 ) / 100 ) + 1;
+				} else {
+					century = Math.floor( ( year - 1 ) / 100 ) + 1;
+				}
+				centuries.val( century );
+			};
+			this.hasValue = function() {
+				return !$.isEmpty( centuries.val() );
+			};
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
+					throw new Error( 'No value' );
+				}
+
+				return {
+					type: 'time',
+					value: {
+						time: WEF_Utils.formatCentury( centuries.val() ),
+						timezone: 0,
+						precision: PRECISION_CENTURIES,
+						before: 0,
+						after: 0,
+						calendarmodel: PREFIX_CALENDAR_MODEL + CALENDAR_GREGORIAN,
+					},
+				};
+			};
+			this.getAsLabel = function() {
+				var century = centuries.val();
+				var str;
+				if ( century === 0) {
+					str = '0'; 
+				} else {
+					if ( century < 0 ) {
+						str = WEF_Utils.toRoman( Math.abs( century ) ) + " BC";
+					} else {
+						str = WEF_Utils.toRoman( century ) + " AD";
+					}
+				}
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_centuries' ).text( str );
+			};
+
+			centuries.change( changeF );
+			centuries.keyup( changeF );
 		} ).call( this );
 	} else if ( editorDataType === 'url' ) {
 		( function() {
