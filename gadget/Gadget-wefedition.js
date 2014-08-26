@@ -28,8 +28,18 @@ window.wef_EditionEditor_html = "<div class=\'wef_workEditor_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P357\' data-datatype=\'string\' />\r\n" + 
 		"					<!-- subtitle -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P392\' data-datatype=\'string\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"				<table class=\"wef_table\">\r\n" + 
 		"					<!-- part of -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P361\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- published in -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1433\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- follows -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P155\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- followed by -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P156\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
@@ -156,10 +166,10 @@ window.wef_EditionEditor_i18n_en = {
 
 	dialogTitle: 'FRBR Edition data — WE-Framework',
 
-	groupContent: 'Content',
-	groupInside: 'Inside',
-	groupClassification: 'Classification',
-	groupOther: 'Other',
+	groupContent: 'content',
+	groupInside: 'inside',
+	groupClassification: 'classification',
+	groupOther: 'other',
 
 	menuButton: 'WEF: FRBR Edition',
 };
@@ -168,10 +178,10 @@ window.wef_EditionEditor_i18n_ru = {
 
 	dialogTitle: 'Свойства издания — WE-Framework',
 
-	groupContent: 'Содержание',
-	groupInside: 'Внутри',
-	groupClassification: 'Классификация',
-	groupOther: 'Другое',
+	groupContent: 'содержание',
+	groupInside: 'внутри',
+	groupClassification: 'классификация',
+	groupOther: 'другое',
 
 	menuButton: 'WEF: FRBR издание',
 };
