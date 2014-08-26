@@ -48,6 +48,7 @@ window.wef_Editors_i18n_en = {
 	inputQuantityUpperBoundLabel: 'upper bound',
 	inputQuantityUpperBoundTitle: '',
 	inputQuantityModeExact: 'exact',
+	inputQuantityModePlusMinus: 'plus-minus',
 	inputQuantityModeOther: 'other',
 
 	inputTimeTimeLabel: 'Time (ISO notation)',
@@ -135,6 +136,7 @@ window.wef_Editors_i18n_ru = {
 	inputQuantityUpperBoundLabel: 'верхняя граница',
 	inputQuantityUpperBoundTitle: '',
 	inputQuantityModeExact: 'точно',
+	inputQuantityModePlusMinus: 'плюс-минус',
 	inputQuantityModeOther: 'другое',
 
 	inputTimeTimeLabel: 'Дата и время (ISO-нотация)',
@@ -1073,10 +1075,15 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 			if ( typeof initialDataValue === 'undefined' || typeof initialDataValue.value === 'undefined' ) {
 				editorDataType = 'quantity-exact';
 			} else {
-				if ( initialDataValue.value.unit === '1' // 
-						&& initialDataValue.value.amount === initialDataValue.value.upperBound //
-						&& initialDataValue.value.amount === initialDataValue.value.lowerBound ) {
+				var unit = initialDataValue.value.unit;
+				var amount = initialDataValue.value.amount;
+				var upperBound = initialDataValue.value.upperBound;
+				var lowerBound = initialDataValue.value.lowerBound;
+
+				if ( unit === '1' && amount === upperBound && amount === lowerBound ) {
 					editorDataType = 'quantity-exact';
+				} else if ( unit === '1' && ( Number( upperBound ) - Number( amount ) ) === ( Number( amount ) - Number( lowerBound ) ) ) {
+					editorDataType = 'quantity-plus-minus';
 				}
 			}
 		}
@@ -1096,6 +1103,7 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 		selectQuantityMode = $( document.createElement( 'select' ) ).addClass( 'wef_quantity_mode' );
 
 		selectQuantityMode.append( $( document.createElement( 'option' ) ).attr( 'value', 'quantity-exact' ).text( i18n.inputQuantityModeExact ) );
+		selectQuantityMode.append( $( document.createElement( 'option' ) ).attr( 'value', 'quantity-plus-minus' ).text( i18n.inputQuantityModePlusMinus ) );
 		selectQuantityMode.append( $( document.createElement( 'option' ) ).attr( 'value', 'quantity' ).text( i18n.inputQuantityModeOther ) );
 
 		selectQuantityMode.val( editorDataType );
@@ -1282,7 +1290,7 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 			};
 			this.getAsLabel = function() {
 				// TODO: format value using server ?
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time' ).text(
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_quantity' ).text(
 						lowerBound.val() + ' / ' + inputAmount.val() + ' / ' + inputUpperBound.val() );
 			};
 
@@ -1323,11 +1331,51 @@ window.WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, ini
 			};
 			this.getAsLabel = function() {
 				// TODO: format value using server ?
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time' ).text( inputAmount.val() );
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_quantity' ).text( inputAmount.val() );
 			};
 
 			inputAmount.change( changeF );
 			inputAmount.keyup( changeF );
+		} ).call( this );
+	} else if ( editorDataType === 'quantity-plus-minus' ) {
+		( function() {
+
+			selectQuantityMode.appendTo( this.mainElement );
+			var inputAmount = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).addClass( 'wef_quantity_amount' ).appendTo( this.mainElement );
+			var spanPlusMinus = $( document.createElement( 'span' ) ).text( '±' ).appendTo( this.mainElement );
+			var inputDifference = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).addClass( 'wef_quantity_difference' ).appendTo( this.mainElement );
+
+			this.setDataValue = function( newDataValue ) {
+				inputDifference.val( Number( newDataValue.value.amount ) - Number( newDataValue.value.lowerBound ) );
+				inputAmount.val( newDataValue.value.amount );
+			};
+			this.hasValue = function() {
+				return !$.isEmpty( inputAmount.val() );
+			};
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
+					throw new Error( 'No value' );
+				}
+				var amount = Number( inputAmount.val() );
+				var difference = Number( inputDifference.val() );
+				return {
+					type: 'quantity',
+					value: {
+						unit: '1',
+						lowerBound: WEF_Utils.formatQuantity( amount - difference ),
+						amount: WEF_Utils.formatQuantity( inputAmount.val() ),
+						upperBound: WEF_Utils.formatQuantity( amount + difference ),
+					},
+				};
+			};
+			this.getAsLabel = function() {
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_quantity' ).text( inputAmount.val() + '±' + inputDifference.val() );
+			};
+
+			inputAmount.change( changeF );
+			inputAmount.keyup( changeF );
+			inputDifference.change( changeF );
+			inputDifference.keyup( changeF );
 		} ).call( this );
 	} else if ( editorDataType === 'time' ) {
 		( function() {
