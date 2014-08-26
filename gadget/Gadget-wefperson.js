@@ -261,7 +261,12 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"		<div id=\'wef_personEditor_tab_views\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
 		"				<!-- member of political party -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P102\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P102\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"					<!-- start date -->\r\n" + 
+		"					<tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
+		"					<!-- end date -->\r\n" + 
+		"					<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
+		"				</tbody>\r\n" + 
 		"				<!-- religion -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P140\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- canonization status -->\r\n" + 
