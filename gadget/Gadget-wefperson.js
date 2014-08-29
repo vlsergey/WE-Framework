@@ -117,6 +117,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P109\' data-datatype=\'commonsMedia\' />\r\n" + 
 		"				<!-- recording of the subject\'s voice -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P990\' data-datatype=\'commonsMedia\' />\r\n" + 
+		"				<!-- grave picture -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P1442\' data-datatype=\'commonsMedia\' />\r\n" + 
 		"			</table>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetCoatOfArms</legend>\r\n" + 
@@ -187,6 +189,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P185\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- academic degree -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P512\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				<!-- doctoral thesis -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P1026\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
 		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetBiology</legend>\r\n" + 
