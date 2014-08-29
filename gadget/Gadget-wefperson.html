@@ -175,13 +175,26 @@
 					<tr data-code='P582' data-datatype='time' />
 					<!-- academic degree -->
 					<tr data-code='P512' data-datatype='wikibase-item' />
+					<!-- academic major -->
+					<tr data-code='P812' data-datatype='wikibase-item' />
 				</tbody>
 				<!-- doctoral advisor -->
 				<tbody class='wef_claim_editors' data-code='P184' data-datatype='wikibase-item' />
 				<!-- doctoral student -->
 				<tbody class='wef_claim_editors' data-code='P185' data-datatype='wikibase-item' />
 				<!-- academic degree -->
-				<tbody class='wef_claim_editors' data-code='P512' data-datatype='wikibase-item' />
+				<tbody class='wef_claim_editors' data-code='P512' data-datatype='wikibase-item'>
+					<!-- alma mater -->
+					<tr data-code='P69' data-datatype='wikibase-item' />
+					<!-- academic major -->
+					<tr data-code='P812' data-datatype='wikibase-item' />
+					<!-- point in time -->
+					<tr data-code='P558' data-datatype='time' />
+					<!-- doctoral advisor -->
+					<tr data-code='P184' data-datatype='wikibase-item' />
+					<!-- doctoral thesis -->
+					<tr data-code='P1026' data-datatype='wikibase-item' />
+				</tbody>
 				<!-- doctoral thesis -->
 				<tbody class='wef_claim_editors' data-code='P1026' data-datatype='wikibase-item' />
 			</table>
@@ -208,12 +221,16 @@
 					<!-- end date -->
 					<tr data-code='P582' data-datatype='time' />
 				</tbody>
+				<!-- official residence -->
+				<tbody class='wef_claim_editors' data-code='P263' data-datatype='wikibase-item' />
 			</table>
 			<fieldset class='wef_fieldset wef_single_property_fieldset'>
 				<legend class='wef_i18n_label'>P39</legend>
 				<table class='wef_table'>
 					<!--  position held -->
 					<tbody class='wef_claim_editors' data-code='P39' data-datatype='wikibase-item'>
+						<!-- affiliation -->
+						<tr data-code='P1416' data-datatype='wikibase-item' />
 						<!-- start date -->
 						<tr data-code='P580' data-datatype='time' data-as-column='true' data-editordatatype='time-years' />
 						<!-- end date -->
@@ -231,17 +248,20 @@
 					</tbody>
 				</table>
 			</fieldset>
-			<table class='wef_table'>
-				<!-- official residence -->
-				<tbody class='wef_claim_editors' data-code='P263' data-datatype='wikibase-item' />
-				<!--  member of -->
-				<tbody class='wef_claim_editors' data-code='P463' data-datatype='wikibase-item'>
-					<!-- start date -->
-					<tr data-code='P580' data-datatype='time' />
-					<!-- end date -->
-					<tr data-code='P582' data-datatype='time' />
-				</tbody>
-			</table>
+			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+				<legend class='wef_i18n_label'>P463</legend>
+				<table class='wef_table'>
+					<!-- member of -->
+					<tbody class='wef_claim_editors' data-code='P463' data-datatype='wikibase-item'>
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' data-as-column='true' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' data-as-column='true' />
+						<!-- subject -->
+						<tr data-code='P805' data-datatype='wikibase-item' />
+					</tbody>
+				</table>
+			</fieldset>
 		</div>
 		<div id='wef_personEditor_tab_military' class='wef_editor_tab'>
 			<table class='wef_table'>

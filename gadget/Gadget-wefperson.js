@@ -182,13 +182,26 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"					<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
 		"					<!-- academic degree -->\r\n" + 
 		"					<tr data-code=\'P512\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- academic major -->\r\n" + 
+		"					<tr data-code=\'P812\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</tbody>\r\n" + 
 		"				<!-- doctoral advisor -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P184\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- doctoral student -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P185\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- academic degree -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P512\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P512\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"					<!-- alma mater -->\r\n" + 
+		"					<tr data-code=\'P69\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- academic major -->\r\n" + 
+		"					<tr data-code=\'P812\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- point in time -->\r\n" + 
+		"					<tr data-code=\'P558\' data-datatype=\'time\' />\r\n" + 
+		"					<!-- doctoral advisor -->\r\n" + 
+		"					<tr data-code=\'P184\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- doctoral thesis -->\r\n" + 
+		"					<tr data-code=\'P1026\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				</tbody>\r\n" + 
 		"				<!-- doctoral thesis -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P1026\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
@@ -215,12 +228,16 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"					<!-- end date -->\r\n" + 
 		"					<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
 		"				</tbody>\r\n" + 
+		"				<!-- official residence -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P263\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
 		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P39</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!--  position held -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P39\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- affiliation -->\r\n" + 
+		"						<tr data-code=\'P1416\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"						<!-- start date -->\r\n" + 
 		"						<tr data-code=\'P580\' data-datatype=\'time\' data-as-column=\'true\' data-editordatatype=\'time-years\' />\r\n" + 
 		"						<!-- end date -->\r\n" + 
@@ -238,17 +255,20 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
-		"			<table class=\'wef_table\'>\r\n" + 
-		"				<!-- official residence -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P263\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"				<!--  member of -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P463\' data-datatype=\'wikibase-item\'>\r\n" + 
-		"					<!-- start date -->\r\n" + 
-		"					<tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
-		"					<!-- end date -->\r\n" + 
-		"					<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
-		"				</tbody>\r\n" + 
-		"			</table>\r\n" + 
+		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>P463</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- member of -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P463\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- start date -->\r\n" + 
+		"						<tr data-code=\'P580\' data-datatype=\'time\' data-as-column=\'true\' />\r\n" + 
+		"						<!-- end date -->\r\n" + 
+		"						<tr data-code=\'P582\' data-datatype=\'time\' data-as-column=\'true\' />\r\n" + 
+		"						<!-- subject -->\r\n" + 
+		"						<tr data-code=\'P805\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					</tbody>\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_military\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
