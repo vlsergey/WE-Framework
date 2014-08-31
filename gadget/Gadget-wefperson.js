@@ -196,7 +196,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"					<!-- academic major -->\r\n" + 
 		"					<tr data-code=\'P812\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- point in time -->\r\n" + 
-		"					<tr data-code=\'P558\' data-datatype=\'time\' />\r\n" + 
+		"					<tr data-code=\'P585\' data-datatype=\'time\' />\r\n" + 
 		"					<!-- doctoral advisor -->\r\n" + 
 		"					<tr data-code=\'P184\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- doctoral thesis -->\r\n" + 

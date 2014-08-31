@@ -18,5 +18,5 @@ try {
 	// already registered
 }
 
-mw.loader.register( 'ext.gadget.wef-PersonEditor', 1409315536, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+mw.loader.register( 'ext.gadget.wef-PersonEditor', 1409485703, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 mw.loader.using( 'ext.gadget.wef-PersonEditor' );
