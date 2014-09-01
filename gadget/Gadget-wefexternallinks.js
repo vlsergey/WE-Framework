@@ -1725,7 +1725,7 @@ window.WEF_ExternalLinks = function() {
 				label: i18n.dialogButtonSaveLabel,
 				click: function() {
 					dialogForm.dialog( 'close' );
-					 wef_analyze_and_save( externalLinksEdit.editors );
+					wef_analyze_and_save( WEF_Utils.getEntityId(), externalLinksEdit.editors );
 				}
 			}, {
 				text: i18n.dialogButtonCloseText,
