@@ -157,3 +157,9 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 .wef_button_cell_addColumnQualifier {
 	vertical-align: bottom;
 }
+
+/* References */
+.wef_reference_editor {
+	width: 100%;
+	border-bottom: thin dotted #000000;
+}
