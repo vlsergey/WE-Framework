@@ -121,7 +121,7 @@ window.wef_Editors_i18n_ru = {
 	buttonUrlNavigate: 'открыть указанный URL',
 	buttonOnWikidata: 'открыть указанный элемент Викиданных',
 
-	checkboxShowJulian: 'показывать по старому стилю',
+	checkboxShowJulian: 'показывать по Юлианскому календарю',
 	checkboxShowJulianTitle: 'при отображении даты включать режим отображения по юлинскому календарю. Данная опция не влияет на формат ввода или хранения.',
 
 	confirmDeleteClaim: 'Удалить значение свойства «{label}»?',
@@ -368,6 +368,7 @@ WEF_Utils = {
 		}
 	},
 
+	/** @return {string} */
 	getEntityId: function() {
 		// TODO: add check
 		if ( WEF_Utils.isWikidata() ) {
@@ -4036,13 +4037,13 @@ window.wef_save = function( updates, onComplete ) {
 				$.ajax( {
 					type: 'POST',
 					url: executionContext.getPrefixWithCentralAuthToken() // 
-							+ '&token=' + encodeURIComponent( executionContext.editToken ) // 
 							+ '&action=wbeditentity' // 
 							+ '&id=' + executionContext.entityId //
 							+ '&summary=' + encodeURIComponent( i18n.summary ) //
 					,
 					data: {
 						data: JSON.stringify( updates.data ),
+						token: executionContext.editToken,
 					},
 					error: function( jqXHR, textStatus, errorThrown ) {
 						progressItem.failure( textStatus );
@@ -4086,11 +4087,13 @@ window.wef_save = function( updates, onComplete ) {
 				$.ajax( {
 					type: 'POST',
 					url: executionContext.getPrefixWithCentralAuthToken() // 
-							+ '&token=' + encodeURIComponent( executionContext.editToken ) // 
 							+ '&action=wbremoveclaims' // 
-							+ '&claim=' + encodeURIComponent( updates.removedClaims.join( '|' ) ) //
 							+ '&summary=' + encodeURIComponent( i18n.summary ) //
 					,
+					data: {
+						claim: updates.removedClaims.join( '|' ),
+						token: executionContext.editToken,
+					},
 					error: function( jqXHR, textStatus, errorThrown ) {
 						progressItem.failure( textStatus );
 						alert( i18n.errorRemoveClaims + ': ' + textStatus );
@@ -4289,7 +4292,7 @@ WEF_EditorForm = function( title, html, i18n ) {
 	dialog.find( '.wef_tabs' ).tabs();
 	dialog.dialog( {
 		autoOpen: false,
-		width: 900,
+		width: 1000,
 		buttons: [ {
 			text: i18n.dialogButtonUpdateLabelsText,
 			label: i18n.dialogButtonUpdateLabelsLabel,
