@@ -1,0 +1,13 @@
+.wef-menuitem-freeze {
+	cursor: pointer;
+}
+
+.wef-menuitem-freeze-current {
+	color: rgb(0, 128, 0) !important;
+	font-weight: bold;
+}
+
+.wef-menuitem-freeze-outdated {
+	color: rgb(128, 0, 0) !important;
+	font-weight: bold;
+}
