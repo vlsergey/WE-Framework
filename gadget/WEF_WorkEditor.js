@@ -12,7 +12,7 @@ try {
 			"apiScript": "//ru.wikipedia.org/w/api.php"
 		}
 	} );
-	mw.loader.register( 'ext.gadget.wefcore', 1409021834, [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs' ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wefcore', 1409783925, [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs' ], undefined, 'ruwiki' );
 	mw.loader.register( 'ext.gadget.wefflags', 64774333, undefined, undefined, 'ruwiki' );
 } catch ( error ) {
 	// already registered
