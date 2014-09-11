@@ -3674,7 +3674,7 @@ WEF_ClaimEditorsTable = function( definition, options ) {
 		// empty cell for adding claim button
 		columnsHeader.append( $( document.createElement( 'th' ) ).addClass( 'wef_column_th_empty' ) );
 
-		var propertyName = $( document.createElement( 'th' ) ).addClass( 'wef_column_th' ).attr( 'colspan', '6' ).appendTo( columnsHeader );
+		var propertyName = $( document.createElement( 'th' ) ).addClass( 'wef_column_th' ).attr( 'colspan', '8' ).appendTo( columnsHeader );
 		if ( typeof definition.label !== 'undefined' ) {
 			wef_LabelsCache.getOrQueue( definition.label, function( label, description ) {
 				propertyName.text( label );
