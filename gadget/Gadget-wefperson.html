@@ -63,7 +63,12 @@
 				<legend class='wef_i18n_text'>fieldsetBirth</legend>
 				<table class='wef_table'>
 					<!-- birth date -->
-					<tbody class='wef_claim_editors' data-code='P569' data-datatype='time' />
+					<tbody class='wef_claim_editors' data-code='P569' data-datatype='time'>
+						<!-- earliest date -->
+						<tr data-code='P1319' data-datatype='time' data-editordatatype='time-years' />
+						<!-- earliest date -->
+						<tr data-code='P1326' data-datatype='time' data-editordatatype='time-years' />
+					</tbody>
 					<!-- birth place -->
 					<tbody class='wef_claim_editors' data-code='P19' data-datatype='wikibase-item'>
 						<!--  is in the administrative territorial entity -->
@@ -71,8 +76,6 @@
 						<!--  country -->
 						<tr data-code='P17' data-datatype='wikibase-item' />
 					</tbody>
-					<!-- ancestral home -->
-					<tbody class='wef_claim_editors' data-code='P66' data-datatype='wikibase-item' />
 					<!-- ethnic group -->
 					<tbody class='wef_claim_editors' data-code='P172' data-datatype='wikibase-item' />
 					<!-- native language -->
@@ -80,10 +83,23 @@
 				</table>
 			</fieldset>
 			<fieldset class='wef_fieldset'>
+				<table class='wef_table'>
+					<!-- place of origin (Switzerland) -->
+					<tbody class='wef_claim_editors' data-code='P1321' data-datatype='wikibase-item' data-flag='ch' />
+					<!-- ancestral home -->
+					<tbody class='wef_claim_editors' data-code='P66' data-datatype='wikibase-item' data-flag='cn' />
+				</table>
+			</fieldset>
+			<fieldset class='wef_fieldset'>
 				<legend class='wef_i18n_text'>fieldsetDeath</legend>
 				<table class='wef_table'>
 					<!-- Death date -->
-					<tbody class='wef_claim_editors' data-code='P570' data-datatype='time' />
+					<tbody class='wef_claim_editors' data-code='P570' data-datatype='time'>
+						<!-- earliest date -->
+						<tr data-code='P1319' data-datatype='time' data-editordatatype='time-years' />
+						<!-- earliest date -->
+						<tr data-code='P1326' data-datatype='time' data-editordatatype='time-years' />
+					</tbody>
 					<!-- Death place -->
 					<tbody class='wef_claim_editors' data-code='P20' data-datatype='wikibase-item'>
 						<!--  is in the administrative territorial entity -->

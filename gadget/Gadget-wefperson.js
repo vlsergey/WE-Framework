@@ -70,7 +70,12 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"				<legend class=\'wef_i18n_text\'>fieldsetBirth</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- birth date -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P569\' data-datatype=\'time\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P569\' data-datatype=\'time\'>\r\n" + 
+		"						<!-- earliest date -->\r\n" + 
+		"						<tr data-code=\'P1319\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
+		"						<!-- earliest date -->\r\n" + 
+		"						<tr data-code=\'P1326\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"					<!-- birth place -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P19\' data-datatype=\'wikibase-item\'>\r\n" + 
 		"						<!--  is in the administrative territorial entity -->\r\n" + 
@@ -78,8 +83,6 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"						<!--  country -->\r\n" + 
 		"						<tr data-code=\'P17\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					</tbody>\r\n" + 
-		"					<!-- ancestral home -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P66\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- ethnic group -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P172\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- native language -->\r\n" + 
@@ -87,10 +90,23 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- place of origin (Switzerland) -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1321\' data-datatype=\'wikibase-item\' data-flag=\'ch\' />\r\n" + 
+		"					<!-- ancestral home -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P66\' data-datatype=\'wikibase-item\' data-flag=\'cn\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetDeath</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- Death date -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P570\' data-datatype=\'time\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P570\' data-datatype=\'time\'>\r\n" + 
+		"						<!-- earliest date -->\r\n" + 
+		"						<tr data-code=\'P1319\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
+		"						<!-- earliest date -->\r\n" + 
+		"						<tr data-code=\'P1326\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"					<!-- Death place -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P20\' data-datatype=\'wikibase-item\'>\r\n" + 
 		"						<!--  is in the administrative territorial entity -->\r\n" + 
