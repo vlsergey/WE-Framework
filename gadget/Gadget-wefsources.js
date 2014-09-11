@@ -1,16 +1,21 @@
 var MODULE_DOC = "{{wikidata source information module}}";
 
 function generateSourceModule( entity ) {
+	"use strict";
+
 	var result = 'return {\n';
+	result += appendClaims( entity, 'P31', 'type' );
 	result += appendClaims( entity, 'P364', 'lang' );
 	result += appendClaims( entity, 'P50', 'authors' );
 	result += appendClaims( entity, 'P953', 'url' );
 	result += appendClaims( entity, 'P357', 'title' );
+	result += appendClaims( entity, 'P392', 'subtitle' );
 	result += appendClaims( entity, 'P1433', 'publication' );
 	result += appendClaims( entity, 'P291', 'place' );
 	result += appendClaims( entity, 'P123', 'publisher' );
 	result += appendClaims( entity, 'P577', 'date' );
 	result += appendClaims( entity, 'P478', 'volume' );
+	result += appendClaims( entity, 'P433', 'issue' );
 	result += appendClaims( entity, 'P304', 'page' );
 	result += appendClaims( entity, 'P236', 'issn' );
 	result += appendClaims( entity, 'P1065', 'archiveurl' );
@@ -20,6 +25,8 @@ function generateSourceModule( entity ) {
 }
 
 function appendClaims( entity, propertyId, fieldName ) {
+	"use strict";
+
 	var hasAnything = false;
 	var result = '\t' + fieldName + ' = {\n';
 	if ( typeof entity.claims[propertyId] !== 'undefined' ) {
@@ -41,10 +48,14 @@ function appendClaims( entity, propertyId, fieldName ) {
 }
 
 function escapeForJS( str ) {
+	"use strict";
+
 	return str.replace( "'", "\'" );
 }
 
 function appendClaim( claim ) {
+	"use strict";
+
 	if ( claim.mainsnak.datavalue.type === 'string' ) {
 		return '"' + escapeForJS( claim.mainsnak.datavalue.value ) + '"';
 	} else if ( claim.mainsnak.datavalue.type === 'time' ) {
@@ -69,11 +80,9 @@ function appendClaim( claim ) {
 	}
 }
 
-WEF_Sources = function() {
-	// no ops
-};
+function updateLocalSourceDescription( i18n, entityId ) {
+	"use strict";
 
-WEF_Sources.prototype.updateLocalSourceDescription = function( i18n, entityId ) {
 	var statusDialog = $( '<div></div>' );
 	statusDialog.attr( 'title', i18n.dialogTitle );
 	statusDialog.append( $( document.createElement( 'p' ) ).text( i18n.statusLoadingWikidata ) );
@@ -123,6 +132,39 @@ WEF_Sources.prototype.updateLocalSourceDescription = function( i18n, entityId ) 
 			alert( i18n.errorLoadingWikidata );
 		},
 	} );
+}
+
+WEF_Sources = function() {
+	// no ops
+};
+
+WEF_Sources.prototype.attachToInstancesOf = function( instanceOfEntityId, editorHtml, editorI18n ) {
+	"use strict";
+
+	$( '.citetype_' + instanceOfEntityId ).prepend( $( document.createElement( 'a' ) ).text( '[edit] ' ).css( 'cursor', 'pointer' ).click( function() {
+		var sourceId = $( this ).parent().data( 'entity-id' );
+		if ( typeof sourceId !== 'undefined' && sourceId !== null ) {
+			var editor = new WEF_Editor( editorHtml );
+			editor.localize( editorI18n );
+			editor.afterSave = function() {
+				updateLocalSourceDescription( editor.i18n, editor.entityId );
+			};
+			editor.entityId = sourceId;
+			editor.edit();
+		}
+	} ) );
+	$( '.citetype_unknown' ).prepend( $( document.createElement( 'a' ) ).text( '[' + instanceOfEntityId + '?] ' ).css( 'cursor', 'pointer' ).click( function() {
+		var sourceId = $( this ).parent().data( 'entity-id' );
+		if ( typeof sourceId !== 'undefined' && sourceId !== null ) {
+			var editor = new WEF_Editor( editorHtml );
+			editor.localize( editorI18n );
+			editor.afterSave = function() {
+				updateLocalSourceDescription( editor.i18n, editor.entityId );
+			};
+			editor.entityId = sourceId;
+			editor.edit();
+		}
+	} ) );
 };
 
 window.wef_sources = new WEF_Sources();
