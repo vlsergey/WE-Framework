@@ -957,7 +957,7 @@ window.WEF_ExternalLinks = function() {
 		check: /^\d{7}$/,
 		template: [ 'http://www.enciclopedia.cat/enciclopèdies/gran-enciclopèdia-catalana/EC-GEC-$1.xml',
 				'http://www.enciclopedia.cat/enciclop%C3%A8dies/gran-enciclop%C3%A8dia-catalana/EC-GEC-$1.xml', ],
-		qualifiers: [],
+		qualifiers: [ d.P357, ],
 	} );
 	this.definitions.P1309 = new WEF_Definition( {
 		flag: 'eg',
