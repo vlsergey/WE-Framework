@@ -5,6 +5,10 @@
 	width: 1px;
 }
 
+.wef_table td, .wef_table th {
+	vertical-align: top;
+}
+
 .wef_button_cell .ui-button {
 	margin: 0 0.1em !important;
 }
@@ -24,8 +28,8 @@
 
 .wef_table {
 	width: 100%;
-	border-spacing: 0px;
-    border-collapse: collapse;
+	border-spacing: 0;
+	border-collapse: collapse;
 }
 
 /*Properties level */
@@ -34,6 +38,7 @@
 	position: absolute;
 	z-index: +1;
 }
+
 .wef-claimrankselector-menu option {
 	padding: 0.25em;
 }
@@ -113,6 +118,14 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 /*Snak value level -- per types: TIME-DAYS */
 .wef_snak_value_editor_time-days {
 	white-space: nowrap;
+}
+
+.wef_time_day {
+	width: 3em;
+}
+
+.wef_time_year {
+	width: 8em;
 }
 
 .wef_property_editor_column_table .wef_time_oldstyle_span:before {
