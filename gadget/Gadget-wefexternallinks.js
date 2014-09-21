@@ -1091,7 +1091,7 @@ window.WEF_ExternalLinks = function() {
 		} ],
 		check: /^\d+$/,
 		template: 'http://www.eleven.co.il/article/$1',
-		qualifiers: [ d.P304, d.P478 ],
+		qualifiers: [ d.P304, d.P478, d.P958 ],
 	} );
 
 	this.definitions.Q355 = new WEF_Definition( {
