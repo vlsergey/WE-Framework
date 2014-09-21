@@ -11,6 +11,7 @@ function generateSourceModule( entity ) {
 	result += appendClaims( entity, 'P357', 'title' );
 	result += appendClaims( entity, 'P392', 'subtitle' );
 	result += appendClaims( entity, 'P1433', 'publication' );
+	result += appendClaims( entity, 'P98', 'editor' );
 	result += appendClaims( entity, 'P291', 'place' );
 	result += appendClaims( entity, 'P123', 'publisher' );
 	result += appendClaims( entity, 'P577', 'date' );
