@@ -634,7 +634,7 @@ window.WEF_ExternalLinks = function() {
 		url: function( id ) {
 			return 'http://www.e-lir.ch/e-LIR___Lexicon.' + id + '.450.0.html';
 		},
-		qualifiers: [],
+		qualifiers: [ d.P958 ],
 	} );
 	this.definitions.P902 = new WEF_Definition( {
 		flag: 'ch',
@@ -644,7 +644,7 @@ window.WEF_ExternalLinks = function() {
 		url: function( id ) {
 			return 'http://www.hls-dhs-dss.ch/textes/f/F' + id + '.php';
 		},
-		qualifiers: [],
+		qualifiers: [ d.P958 ],
 	} );
 	this.definitions.P906 = new WEF_Definition( {
 		flag: 'se',
@@ -690,6 +690,10 @@ window.WEF_ExternalLinks = function() {
 		},
 		qualifiers: [],
 	} );
+	/* section, verse, or paragraph; раздел, стих или параграф */
+	this.definitions.P958 = new WEF_Definition( {
+		datatype: 'string',
+	} );	
 	this.definitions.P998 = new WEF_Definition( {
 		label: 'Q41226',
 		normalize: function( id ) {
@@ -957,7 +961,7 @@ window.WEF_ExternalLinks = function() {
 		check: /^\d{7}$/,
 		template: [ 'http://www.enciclopedia.cat/enciclopèdies/gran-enciclopèdia-catalana/EC-GEC-$1.xml',
 				'http://www.enciclopedia.cat/enciclop%C3%A8dies/gran-enciclop%C3%A8dia-catalana/EC-GEC-$1.xml', ],
-		qualifiers: [ d.P357, ],
+		qualifiers: [ d.P958, ],
 	} );
 	this.definitions.P1309 = new WEF_Definition( {
 		flag: 'eg',
@@ -1051,7 +1055,7 @@ window.WEF_ExternalLinks = function() {
 		} ],
 		check: /^\d+$/,
 		template: 'http://global.britannica.com/EBchecked/topic/$1/',
-		qualifiers: [ d.P50, d.P357, ],
+		qualifiers: [ d.P50, d.P958, ],
 	} );
 	this.definitions.P1422 = new WEF_Definition( {
 		datatype: 'string',
@@ -1236,7 +1240,7 @@ window.WEF_ExternalLinks = function() {
 				return '//slovari.yandex.ru/' + encodeURIComponent( 'БСЭ ' + title ) + '/%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B5/';
 			} ),
 		} ],
-		qualifiers: [ d.P50, d.P357, d.P478 ],
+		qualifiers: [ d.P50, d.P958, d.P478 ],
 	} );
 	this.definitions.Q372827 = new WEF_Definition( {
 		code: 'P553[Q372827]/P554',
@@ -1325,7 +1329,7 @@ window.WEF_ExternalLinks = function() {
 				return 'http://www.pravenc.ru/search/?ie=utf-8&oe=utf-8&text=' + encodeURIComponent( title );
 			} ),
 		} ],
-		qualifiers: [ d.P50, d.P357, d.P478 ],
+		qualifiers: [ d.P50, d.P958, d.P478 ],
 	} );
 	this.definitions.Q2627728 = new WEF_Definition( {
 		datatype: 'url',
@@ -1342,7 +1346,7 @@ window.WEF_ExternalLinks = function() {
 				return 'http://krugosvet.ru/search-content?keys=' + encodeURIComponent( title );
 			} ),
 		} ],
-		qualifiers: [ d.P50, d.P357 ],
+		qualifiers: [ d.P50, d.P958 ],
 	} );
 	this.definitions.Q4037665 = new WEF_Definition( {
 		code: 'P553[Q4037665]/P554',
@@ -1382,10 +1386,10 @@ window.WEF_ExternalLinks = function() {
 			text: false,
 			label: 'Искать в БЭКМ',
 			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
-				return 'http://megabook.ru/article-search?SearchText=' + encodeURIComponent( title );
+				return '//www.google.com/search?q=site%3Amegabook.ru+' + encodeURIComponent( title );
 			} ),
 		} ],
-		qualifiers: [],
+		qualifiers: [ d.P958 ],
 	} );
 	this.definitions.Q4101720 = new WEF_Definition( {
 		code: 'P553[Q4101720]/P554',
@@ -1413,7 +1417,7 @@ window.WEF_ExternalLinks = function() {
 				return '//www.google.com/search?q=site%3Afeb-web.ru%2Ffeb%2Fkle+' + encodeURIComponent( title );
 			} ),
 		} ],
-		qualifiers: [ d.P50, d.P357, d.P478 ],
+		qualifiers: [ d.P50, d.P958, d.P478 ],
 	} );
 	this.definitions.Q4263804 = new WEF_Definition( {
 		datatype: 'url',
@@ -1430,7 +1434,7 @@ window.WEF_ExternalLinks = function() {
 				return '//www.google.com/search?q=site%3Afeb-web.ru%2Ffeb%2Flitenc+' + encodeURIComponent( title );
 			} ),
 		} ],
-		qualifiers: [ d.P50, d.P357, d.P478 ],
+		qualifiers: [ d.P50, d.P958, d.P478 ],
 	} );
 	this.definitions.Q4299813 = new WEF_Definition( {
 		code: 'P553[Q4299813]/P554',
@@ -1599,7 +1603,7 @@ window.WEF_ExternalLinks = function() {
 				return 'http://www.larousse.fr/encyclopedie/rechercher?q=' + encodeURIComponent( title );
 			} ),
 		} ],
-		qualifiers: [ d.P357 ],
+		qualifiers: [ d.P958 ],
 	} );
 
 	this.defaultQualifiers = [ d.P407 ];
