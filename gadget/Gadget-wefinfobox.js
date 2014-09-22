@@ -200,7 +200,7 @@ mediaWiki.loader.using( [ 'ext.gadget.wefcore', 'jquery.ui.button', 'wikibase.fo
 								var newValue = valueView.value().toJSON();
 								claim.mainsnak.datavalue.value = newValue;
 
-								var updates = new WEF_Updates();
+								var updates = new WEF_Updates( WEF_Utils.getEntityId() );
 								var claims = {};
 								claims[claim.property] = [ claim ];
 								updates.data.claims = claims;

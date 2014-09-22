@@ -605,6 +605,81 @@ WEF_Utils.purgeAsync = function() {
 	} );
 };
 
+WEF_Utils.queryCentralAuthToken = function() {
+	var d = $.Deferred();
+
+	$.ajax( {
+		type: 'GET',
+		url: mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php' + '?format=json&action=tokens&type=centralauth',
+		error: function( jqXHR, textStatus, errorThrown ) {
+			d.reject( textStatus );
+		},
+		success: function( result ) {
+			if ( result.error ) {
+				d.reject( result.error.info );
+				return;
+			}
+			if ( !result.tokens || !result.tokens.centralauthtoken ) {
+				d.reject( 'no centralauthtoken in response' );
+				return;
+			}
+
+			d.resolve( result.tokens.centralauthtoken );
+		},
+	} );
+
+	return d;
+};
+
+WEF_Utils.queryWikidataToken = function( centralAuthToken, tokenType ) {
+	if ( !WEF_Utils.isWikidata() && $.isEmpty( centralAuthToken ) ) {
+		throw new Error( "Need to specify centralauthtoken for out-of-wikidata queries" );
+	}
+	if ( $.isEmpty( tokenType ) ) {
+		tokenType = 'csrf';
+	}
+
+	var d = $.Deferred();
+
+	var prefix;
+	if ( !WEF_Utils.isWikidata() ) {
+		prefix = '//www.wikidata.org/w/api.php' //
+				+ '?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) //
+				+ '&centralauthtoken=' + encodeURIComponent( centralAuthToken ) //
+				+ '&format=json'; //
+	} else {
+		prefix = mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php' //
+				+ '?format=json';
+	}
+
+	$.ajax( {
+		type: 'GET',
+		url: prefix // 
+				+ '&action=query' //
+				+ '&meta=tokens' //
+				+ '&type=' + encodeURIComponent( tokenType ),
+		error: function( jqXHR, textStatus, errorThrown ) {
+			d.reject( textStatus );
+		},
+		success: function( result ) {
+			if ( result.error ) {
+				d.reject( result.error.info );
+				return;
+			}
+
+			var token = WEF_Utils.getFirstObjectValue( result.query.tokens );
+			if ( typeof token === 'undefined' ) {
+				d.reject( 'no token in response' );
+				return;
+			}
+
+			d.resolve( token );
+		},
+	} );
+
+	return d;
+};
+
 /**
  * @param s
  *            {string} string to escapse
@@ -3971,6 +4046,22 @@ WEF_ClaimEditorsTable = function( definition, options ) {
 		}
 	};
 
+	/**
+	 * Init editor with values. Must be called after placement on the form.
+	 * 
+	 * @param entity
+	 *            {WEF_Entity}
+	 */
+	this.initAsEmpty = function() {
+		if ( placed === false ) {
+			throw new Error( 'Claims edit table is not placed on the form yet' );
+		}
+
+		/** @type {WEF_ClaimEditor} */
+		var editor = this.add();
+		editor.initEmpty();
+	};
+
 	function createPlaceholder( target ) {
 		if ( $.isEmpty( definition.columns ) ) {
 			temporaryHolder = $( document.createElement( 'tbody' ) ).html( '<!-- Temporary holder for ' + definition.code + ' -->' );
@@ -4139,14 +4230,15 @@ WEF_ProgressItem.prototype.notNeeded = function() {
  */
 WEF_Updates = function( entityId ) {
 	/** {string} */
-	this.entityId = typeof entityId === 'undefined' ? WEF_Utils.getEntityId() : entityId;
+	this.entityId = entityId;
 	this.data = {};
 	this.removedClaims = [];
 };
 window.WEF_Updates = WEF_Updates;
 
-window.wef_analyze_and_save = function( entityId, claimEditorTables, onComplete ) {
+window.wef_analyze_and_save = function( entityId, claimEditorTables ) {
 	var i18n = wef_Editors_i18n;
+	var d = $.Deferred();
 
 	var dialog = $( document.createElement( 'div' ) );
 	dialog.attr( 'title', i18n.dialogAnalyzeChangesTitle );
@@ -4158,19 +4250,6 @@ window.wef_analyze_and_save = function( entityId, claimEditorTables, onComplete 
 		width: 'auto'
 	} );
 
-	var actualOnComplete = onComplete;
-	if ( typeof actualOnComplete !== 'function' ) {
-		actualOnComplete = function() {
-			WEF_Utils.purge();
-		};
-	} else {
-		actualOnComplete = function() {
-			WEF_Utils.purgeAsync();
-			onComplete();
-			dialog.dialog( 'close' );
-		};
-	}
-
 	var updates = new WEF_Updates( entityId );
 	try {
 		$.each( claimEditorTables, function( i, claimEditorTable ) {
@@ -4181,8 +4260,27 @@ window.wef_analyze_and_save = function( entityId, claimEditorTables, onComplete 
 			var purgeProgress = new WEF_ProgressItem( analyzeProgressUl, i18n.actionNoChangesPurge );
 			analyzeProgress.success();
 			purgeProgress.inProgress();
-			actualOnComplete();
+			d.resolve( updates.entityId );
 			return;
+		}
+
+		if ( $.isEmpty( entityId ) ) {
+			// set label in current content language
+			var language = mw.config.get( 'wgContentLanguage' );
+			updates.data.labels = {};
+			updates.data.labels[language] = {
+				language: language,
+				value: mw.config.get( 'wgPageName' )
+			};
+
+			// TODO: check documentation
+			// attach current site
+			var siteCode = mw.config.get( 'wgDBname' );
+			updates.data.sitelinks = {};
+			updates.data.sitelinks[siteCode] = {
+				site: siteCode,
+				title: mw.config.get( 'wgPageName' )
+			};
 		}
 
 		analyzeProgress.success();
@@ -4190,21 +4288,31 @@ window.wef_analyze_and_save = function( entityId, claimEditorTables, onComplete 
 		mw.log.warn( i18n.errorAnalyzeChanges + ': ' + error );
 		analyzeProgress.failure( '' + error );
 		alert( i18n.errorAnalyzeChanges + ': ' + error );
-		return;
+		d.reject( error );
+		return d;
 	}
 	dialog.dialog( 'close' );
 
-	wef_save( updates, actualOnComplete );
+	var d2 = wef_save( updates );
+	d2.done( function() {
+		d.resolve( updates.entityId );
+	} );
+	d2.fail( function( arg ) {
+		d.reject( arg );
+	} );
+
+	return d;
 };
 
-window.wef_save = function( updates, onComplete ) {
+window.wef_save = function( updates ) {
 
 	if ( !( updates instanceof WEF_Updates ) ) {
 		throw new Error( 'WEF_Updates object is expected' );
 	}
 
-	var i18n = wef_Editors_i18n;
+	var d = $.Deferred();
 
+	var i18n = wef_Editors_i18n;
 	var dialog = $( document.createElement( 'div' ) );
 	dialog.attr( 'title', i18n.dialogSaveChangesTitle );
 
@@ -4213,7 +4321,7 @@ window.wef_save = function( updates, onComplete ) {
 	var executionContext = {
 		centralAuthToken: null,
 		editToken: null,
-		entityId: updates.entityId,
+		updates: updates,
 		isWikidata: WEF_Utils.isWikidata(),
 		localUrlPrefix: mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php' + '?format=json',
 		wikidataUrlPrefix: '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json',
@@ -4230,11 +4338,7 @@ window.wef_save = function( updates, onComplete ) {
 	var actions = [];
 	var actionFinal = function() {
 		dialog.dialog( 'close' );
-		if ( mw.config.get( 'wgAction' ) === 'view' ) {
-			if ( typeof onComplete === 'function' ) {
-				onComplete();
-			}
-		}
+		d.resolve();
 	};
 
 	function createObtainCentralAuthTokenAction( onSuccessActionIndex, onFailureActionIndex ) {
@@ -4243,39 +4347,25 @@ window.wef_save = function( updates, onComplete ) {
 			var onFailureAction = typeof onFailureActionIndex === 'undefined' ? actionFinal : actions[onFailureActionIndex];
 			var onSuccessAction = actions[onSuccessActionIndex];
 			progressItem.inProgress();
-			$.ajax( {
-				type: 'GET',
-				url: executionContext.localUrlPrefix + '&action=tokens&type=centralauth',
-				error: function( jqXHR, textStatus, errorThrown ) {
-					alert( i18n.errorObtainCentralAuthToken + ': ' + textStatus );
-					progressItem.failure( textStatus );
-					onFailureAction();
-					return;
-				},
-				success: function( result ) {
-					if ( result.error ) {
-						progressItem.failure( result.error.info );
-						alert( i18n.errorObtainCentralAuthToken + ': ' + result.error.info );
-						onFailureAction();
-						return;
-					}
-					if ( !result.tokens || !result.tokens.centralauthtoken ) {
-						progressItem.failure();
-						alert( i18n.errorObtainCentralAuthToken );
-						onFailureAction();
-						return;
-					}
-					executionContext.centralAuthToken = result.tokens.centralauthtoken;
-					progressItem.success();
-					onSuccessAction();
-				},
+
+			var d = WEF_Utils.queryCentralAuthToken();
+			d.done( function( centralauthtoken ) {
+				executionContext.centralAuthToken = centralauthtoken;
+				progressItem.success();
+				onSuccessAction();
 			} );
+			d.fail( function( textStatus ) {
+				alert( i18n.errorObtainCentralAuthToken + ': ' + textStatus );
+				progressItem.failure( textStatus );
+				onFailureAction();
+			} );
+			return d;
 		};
 	}
 
 	var currentAction = 0;
 
-	if ( WEF_Utils.isWikidata() === false ) {
+	if ( !WEF_Utils.isWikidata() ) {
 		actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1 );
 		currentAction++;
 	}
@@ -4290,38 +4380,17 @@ window.wef_save = function( updates, onComplete ) {
 			var onFailureAction = actionFinal;
 			var onSuccessAction = actions[nextAction];
 			progressItem.inProgress();
-			$.ajax( {
-				type: 'GET',
-				url: executionContext.getPrefixWithCentralAuthToken() // 
-						+ '&action=query' //
-						+ '&prop=info' //
-						+ '&intoken=edit' // 
-						+ '&titles=' + executionContext.entityId,
-				error: function( jqXHR, textStatus, errorThrown ) {
-					progressItem.failure( textStatus );
-					alert( i18n.errorObtainEditToken + ': ' + textStatus );
-					onFailureAction();
-					return;
-				},
-				success: function( result ) {
-					if ( result.error ) {
-						progressItem.failure( result.error.info );
-						alert( i18n.errorObtainEditToken + ': ' + result.error.info );
-						onFailureAction();
-						return;
-					}
 
-					var pageInfo = WEF_Utils.getFirstObjectValue( result.query.pages );
-					executionContext.editToken = pageInfo.edittoken;
-					if ( !executionContext.editToken ) {
-						progressItem.failure();
-						alert( i18n.errorObtainEditToken );
-						onFailureAction();
-						return;
-					}
-					progressItem.success();
-					onSuccessAction();
-				}
+			var d = WEF_Utils.queryWikidataToken( executionContext.centralAuthToken, 'csrf' );
+			d.done( function( editToken ) {
+				executionContext.editToken = editToken;
+				progressItem.success();
+				onSuccessAction();
+			} );
+			d.fail( function( textStatus ) {
+				progressItem.failure( textStatus );
+				alert( i18n.errorObtainEditToken + ': ' + textStatus );
+				onFailureAction();
 			} );
 		};
 		currentAction++;
@@ -4348,7 +4417,7 @@ window.wef_save = function( updates, onComplete ) {
 					type: 'POST',
 					url: executionContext.getPrefixWithCentralAuthToken() // 
 							+ '&action=wbeditentity' // 
-							+ '&id=' + executionContext.entityId //
+							+ ( $.isEmpty( executionContext.updates.entityId ) ? '&new=item' : '&id=' + executionContext.updates.entityId ) //
 							+ '&summary=' + encodeURIComponent( i18n.summary ) //
 					,
 					data: {
@@ -4368,6 +4437,9 @@ window.wef_save = function( updates, onComplete ) {
 							onFailureAction();
 							return;
 						}
+						if ( result.entity ) {
+							executionContext.updates.entityId = result.entity.id;
+						}
 						progressItem.success();
 						onSuccessAction();
 					},
@@ -4383,7 +4455,7 @@ window.wef_save = function( updates, onComplete ) {
 		 * Each action (including obtaining edit token) need separate auth
 		 * token, because it's expiring in 10 seconds
 		 */
-		if ( WEF_Utils.isWikidata() === false ) {
+		if ( !WEF_Utils.isWikidata() ) {
 			actions[currentAction] = createObtainCentralAuthTokenAction( currentAction + 1, currentAction + 2 );
 			currentAction++;
 		}
@@ -4433,10 +4505,13 @@ window.wef_save = function( updates, onComplete ) {
 		width: 'auto',
 	} );
 	actions[0]();
+
+	return d;
 };
 
-WEF_EditorForm = function( title, html, i18n ) {
+WEF_EditorForm = function( title, html, i18n, editDeferred ) {
 
+	this.editDeferred = editDeferred;
 	var editorForm = this;
 
 	/** @type {WEF_ClaimEditorsTable[]} */
@@ -4616,13 +4691,20 @@ WEF_EditorForm = function( title, html, i18n ) {
 			label: i18n.dialogButtonSaveLabel,
 			click: function() {
 				dialog.dialog( 'close' );
-				editorForm._save( claimEditorsTables );
+				var saveD = wef_analyze_and_save( editorForm.entityId, claimEditorsTables );
+				saveD.done( function( entityId ) {
+					editDeferred.resolve( entityId );
+				} );
+				saveD.fail( function() {
+					editDeferred.reject();
+				} );
 			},
 		}, {
 			text: i18n.dialogButtonCancelText,
 			label: i18n.dialogButtonCancelLabel,
 			click: function() {
 				$( this ).dialog( 'close' );
+				editDeferred.reject();
 			}
 		} ],
 	} );
@@ -4638,6 +4720,17 @@ WEF_EditorForm = function( title, html, i18n ) {
 		} );
 	};
 
+	this.initAsNew = function() {
+		this.entityId = null;
+		$.each( claimEditorsTables, function( i, claimEditorsTable ) {
+			claimEditorsTable.initAsEmpty();
+		} );
+		enableAnchorCounterUpdate = true;
+		dialog.find( 'a.wef_editor_tab_anchor' ).each( function( i, anchor ) {
+			updateAnchorCounter( $( anchor ) );
+		} );
+	};
+
 	this.open = function() {
 		dialog.dialog( 'open' );
 	};
@@ -4645,17 +4738,10 @@ WEF_EditorForm = function( title, html, i18n ) {
 window.WEF_EditorForm = WEF_EditorForm;
 
 /**
- * @param {WEF_ClaimEditorsTable[]}
- *            claimEditorsTables
- */
-window.WEF_EditorForm.prototype._save = function( claimEditorsTables ) {
-	wef_analyze_and_save( this.entityId, claimEditorsTables, this.afterSave );
-};
-
-/**
  * @class
  */
 WEF_Editor = function( dialogHtml ) {
+	"use strict";
 
 	if ( typeof dialogHtml === 'undefined' ) {
 		throw new Error( 'Dialog HTML is not specified' );
@@ -4663,71 +4749,95 @@ WEF_Editor = function( dialogHtml ) {
 
 	this.i18n = {};
 	this.dialogHtml = dialogHtml;
-
-	if ( WEF_Utils.isWikidata() ) {
-		this.entityId = mw.config.get( 'wgTitle' );
-	} else {
-		this.entityId = mw.config.get( 'wgWikibaseItemId' );
-	}
-
-	this.enabled = /^Q\d+$/.test( this.entityId );
-	this.dialogForm = null;
 };
 window.WEF_Editor = WEF_Editor;
 
 WEF_Editor.prototype.addEditButtons = function() {
-	if ( !this.enabled ) {
-		return;
-	}
+	"use strict";
 
 	var editor = this;
 	var li = $( document.createElement( 'li' ) ).addClass( 'plainlinks' );
 	$( document.createElement( 'a' ) ).css( 'cursor', 'pointer' ).click( function() {
-		editor.edit();
+		var editDeferred = editor.edit( WEF_Utils.getEntityId() );
+		editDeferred.done( function() {
+			WEF_Utils.purge();
+		} );
 	} ).text( this.i18n.menuButton ).appendTo( li );
 	$( '#p-tb div ul' ).append( li );
 };
 
-WEF_Editor.prototype.createEditorForm = function() {
-	var editorForm = new WEF_EditorForm( this.i18n.dialogTitle, this.dialogHtml, this.i18n );
+WEF_Editor.prototype.createEditorForm = function( editDeferred ) {
+	"use strict";
+
+	var editorForm = new WEF_EditorForm( this.i18n.dialogTitle, this.dialogHtml, this.i18n, editDeferred );
 	editorForm.afterSave = this.afterSave;
 	return editorForm;
 };
 
-WEF_Editor.prototype.edit = function() {
-	if ( this.dialogForm === null ) {
+WEF_Editor.prototype.edit = function( entityId ) {
+	"use strict";
 
-		var statusDialog = $( '<div></div>' );
-		statusDialog.attr( 'title', this.i18n.dialogTitle );
-		statusDialog.append( $( document.createElement( 'p' ) ).text( this.i18n.statusLoadingWikidata ) );
-		statusDialog.dialog();
+	var editDeferred = $.Deferred();
 
-		var editor = this;
-		var entityId = this.entityId;
-		var i18n = this.i18n;
-		$.ajax( {
-			type: 'GET',
-			url: WEF_Utils.getWikidataApiPrefix() + '&action=wbgetentities&ids=' + entityId,
-			dataType: 'json',
-			success: function( result ) {
-				var editorForm = editor.createEditorForm();
-				editorForm.load( result.entities[entityId] );
-				wef_LabelsCache.receiveLabels();
-				editorForm.open();
-			},
-			complete: function() {
-				statusDialog.dialog( 'close' );
-			},
-			fail: function() {
-				alert( i18n.errorLoadingWikidata );
-			},
-		} );
-	} else {
-		dialogForm.dialog( 'open' );
+	if ( typeof entityId === 'undefined' ) {
+		entityId = WEF_Utils.getEntityId();
 	}
+
+	var editor = this;
+	var i18n = this.i18n;
+
+	if ( entityId === null ) {
+		// empty item
+		var editorForm = editor.createEditorForm( editDeferred );
+		editorForm.initAsNew();
+		wef_LabelsCache.receiveLabels();
+		editorForm.open();
+		return editDeferred;
+	}
+
+	var statusDialog = $( document.createElement( 'div' ) );
+	statusDialog.attr( 'title', this.i18n.dialogTitle );
+	statusDialog.append( $( document.createElement( 'p' ) ).text( this.i18n.statusLoadingWikidata ) );
+	statusDialog.dialog();
+
+	$.ajax( {
+		type: 'GET',
+		url: WEF_Utils.getWikidataApiPrefix() + '&action=wbgetentities&ids=' + entityId,
+		dataType: 'json',
+		success: function( result ) {
+			var editorForm = editor.createEditorForm( editDeferred );
+			editorForm.load( result.entities[entityId] );
+			wef_LabelsCache.receiveLabels();
+			editorForm.open();
+		},
+		complete: function() {
+			statusDialog.dialog( 'close' );
+		},
+		fail: function() {
+			alert( i18n.errorLoadingWikidata );
+			editDeferred.reject( 'Unable to load from Wikidata' );
+		},
+	} );
+
+	return editDeferred;
 };
 
 WEF_Editor.prototype.localize = function( i18n_prefix ) {
+	"use strict";
+
 	WEF_Utils.localize( this.i18n, 'wef_AnyEditor_i18n_' );
 	WEF_Utils.localize( this.i18n, i18n_prefix );
 };
+
+WEF_Editors_Registry = function() {
+	"use strict";
+	var byClass = {};
+
+	this.registerEditor = function( classEntityId, wef_editor ) {
+		if ( !( wef_editor instanceof WEF_Editor ) ) {
+			throw new Error( 'Illegal argument: ' + wef_editor + ' is not instanceof WEF_Editor' );
+		}
+	};
+};
+
+window.wef_editors_registry = new WEF_Editors_Registry();

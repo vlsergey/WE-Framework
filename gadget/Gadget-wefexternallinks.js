@@ -439,7 +439,7 @@ window.WEF_ExternalLinks = function() {
 	/* title; название */
 	this.definitions.P357 = new WEF_Definition( {
 		datatype: 'string',
-	} );	
+	} );
 	this.definitions.P373 = new WEF_Definition( {
 		label: 'Q565',
 		autocomplete: {
@@ -693,7 +693,7 @@ window.WEF_ExternalLinks = function() {
 	/* section, verse, or paragraph; раздел, стих или параграф */
 	this.definitions.P958 = new WEF_Definition( {
 		datatype: 'string',
-	} );	
+	} );
 	this.definitions.P998 = new WEF_Definition( {
 		label: 'Q41226',
 		normalize: function( id ) {
@@ -1729,7 +1729,9 @@ window.WEF_ExternalLinks = function() {
 				label: i18n.dialogButtonSaveLabel,
 				click: function() {
 					dialogForm.dialog( 'close' );
-					wef_analyze_and_save( WEF_Utils.getEntityId(), externalLinksEdit.editors );
+					wef_analyze_and_save( WEF_Utils.getEntityId(), externalLinksEdit.editors ).always( function() {
+						WEF_Utils.purge();
+					} );
 				}
 			}, {
 				text: i18n.dialogButtonCloseText,
@@ -1852,7 +1854,8 @@ window.WEF_ExternalLinks = function() {
 	};
 
 	this.purge = function() {
-		window.location.replace( mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/index.php?action=purge&title=' + encodeURIComponent( mw.config.get( 'wgPageName' ) ) );
+		window.location.replace( mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/index.php?action=purge&title='
+				+ encodeURIComponent( mw.config.get( 'wgPageName' ) ) );
 		return;
 	};
 };
