@@ -21,6 +21,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"			<li><a href=\'#wef_personEditor_tab_awards\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupAwards</a></li>\r\n" + 
 		"		</ul>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetName</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
@@ -440,8 +441,16 @@ window.wef_PersonEditor_i18n_ru = {
 	menuButton: 'WEF: Персона',
 };
 
-mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
-	window.wef_PersonEditor = new WEF_Editor( wef_PersonEditor_html );
-	wef_PersonEditor.localize( 'wef_PersonEditor_i18n_' );
-	wef_PersonEditor.addEditButtons();
+mw.loader.using( [ //
+'jquery.ui.autocomplete', //
+'jquery.ui.dialog', //
+'jquery.ui.tabs', //
+'ext.gadget.wefcore', //
+'ext.gadget.wefflags', //
+'wikibase.utilities.jQuery.ui.tagadata', //
+], function() {
+	var editor = new WEF_Editor( wef_PersonEditor_html );
+	editor.localize( 'wef_PersonEditor_i18n_' );
+	editor.addEditButtons();
+	window.wef_editors_registry.registerEditor( 'Q5', editor );
 } );

@@ -1729,7 +1729,8 @@ window.WEF_ExternalLinks = function() {
 				label: i18n.dialogButtonSaveLabel,
 				click: function() {
 					dialogForm.dialog( 'close' );
-					wef_analyze_and_save( WEF_Utils.getEntityId(), externalLinksEdit.editors ).always( function() {
+					var d = wef_analyze_and_save( true, WEF_Utils.getEntityId(), null, externalLinksEdit.editors );
+					d.always( function() {
 						WEF_Utils.purge();
 					} );
 				}
@@ -2030,7 +2031,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 	} );
 };
 
-mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
+mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
 	window.externalLinksEdit = new WEF_ExternalLinks();
 	window.externalLinksEdit.init();
 	window.externalLinksEdit.setup();

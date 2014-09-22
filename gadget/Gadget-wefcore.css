@@ -32,6 +32,25 @@
 	border-collapse: collapse;
 }
 
+.wef_table table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+/* Labels editor */
+.wef-labels-editor {
+	padding: 0 1em !important;
+}
+
+.wef-labels-editor-th {
+	text-align: left;
+}
+
+.wef-labels-editor-label-td, .wef-labels-editor-label-input,
+	.wef-labels-editor-description-input {
+	width: 100%;
+}
+
 /*Properties level */
 .wef-claimrankselector-menu {
 	border: 1px solid #CCC;
@@ -154,6 +173,16 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 /*Snak value level -- per types: WIKIBASE-ITEM */
 .wef_wikibase-item_table {
 	width: 100%;
+}
+
+.wef-editor-menu {
+	border: 1px solid #CCC;
+	position: absolute;
+	z-index: +1;
+}
+
+.wef-editor-menu option {
+	padding: 0.25em;
 }
 
 /* Qualifiers only */

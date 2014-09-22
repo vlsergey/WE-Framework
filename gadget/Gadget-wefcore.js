@@ -23,7 +23,10 @@ window.wef_Editors_i18n_en = {
 	buttonAddQualifier: 'add qualifier',
 	buttonRemoveQualifier: 'remove qualifier',
 	buttonUrlNavigate: 'open specified URL',
-	buttonOnWikidata: 'open specified wikidata item',
+	buttonCreateOrEdit: 'create or edit wikidata item',
+	buttonCreateOrEditPrefixCreate: 'create as: ',
+	buttonCreateOrEditPrefixEdit: 'edit as: ',
+	buttonOnWikidata: 'open specified wikidata item on wikidata website',
 
 	checkboxShowJulian: 'show in Julian calendar?',
 	checkboxShowJulianTitle: 'when displaying the date show in julian calendar. This option does not change the input format or the value stored',
@@ -61,6 +64,11 @@ window.wef_Editors_i18n_en = {
 	inputTimeCalendarModelTitle: 'A calendar model, such as gregorian or julian',
 	inputTimePrecisionLabel: 'Precision',
 	inputTimePrecisionTitle: 'To what unit is the given date/time significant?',
+
+	labelLabels: 'Label, description and aliases',
+	labelLabel: 'Label',
+	labelDescription: 'Description',
+	labelAliases: 'Aliases',
 
 	rankDeprecatedValue: 'deprecated',
 	rankDeprecatedTitle: 'used for a statement that contains information that may not be considered reliable or that is known to include errors. (For example, a statement that documents a wrong population figure that was published in some historic document. In this case the statement is not wrong – the historic document that is given as a reference really made the erroneous claim – but the statement should not be used in most cases.)',
@@ -121,7 +129,10 @@ window.wef_Editors_i18n_ru = {
 	buttonAddQualifier: 'добавить квалификатор',
 	buttonRemoveQualifier: 'удалить квалификатор',
 	buttonUrlNavigate: 'открыть указанный URL',
-	buttonOnWikidata: 'открыть указанный элемент Викиданных',
+	buttonCreateOrEdit: 'создать или редактировать элемент Викиданных',
+	buttonCreateOrEditPrefixCreate: 'создать: ',
+	buttonCreateOrEditPrefixEdit: 'редактировать: ',
+	buttonOnWikidata: 'открыть указанный элемент Викиданных на сайте Викиданных',
 
 	checkboxShowJulian: 'показывать по Юлианскому календарю',
 	checkboxShowJulianTitle: 'при отображении даты включать режим отображения по юлинскому календарю. Данная опция не влияет на формат ввода или хранения.',
@@ -159,6 +170,11 @@ window.wef_Editors_i18n_ru = {
 	inputTimePrecisionTitle: 'Какая наиболее точная значая единица для данного значения?',
 	inputTimeCalendarModelLabel: 'Календарь для отображения',
 	inputTimeCalendarModelTitle: 'Календарь, например,  юлианский или григорианский',
+
+	labelLabels: 'Метка, описание и синонимы',
+	labelLabel: 'Метка',
+	labelDescription: 'Описание',
+	labelAliases: 'Также известен как',
 
 	rankDeprecatedValue: 'нерекомендуемый',
 	rankDeprecatedTitle: 'используется для утверждений, содержащих информацию, которую нельзя считать надёжной или которая содержит известные ошибки. (Например, утверждение сообщает о неверной численности населения, опубликованной в некоем историческом документе. В этом случае утверждение не является ложным — в историческом документе, указанном в качестве источника, действительно было сделано ошибочное заявление — но такое утверждение в большинстве случаев не стоит использовать.)',
@@ -219,6 +235,7 @@ window.wef_AnyEditor_i18n_en = {
 	dialogButtonCancelText: 'Cancel',
 	dialogButtonCancelLabel: 'Close the dialog and discard all changes (do not save)',
 	dialogTitle: 'WE-Framework',
+	dialogTitleNewElement: '(new item)',
 
 	fieldsetGeneral: 'general',
 	groupGeneral: 'general',
@@ -253,6 +270,7 @@ window.wef_AnyEditor_i18n_ru = {
 	dialogButtonCancelText: 'Отмена',
 	dialogButtonCancelLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
 	dialogTitle: 'WE-Framework',
+	dialogTitleNewElement: '(новый элемент)',
 
 	fieldsetGeneral: 'основное',
 	groupGeneral: 'основное',
@@ -1089,7 +1107,7 @@ WEF_LabelsCache = function() {
 		}
 	};
 };
-window.wef_LabelsCache = new WEF_LabelsCache();
+var wef_LabelsCache = window.wef_LabelsCache = new WEF_LabelsCache();
 
 /**
  * Caches types of properties. Required because sometimes entity contains the
@@ -1599,8 +1617,8 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 
 			var table = $( document.createElement( 'table' ) ).addClass( 'wef_time_table' ).appendTo( this.mainElement );
 
-			var inputTime = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_time' );
-			var inputTimeZone = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_timezone' );
+			var inputTime = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_time' ).attr( 'placeholder', i18n.inputTimeTimeTitle );
+			var inputTimeZone = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_time_timezone' ).attr( 'placeholder', i18n.inputTimeTimeZoneTitle );
 
 			var inputPrecision = $( document.createElement( 'select' ) ).addClass( 'wef_time_precision' );
 			for ( var i = 0; i < 15; i++ ) {
@@ -2140,7 +2158,10 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					$( document.createElement( 'td' ) ).addClass( 'wef_wikibase-item_td_input' ).appendTo( tr ) );
 
 			this.setDataValue = function( newDataValue ) {
-				var entityId = 'Q' + newDataValue.value['numeric-id'];
+				this.setDataValueImpl( 'Q' + newDataValue.value['numeric-id'] );
+			};
+
+			this.setDataValueImpl = function( entityId ) {
 				input.data( 'value-entity-id', entityId );
 				input.data( 'value-entity-label', '' );
 				input.val( '(' + entityId + ')' );
@@ -2305,6 +2326,59 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				}
 				return $( document.createElement( 'li' ) ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
 			};
+
+			/** @type {WEF_SelectEditor} */
+			var selectCreateEditor = null;
+			var selectEditEditor = null;
+
+			var createOrEditButton = $( document.createElement( 'div' ) ).css( 'cursor', 'pointer' ).addClass( 'wef_wikibase-item_button' ).appendTo(
+					$( document.createElement( 'td' ) ).addClass( 'wef_wikibase-item_td_button wef_button_cell' ).appendTo( tr ) );
+			createOrEditButton.button( {
+				icons: {
+					primary: 'ui-icon-pencil'
+				},
+				text: false,
+				label: wef_Editors_i18n.buttonCreateOrEdit,
+			} );
+			$( this ).on( 'change', function() {
+				if ( selectCreateEditor != null )
+					selectCreateEditor.hide();
+				if ( selectEditEditor != null )
+					selectEditEditor.hide();
+			} );
+
+			createOrEditButton.click( function() {
+				var entityId = input.data( 'value-entity-id' );
+				if ( $.isEmpty( entityId ) ) {
+					if ( selectCreateEditor == null ) {
+						selectCreateEditor = new WEF_SelectEditor( createOrEditButton, wef_Editors_i18n.buttonCreateOrEditPrefixCreate, function( id, editor ) {
+							var d = editor.edit( false, null );
+							d.done( function( newEntityId ) {
+								if ( !$.isEmpty( newEntityId ) ) {
+									snakValueEditor.setDataValueImpl( newEntityId );
+									wef_LabelsCache.receiveLabels();
+								}
+								WEF_Utils.purgeAsync();
+							} );
+						} );
+						selectCreateEditor.show();
+					} else {
+						selectCreateEditor.toggle();
+					}
+				} else {
+					if ( selectEditEditor == null ) {
+						selectEditEditor = new WEF_SelectEditor( createOrEditButton, wef_Editors_i18n.buttonCreateOrEditPrefixEdit, function( id, editor ) {
+							var d = editor.edit( false, entityId );
+							d.done( function() {
+								WEF_Utils.purgeAsync();
+							} );
+						} );
+						selectEditEditor.show();
+					} else {
+						selectEditEditor.toggle();
+					}
+				}
+			} );
 
 			var onWikidata = $( document.createElement( 'a' ) ).css( 'cursor', 'pointer' ).attr( 'target', '_blank' ).addClass( 'wef_wikibase-item_button' ).appendTo(
 					$( document.createElement( 'td' ) ).addClass( 'wef_wikibase-item_td_button wef_button_cell' ).appendTo( tr ) );
@@ -3246,6 +3320,222 @@ WEF_SelectRank = function() {
 	};
 };
 window.wef_selectRank = new WEF_SelectRank();
+
+/** @class */
+var WEF_LabelsEditor = function() {
+	"use strict";
+
+	var i18n = wef_Editors_i18n;
+	this.placed = false;
+	var labelsEditor = this;
+
+	this.oldLabels = {};
+	this.oldDescriptions = {};
+	// this.oldAliases = {};
+
+	// key is language
+	this.dataLabels = {};
+	this.dataDescriptions = {};
+	// this.dataAliases = {};
+
+	this.currentLanguage = null;
+
+	this.fieldset = $( document.createElement( 'fieldset' ) ).addClass( 'wef_fieldset' ).addClass( 'wef-labels-editor' );
+	this.legend = $( document.createElement( 'legend' ) ).text( i18n.labelLabels + ':\u00A0\u00A0\u00A0' ).appendTo( this.fieldset );
+	this.langSelect = $( document.createElement( 'select' ) ).appendTo( this.legend );
+	var table = $( document.createElement( 'table' ) ).addClass( 'wef-table' ).addClass( 'wef-labels-editor-table' ).appendTo( this.fieldset );
+
+	var tr1 = $( document.createElement( 'tr' ) ).appendTo( table );
+	$( document.createElement( 'th' ) ).addClass( 'wef-labels-editor-th' ).text( i18n.labelLabel ).appendTo( tr1 );
+	this.inputLabel = $( document.createElement( 'input' ) ).addClass( 'wef-labels-editor-label-input' ).appendTo(
+			$( document.createElement( 'td' ) ).addClass( 'wef-labels-editor-label-td' ).appendTo( tr1 ) );
+
+	var tr2 = $( document.createElement( 'tr' ) ).appendTo( table );
+	$( document.createElement( 'th' ) ).addClass( 'wef-labels-editor-th' ).text( i18n.labelDescription ).appendTo( tr2 );
+	this.inputDescription = $( document.createElement( 'input' ) ).addClass( 'wef-labels-editor-description-input' ).appendTo(
+			$( document.createElement( 'td' ) ).addClass( 'wef-labels-editor-description-td' ).appendTo( tr2 ) );
+
+	// var tr3 = $( document.createElement( 'tr' ) ).appendTo( table );
+	// $( document.createElement( 'th' ) ).text( i18n.labelAliases ).appendTo(
+	// tr3 );
+	// this.inputAliases = $( document.createElement( 'ul' ) ).appendTo( $(
+	// document.createElement( 'td' ) ).appendTo( tr3 ) );
+
+	this.langSelect.change( function() {
+		labelsEditor.switchLanguage();
+	} );
+	this.langSelect.change( function() {
+		labelsEditor.switchLanguage();
+	} );
+};
+
+WEF_LabelsEditor.prototype.replaceAll = function( target ) {
+	"use strict";
+
+	if ( this.placed === true ) {
+		throw new Error( 'Claims edit table is already placed on the form' );
+	}
+	this.placed = true;
+
+	this.fieldset.replaceAll( target );
+};
+
+WEF_LabelsEditor.prototype.initAsEmpty = function( currentPageItem ) {
+	"use strict";
+	var labelsEditor = this;
+
+	this.oldLabels = {};
+	this.oldDescriptions = {};
+	this.dataLabels = {};
+	this.dataDescriptions = {};
+	this.currentLanguage = null;
+
+	var contentLang = mw.config.get( 'wgContentLanguage' );
+	var userLang = mw.config.get( 'wgUserLanguage' );
+
+	if ( currentPageItem && !WEF_Utils.isWikidata() ) {
+		this.dataLabels[contentLang] = mw.config.get( 'wgPageName' );
+	}
+
+	var languages = [];
+	if ( contentLang === userLang ) {
+		languages.push( contentLang );
+	} else {
+		languages.push( userLang );
+		languages.push( contentLang );
+	}
+	$.each( languages, function( i, language ) {
+		$( document.createElement( 'option' ) ).attr( 'value', language ).text( language ).appendTo( labelsEditor.langSelect );
+	} );
+
+	this.currentLanguage = null;
+	if ( WEF_Utils.isWikidata() ) {
+		this.langSelect.val( userLang );
+	} else {
+		this.langSelect.val( contentLang );
+	}
+	this.switchLanguage();
+};
+
+WEF_LabelsEditor.prototype.load = function( entity ) {
+	"use strict";
+	var labelsEditor = this;
+
+	// holder for all used laguages
+	var languages = [];
+
+	if ( typeof entity.labels !== 'undefined' ) {
+		$.each( entity.labels, function( language, label ) {
+			if ( languages.indexOf( language ) === -1 ) {
+				languages.push( language );
+			}
+			labelsEditor.dataLabels[language] = label.value;
+		} );
+	}
+	if ( typeof entity.descriptions !== 'undefined' ) {
+		$.each( entity.descriptions, function( language, description ) {
+			if ( languages.indexOf( language ) === -1 ) {
+				languages.push( language );
+			}
+			labelsEditor.dataDescriptions[language] = description.value;
+		} );
+	}
+	// if ( typeof entity.aliases !== 'undefined' ) {
+	// $.each( entity.aliases, function( language, langAliases ) {
+	// if ( languages.indexOf( language ) === -1 ) {
+	// languages.push( language );
+	// }
+	// labelsEditor.dataAliases[language] = $.map( langAliases, function(
+	// langAlias ) {
+	// return langAlias.value;
+	// } );
+	// } );
+	// }
+	this.oldLabels = $.extend( {}, this.dataLabels );
+	this.oldDescriptions = $.extend( {}, this.dataDescriptions );
+
+	languages.sort();
+
+	var contentLang = mw.config.get( 'wgContentLanguage' );
+	var userLang = mw.config.get( 'wgUserLanguage' );
+	languages = $.grep( languages, function( item ) {
+		return item !== contentLang && item !== userLang;
+	} );
+
+	languages.splice( 0, 0, contentLang );
+	if ( contentLang !== userLang ) {
+		languages.splice( 0, 0, userLang );
+	}
+
+	$.each( languages, function( i, language ) {
+		$( document.createElement( 'option' ) ).attr( 'value', language ).text( language ).appendTo( labelsEditor.langSelect );
+	} );
+
+	this.currentLanguage = null;
+	if ( WEF_Utils.isWikidata() ) {
+		this.langSelect.val( userLang );
+	} else {
+		this.langSelect.val( contentLang );
+	}
+	this.switchLanguage();
+};
+
+WEF_LabelsEditor.prototype.switchLanguage = function() {
+	"use strict";
+	var selectedLanguage = this.langSelect.val();
+
+	if ( selectedLanguage == this.currentLanguage ) {
+		return;
+	}
+
+	this._storeCurrentData();
+	this.currentLanguage = selectedLanguage;
+
+	if ( this.dataLabels[this.currentLanguage] !== 'undefined' ) {
+		this.inputLabel.val( this.dataLabels[this.currentLanguage] );
+	} else {
+		this.inputLabel.val( '' );
+	}
+	if ( this.dataDescriptions[this.currentLanguage] !== 'undefined' ) {
+		this.inputDescription.val( this.dataDescriptions[this.currentLanguage] );
+	} else {
+		this.inputDescription.val( '' );
+	}
+};
+
+WEF_LabelsEditor.prototype._storeCurrentData = function() {
+	"use strict";
+	if ( this.currentLanguage !== null ) {
+		this.dataLabels[this.currentLanguage] = ( "" + this.inputLabel.val() ).trim();
+		this.dataDescriptions[this.currentLanguage] = ( "" + this.inputDescription.val() ).trim();
+	}
+};
+
+/**
+ * @param {WEF_Updates}
+ *            updates
+ */
+WEF_LabelsEditor.prototype.collectUpdates = function( updates ) {
+	"use strict";
+	var labelsEditor = this;
+
+	this._storeCurrentData();
+
+	$.each( this.dataLabels, function( language, label ) {
+		if ( !$.isEmpty( label ) ) {
+			if ( labelsEditor.oldLabels[language] !== label ) {
+				updates.setLabel( language, label );
+			}
+		}
+	} );
+	$.each( this.dataDescriptions, function( language, description ) {
+		if ( !$.isEmpty( description ) ) {
+			if ( labelsEditor.oldDescriptions[language] !== description ) {
+				updates.setDescription( language, description );
+			}
+		}
+	} );
+};
 
 /**
  * Creates editor from definition. Definition includes:
@@ -4228,15 +4518,59 @@ WEF_ProgressItem.prototype.notNeeded = function() {
  *            entityId
  * @class
  */
-WEF_Updates = function( entityId ) {
+var WEF_Updates = function( entityId ) {
 	/** {string} */
 	this.entityId = entityId;
 	this.data = {};
 	this.removedClaims = [];
 };
+WEF_Updates.prototype.setLabel = function( language, value ) {
+	"use strict";
+
+	if ( typeof this.data.labels === 'undefined' ) {
+		this.data.labels = {};
+	}
+	this.data.labels[language] = {
+		language: language,
+		value: value
+	};
+};
+WEF_Updates.prototype.setDescription = function( language, value ) {
+	"use strict";
+
+	if ( typeof this.data.descriptions === 'undefined' ) {
+		this.data.descriptions = {};
+	}
+	this.data.descriptions[language] = {
+		language: language,
+		value: value
+	};
+};
+WEF_Updates.prototype.setSitelink = function( site, title ) {
+	"use strict";
+
+	if ( typeof this.data.sitelinks === 'undefined' ) {
+		this.data.sitelinks = {};
+	}
+	this.data.sitelinks[site] = {
+		site: site,
+		title: title
+	};
+};
+
 window.WEF_Updates = WEF_Updates;
 
-window.wef_analyze_and_save = function( entityId, claimEditorTables ) {
+/**
+ * @param {boolean}
+ *            currentPageItem
+ * @param {String}
+ *            entityId
+ * @param {WEF_LabelsEditor}
+ *            labelsEditor
+ * @param {WEF_ClaimEditorsTable[]}
+ *            claimEditorTables
+ */
+window.wef_analyze_and_save = function( currentPageItem, entityId, labelsEditor, claimEditorTables ) {
 	var i18n = wef_Editors_i18n;
 	var d = $.Deferred();
 
@@ -4252,6 +4586,18 @@ window.wef_analyze_and_save = function( entityId, claimEditorTables ) {
 
 	var updates = new WEF_Updates( entityId );
 	try {
+		if ( currentPageItem && $.isEmpty( entityId ) && !WEF_Utils.isWikidata() ) {
+			// set label in current content language
+			updates.setLabel( mw.config.get( 'wgContentLanguage' ), mw.config.get( 'wgPageName' ) );
+
+			// TODO: check documentation about using wgDBname
+			// attach current site
+			updates.setSitelink( mw.config.get( 'wgDBname' ), mw.config.get( 'wgPageName' ) );
+		}
+
+		if ( labelsEditor != null ) {
+			labelsEditor.collectUpdates( updates );
+		}
 		$.each( claimEditorTables, function( i, claimEditorTable ) {
 			claimEditorTable.collectUpdates( updates );
 		} );
@@ -4262,25 +4608,6 @@ window.wef_analyze_and_save = function( entityId, claimEditorTables ) {
 			purgeProgress.inProgress();
 			d.resolve( updates.entityId );
 			return;
-		}
-
-		if ( $.isEmpty( entityId ) ) {
-			// set label in current content language
-			var language = mw.config.get( 'wgContentLanguage' );
-			updates.data.labels = {};
-			updates.data.labels[language] = {
-				language: language,
-				value: mw.config.get( 'wgPageName' )
-			};
-
-			// TODO: check documentation
-			// attach current site
-			var siteCode = mw.config.get( 'wgDBname' );
-			updates.data.sitelinks = {};
-			updates.data.sitelinks[siteCode] = {
-				site: siteCode,
-				title: mw.config.get( 'wgPageName' )
-			};
 		}
 
 		analyzeProgress.success();
@@ -4509,16 +4836,19 @@ window.wef_save = function( updates ) {
 	return d;
 };
 
-WEF_EditorForm = function( title, html, i18n, editDeferred ) {
+WEF_EditorForm = function( originalTitle, html, i18n, currentPageItem, editDeferred ) {
 
+	this.currentPageItem = currentPageItem;
 	this.editDeferred = editDeferred;
 	var editorForm = this;
+
+	/** @type {WEF_LabelsEditor} */
+	var labelsEditor = null;
 
 	/** @type {WEF_ClaimEditorsTable[]} */
 	var claimEditorsTables = [];
 
 	var dialog = $( html );
-	dialog.attr( 'title', title );
 
 	/**
 	 * @type {string}
@@ -4607,6 +4937,13 @@ WEF_EditorForm = function( title, html, i18n, editDeferred ) {
 		jAnchor.data( DATAKEY_ANCHOR_ORIGINAL_TEXT, jAnchor.text() );
 	} );
 
+	dialog.find( '.wef_labels_editor' ).each( function( i, htmlItem ) {
+		var item = $( htmlItem );
+
+		labelsEditor = new WEF_LabelsEditor();
+		labelsEditor.replaceAll( item );
+	} );
+
 	dialog.find( '.wef_claim_editors' ).each( function( i, htmlItem ) {
 		var item = $( htmlItem );
 
@@ -4678,6 +5015,7 @@ WEF_EditorForm = function( title, html, i18n, editDeferred ) {
 	dialog.dialog( {
 		autoOpen: false,
 		width: 1000,
+		title: originalTitle,
 		buttons: [ {
 			text: i18n.dialogButtonUpdateLabelsText,
 			label: i18n.dialogButtonUpdateLabelsLabel,
@@ -4691,7 +5029,7 @@ WEF_EditorForm = function( title, html, i18n, editDeferred ) {
 			label: i18n.dialogButtonSaveLabel,
 			click: function() {
 				dialog.dialog( 'close' );
-				var saveD = wef_analyze_and_save( editorForm.entityId, claimEditorsTables );
+				var saveD = wef_analyze_and_save( editorForm.currentPageItem, editorForm.entityId, labelsEditor, claimEditorsTables );
 				saveD.done( function( entityId ) {
 					editDeferred.resolve( entityId );
 				} );
@@ -4711,6 +5049,14 @@ WEF_EditorForm = function( title, html, i18n, editDeferred ) {
 
 	this.load = function( entity ) {
 		this.entityId = entity.id.toUpperCase();
+
+		wef_LabelsCache.getOrQueue( this.entityId, function( label ) {
+			dialog.dialog( 'option', 'title', '«' + label + '» — ' + originalTitle );
+		} );
+
+		if ( labelsEditor != null ) {
+			labelsEditor.load( entity );
+		}
 		$.each( claimEditorsTables, function( i, claimEditorsTable ) {
 			claimEditorsTable.init( entity );
 		} );
@@ -4720,10 +5066,18 @@ WEF_EditorForm = function( title, html, i18n, editDeferred ) {
 		} );
 	};
 
-	this.initAsNew = function() {
+	this.initAsEmpty = function( currentPageItem ) {
 		this.entityId = null;
+
+		var newTitle = i18n.dialogTitleNewElement + ' — ' + originalTitle;
+		dialog.attr( 'title', newTitle );
+		dialog.dialog( 'option', 'title', newTitle );
+
+		if ( labelsEditor != null ) {
+			labelsEditor.initAsEmpty( currentPageItem );
+		}
 		$.each( claimEditorsTables, function( i, claimEditorsTable ) {
-			claimEditorsTable.initAsEmpty();
+			claimEditorsTable.initAsEmpty( currentPageItem );
 		} );
 		enableAnchorCounterUpdate = true;
 		dialog.find( 'a.wef_editor_tab_anchor' ).each( function( i, anchor ) {
@@ -4758,7 +5112,7 @@ WEF_Editor.prototype.addEditButtons = function() {
 	var editor = this;
 	var li = $( document.createElement( 'li' ) ).addClass( 'plainlinks' );
 	$( document.createElement( 'a' ) ).css( 'cursor', 'pointer' ).click( function() {
-		var editDeferred = editor.edit( WEF_Utils.getEntityId() );
+		var editDeferred = editor.edit( true );
 		editDeferred.done( function() {
 			WEF_Utils.purge();
 		} );
@@ -4766,20 +5120,12 @@ WEF_Editor.prototype.addEditButtons = function() {
 	$( '#p-tb div ul' ).append( li );
 };
 
-WEF_Editor.prototype.createEditorForm = function( editDeferred ) {
-	"use strict";
-
-	var editorForm = new WEF_EditorForm( this.i18n.dialogTitle, this.dialogHtml, this.i18n, editDeferred );
-	editorForm.afterSave = this.afterSave;
-	return editorForm;
-};
-
-WEF_Editor.prototype.edit = function( entityId ) {
+WEF_Editor.prototype.edit = function( currentPageItem, entityId ) {
 	"use strict";
 
 	var editDeferred = $.Deferred();
 
-	if ( typeof entityId === 'undefined' ) {
+	if ( currentPageItem ) {
 		entityId = WEF_Utils.getEntityId();
 	}
 
@@ -4788,8 +5134,8 @@ WEF_Editor.prototype.edit = function( entityId ) {
 
 	if ( entityId === null ) {
 		// empty item
-		var editorForm = editor.createEditorForm( editDeferred );
-		editorForm.initAsNew();
+		var editorForm = new WEF_EditorForm( editor.i18n.dialogTitle, editor.dialogHtml, editor.i18n, currentPageItem, editDeferred );
+		editorForm.initAsEmpty( currentPageItem );
 		wef_LabelsCache.receiveLabels();
 		editorForm.open();
 		return editDeferred;
@@ -4805,7 +5151,7 @@ WEF_Editor.prototype.edit = function( entityId ) {
 		url: WEF_Utils.getWikidataApiPrefix() + '&action=wbgetentities&ids=' + entityId,
 		dataType: 'json',
 		success: function( result ) {
-			var editorForm = editor.createEditorForm( editDeferred );
+			var editorForm = new WEF_EditorForm( editor.i18n.dialogTitle, editor.dialogHtml, editor.i18n, currentPageItem, editDeferred );
 			editorForm.load( result.entities[entityId] );
 			wef_LabelsCache.receiveLabels();
 			editorForm.open();
@@ -4831,13 +5177,96 @@ WEF_Editor.prototype.localize = function( i18n_prefix ) {
 
 WEF_Editors_Registry = function() {
 	"use strict";
-	var byClass = {};
 
-	this.registerEditor = function( classEntityId, wef_editor ) {
-		if ( !( wef_editor instanceof WEF_Editor ) ) {
-			throw new Error( 'Illegal argument: ' + wef_editor + ' is not instanceof WEF_Editor' );
+	/** @type {WEF_Editor[]} */
+	this.registry = {};
+	this.registryLength = 0;
+};
+
+WEF_Editors_Registry.prototype.registerEditor = function( classEntityId, wef_editor ) {
+	if ( $.isEmpty( classEntityId ) ) {
+		throw new Error( 'Illegal argument: classEntityId not provided' );
+	}
+	if ( !( wef_editor instanceof WEF_Editor ) ) {
+		throw new Error( 'Illegal argument: ' + wef_editor + ' is not instanceof WEF_Editor' );
+	}
+	this.registry[classEntityId] = wef_editor;
+	this.registryLength++;
+};
+var wef_editors_registry = window.wef_editors_registry = new WEF_Editors_Registry();
+
+/** @class */
+var WEF_SelectEditor = function( anchor, optionPrefix, listener ) {
+	var select = $( document.createElement( 'select' ) ).addClass( 'wef-editor-menu' ).attr( 'size', wef_editors_registry.registryLength );
+	select.hide();
+	$( document.body ).append( select );
+
+	var called = false;
+	var _this = this;
+	function changeF() {
+		var value = _this.val();
+		if ( value !== null ) {
+			if ( called ) {
+				return;
+			}
+			called = true;
+			_this.hide();
+			listener( value, wef_editors_registry.registry[value] );
+		}
+	}
+
+	$.each( wef_editors_registry.registry, function( id, editor ) {
+		var jOption = $( document.createElement( 'option' ) ).attr( 'value', id ).text( optionPrefix + id ).appendTo( select );
+		wef_LabelsCache.getOrQueue( id, function( label, description ) {
+			jOption.text( optionPrefix + label );
+			jOption.attr( 'title', description );
+		} );
+	} );
+	wef_LabelsCache.receiveLabels();
+
+	select.click( changeF );
+	select.change( changeF );
+
+	this.val = function( value ) {
+		if ( typeof value === 'undefined' ) {
+			return select.val();
+		}
+
+		select.val( value );
+	};
+
+	this.text = function() {
+		var option = select.find( ':selected' );
+		if ( option.length !== 0 ) {
+			return option.text();
+		}
+		return null;
+	};
+
+	this.visible = false;
+
+	this.hide = function() {
+		this.visible = false;
+		select.hide();
+	};
+
+	this.show = function() {
+		called = false;
+		anchor.after( select );
+		select.show().position( {
+			my: 'left top',
+			at: 'left bottom',
+			of: anchor,
+		} );
+		this.listener = listener;
+		this.visible = true;
+	};
+
+	this.toggle = function() {
+		if ( this.visible ) {
+			this.hide();
+		} else {
+			this.show();
 		}
 	};
 };
-
-window.wef_editors_registry = new WEF_Editors_Registry();

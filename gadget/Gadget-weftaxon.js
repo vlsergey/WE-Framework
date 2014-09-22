@@ -13,6 +13,7 @@ var wef_TaxonEditor_html = "<div class=\'wef_taxonEditor_dialog\'>\r\n" +
 		"			<li><a href=\'#wef_taxonEditor_tab_databases\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupDatabases</a></li>\r\n" + 
 		"		</ul>\r\n" + 
 		"		<div id=\'wef_taxonEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetGeneral</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
@@ -48,6 +49,10 @@ var wef_TaxonEditor_html = "<div class=\'wef_taxonEditor_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P944\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
+		"			<table class=\'wef_table\'>\r\n" + 
+		"				<!-- image -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P18\' data-datatype=\'commonsMedia\' />\r\n" + 
+		"			</table>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_taxonEditor_tab_biology\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
@@ -151,8 +156,16 @@ window.wef_TaxonEditor_i18n_ru = {
 	menuButton: 'WEF: Таксон',
 };
 
-mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
-	window.wef_TaxonEditor = new WEF_Editor( wef_TaxonEditor_html );
-	window.wef_TaxonEditor.localize( 'wef_TaxonEditor_i18n_' );
-	window.wef_TaxonEditor.addEditButtons();
+mw.loader.using( [ //
+'jquery.ui.autocomplete', //
+'jquery.ui.dialog', //
+'jquery.ui.tabs', //
+'ext.gadget.wefcore', //
+'ext.gadget.wefflags', //
+'wikibase.utilities.jQuery.ui.tagadata', //
+], function() {
+	var editor = new WEF_Editor( wef_TaxonEditor_html );
+	editor.localize( 'wef_TaxonEditor_i18n_' );
+	editor.addEditButtons();
+	window.wef_editors_registry.registerEditor( 'Q16521', editor );
 } );

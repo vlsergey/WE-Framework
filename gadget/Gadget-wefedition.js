@@ -5,7 +5,7 @@
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
  */
-window.wef_EditionEditor_html = "<div class=\'wef_workEditor_dialog\'>\r\n" + 
+var wef_EditionEditor_html = "<div class=\'wef_workEditor_dialog\'>\r\n" + 
 		"	<div class=\'wef_tabs\'>\r\n" + 
 		"		<ul>\r\n" + 
 		"			<li><a href=\'#wef_workEditor_tab_general\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupGeneral</a></li>\r\n" + 
@@ -14,6 +14,7 @@ window.wef_EditionEditor_html = "<div class=\'wef_workEditor_dialog\'>\r\n" +
 		"			<li><a href=\'#wef_workEditor_tab_other\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupOther</a></li>\r\n" + 
 		"		</ul>\r\n" + 
 		"		<div id=\'wef_workEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\"wef_table\">\r\n" + 
 		"					<!-- instance of -->\r\n" + 
@@ -186,8 +187,16 @@ window.wef_EditionEditor_i18n_ru = {
 	menuButton: 'WEF: FRBR издание',
 };
 
-mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.datepicker', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
-	window.wef_EditionEditor = new WEF_Editor( wef_EditionEditor_html );
-	window.wef_EditionEditor.localize( 'wef_EditionEditor_i18n_' );
-	window.wef_EditionEditor.addEditButtons();
+mw.loader.using( [ //
+'jquery.ui.autocomplete', //
+'jquery.ui.dialog', //
+'jquery.ui.tabs', //
+'ext.gadget.wefcore', //
+'ext.gadget.wefflags', //
+'wikibase.utilities.jQuery.ui.tagadata', //
+], function() {
+	var editor = new WEF_Editor( wef_EditionEditor_html );
+	editor.localize( 'wef_EditionEditor_i18n_' );
+	editor.addEditButtons();
+	window.wef_editors_registry.registerEditor( 'Q3331189', editor );
 } );
