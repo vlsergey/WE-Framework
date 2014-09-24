@@ -76,6 +76,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"						<tr data-code=\'P1319\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
 		"						<!-- earliest date -->\r\n" + 
 		"						<tr data-code=\'P1326\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
+		"						<!-- sourcing circumstances -->\r\n" + 
+		"						<tr data-code=\'P1480\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					</tbody>\r\n" + 
 		"					<!-- birth place -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P19\' data-datatype=\'wikibase-item\'>\r\n" + 
@@ -83,6 +85,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"						<tr data-code=\'P131\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"						<!--  country -->\r\n" + 
 		"						<tr data-code=\'P17\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"						<!-- sourcing circumstances -->\r\n" + 
+		"						<tr data-code=\'P1480\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					</tbody>\r\n" + 
 		"					<!-- ethnic group -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P172\' data-datatype=\'wikibase-item\' />\r\n" + 
@@ -107,6 +111,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"						<tr data-code=\'P1319\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
 		"						<!-- earliest date -->\r\n" + 
 		"						<tr data-code=\'P1326\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
+		"						<!-- sourcing circumstances -->\r\n" + 
+		"						<tr data-code=\'P1480\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					</tbody>\r\n" + 
 		"					<!-- Death place -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P20\' data-datatype=\'wikibase-item\'>\r\n" + 
@@ -114,6 +120,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"						<tr data-code=\'P131\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"						<!--  country -->\r\n" + 
 		"						<tr data-code=\'P17\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"						<!-- sourcing circumstances -->\r\n" + 
+		"						<tr data-code=\'P1480\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					</tbody>\r\n" + 
 		"					<!-- Death cause -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P509\' data-datatype=\'wikibase-item\' />\r\n" + 
