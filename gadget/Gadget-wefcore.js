@@ -3040,8 +3040,28 @@ PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
 	datatype: 'wikibase-item',
 } ) );
 PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
-	code: 'P387', // citation
+	code: 'P50', // author
+	datatype: 'wikibase-item',
+} ) );
+PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
+	code: 'P357', // title
 	datatype: 'string',
+} ) );
+PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
+	code: 'P392', // subtitle
+	datatype: 'string',
+} ) );
+PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
+	code: 'P393', // editor
+	datatype: 'wikibase-item',
+} ) );
+PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
+	code: 'P1433', // publication
+	datatype: 'wikibase-item',
+} ) );
+PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
+	code: 'P123', // publisher
+	datatype: 'wikibase-item',
 } ) );
 PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
 	code: 'P478', // volume
@@ -3078,6 +3098,22 @@ PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
 PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
 	code: 'P1065', // archive URL
 	datatype: 'url',
+} ) );
+PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
+	code: 'P212', // ISBN 13
+	datatype: 'string',
+} ) );
+PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
+	code: 'P957', // ISBN 10
+	datatype: 'string',
+} ) );
+PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
+	code: 'P1480', // sourcing circumstances
+	datatype: 'wikibase-item',
+} ) );
+PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
+	code: 'P387', // citation
+	datatype: 'string',
 } ) );
 
 /** @class */
