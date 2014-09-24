@@ -4607,7 +4607,8 @@ window.wef_analyze_and_save = function( currentPageItem, entityId, labelsEditor,
 			analyzeProgress.success();
 			purgeProgress.inProgress();
 			d.resolve( updates.entityId );
-			return;
+			dialog.dialog( 'close' );
+			return d;
 		}
 
 		analyzeProgress.success();

@@ -11,6 +11,7 @@ function generateSourceModule( entity ) {
 	result += appendClaims( entity, 'P357', 'title' );
 	result += appendClaims( entity, 'P392', 'subtitle' );
 	result += appendClaims( entity, 'P1433', 'publication' );
+	result += appendClaims( entity, 'P393', 'edition' );
 	result += appendClaims( entity, 'P98', 'editor' );
 	result += appendClaims( entity, 'P291', 'place' );
 	result += appendClaims( entity, 'P123', 'publisher' );
@@ -18,8 +19,12 @@ function generateSourceModule( entity ) {
 	result += appendClaims( entity, 'P478', 'volume' );
 	result += appendClaims( entity, 'P433', 'issue' );
 	result += appendClaims( entity, 'P304', 'page' );
+	result += appendClaims( entity, 'P1104', 'pages' );
 	result += appendClaims( entity, 'P236', 'issn' );
 	result += appendClaims( entity, 'P1065', 'archiveurl' );
+	result += appendClaims( entity, 'P813', 'datecheck' );
+	result += appendClaims( entity, 'P212', 'isbn13' );
+	result += appendClaims( entity, 'P957', 'isbn10' );
 	result += appendClaims( entity, 'P813', 'datecheck' );
 	result += '}\n';
 	return result;
@@ -142,28 +147,31 @@ WEF_Sources = function() {
 WEF_Sources.prototype.attachToInstancesOf = function( instanceOfEntityId, editorHtml, editorI18n ) {
 	"use strict";
 
+	var editor = new WEF_Editor( editorHtml );
+	editor.localize( editorI18n );
+	var originalFunction = WEF_Editor.prototype.edit;
+	editor.edit = function( currentPageItem, entityId ) {
+		mw.log.warn( "editor.edit called" );
+		var d = originalFunction.call( this, currentPageItem, entityId );
+		d.always( function() {
+			updateLocalSourceDescription( editor.i18n, entityId );
+		} );
+		mw.log.warn( "editor.edit finished" );
+		return d;
+	};
+	window.wef_editors_registry.registerEditor( instanceOfEntityId, editor );
+
 	$( '.citetype_' + instanceOfEntityId ).prepend( $( document.createElement( 'a' ) ).text( '[edit] ' ).css( 'cursor', 'pointer' ).click( function() {
-		var sourceId = $( this ).parent().data( 'entity-id' );
-		if ( typeof sourceId !== 'undefined' && sourceId !== null ) {
-			var editor = new WEF_Editor( editorHtml );
-			editor.localize( editorI18n );
-			editor.afterSave = function() {
-				updateLocalSourceDescription( editor.i18n, editor.entityId );
-			};
-			editor.entityId = sourceId;
-			editor.edit();
+		var entityId = $( this ).parent().data( 'entity-id' );
+		if ( !$.isEmpty( entityId ) ) {
+			editor.edit( false, entityId );
 		}
 	} ) );
+
 	$( '.citetype_unknown' ).prepend( $( document.createElement( 'a' ) ).text( '[' + instanceOfEntityId + '?] ' ).css( 'cursor', 'pointer' ).click( function() {
-		var sourceId = $( this ).parent().data( 'entity-id' );
-		if ( typeof sourceId !== 'undefined' && sourceId !== null ) {
-			var editor = new WEF_Editor( editorHtml );
-			editor.localize( editorI18n );
-			editor.afterSave = function() {
-				updateLocalSourceDescription( editor.i18n, editor.entityId );
-			};
-			editor.entityId = sourceId;
-			editor.edit();
+		var entityId = $( this ).parent().data( 'entity-id' );
+		if ( !$.isEmpty( entityId ) ) {
+			editor.edit( false, entityId );
 		}
 	} ) );
 };
