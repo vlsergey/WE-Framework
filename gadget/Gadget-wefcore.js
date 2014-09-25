@@ -112,6 +112,7 @@ window.wef_Editors_i18n_en = {
 	sourcesButtonAddLabel: 'Add new reference to the list',
 	sourcesButtonCloseText: 'Close',
 	sourcesButtonCloseLabel: 'Close the dialog',
+	sourcesLabelAddUsedReferences: 'Quick add recently used sources: ',
 };
 
 window.wef_Editors_i18n_ru = {
@@ -211,6 +212,7 @@ window.wef_Editors_i18n_ru = {
 	sourcesButtonAddLabel: 'Добавить новую сноску на источник в список',
 	sourcesButtonCloseText: 'Закрыть',
 	sourcesButtonCloseLabel: 'Закрыть диалоговое окно',
+	sourcesLabelAddUsedReferences: 'Быстрое добавление недавно использованных источников: ',
 };
 
 window.WEF_Editors_i18n = function() {
@@ -531,6 +533,21 @@ WEF_Utils.localize = function( targetObject, globalVariablesPrefix ) {
 WEF_Utils._mod = function( a, b ) {
 	"use strict";
 	return a - ( b * Math.floor( a / b ) );
+};
+
+WEF_Utils.newWikibaseItemSnak = function( property, entityType, numericId ) {
+	return {
+		snaktype: 'value',
+		property: property,
+		datatype: 'wikibase-item',
+		datavalue: {
+			value: {
+				'entity-type': entityType,
+				'numeric-id': numericId,
+			},
+			type: 'wikibase-entityid',
+		},
+	};
 };
 
 /**
@@ -3221,11 +3238,16 @@ WEF_ClaimReferencesEditor = function() {
 	var i18n = wef_Editors_i18n;
 
 	this.parent = $( document.createElement( 'div' ) ).addClass( 'wef_references_editor' );
+	this.referencesHolder = $( document.createElement( 'div' ) ).appendTo( this.parent );
+	this.addReferenceHolder = $( document.createElement( 'div' ) ).appendTo( this.parent );
+	$( document.createElement( 'span' ) ).text( i18n.sourcesLabelAddUsedReferences ).appendTo( this.addReferenceHolder );
+
 	this.editors = [];
 	this.parent.dialog( {
 		title: i18n.sourcesDialogTitle,
 		autoOpen: false,
 		width: 'auto',
+		maxWidth: 1000,
 		height: 'auto',
 		resizable: true,
 		modal: true,
@@ -3248,6 +3270,7 @@ WEF_ClaimReferencesEditor = function() {
 			label: i18n.sourcesButtonCloseLabel,
 			click: function() {
 				claimReferencesEditor.parent.dialog( 'close' );
+				claimReferencesEditor.rememberUsedSources();
 			}
 		} ],
 	} );
@@ -3255,23 +3278,11 @@ WEF_ClaimReferencesEditor = function() {
 
 WEF_ClaimReferencesEditor.prototype.add = function() {
 	"use strict";
-	var div = $( document.createElement( 'table' ) ).addClass( 'wef_reference_editor' ).appendTo( this.parent );
+	var div = $( document.createElement( 'table' ) ).addClass( 'wef_reference_editor' ).appendTo( this.referencesHolder );
 	var claimReferenceEditor = new WEF_ClaimReferenceEditor( div );
 	// TODO: something like "init with empty?"
 	// claimReferenceEditor.load( reference );
 	this.editors.push( claimReferenceEditor );
-};
-
-WEF_ClaimReferencesEditor.prototype.load = function( references ) {
-	"use strict";
-	var claimReferencesEditor = this;
-	$.each( references, function( i, reference ) {
-		var div = $( document.createElement( 'table' ) ).addClass( 'wef_reference_editor' ).appendTo( claimReferencesEditor.parent );
-		var claimReferenceEditor = new WEF_ClaimReferenceEditor( div );
-		claimReferenceEditor.load( reference );
-		claimReferencesEditor.editors.push( claimReferenceEditor );
-	} );
-	wef_LabelsCache.receiveLabels();
 };
 
 WEF_ClaimReferencesEditor.prototype.collect = function() {
@@ -3287,6 +3298,139 @@ WEF_ClaimReferencesEditor.prototype.collect = function() {
 	} );
 	return result;
 };
+
+WEF_ClaimReferencesEditor.prototype.initAsEmpty = function() {
+	"use strict";
+	this.loadUsedSources();
+	wef_LabelsCache.receiveLabels();
+};
+
+WEF_ClaimReferencesEditor.prototype.load = function( references ) {
+	"use strict";
+	var claimReferencesEditor = this;
+	$.each( references, function( i, reference ) {
+		claimReferencesEditor.addReference( reference );
+	} );
+	this.loadUsedSources();
+	wef_LabelsCache.receiveLabels();
+};
+
+WEF_ClaimReferencesEditor.prototype.addReference = function( reference ) {
+	var div = $( document.createElement( 'table' ) ).addClass( 'wef_reference_editor' ).appendTo( this.referencesHolder );
+	var claimReferenceEditor = new WEF_ClaimReferenceEditor( div );
+	claimReferenceEditor.load( reference );
+	this.editors.push( claimReferenceEditor );
+};
+
+WEF_ClaimReferencesEditor.prototype.loadUsedSources = function() {
+	"use strict";
+
+	if ( typeof window.localStorage === 'undefined' || typeof window.localStorage['wef-latest-sources-refs'] === 'undefined' )
+		return;
+
+	var claimReferencesEditor = this;
+	try {
+		var remembered = JSON.parse( window.localStorage['wef-latest-sources-refs'] ).slice( 0 );
+		$.each( remembered, function( i, record ) {
+			var property = 'P' + record[0];
+			var itemId = record[1];
+			var item = 'Q' + itemId;
+
+			var propertyName = property;
+			var itemName = item;
+
+			var button = $( document.createElement( 'div' ) ).text( propertyName + ': ' + itemName );
+			wef_LabelsCache.getOrQueue( property, function( label ) {
+				propertyName = label;
+				button.text( propertyName + ': ' + itemName );
+			} );
+			wef_LabelsCache.getOrQueue( item, function( label ) {
+				itemName = label;
+				button.text( propertyName + ': ' + itemName );
+			} );
+			button.button();
+			button.click( function() {
+				button.remove();
+				var reference = {
+					snaks: {},
+				};
+				reference.snaks[property] = [ WEF_Utils.newWikibaseItemSnak( property, 'item', itemId ) ];
+				claimReferencesEditor.addReference( reference );
+			} );
+			button.appendTo( claimReferencesEditor.addReferenceHolder );
+		} );
+	} catch ( e ) {
+		mw.log( 'Unable to load latest sources refs from local storage: ' + e );
+	}
+};
+
+WEF_ClaimReferencesEditor.prototype.rememberUsedSources = function() {
+	"use strict";
+
+	if ( typeof window.localStorage === 'undefined' )
+		return;
+
+	var claimReferencesEditor = this;
+	try {
+		var usedSources = [];
+		$.each( this.editors, function( i, claimReferenceEditor ) {
+			var reference = claimReferenceEditor.collect();
+			claimReferencesEditor._collectSourceRef( reference.snaks, 248, usedSources );
+			claimReferencesEditor._collectSourceRef( reference.snaks, 143, usedSources );
+		} );
+
+		var remembered = [];
+		try {
+			var stored = window.localStorage['wef-latest-sources-refs'];
+			if ( typeof stored !== 'undefined' ) {
+				remembered = JSON.parse( stored ).slice( 0 );
+			}
+		} catch ( e ) {
+			mw.log( 'Unknown error trying to restore latest sources refs from local storage: ' + e );
+		}
+
+		var newToRemember = usedSources.concat( remembered ).slice( 0, 10 );
+		// leave unique only
+		var stringified = $.map( newToRemember, function( x ) {
+			return JSON.stringify( x );
+		} );
+		newToRemember = $.grep( newToRemember, function( item, i ) {
+			return $.inArray( JSON.stringify( item ), stringified ) === i // /
+					&& typeof $.isArray( item ) //
+					&& item.length === 2 //
+					&& typeof item[0] === 'number' //
+					&& typeof item[1] === 'number';
+		} );
+		window.localStorage['wef-latest-sources-refs'] = JSON.stringify( newToRemember );
+	} catch ( e ) {
+		mw.log( 'Unable to update latest sources refs in local storage: ' + e );
+	}
+};
+
+WEF_ClaimReferencesEditor.prototype._collectSourceRef = function( snaks, propertyNumberId, usedSources ) {
+	"use strict";
+	var value = this._getItemId( snaks, 'P' + propertyNumberId );
+	if ( typeof value !== 'undefined' ) {
+		usedSources.push( [ propertyNumberId, value ] );
+	}
+};
+WEF_ClaimReferencesEditor.prototype._getItemId = function( snaks, propertyId ) {
+
+	"use strict";
+	var hasValue = typeof snaks[propertyId] !== 'undefined' //
+			&& snaks[propertyId].length === 1 //
+			&& typeof snaks[propertyId][0].datavalue !== 'undefined' //
+			&& typeof snaks[propertyId][0].datavalue.value !== 'undefined' //
+			&& snaks[propertyId][0].datavalue.value['entity-type'] === 'item';
+	if ( hasValue ) {
+		var value = Number( snaks[propertyId][0].datavalue.value['numeric-id'] );
+		if ( !Number.isNaN( value ) ) {
+			return value;
+		}
+	}
+	return undefined;
+};
+
 WEF_ClaimReferencesEditor.prototype.show = function() {
 	"use strict";
 	this.parent.dialog( 'open' );
@@ -4075,18 +4219,7 @@ WEF_ClaimEditor.prototype.collectUpdates = function( updates ) {
 			claim.mainsnak = newSnak;
 		} else if ( this.isQualifierEditor === true ) {
 			if ( oldClaim === null ) {
-				claim.mainsnak = {
-					snaktype: 'value',
-					property: this.propertyId,
-					datatype: 'wikibase-item',
-					datavalue: {
-						value: {
-							'entity-type': 'item',
-							'numeric-id': this.propertyValue.substr( 1 ),
-						},
-						type: 'wikibase-entityid',
-					}
-				};
+				claim.mainsnak = WEF_Utils.newWikibaseItemSnak( this.propertyId, 'item', this.propertyValue.substr( 1 ) );
 			}
 			var qualifier = newSnak;
 			if ( oldSnak !== null ) {
