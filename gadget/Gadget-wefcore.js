@@ -3239,8 +3239,11 @@ WEF_ClaimReferencesEditor = function() {
 
 	this.parent = $( document.createElement( 'div' ) ).addClass( 'wef_references_editor' );
 	this.referencesHolder = $( document.createElement( 'div' ) ).appendTo( this.parent );
-	this.addReferenceHolder = $( document.createElement( 'div' ) ).appendTo( this.parent );
-	$( document.createElement( 'span' ) ).text( i18n.sourcesLabelAddUsedReferences ).appendTo( this.addReferenceHolder );
+
+	var referencesTable = $( document.createElement( 'div' ) ).addClass( 'wef_reference_editor_table' ).appendTo( this.parent );
+	var part1 = $( document.createElement( 'div' ) ).addClass( 'wef_reference_editor_column' ).appendTo( referencesTable );
+	$( document.createElement( 'span' ) ).text( i18n.sourcesLabelAddUsedReferences ).appendTo( part1 );
+	this.addReferenceHolder = $( document.createElement( 'ul' ) ).addClass( 'wef_reference_editor_list' ).appendTo( part1 );
 
 	this.editors = [];
 	this.parent.dialog( {
@@ -3339,25 +3342,24 @@ WEF_ClaimReferencesEditor.prototype.loadUsedSources = function() {
 			var propertyName = property;
 			var itemName = item;
 
-			var button = $( document.createElement( 'div' ) ).text( propertyName + ': ' + itemName );
+			var li = $( document.createElement( 'li' ) ).appendTo( claimReferencesEditor.addReferenceHolder );
+			var reflink = $( document.createElement( 'a' ) ).addClass( 'wef_reference_editor_ref' ).text( propertyName + ': ' + itemName ).appendTo( li );
 			wef_LabelsCache.getOrQueue( property, function( label ) {
 				propertyName = label;
-				button.text( propertyName + ': ' + itemName );
+				reflink.text( propertyName + ': ' + itemName );
 			} );
 			wef_LabelsCache.getOrQueue( item, function( label ) {
 				itemName = label;
-				button.text( propertyName + ': ' + itemName );
+				reflink.text( propertyName + ': ' + itemName );
 			} );
-			button.button();
-			button.click( function() {
-				button.remove();
+			reflink.click( function() {
+				li.remove();
 				var reference = {
 					snaks: {},
 				};
 				reference.snaks[property] = [ WEF_Utils.newWikibaseItemSnak( property, 'item', itemId ) ];
 				claimReferencesEditor.addReference( reference );
 			} );
-			button.appendTo( claimReferencesEditor.addReferenceHolder );
 		} );
 	} catch ( e ) {
 		mw.log( 'Unable to load latest sources refs from local storage: ' + e );
