@@ -42,6 +42,10 @@
 	padding: 0 1em !important;
 }
 
+.wef-labels-editor legend select {
+	vertical-align: middle;
+}
+
 .wef-labels-editor-th {
 	text-align: left;
 }
@@ -204,4 +208,8 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 .wef_reference_editor {
 	width: 100%;
 	border-bottom: thin dotted #000000;
+}
+
+.wef_reference_editor_ref {
+	cursor: pointer;
 }
