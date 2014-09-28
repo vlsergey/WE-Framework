@@ -1,31 +1,37 @@
 /**
- * This JavaScript is a implementation of JavaScript Gadget to edit country
- * information on Wikidata. This script is based on WE-Framework.
+ * This JavaScript is a implementation of JavaScript Gadget to edit
+ * administrative unit information on Wikidata. This script is based on
+ * WE-Framework.
  * 
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
  */
-window.wef_CountryEditor_html = "<div class=\'wef_countryEditor_dialog\'>\r\n" + 
+var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'>\r\n" + 
 		"	<div class=\'wef_tabs\'>\r\n" + 
 		"		<ul>\r\n" + 
-		"			<li><a href=\'#wef_countryEditor_tab_general\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupGeneral</a></li>\r\n" + 
-		"			<li><a href=\'#wef_countryEditor_tab_media\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupMedia</a></li>\r\n" + 
-		"			<li><a href=\'#wef_countryEditor_tab_history\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q309</a></li>\r\n" + 
-		"			<li><a href=\'#wef_countryEditor_tab_geography\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q1071</a></li>\r\n" + 
-		"			<li><a href=\'#wef_countryEditor_tab_politic\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q7163</a></li>\r\n" + 
-		"			<li><a href=\'#wef_countryEditor_tab_subdivisions\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P150</a></li>\r\n" + 
-		"			<li><a href=\'#wef_countryEditor_tab_demography\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P1082</a></li>\r\n" + 
-		"			<li><a href=\'#wef_countryEditor_tab_clubs\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupClubs</a></li>\r\n" + 
-		"			<li><a href=\'#wef_countryEditor_tab_iso\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q25275</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_general\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupGeneral</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_media\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupMedia</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_history\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q309</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_geography\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q1071</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_politic\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q7163</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_subdivisions\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P150</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_demography\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P1082</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_clubs\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupClubs</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_codes\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupCodes</a></li>\r\n" + 
+		"			<li><a href=\'#wef_admUnitEditor_tab_categories\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupCategories</a></li>\r\n" + 
 		"		</ul>\r\n" + 
 		"\r\n" + 
-		"		<div id=\'wef_countryEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetGeneral</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- instance of -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P31\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- is in the administrative territorial entity -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P131\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- type of administrative territorial entity -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P132\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- part of -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P361\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
@@ -46,7 +52,7 @@ window.wef_CountryEditor_html = "<div class=\'wef_countryEditor_dialog\'>\r\n" +
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
-		"		<div id=\'wef_countryEditor_tab_media\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_media\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
 		"				<!-- commons -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P373\' data-datatype=\'string\' />\r\n" + 
@@ -81,7 +87,7 @@ window.wef_CountryEditor_html = "<div class=\'wef_countryEditor_dialog\'>\r\n" +
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
-		"		<div id=\'wef_countryEditor_tab_history\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_history\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- est. date -->\r\n" + 
@@ -116,7 +122,7 @@ window.wef_CountryEditor_html = "<div class=\'wef_countryEditor_dialog\'>\r\n" +
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
-		"		<div id=\'wef_countryEditor_tab_geography\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_geography\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
 		"				<!-- continent -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P30\' data-datatype=\'wikibase-item\' />\r\n" + 
@@ -146,7 +152,7 @@ window.wef_CountryEditor_html = "<div class=\'wef_countryEditor_dialog\'>\r\n" +
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
-		"		<div id=\'wef_countryEditor_tab_politic\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_politic\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
 		"				<!-- basic form of government -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P122\' data-datatype=\'wikibase-item\' />\r\n" + 
@@ -157,7 +163,7 @@ window.wef_CountryEditor_html = "<div class=\'wef_countryEditor_dialog\'>\r\n" +
 		"			</table>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
-		"		<div id=\'wef_countryEditor_tab_subdivisions\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_subdivisions\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P150</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
@@ -174,7 +180,7 @@ window.wef_CountryEditor_html = "<div class=\'wef_countryEditor_dialog\'>\r\n" +
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
-		"		<div id=\'wef_countryEditor_tab_demography\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_demography\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P1082</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
@@ -187,7 +193,7 @@ window.wef_CountryEditor_html = "<div class=\'wef_countryEditor_dialog\'>\r\n" +
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
-		"		<div id=\'wef_countryEditor_tab_clubs\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_clubs\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P463</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
@@ -204,38 +210,71 @@ window.wef_CountryEditor_html = "<div class=\'wef_countryEditor_dialog\'>\r\n" +
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
-		"		<div id=\'wef_countryEditor_tab_iso\' class=\'wef_editor_tab\'>\r\n" + 
-		"			<table class=\'wef_table\'>\r\n" + 
-		"				<!-- ISO 3166-1 alpha-2 -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P297\' data-datatype=\'string\' />\r\n" + 
-		"				<!-- ISO 3166-1 alpha-3 -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P298\' data-datatype=\'string\' />\r\n" + 
-		"				<!-- ISO 3166-1 numeric -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P299\' data-datatype=\'string\' />\r\n" + 
-		"			</table>\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_codes\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- phone code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P473\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- ОКАТО -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ru\' data-code=\'P721\' data-datatype=\'string\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>Q25275</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- ISO 3166-1 alpha-2 -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P297\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- ISO 3166-1 alpha-3 -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P298\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- ISO 3166-1 numeric -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P299\' data-datatype=\'string\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>Q133153</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- ISO 3166-2 -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P300\' data-datatype=\'string\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"		</div>\r\n" + 
+		"\r\n" + 
+		"		<div id=\'wef_admUnitEditor_tab_categories\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- main category -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P910\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1464\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1465\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
 		"	</div>\r\n" + 
 		"</div>";
 
-window.wef_CountryEditor_i18n_en = {
+window.wef_AdmUnitEditor_i18n_en = {
 
-	dialogTitle: 'Country — WE-Framework',
+	dialogTitle: 'Administrative Unit — WE-Framework',
 
 	groupMedia: 'media',
 	groupClubs: 'clubs',
+	groupCodes: 'codes',
+	groupCategories: 'categories',
 
-	menuButton: 'WEF: Country',
+	menuButton: 'WEF: Adm. Unit',
 };
 
-window.wef_CountryEditor_i18n_ru = {
+window.wef_AdmUnitEditor_i18n_ru = {
 
-	dialogTitle: 'Страна — WE-Framework',
+	dialogTitle: 'Административная единица — WE-Framework',
 
 	groupMedia: 'медиа',
 	groupClubs: 'клубы',
+	groupCodes: 'коды',
+	groupCategories: 'категории',
 
-	menuButton: 'WEF: Страна',
+	menuButton: 'WEF: Адм. Единица',
 };
 
 mw.loader.using( [ //
@@ -246,8 +285,8 @@ mw.loader.using( [ //
 'ext.gadget.wefflags', //
 'wikibase.utilities.jQuery.ui.tagadata', //
 ], function() {
-	var editor = new WEF_Editor( wef_CountryEditor_html );
-	editor.localize( 'wef_CountryEditor_i18n_' );
+	var editor = new WEF_Editor( wef_AdmUnitEditor_html );
+	editor.localize( 'wef_AdmUnitEditor_i18n_' );
 	editor.addEditButtons();
-	window.wef_editors_registry.registerEditor( 'Q6256', editor );
+	window.wef_editors_registry.registerEditor( 'Q56061', editor );
 } );
