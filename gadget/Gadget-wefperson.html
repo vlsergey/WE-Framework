@@ -1,4 +1,4 @@
-<div class='wef_personEditor_dialog'>
+<div class='wef_dialog'>
 	<div class='wef_tabs'>
 		<ul>
 			<li><a href='#wef_personEditor_tab_general' class='wef_editor_tab_anchor wef_i18n_text'>groupGeneral</a></li>
@@ -55,7 +55,19 @@
 					<!-- sexual orientation -->
 					<tbody class='wef_claim_editors' data-code='P91' data-datatype='wikibase-item' />
 					<!-- country of citizenship -->
-					<tbody class='wef_claim_editors' data-code='P27' data-datatype='wikibase-item' />
+					<tbody class='wef_claim_editors' data-code='P27' data-datatype='wikibase-item'>
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' />
+					</tbody>
+					<!-- native language -->
+					<tbody class='wef_claim_editors' data-code='P103' data-datatype='wikibase-item' />
+					<!-- languages spoken -->
+					<tbody class='wef_claim_editors' data-code='P1412' data-datatype='wikibase-item'>
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' />
+					</tbody>
 				</table>
 			</fieldset>
 		</div>
@@ -102,7 +114,7 @@
 					<tbody class='wef_claim_editors' data-code='P570' data-datatype='time'>
 						<!-- earliest date -->
 						<tr data-code='P1319' data-datatype='time' data-editordatatype='time-years' />
-						<!-- earliest date -->
+						<!-- latest date -->
 						<tr data-code='P1326' data-datatype='time' data-editordatatype='time-years' />
 						<!-- sourcing circumstances -->
 						<tr data-code='P1480' data-datatype='wikibase-item' />

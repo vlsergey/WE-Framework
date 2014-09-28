@@ -5,7 +5,7 @@
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
  */
-window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" + 
+window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" + 
 		"	<div class=\'wef_tabs\'>\r\n" + 
 		"		<ul>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_general\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupGeneral</a></li>\r\n" + 
@@ -62,7 +62,19 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"					<!-- sexual orientation -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P91\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- country of citizenship -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P27\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P27\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- start date -->\r\n" + 
+		"						<tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- end date -->\r\n" + 
+		"						<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
+		"					</tbody>\r\n" + 
+		"					<!-- native language -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P103\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- languages spoken -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1412\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- start date -->\r\n" + 
+		"						<tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
@@ -109,7 +121,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_personEditor_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P570\' data-datatype=\'time\'>\r\n" + 
 		"						<!-- earliest date -->\r\n" + 
 		"						<tr data-code=\'P1319\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
-		"						<!-- earliest date -->\r\n" + 
+		"						<!-- latest date -->\r\n" + 
 		"						<tr data-code=\'P1326\' data-datatype=\'time\' data-editordatatype=\'time-years\' />\r\n" + 
 		"						<!-- sourcing circumstances -->\r\n" + 
 		"						<tr data-code=\'P1480\' data-datatype=\'wikibase-item\' />\r\n" + 
