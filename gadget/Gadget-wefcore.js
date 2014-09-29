@@ -3247,6 +3247,7 @@ WEF_ClaimReferencesEditor = function() {
 
 	this.editors = [];
 	this.parent.dialog( {
+		dialogClass: 'wef_references_editor_dialog',
 		title: i18n.sourcesDialogTitle,
 		autoOpen: false,
 		width: 'auto',
@@ -3255,26 +3256,28 @@ WEF_ClaimReferencesEditor = function() {
 		resizable: true,
 		modal: true,
 		buttons: [ {
+			text: i18n.sourcesButtonAddText,
+			label: i18n.sourcesButtonAddLabel,
+			click: function() {
+				claimReferencesEditor.add();
+			},
+			style: 'float: left;',
+		}, {
 			text: i18n.sourcesButtonUpdateLabelsText,
 			label: i18n.sourcesButtonUpdateLabelsLabel,
 			click: function() {
 				wef_LabelsCache.clearCacheAndRequeue();
 				wef_LabelsCache.receiveLabels();
 			},
-			style: 'position: absolute; left: 1em;',
-		}, {
-			text: i18n.sourcesButtonAddText,
-			label: i18n.sourcesButtonAddLabel,
-			click: function() {
-				claimReferencesEditor.add();
-			}
+			style: 'float: left;',
 		}, {
 			text: i18n.sourcesButtonCloseText,
 			label: i18n.sourcesButtonCloseLabel,
 			click: function() {
 				claimReferencesEditor.parent.dialog( 'close' );
 				claimReferencesEditor.rememberUsedSources();
-			}
+			},
+			style: 'float: right;',
 		} ],
 	} );
 };

@@ -226,3 +226,11 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 .wef_reference_editor_ref {
 	cursor: pointer;
 }
+
+.wef_reference_editor_table {
+	padding-top: 2em;
+}
+
+.wef_references_editor_dialog .ui-dialog-buttonset {
+	float: none !important;
+}
