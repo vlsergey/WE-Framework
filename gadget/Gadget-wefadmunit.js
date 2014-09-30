@@ -34,6 +34,8 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P132\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- part of -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P361\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- territory claimed by -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1336\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
@@ -133,6 +135,8 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"					<!-- end date -->\r\n" + 
 		"					<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
 		"				</tbody>\r\n" + 
+		"				<!-- capital of -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P1376\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- time zone -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P421\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
@@ -150,6 +154,14 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
+		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- located next to body of water -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P206\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- highest point -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P610\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
 		"		<div id=\'wef_admUnitEditor_tab_politic\' class=\'wef_editor_tab\'>\r\n" + 
@@ -160,6 +172,10 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P194\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- highest judicial authority -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P209\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				<!-- office held by head of government -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P1313\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				<!-- central bank -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P1304\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
 		"		</div>\r\n" + 
 		"\r\n" + 
@@ -181,6 +197,10 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"		</div>\r\n" + 
 		"\r\n" + 
 		"		<div id=\'wef_admUnitEditor_tab_demography\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<table class=\'wef_table\'>\r\n" + 
+		"				<!-- Gini coefficient -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P1125\' data-datatype=\'quantity\' />\r\n" + 
+		"			</table>\r\n" + 
 		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P1082</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
@@ -215,8 +235,6 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- phone code -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P473\' data-datatype=\'string\' />\r\n" + 
-		"					<!-- ОКАТО -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-flag=\'ru\' data-code=\'P721\' data-datatype=\'string\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
@@ -235,6 +253,62 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- ISO 3166-2 -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P300\' data-datatype=\'string\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!--  local administrative unit -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'eu\' data-code=\'P782\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- Austrian municipality key -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'at\' data-code=\'P964\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- Swiss municipality code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ch\' data-code=\'P771\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- China administrative division code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'cn\' data-code=\'P442\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- German regional key -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'de\' data-code=\'P1388\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- municipality code (Denmark) -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'dk\' data-code=\'P1168\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- EHAK id -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ee\' data-code=\'P1140\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- INE municipality code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'es\' data-code=\'P772\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- Finnish municipality number -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'fi\' data-code=\'P1203\' data-datatype=\'string\' />\r\n" + 
+		"					<!--  INSEE municipality code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'fr\' data-code=\'P374\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- Kallikratis geographical code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'gr\' data-code=\'P1116\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- KSH code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'hu\' data-code=\'P939\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- Iran statistics ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ir\' data-code=\'P1010\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- ISTAT ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'it\' data-code=\'P635\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- Italian cadastre code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'it\' data-code=\'P806\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- dantai code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'jp\' data-code=\'P429\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- ATVK ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'lv\' data-code=\'P1115\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- CBS municipality code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'nl\' data-code=\'P382\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- SIRUTA -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ro\' data-code=\'P843\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- ОКАТО -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ru\' data-code=\'P721\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- OKTMO identifier -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ru\' data-code=\'P764\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- State Catalogue of Geographical Names identifier (Russia) -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ru\' data-code=\'P1397\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- Geokod -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'se\' data-code=\'P1172\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- Thailand central administrative unit code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'th\' data-code=\'P1067\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- KOATUU identifier -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ua\' data-code=\'P1077\' data-datatype=\'string\' />\r\n" + 
+		"					<!-- Philippine Standard Geographic Code ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-flag=\'ph\' data-code=\'P1228\' data-datatype=\'string\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
