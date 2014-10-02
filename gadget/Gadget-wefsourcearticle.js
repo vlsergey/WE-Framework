@@ -18,7 +18,6 @@ mw.loader.using( [ //
 'ext.gadget.wefflags', //
 'ext.gadget.wefsources', //
 'mediawiki.api.edit',//
-'wikibase.utilities.jQuery.ui.tagadata', //
 ], function() {
 	window.wef_sources.attachToInstancesOf( 'Q191067', wef_SourceArticleEditor_html, 'wef_SourceArticleEditor_i18n_' );
 } );

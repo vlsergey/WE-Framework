@@ -162,7 +162,6 @@ mw.loader.using( [ //
 'jquery.ui.tabs', //
 'ext.gadget.wefcore', //
 'ext.gadget.wefflags', //
-'wikibase.utilities.jQuery.ui.tagadata', //
 ], function() {
 	var editor = new WEF_Editor( wef_TaxonEditor_html );
 	editor.localize( 'wef_TaxonEditor_i18n_' );
