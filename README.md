@@ -1,4 +1,4 @@
-WE-Framework
+This project is closed
 ============
 
-Wikidata Edit Framework for Javascript
+This project was about Wikidata Edit Framework for Javascript. Since ruwiki porject (at least from my side) is out of Wikidata, there is no reason to continue it.
