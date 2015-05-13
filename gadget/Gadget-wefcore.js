@@ -551,6 +551,52 @@ WEF_Utils.newWikibaseItemSnak = function( property, entityType, numericId ) {
 };
 
 /**
+ * Date.parse with progressive enhancement for ISO 8601
+ * <https://github.com/csnover/js-iso8601> © 2011 Colin Snover
+ * <http://zetafleet.com>
+ * 
+ * Released under MIT license.
+ * 
+ * Some changes by Vlsergey to adapt to Wikidata format
+ */
+WEF_Utils.parseISO8601 = function( date ) {
+	var numericKeys = [ 1, 4, 5, 6, 7, 10, 11 ];
+	var timestamp, struct, minutesOffset = 0;
+
+	// ES5 §15.9.4.2 states that the string should attempt to be parsed as a
+	// Date Time String Format string before falling back to any
+	// implementation-specific date parsing, so that’s what we do, even if
+	// native implementations could be faster
+
+	// 1 YYYY 2 MM 3 DD 4 HH 5 mm 6 ss 7 msec 8 Z 9 ± 10 tzHH 11 tzmm
+	if ( ( struct = /^([+\-]\d{1,11})(?:-(\d{2})(?:-(\d{2}))?)?(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{3}))?)?(?:(Z)|([+\-])(\d{2})(?::(\d{2}))?)?)?$/.exec( date ) ) ) {
+		// avoid NaN timestamps caused by “undefined” values being passed to
+		// Date.UTC
+		for ( var i = 0, k; ( k = numericKeys[i] ); ++i ) {
+			struct[k] = +struct[k] || 0;
+		}
+
+		// allow undefined days and months
+		struct[2] = ( +struct[2] || 1 ) - 1;
+		struct[3] = +struct[3] || 1;
+
+		if ( struct[8] !== 'Z' && struct[9] !== undefined ) {
+			minutesOffset = struct[10] * 60 + struct[11];
+
+			if ( struct[9] === '+' ) {
+				minutesOffset = 0 - minutesOffset;
+			}
+		}
+
+		timestamp = Date.UTC( struct[1], struct[2], struct[3], struct[4], struct[5] + minutesOffset, struct[6], struct[7] );
+	} else {
+		timestamp = Date.parse( date );
+	}
+
+	return timestamp;
+};
+
+/**
  * Preprocess different aspects of WEF_definition
  * <ul>
  * <li>Analyzes definition.template string and updates definition with new
@@ -1299,7 +1345,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				editorDataType = 'time-days-gregorian';
 			} else {
 				var initialValue = initialDataValue.value;
-				if ( !/^[\\+\\-]00000/.test( initialValue.time ) ) {
+				if ( !/^[\\+\\-][0-9]{1,4}\-/.test( initialValue.time ) ) {
 					editorDataType = 'time';
 				} else if ( !$.isEmpty( initialValue ) && !$.isEmpty( initialValue.precision ) ) {
 					var precision = initialValue.precision;
@@ -1803,17 +1849,19 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			};
 
 			this.setDataValue = function( newDataValue ) {
-				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
+				if ( !/^[\\+\\-][0-9]{1,4}\-/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
 
 				inputCalendarModel.val( newDataValue.value.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) );
 
-				var parseable = newDataValue.value.time.replace( /^([\\+\\-])00000/, '$1' );
-				if ( isNaN( Date.parse( parseable ) ) ) {
+				var date = WEF_Utils.parseISO8601( newDataValue.value.time );
+				if ( isNaN( date ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
-				var date = new Date( parseable );
+				date = new Date(date);
 				grYears.val( date.getUTCFullYear() );
 				grMonths.val( date.getUTCMonth() + 1 );
 				grDays.val( date.getUTCDate() );
@@ -1915,19 +1963,22 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			showJulianCheckboxLabel.appendTo( showJulianSpan );
 
 			this.setDataValue = function( newDataValue ) {
-				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
+				if ( !/^[\\+\\-][0-9]{1,4}\-/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
 
 				if ( newDataValue.value.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) !== CALENDAR_GREGORIAN ) {
 					switchDataType( 'time-days', newDataValue );
+					return;
 				}
 
-				var parseable = newDataValue.value.time.replace( /^([\\+\\-])00000/, '$1' );
-				if ( isNaN( Date.parse( parseable ) ) ) {
+				var date = WEF_Utils.parseISO8601( newDataValue.value.time );
+				if ( isNaN( date ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
-				var date = new Date( parseable );
+				date = new Date(date);
 				years.val( date.getUTCFullYear() );
 				months.val( date.getUTCMonth() + 1 );
 				days.val( date.getUTCDate() );
@@ -1981,14 +2032,17 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 
 			var years = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( this.mainElement );
 			this.setDataValue = function( newDataValue ) {
-				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
+				if ( !/^[\\+\\-][0-9]{1,4}\-/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
-				var parseable = newDataValue.value.time.replace( /^([\\+\\-])00000/, '$1' );
-				if ( isNaN( Date.parse( parseable ) ) ) {
+
+				var date = WEF_Utils.parseISO8601( newDataValue.value.time );
+				if ( isNaN( date ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
-				var date = new Date( parseable );
+				date = new Date(date);
 				months.val( date.getMonth() + 1 );
 				years.val( date.getFullYear() );
 			};
@@ -2030,14 +2084,17 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			var years = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( this.mainElement );
 
 			this.setDataValue = function( newDataValue ) {
-				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
+				if ( !/^[\\+\\-][0-9]{1,4}\-/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
-				var parseable = newDataValue.value.time.replace( /^([\\+\\-])00000/, '$1' );
-				if ( isNaN( Date.parse( parseable ) ) ) {
+
+				var date = WEF_Utils.parseISO8601( newDataValue.value.time );
+				if ( isNaN( date ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
-				var date = new Date( parseable );
+				date = new Date(date);
 				years.val( date.getFullYear() );
 			};
 			this.hasValue = function() {
@@ -2075,14 +2132,17 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			var centuries = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).attr( 'step', '1' ).appendTo( this.mainElement );
 
 			this.setDataValue = function( newDataValue ) {
-				if ( !/^[\\+\\-]00000/.test( newDataValue.value.time ) ) {
+				if ( !/^[\\+\\-][0-9]{1,4}\-/.test( newDataValue.value.time ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
-				var parseable = newDataValue.value.time.replace( /^([\\+\\-])00000/, '$1' );
-				if ( isNaN( Date.parse( parseable ) ) ) {
+
+				var date = WEF_Utils.parseISO8601( newDataValue.value.time );
+				if ( isNaN( date ) ) {
 					switchDataType( 'time', newDataValue );
+					return;
 				}
-				var date = new Date( parseable );
+				date = new Date(date);
 				var year = date.getUTCFullYear();
 				var century;
 				if ( date.getUTCFullYear() < 0 ) {
