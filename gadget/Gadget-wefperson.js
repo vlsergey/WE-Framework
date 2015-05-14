@@ -29,11 +29,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P735\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- surname -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P734\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"					<!-- birth name -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P513\' data-datatype=\'string\'>\r\n" + 
-		"						<!--  language -->\r\n" + 
-		"						<tr data-code=\'P407\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"					</tbody>\r\n" + 
+		"                    <!-- birth name -->\r\n" + 
+		"                    <tbody class=\'wef_claim_editors\' data-code=\'P1477\' data-datatype=\'monolingualtext\' />\r\n" + 
 		"					<!-- pseudonym -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P742\' data-datatype=\'string\'>\r\n" + 
 		"						<!--  language -->\r\n" + 
@@ -102,8 +99,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					</tbody>\r\n" + 
 		"					<!-- ethnic group -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P172\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"					<!-- native language -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P103\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"                    <!-- native language -->\r\n" + 
+		"                    <tbody class=\'wef_claim_editors\' data-code=\'P103\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
@@ -465,6 +462,7 @@ mw.loader.using( [ //
 'jquery.ui.autocomplete', //
 'jquery.ui.dialog', //
 'jquery.ui.tabs', //
+'jquery.uls.data', //
 'ext.gadget.wefcore', //
 'ext.gadget.wefflags', //
 ], function() {

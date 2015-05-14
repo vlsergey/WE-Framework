@@ -57,7 +57,7 @@ window.wef_Editors_i18n_en = {
 	inputTimeAsGregorianLabel: 'Date in Gregorian calendar model',
 	inputTimeAsJulianLabel: 'Date in Julian calendar model',
 	inputTimeTimeLabel: 'Time (ISO notation)',
-	inputTimeTimeTitle: 'Date and time in ISO notation, including. E.g. "+00000001994-01-01T00:00:00Z"',
+	inputTimeTimeTitle: 'Date and time in ISO notation, including. E.g. "+1994-01-01T00:00:00Z"',
 	inputTimeTimeZoneLabel: 'Timezone (minutes)',
 	inputTimeTimeZoneTitle: 'The time zone offset against UTC, in minutes. May be given as an integer or string literal.',
 	inputTimeCalendarModelLabel: 'Calendar model',
@@ -164,7 +164,7 @@ window.wef_Editors_i18n_ru = {
 	inputTimeAsGregorianLabel: 'дата по григорианскому календарю (новый стиль)',
 	inputTimeAsJulianLabel: 'дата по юлианскому календарю (старый стиль)',
 	inputTimeTimeLabel: 'Дата и время (ISO-нотация)',
-	inputTimeTimeTitle: 'Дата и время в ISO-нотации, т. е. «+00000001994-01-01T00:00:00Z» по григорианскому календарю',
+	inputTimeTimeTitle: 'Дата и время в ISO-нотации, т. е. «+1994-01-01T00:00:00Z» по григорианскому календарю',
 	inputTimeTimeZoneLabel: 'Часовой пояс (в минутах)',
 	inputTimeTimeZoneTitle: 'Сдвиг часового пояса относительно UTC, в минутах',
 	inputTimePrecisionLabel: 'Точность',
@@ -454,9 +454,9 @@ WEF_Utils.formatDate = function( year, month, day ) {
 	"use strict";
 	var time;
 	if ( year >= 0 ) {
-		time = '+' + ( '00000000000' + year ).substr( -11, 11 );
+		time = '+' + year;
 	} else {
-		time = '-' + ( '00000000000' + ( -year ) ).substr( -11, 11 );
+		time = '-' + ( -year );
 	}
 	time += '-';
 	if ( typeof month !== 'undefined' ) {
@@ -1449,7 +1449,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 
 	if ( editorDataType === 'commonsMedia' ) {
 		( function() {
-			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_commonsMedia' ).appendTo( this.mainElement );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_commonsMedia' ).appendTo( snakValueEditor.mainElement );
 			this.setDataValue = function( newDataValue ) {
 				input.val( newDataValue.value );
 			};
@@ -1494,6 +1494,51 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				},
 			} );
 
+			input.change( changeF );
+			input.keyup( changeF );
+		} ).call( this );
+	} else if ( editorDataType === 'monolingualtext' ) {
+		( function() {
+			var table = $( document.createElement( 'table' ) ).addClass( 'wef_monolingualtext_table' ).appendTo( snakValueEditor.mainElement );
+			var tr = $( document.createElement( 'tr' ) ).addClass( 'wef_monolingualtext_tr' ).appendTo( table );
+
+			var langSelect = new WEF_LanguageInput().appendTo( $( document.createElement( 'td' ) ).addClass( 'wef_monolingualtext_td_language' ).appendTo( tr ) );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_monolingualtext_text' ).appendTo(
+					$( document.createElement( 'td' ) ).addClass( 'wef_monolingualtext_td_text' ).appendTo( tr ) );
+
+			try {
+				if ( typeof options === 'object' && typeof options.check === 'object' ) {
+					input.attr( 'pattern', WEF_Utils.regexpGetHtmlPattern( options.check ) );
+				}
+			} catch ( err ) {
+				mw.log.warn( 'Unable to attach check pattern to input: ' + err );
+			}
+
+			this.setDataValue = function( newDataValue ) {
+				langSelect.val( newDataValue.value.language );
+				input.val( newDataValue.value.text );
+			};
+			this.hasValue = function() {
+				return !$.isEmpty( input.val() );
+			};
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
+					throw new Error( 'No value' );
+				}
+				return {
+					type: 'monolingualtext',
+					value: {
+						text: input.val(),
+						language: langSelect.val(),
+					},
+				};
+			};
+			this.getAsLabel = function() {
+				return $( document.createElement( 'span' ) ).text( '(' + langSelect.val() + ') ' + input.val() );
+			};
+
+			langSelect.change( changeF );
+			langSelect.keyup( changeF );
 			input.change( changeF );
 			input.keyup( changeF );
 		} ).call( this );
@@ -1861,7 +1906,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					switchDataType( 'time', newDataValue );
 					return;
 				}
-				date = new Date(date);
+				date = new Date( date );
 				grYears.val( date.getUTCFullYear() );
 				grMonths.val( date.getUTCMonth() + 1 );
 				grDays.val( date.getUTCDate() );
@@ -1978,7 +2023,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					switchDataType( 'time', newDataValue );
 					return;
 				}
-				date = new Date(date);
+				date = new Date( date );
 				years.val( date.getUTCFullYear() );
 				months.val( date.getUTCMonth() + 1 );
 				days.val( date.getUTCDate() );
@@ -2042,7 +2087,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					switchDataType( 'time', newDataValue );
 					return;
 				}
-				date = new Date(date);
+				date = new Date( date );
 				months.val( date.getMonth() + 1 );
 				years.val( date.getFullYear() );
 			};
@@ -2094,7 +2139,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					switchDataType( 'time', newDataValue );
 					return;
 				}
-				date = new Date(date);
+				date = new Date( date );
 				years.val( date.getFullYear() );
 			};
 			this.hasValue = function() {
@@ -2142,7 +2187,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					switchDataType( 'time', newDataValue );
 					return;
 				}
-				date = new Date(date);
+				date = new Date( date );
 				var year = date.getUTCFullYear();
 				var century;
 				if ( date.getUTCFullYear() < 0 ) {
@@ -2538,6 +2583,39 @@ WEF_ItemSelect = function() {
 		}
 	};
 };
+
+/**
+ * Creates input field to input language code based on $.uls.data.languages list
+ */
+WEF_LanguageInput = ( function() {
+	var availableLanguagesCache;
+	var getAvailableLanguages = function() {
+		if ( typeof availableLanguagesCache === 'undefined' ) {
+			var availableLanguagesCache = [];
+			$.each( $.uls.data.languages, function( languageCode, languageOptions ) {
+				var languageTitle = languageOptions[2];
+				var auctocompleteObject = {
+					label: languageCode + ' — ' + languageTitle,
+					value: languageCode,
+				};
+				availableLanguagesCache.push( auctocompleteObject );
+			} );
+		}
+		return availableLanguagesCache;
+	}
+
+	return function() {
+		var input = $( document.createElement( 'input' ) ).addClass( 'wef_language_select' );
+
+		input.autocomplete( {
+			source: getAvailableLanguages(),
+		} );
+
+		this.appendTo = input.appendTo.bind( input );
+		this.change = input.change.bind( input );
+		this.val = input.val.bind( input );
+	};
+} )();
 
 /** @class */
 var WEF_SelectSnakType = function() {

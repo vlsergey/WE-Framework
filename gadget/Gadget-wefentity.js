@@ -36,6 +36,7 @@ mw.loader.using( [ //
 'jquery.ui.autocomplete', //
 'jquery.ui.dialog', //
 'jquery.ui.tabs', //
+'jquery.uls.data', //
 'ext.gadget.wefcore', //
 'ext.gadget.wefflags', //
 ], function() {

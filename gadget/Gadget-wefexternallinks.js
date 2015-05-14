@@ -128,7 +128,6 @@ window.wef_ExternalLinks_i18n_ru = {
 		'Q183718': 'Идентификатор Last FM содержит недопустимые символы',
 		'Q209330': 'Идентификатор «Instagram» содержит недопустимые символы',
 		'Q219523': 'Идентификатор «Живого журнала» содержит недопустимые символы',
-		'Q234535': 'URL для «БСЭ» должен начинаться с «http://slovari.yandex.ru/~%D0%BA%D0%BD%D0%B8%D0%B3%D0%B8/%D0%91%D0%A1%D0%AD/» или с «http://slovari.yandex.ru/~книги/БСЭ/»',
 		'Q372827': 'Идентификатор «Rutube» содержит недопустимые символы',
 		'Q384060': 'Идентификатор «Tumblr» содержит недопустимые символы',
 		'Q568769': 'Идентификатор «SoundCloud» содержит недопустимые символы',
@@ -1221,27 +1220,6 @@ window.WEF_ExternalLinks = function() {
 		check: regexpPath,
 		template: 'https://$1.livejournal.com/',
 	} );
-	this.definitions.Q17378135 = new WEF_Definition( {
-		datatype: 'url',
-		flag: 'ru',
-		code: 'P1343[Q17378135]/P854',
-		label: 'Q17378135',
-		normalize: function( id ) {
-			return id.replace( /^(https?:\/\/slovari\.yandex\.ru\/)[^\/]+(\/%D0%91%D0%A1%D0%AD\/.*)$/i, '$1~%D0%BA%D0%BD%D0%B8%D0%B3%D0%B8$2' );
-		},
-		check: /^https?:\/\/slovari\.yandex\/.ru\/(~%D0%BA%D0%BD%D0%B8%D0%B3%D0%B8|~книги)\/(%D0%91%D0%A1%D0%AD|БСЭ)\//,
-		buttons: [ {
-			icons: {
-				primary: 'ui-icon-search'
-			},
-			text: false,
-			label: 'Search on Yandex.Slovari website',
-			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
-				return '//slovari.yandex.ru/' + encodeURIComponent( 'БСЭ ' + title ) + '/%D0%B7%D0%BD%D0%B0%D1%87%D0%B5%D0%BD%D0%B8%D0%B5/';
-			} ),
-		} ],
-		qualifiers: [ d.P50, d.P958, d.P478 ],
-	} );
 	this.definitions.Q372827 = new WEF_Definition( {
 		code: 'P553[Q372827]/P554',
 		label: 'Q372827',
@@ -1977,7 +1955,6 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.P886, // e-lir.ch
 		d.P1417, // Encyclopædia Britannica online .en
 		d.Q17329836,// Encyclopédique Larousse en ligne .fr
-		d.Q17378135,// Большая советская .ru
 		d.Q4091875, // Большая энциклопедия Кирилла и Мефодия .ru
 		d.P1438,// Краткая еврейская .ru
 		d.Q4239850,// Краткая литературная .ru
@@ -2031,7 +2008,14 @@ WEF_ExternalLinks.prototype.setup = function() {
 	} );
 };
 
-mw.loader.using( [ 'jquery.ui.autocomplete', 'jquery.ui.dialog', 'jquery.ui.tabs', 'ext.gadget.wefcore', 'ext.gadget.wefflags' ], function() {
+mw.loader.using( [ //
+'jquery.ui.autocomplete',// 
+'jquery.ui.dialog',// 
+'jquery.ui.tabs', // 
+'jquery.uls.data', //
+'ext.gadget.wefcore',// 
+'ext.gadget.wefflags',//
+], function() {
 	window.externalLinksEdit = new WEF_ExternalLinks();
 	window.externalLinksEdit.init();
 	window.externalLinksEdit.setup();
