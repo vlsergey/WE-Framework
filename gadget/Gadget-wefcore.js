@@ -42,6 +42,17 @@ window.wef_Editors_i18n_en = {
 	errorUpdateEntity: 'Unable to update entity',
 	errorRemoveClaims: 'Unable to remove outdated statements from entity',
 
+	inputGlobeLatitudeLabel: 'Latitude',
+	inputGlobeLatitudeTitle: 'a latitude (decimal, no default, 9 digits after the dot and two before, signed)',
+	inputGlobeLongitudeLabel: 'Longitude',
+	inputGlobeLongitudeTitle: 'a longitude (decimal, no default, 9 digits after the dot and three before, signed)',
+	inputGlobeAltitudeLabel: 'Altitude',
+	inputGlobeAltitudeTitle: '',
+	inputGlobePrecisionLabel: 'Precision',
+	inputGlobePrecisionTitle: 'a precision (decimal, representing degrees of distance, defaults to 0, 9 digits after the dot and three before, unsigned, used to save the precision of the representation)',
+	inputGlobeGlobeLabel: 'Globe',
+	inputGlobeGlobeTitle: 'a coordinate system or globe (identified by an URI, defaults to the Earth, which means WGS84). Any such geodesic system must imply the globe for which it is used (and should be displayed as simply the globe in most cases)',
+
 	inputQuantityUnitLabel: 'unit',
 	inputQuantityUnitTitle: '',
 	inputQuantityLowerBoundLabel: 'lower bound',
@@ -148,6 +159,17 @@ window.wef_Editors_i18n_ru = {
 	errorObtainEditToken: 'Произошла ошибка при получении нового токена редактирования',
 	errorUpdateEntity: 'Произошла ошибка при сохранении изменений в элемент',
 	errorRemoveClaims: 'Произошла ошибка при удалении устаревших утверждений из элемента',
+
+	inputGlobeLatitudeLabel: 'Широта',
+	inputGlobeLatitudeTitle: 'широта (десятичное число, значение по умолчанию не задано, 9 цифр после запятой и два до; знаковое)',
+	inputGlobeLongitudeLabel: 'Долгота',
+	inputGlobeLongitudeTitle: 'долгота (десятичное число, значение по умолчанию не задано, 9 цифр после запятой и три до; знаковое)',
+	inputGlobeAltitudeLabel: 'Высота',
+	inputGlobeAltitudeTitle: 'Высота (десятичное число, значение по умолчанию не задано, 9 цифр после запятой и два до; знаковое)',
+	inputGlobePrecisionLabel: 'Точность',
+	inputGlobePrecisionTitle: 'точность (десятичное число, representing degrees of distance, значение по умолчанию 0, 9 цифр после запятой и три до; знаковое, используется для указания точности представления георафической координаты)',
+	inputGlobeGlobeLabel: 'Глобус',
+	inputGlobeGlobeTitle: 'координатная система или глобус (указывается идентификатором, по умолчанию Земля, т. е. WGS84)',
 
 	inputQuantityUnitLabel: 'единица',
 	inputQuantityUnitTitle: '',
@@ -1312,13 +1334,26 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 	}
 
 	/** @type {string} */
+	var WIKIDATA_URI_PREFIX = 'http://www.wikidata.org/entity/';
+
+	/** @type {string} */
+	var GLOBE_EARTH = 'Q2';
+	/** @type {string[]} */
+	var GLOBES = [ //
+	'Q308', // MERCURY
+	'Q313', // VENUS
+	GLOBE_EARTH, // EARTH
+	'Q405',// MOON
+	'Q111',// MARS
+	'Q319',// JUPITER
+	];
+
+	/** @type {string} */
 	var CALENDAR_GREGORIAN = 'Q1985727';
 	/** @type {string} */
 	var CALENDAR_JULIAN = 'Q1985786';
-	/** @type {string} */
-	var PREFIX_CALENDAR_MODEL = 'http://www.wikidata.org/entity/';
 	/** @type {string[]} */
-	var CALENDAR_MODELS = [ PREFIX_CALENDAR_MODEL + CALENDAR_GREGORIAN, PREFIX_CALENDAR_MODEL + CALENDAR_JULIAN ];
+	var CALENDAR_MODELS = [ WIKIDATA_URI_PREFIX + CALENDAR_GREGORIAN, WIKIDATA_URI_PREFIX + CALENDAR_JULIAN ];
 	var PRECISION_DAYS = 11;
 	var PRECISION_MONTHS = 10;
 	var PRECISION_YEARS = 9;
@@ -1337,6 +1372,20 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 
 	this.getAsLabel = unsupportedF;
 
+	var addTr = function( table, textLabel, textTitle, input ) {
+		var tr = $( document.createElement( 'tr' ) ).attr( 'title', textTitle ).appendTo( table );
+		if ( typeof textLabel !== 'undefined' ) {
+			input.uniqueId();
+			var th = $( document.createElement( 'th' ) ).appendTo( tr );
+			$( document.createElement( 'label' ) ).text( textLabel + ': ' ).attr( 'id', input.attr( 'id' ) ).appendTo( th );
+		}
+		var td = $( document.createElement( 'td' ) ).appendTo( tr );
+		if ( typeof textLabel === 'undefined' ) {
+			td.attr( 'colspan', 2 );
+		}
+		td.append( input );
+	};
+
 	if ( typeof editorDataType === 'undefined' ) {
 		// autodetect enabled
 		editorDataType = dataDataType;
@@ -1349,14 +1398,14 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					editorDataType = 'time';
 				} else if ( !$.isEmpty( initialValue ) && !$.isEmpty( initialValue.precision ) ) {
 					var precision = initialValue.precision;
-					if ( precision === PRECISION_CENTURIES && initialValue.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) === CALENDAR_GREGORIAN ) {
+					if ( precision === PRECISION_CENTURIES && initialValue.calendarmodel.substr( WIKIDATA_URI_PREFIX.length ) === CALENDAR_GREGORIAN ) {
 						editorDataType = 'time-centuries';
-					} else if ( precision === PRECISION_YEARS && initialValue.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) === CALENDAR_GREGORIAN ) {
+					} else if ( precision === PRECISION_YEARS && initialValue.calendarmodel.substr( WIKIDATA_URI_PREFIX.length ) === CALENDAR_GREGORIAN ) {
 						editorDataType = 'time-years';
-					} else if ( precision === PRECISION_MONTHS && initialValue.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) === CALENDAR_GREGORIAN ) {
+					} else if ( precision === PRECISION_MONTHS && initialValue.calendarmodel.substr( WIKIDATA_URI_PREFIX.length ) === CALENDAR_GREGORIAN ) {
 						editorDataType = 'time-months';
 					} else if ( precision === PRECISION_DAYS ) {
-						if ( initialValue.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) === CALENDAR_GREGORIAN ) {
+						if ( initialValue.calendarmodel.substr( WIKIDATA_URI_PREFIX.length ) === CALENDAR_GREGORIAN ) {
 							editorDataType = 'time-days-gregorian';
 						} else {
 							editorDataType = 'time-days';
@@ -1497,6 +1546,85 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			input.change( changeF );
 			input.keyup( changeF );
 		} ).call( this );
+	} else if ( editorDataType === 'globe-coordinate' ) {
+		( function() {
+
+			var table = $( document.createElement( 'table' ) ).addClass( 'wef_globecoordinate_table' ).appendTo( this.mainElement );
+
+			var inputLatitude = $( document.createElement( 'input' ) ) //
+			/**/.attr( 'type', 'number' ).attr( 'step', 'any' ) //
+			/**/.attr( 'min', '-90' ).attr( 'max', '90' ).attr( 'pattern', '[0-9]{1,2}(\.[0-9]{0,9})?' ) //
+			/**/.addClass( 'wef_globecoordinate_latitude' ) //
+			/**/.attr( 'placeholder', i18n.inputGlobeLatitudeLabel );
+			var inputLongitude = $( document.createElement( 'input' ) ) //
+			/**/.attr( 'type', 'number' ).attr( 'step', 'any' ) //
+			/**/.attr( 'min', '-180' ).attr( 'max', '180' ).attr( 'pattern', '[0-9]{1,3}(\.[0-9]{0,9})?' ) //
+			/**/.addClass( 'wef_globecoordinate_longitude' ) //
+			/**/.attr( 'placeholder', i18n.inputGlobeLongitudeLabel );
+			var inputAltitude = $( document.createElement( 'input' ) ) //
+			/**/.attr( 'type', 'number' ).attr( 'step', 'any' ) //
+			/**/.addClass( 'wef_globecoordinate_altitude' ) //
+			/**/.attr( 'placeholder', i18n.inputGlobeAltitudeLabel );
+			var inputPrecision = $( document.createElement( 'input' ) ) //
+			/**/.attr( 'type', 'number' ) //
+			/**/.attr( 'step', 'any' ) //
+			/**/.addClass( 'wef_globecoordinate_precision' ) //
+			/**/.attr( 'placeholder', i18n.inputGlobePrecisionLabel );
+
+			var inputGlobe = new WEF_ItemSelect();
+			inputGlobe.select.addClass( 'wef_globecoordinate_globe' );
+			$.each( GLOBES, function( index, item ) {
+				inputGlobe.addOption( item );
+			} );
+			inputGlobe.val( GLOBE_EARTH );
+
+			addTr( table, i18n.inputGlobeLatitudeLabel, i18n.inputGlobeLatitudeTitle, inputLatitude );
+			addTr( table, i18n.inputGlobeLongitudeLabel, i18n.inputGlobeLongitudeTitle, inputLongitude );
+			addTr( table, i18n.inputGlobeAltitudeLabel, i18n.inputGlobeAltitudeTitle, inputAltitude );
+			addTr( table, i18n.inputGlobePrecisionLabel, i18n.inputGlobePrecisionTitle, inputPrecision );
+			addTr( table, i18n.inputGlobeGlobeLabel, i18n.inputGlobeGlobeTitle, inputGlobe.select );
+
+			this.setDataValue = function( newDataValue ) {
+				inputLatitude.val( newDataValue.value.latitude == null ? '' : newDataValue.value.latitude );
+				inputLongitude.val( newDataValue.value.longitude == null ? '' : newDataValue.value.longitude );
+				inputAltitude.val( newDataValue.value.altitude == null ? '' : newDataValue.value.altitude );
+				inputPrecision.val( newDataValue.value.precision == null ? '' : newDataValue.value.precision );
+				inputGlobe.val( newDataValue.value.globe.substr( WIKIDATA_URI_PREFIX.length ) );
+			};
+			this.hasValue = function() {
+				return !$.isEmpty( inputLatitude.val() ) || !$.isEmpty( inputLongitude.val() ) || !$.isEmpty( inputAltitude.val() );
+			};
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
+					throw new Error( 'No value' );
+				}
+				return {
+					type: 'globecoordinate',
+					value: {
+						latitude: !$.isEmpty( inputLatitude.val() ) ? Number( inputLatitude.val() ) : null,
+						longitude: !$.isEmpty( inputLongitude.val() ) ? Number( inputLongitude.val() ) : null,
+						altitude: !$.isEmpty( inputAltitude.val() ) ? Number( inputAltitude.val() ) : null,
+						precision: !$.isEmpty( inputPrecision.val() ) ? Number( inputPrecision.val() ) : 0,
+						globe: WIKIDATA_URI_PREFIX + inputGlobe.val(),
+					},
+				};
+			};
+			this.getAsLabel = function() {
+				// TODO: format value using server ?
+				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_globe' ).text( inputLatitude.val() + "; " + inputLongitude.val() );
+			};
+
+			inputLatitude.change( changeF );
+			inputLatitude.keyup( changeF );
+			inputLongitude.change( changeF );
+			inputLongitude.keyup( changeF );
+			inputAltitude.change( changeF );
+			inputAltitude.keyup( changeF );
+			inputPrecision.change( changeF );
+			inputPrecision.keyup( changeF );
+			inputGlobe.select.change( changeF );
+			inputGlobe.select.keyup( changeF );
+		} ).call( this );
 	} else if ( editorDataType === 'monolingualtext' ) {
 		( function() {
 			var table = $( document.createElement( 'table' ) ).addClass( 'wef_monolingualtext_table' ).appendTo( snakValueEditor.mainElement );
@@ -1542,47 +1670,6 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			input.change( changeF );
 			input.keyup( changeF );
 		} ).call( this );
-	} else if ( editorDataType === 'string' ) {
-		( function() {
-			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_string' ).appendTo( this.mainElement );
-
-			if ( typeof options === 'object' && typeof options.autocomplete === 'object' ) {
-				input.autocomplete( options.autocomplete );
-				input.on( 'autocompleteselect', function( event, ui ) {
-					input.val( ui.item.value );
-					input.change();
-				} );
-			}
-			try {
-				if ( typeof options === 'object' && typeof options.check === 'object' ) {
-					input.attr( 'pattern', WEF_Utils.regexpGetHtmlPattern( options.check ) );
-				}
-			} catch ( err ) {
-				mw.log.warn( 'Unable to attach check pattern to input: ' + err );
-			}
-
-			this.setDataValue = function( newDataValue ) {
-				input.val( newDataValue.value );
-			};
-			this.hasValue = function() {
-				return !$.isEmpty( input.val() );
-			};
-			this.getDataValue = function() {
-				if ( !this.hasValue() ) {
-					throw new Error( 'No value' );
-				}
-				return {
-					type: 'string',
-					value: input.val(),
-				};
-			};
-			this.getAsLabel = function() {
-				return $( document.createElement( 'span' ) ).text( input.val() );
-			};
-
-			input.change( changeF );
-			input.keyup( changeF );
-		} ).call( this );
 	} else if ( editorDataType === 'quantity' ) {
 		( function() {
 
@@ -1593,20 +1680,10 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			var inputAmount = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).addClass( 'wef_quantity_amount' );
 			var inputUpperBound = $( document.createElement( 'input' ) ).attr( 'type', 'number' ).addClass( 'wef_quantity_upper_bound' );
 
-			var addTr = function( textLabel, textTitle, input ) {
-				input.uniqueId();
-
-				var tr = $( document.createElement( 'tr' ) ).attr( 'title', textTitle ).appendTo( table );
-				var th = $( document.createElement( 'th' ) ).appendTo( tr );
-				$( document.createElement( 'label' ) ).text( textLabel + ': ' ).attr( 'id', input.attr( 'id' ) ).appendTo( th );
-				var td = $( document.createElement( 'td' ) ).appendTo( tr );
-				td.append( input );
-			};
-
-			addTr( i18n.inputQuantityUnitLabel, i18n.inputQuantityUnitTitle, inputUnit );
-			addTr( i18n.inputQuantityLowerBoundLabel, i18n.inputQuantityLowerBoundTitle, inputLowerBound );
-			addTr( i18n.inputQuantityAmountLabel, i18n.inputQuantityAmountTitle, inputAmount );
-			addTr( i18n.inputQuantityUpperBoundLabel, i18n.inputQuantityUpperBoundTitle, inputUpperBound );
+			addTr( table, i18n.inputQuantityUnitLabel, i18n.inputQuantityUnitTitle, inputUnit );
+			addTr( table, i18n.inputQuantityLowerBoundLabel, i18n.inputQuantityLowerBoundTitle, inputLowerBound );
+			addTr( table, i18n.inputQuantityAmountLabel, i18n.inputQuantityAmountTitle, inputAmount );
+			addTr( table, i18n.inputQuantityUpperBoundLabel, i18n.inputQuantityUpperBoundTitle, inputUpperBound );
 
 			this.setDataValue = function( newDataValue ) {
 				inputUnit.val( newDataValue.value.unit );
@@ -1720,6 +1797,47 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			inputDifference.change( changeF );
 			inputDifference.keyup( changeF );
 		} ).call( this );
+	} else if ( editorDataType === 'string' ) {
+		( function() {
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_string' ).appendTo( this.mainElement );
+
+			if ( typeof options === 'object' && typeof options.autocomplete === 'object' ) {
+				input.autocomplete( options.autocomplete );
+				input.on( 'autocompleteselect', function( event, ui ) {
+					input.val( ui.item.value );
+					input.change();
+				} );
+			}
+			try {
+				if ( typeof options === 'object' && typeof options.check === 'object' ) {
+					input.attr( 'pattern', WEF_Utils.regexpGetHtmlPattern( options.check ) );
+				}
+			} catch ( err ) {
+				mw.log.warn( 'Unable to attach check pattern to input: ' + err );
+			}
+
+			this.setDataValue = function( newDataValue ) {
+				input.val( newDataValue.value );
+			};
+			this.hasValue = function() {
+				return !$.isEmpty( input.val() );
+			};
+			this.getDataValue = function() {
+				if ( !this.hasValue() ) {
+					throw new Error( 'No value' );
+				}
+				return {
+					type: 'string',
+					value: input.val(),
+				};
+			};
+			this.getAsLabel = function() {
+				return $( document.createElement( 'span' ) ).text( input.val() );
+			};
+
+			input.change( changeF );
+			input.keyup( changeF );
+		} ).call( this );
 	} else if ( editorDataType === 'time' ) {
 		( function() {
 
@@ -1743,30 +1861,16 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			inputCalendarModel.addOption( CALENDAR_JULIAN );
 			inputCalendarModel.val( CALENDAR_GREGORIAN );
 
-			var addTr = function( textLabel, textTitle, input ) {
-				var tr = $( document.createElement( 'tr' ) ).attr( 'title', textTitle ).appendTo( table );
-				if ( typeof textLabel !== 'undefined' ) {
-					input.uniqueId();
-					var th = $( document.createElement( 'th' ) ).appendTo( tr );
-					$( document.createElement( 'label' ) ).text( textLabel + ': ' ).attr( 'id', input.attr( 'id' ) ).appendTo( th );
-				}
-				var td = $( document.createElement( 'td' ) ).appendTo( tr );
-				if ( typeof textLabel === 'undefined' ) {
-					td.attr( 'colspan', 2 );
-				}
-				td.append( input );
-			};
-
-			addTr( i18n.inputTimeTimeLabel, i18n.inputTimeTimeTitle, inputTime );
-			addTr( i18n.inputTimeTimeZoneLabel, i18n.inputTimeTimeZoneTitle, inputTimeZone );
-			addTr( i18n.inputTimePrecisionLabel, i18n.inputTimePrecisionTitle, inputPrecision );
-			addTr( i18n.inputTimeCalendarModelLabel, i18n.inputTimeCalendarModelTitle, inputCalendarModel.select );
+			addTr( table, i18n.inputTimeTimeLabel, i18n.inputTimeTimeTitle, inputTime );
+			addTr( table, i18n.inputTimeTimeZoneLabel, i18n.inputTimeTimeZoneTitle, inputTimeZone );
+			addTr( table, i18n.inputTimePrecisionLabel, i18n.inputTimePrecisionTitle, inputPrecision );
+			addTr( table, i18n.inputTimeCalendarModelLabel, i18n.inputTimeCalendarModelTitle, inputCalendarModel.select );
 
 			this.setDataValue = function( newDataValue ) {
 				inputTime.val( newDataValue.value.time );
 				inputTimeZone.val( newDataValue.value.timezone );
 				inputPrecision.val( newDataValue.value.precision );
-				inputCalendarModel.val( newDataValue.value.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) );
+				inputCalendarModel.val( newDataValue.value.calendarmodel.substr( WIKIDATA_URI_PREFIX.length ) );
 			};
 			this.hasValue = function() {
 				return !$.isEmpty( inputTime.val() );
@@ -1783,7 +1887,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 						precision: Number( inputPrecision.val() ),
 						before: 0,
 						after: 0,
-						calendarmodel: PREFIX_CALENDAR_MODEL + inputCalendarModel.val(),
+						calendarmodel: WIKIDATA_URI_PREFIX + inputCalendarModel.val(),
 					},
 				};
 			};
@@ -1824,7 +1928,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			inputCalendarModel.val( CALENDAR_GREGORIAN );
 
 			var table = $( document.createElement( 'table' ) ).addClass( 'wef_time_table' ).appendTo( this.mainElement );
-			var addTr = function( textLabel, labelQId, textTitle, input ) {
+			var addTrExt = function( textLabel, labelQId, textTitle, input ) {
 				var tr = $( document.createElement( 'tr' ) ).attr( 'title', textTitle ).appendTo( table );
 				if ( typeof textLabel !== 'undefined' ) {
 					input.uniqueId();
@@ -1847,10 +1951,10 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				td.append( input );
 			};
 
-			addTr( i18n.inputTimePrecisionLabel, undefined, i18n.inputTimePrecisionTitle, selectDateTimePrecision );
-			addTr( i18n.inputTimeCalendarModelLabel, undefined, i18n.inputTimeCalendarModelTitle, inputCalendarModel.select );
-			addTr( undefined, 'Q12138', i18n.inputTimeAsGregorianLabel, grSpan );
-			addTr( undefined, 'Q11184', i18n.inputTimeAsJulianLabel, juSpan );
+			addTrExt( i18n.inputTimePrecisionLabel, undefined, i18n.inputTimePrecisionTitle, selectDateTimePrecision );
+			addTrExt( i18n.inputTimeCalendarModelLabel, undefined, i18n.inputTimeCalendarModelTitle, inputCalendarModel.select );
+			addTrExt( undefined, 'Q12138', i18n.inputTimeAsGregorianLabel, grSpan );
+			addTrExt( undefined, 'Q11184', i18n.inputTimeAsJulianLabel, juSpan );
 			table.appendTo( this.mainElement );
 
 			var inProgress = false;
@@ -1899,7 +2003,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					return;
 				}
 
-				inputCalendarModel.val( newDataValue.value.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) );
+				inputCalendarModel.val( newDataValue.value.calendarmodel.substr( WIKIDATA_URI_PREFIX.length ) );
 
 				var date = WEF_Utils.parseISO8601( newDataValue.value.time );
 				if ( isNaN( date ) ) {
@@ -1930,7 +2034,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 						precision: PRECISION_DAYS,
 						before: 0,
 						after: 0,
-						calendarmodel: PREFIX_CALENDAR_MODEL + inputCalendarModel.val(),
+						calendarmodel: WIKIDATA_URI_PREFIX + inputCalendarModel.val(),
 					},
 				};
 			};
@@ -2013,7 +2117,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					return;
 				}
 
-				if ( newDataValue.value.calendarmodel.substr( PREFIX_CALENDAR_MODEL.length ) !== CALENDAR_GREGORIAN ) {
+				if ( newDataValue.value.calendarmodel.substr( WIKIDATA_URI_PREFIX.length ) !== CALENDAR_GREGORIAN ) {
 					switchDataType( 'time-days', newDataValue );
 					return;
 				}
@@ -2050,7 +2154,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 						precision: PRECISION_DAYS,
 						before: 0,
 						after: 0,
-						calendarmodel: PREFIX_CALENDAR_MODEL + ( showJulianCheckbox.is( ':checked' ) ? CALENDAR_JULIAN : CALENDAR_GREGORIAN ),
+						calendarmodel: WIKIDATA_URI_PREFIX + ( showJulianCheckbox.is( ':checked' ) ? CALENDAR_JULIAN : CALENDAR_GREGORIAN ),
 					},
 				};
 			};
@@ -2107,7 +2211,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 						precision: PRECISION_MONTHS,
 						before: 0,
 						after: 0,
-						calendarmodel: PREFIX_CALENDAR_MODEL + CALENDAR_GREGORIAN,
+						calendarmodel: WIKIDATA_URI_PREFIX + CALENDAR_GREGORIAN,
 					},
 				};
 			};
@@ -2158,7 +2262,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 						precision: PRECISION_YEARS,
 						before: 0,
 						after: 0,
-						calendarmodel: PREFIX_CALENDAR_MODEL + CALENDAR_GREGORIAN,
+						calendarmodel: WIKIDATA_URI_PREFIX + CALENDAR_GREGORIAN,
 					},
 				};
 			};
@@ -2213,7 +2317,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 						precision: PRECISION_CENTURIES,
 						before: 0,
 						after: 0,
-						calendarmodel: PREFIX_CALENDAR_MODEL + CALENDAR_GREGORIAN,
+						calendarmodel: WIKIDATA_URI_PREFIX + CALENDAR_GREGORIAN,
 					},
 				};
 			};

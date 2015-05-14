@@ -137,6 +137,17 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 	white-space: nowrap;
 }
 
+/*Snak value level -- per types: GLOBE-COORDINATE */
+.wef_globecoordinate_table th {
+	text-align: left;
+	padding-right: 1em;
+	padding-left: 0.5em;
+}
+
+.wef_globecoordinate_table input, .wef_globecoordinate_table select {
+	width: 14em;
+}
+
 /*Snak value level -- per types: MONOLINGUALTEXT */
 .wef_monolingualtext_table {
 	width: 100%;
