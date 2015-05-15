@@ -505,6 +505,71 @@ WEF_Utils.formatQuantity = function( value ) {
 	}
 };
 
+WEF_Utils.formatValueRemotely = function( datatype, datavalue, span ) {
+	"use strict";
+
+	var prefix;
+	if ( !WEF_Utils.isWikidata() ) {
+		prefix = '//www.wikidata.org/w/api.php' //
+				+ '?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) //
+				+ '&format=json'; //
+	} else {
+		prefix = mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php' //
+				+ '?format=json';
+	}
+
+	$.ajax( {
+		type: 'POST',
+		url: prefix // 
+				+ '&action=wbformatvalue' //
+				+ '&generate=' + encodeURIComponent( "text/html" ),
+		data: {
+			datatype: datatype,
+			datavalue: JSON.stringify( datavalue ),
+			uselang: WEF_Utils.getDefaultLanguageCode(),
+		},
+		error: function( jqXHR, textStatus, errorThrown ) {
+			// too bad :-(
+			console.log( "Unable to call 'wbformatvalue'" );
+			console.log( textStatus );
+			console.log( errorThrown );
+		},
+		success: function( response ) {
+			if ( response.error ) {
+				console.log( "Unable to call 'wbformatvalue': " + response.error.info );
+				return;
+			}
+			var result = response.result;
+			if ( typeof result === 'undefined' ) {
+				console.log( "Unable to call 'wbformatvalue': no result" );
+				return;
+			}
+
+			// we assume Wikidata is trusted source :-)
+			span.html( result );
+		},
+	} );
+
+};
+
+WEF_Utils.getDefaultLanguageCode = ( function() {
+	var defaultLanguageCode;
+	return function() {
+		"use strict";
+		if ( $.isEmpty( defaultLanguageCode ) ) {
+			defaultLanguageCode = mw.config.get( 'wgUserLanguage' );
+			if ( $.isEmpty( defaultLanguageCode ) ) {
+				defaultLanguageCode = mw.config.get( 'wgContentLanguage' );
+				if ( $.isEmpty( defaultLanguageCode ) ) {
+					defaultLanguageCode = 'en';
+				}
+			}
+		}
+
+		return defaultLanguageCode;
+	};
+} )();
+
 /** @return {string} */
 WEF_Utils.getEntityId = function() {
 	"use strict";
@@ -1515,9 +1580,11 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				return $( document.createElement( 'a' ) ) //
-				.attr( 'href', '//commons.wikimedia.org/wiki/File:' + encodeURI( input.val() ) ) //
-				.text( input.val() );
+				"use strict";
+				var span = $( document.createElement( 'a' ) ).attr( 'href', '//commons.wikimedia.org/wiki/File:' + encodeURI( input.val() ) ).text( input.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'commonsMedia', this.getDataValue(), span );
+				return span;
 			};
 
 			input.autocomplete( {
@@ -1610,8 +1677,11 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				// TODO: format value using server ?
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_globe' ).text( inputLatitude.val() + "; " + inputLongitude.val() );
+				"use strict";
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_globe' ).text( inputLatitude.val() + "; " + inputLongitude.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'globe-coordinate', this.getDataValue(), span );
+				return span;
 			};
 
 			inputLatitude.change( changeF );
@@ -1662,7 +1732,11 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				return $( document.createElement( 'span' ) ).text( '(' + langSelect.val() + ') ' + input.val() );
+				"use strict";
+				var span = $( document.createElement( 'span' ) ).text( '(' + langSelect.val() + ') ' + input.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'monolingualtext', this.getDataValue(), span );
+				return span;
 			};
 
 			langSelect.change( changeF );
@@ -1709,9 +1783,12 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				// TODO: format value using server ?
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_quantity' ).text(
+				"use strict";
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_quantity' ).text(
 						lowerBound.val() + ' / ' + inputAmount.val() + ' / ' + inputUpperBound.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'quantity', this.getDataValue(), span );
+				return span;
 			};
 
 			inputUnit.change( changeF );
@@ -1750,8 +1827,11 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				// TODO: format value using server ?
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_quantity' ).text( inputAmount.val() );
+				"use strict";
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_quantity' ).text( inputAmount.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'quantity', this.getDataValue(), span );
+				return span;
 			};
 
 			inputAmount.change( changeF );
@@ -1789,7 +1869,11 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_quantity' ).text( inputAmount.val() + '±' + inputDifference.val() );
+				"use strict";
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_quantity' ).text( inputAmount.val() + '±' + inputDifference.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'quantity', this.getDataValue(), span );
+				return span;
 			};
 
 			inputAmount.change( changeF );
@@ -1892,8 +1976,11 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				// TODO: format value using server ?
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time' ).text( inputTime.val() );
+				"use strict";
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time' ).text( inputTime.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'time', this.getDataValue(), span );
+				return span;
 			};
 
 			inputTime.change( changeF );
@@ -2040,10 +2127,13 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			};
 			this.getAsLabel = function() {
 				"use strict";
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_days' ).text(
-						juDays.val() + ' ' + mw.config.get( 'wgMonthNames' )[juMonths.val()] + ' ' + juYears.val() + //
-						' ( ' + grDays.val() + ' ' + mw.config.get( 'wgMonthNames' )[grMonths.val()] + ' ' + grYears.val() )
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_days' ).text(
+						juDays.val() + ' ' + mw.config.get( 'wgMonthNames' )[juMonths.val()] + ' ' + juYears.val() + ' ( ' + grDays.val() + ' '
+								+ mw.config.get( 'wgMonthNames' )[grMonths.val()] + ' ' + grYears.val() )
 						+ ' )';
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'time', this.getDataValue(), span );
+				return span;
 			};
 
 			grDays.change( changeF );
@@ -2160,8 +2250,11 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			};
 			this.getAsLabel = function() {
 				"use strict";
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_days' ).text(
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_days' ).text(
 						days.val() + ' ' + mw.config.get( 'wgMonthNames' )[months.val()] + ' ' + years.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'time', this.getDataValue(), span );
+				return span;
 			};
 
 			days.change( changeF );
@@ -2216,8 +2309,11 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_months' ).text(
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_months' ).text(
 						mw.config.get( 'wgMonthNames' )[months.val()] + ' ' + years.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'time', this.getDataValue(), span );
+				return span;
 			};
 
 			months.change( changeF );
@@ -2267,7 +2363,10 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_years' ).text( years.val() );
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_years' ).text( years.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'time', this.getDataValue(), span );
+				return span;
 			};
 
 			years.change( changeF );
@@ -2370,7 +2469,10 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				};
 			};
 			this.getAsLabel = function() {
-				return $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_url' ).text( input.val() );
+				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_url' ).text( input.val() );
+				if ( this.hasValue() )
+					WEF_Utils.formatValueRemotely( 'url', this.getDataValue(), span );
+				return span;
 			};
 
 			input.change( changeF );
