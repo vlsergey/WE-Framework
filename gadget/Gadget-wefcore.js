@@ -1503,7 +1503,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				input.val( newDataValue.value );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( input.val() );
+				return input.val() != null && !$.isEmpty( input.val().trim() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -1511,7 +1511,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				}
 				return {
 					type: 'string',
-					value: input.val(),
+					value: input.val() == null ? null : input.val().trim(),
 				};
 			};
 			this.getAsLabel = function() {
@@ -1820,7 +1820,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				input.val( newDataValue.value );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( input.val() );
+				return input.val() != null && !$.isEmpty( input.val().trim() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -1828,7 +1828,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				}
 				return {
 					type: 'string',
-					value: input.val(),
+					value: input.val() == null ? null : input.val().trim(),
 				};
 			};
 			this.getAsLabel = function() {
