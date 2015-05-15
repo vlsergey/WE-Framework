@@ -2614,6 +2614,19 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				},
 			} );
 
+			input.data( 'autocomplete' )._renderItem = function( ul, item ) {
+				var a = $( '<a><strong>' + item.label + '</strong> <span style="color: darkgray;">' + item.value + '</span><br>' + '</a>' );
+				var desc = $( document.createElement( 'span' ) ).appendTo( a );
+				if ( !$.isEmpty( item.desc ) ) {
+					desc.text( item.desc );
+				} else {
+					desc.data( 'entity-id', item.value );
+					wef_LabelsCache.queueForDescription( item.value );
+					translatableDesciptions.push( desc );
+				}
+				return $( document.createElement( 'li' ) ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
+			};
+
 			input.focus( function() {
 				var id = input.data( 'value-entity-id' );
 				var label = input.data( 'value-entity-label' );
@@ -2641,19 +2654,6 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				}
 				changeF();
 			} );
-
-			input.data( 'autocomplete' )._renderItem = function( ul, item ) {
-				var a = $( '<a><strong>' + item.label + '</strong> <span style="color: darkgray;">' + item.value + '</span><br>' + '</a>' );
-				var desc = $( document.createElement( 'span' ) ).appendTo( a );
-				if ( !$.isEmpty( item.desc ) ) {
-					desc.text( item.desc );
-				} else {
-					desc.data( 'entity-id', item.value );
-					wef_LabelsCache.queueForDescription( item.value );
-					translatableDesciptions.push( desc );
-				}
-				return $( document.createElement( 'li' ) ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
-			};
 
 			/** @type {WEF_SelectEditor} */
 			var selectCreateEditor = null;

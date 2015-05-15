@@ -1259,6 +1259,12 @@ window.WEF_ExternalLinks = function() {
 			return 'https://soundcloud.com/' + id + '/';
 		}
 	} );
+	// Энциклопедический словарь Брокгауза и Ефрона
+	this.definitions.Q602358 = new WEF_Definition( {
+		code: 'P1343[Q602358]/P554',
+		datatype: 'wikibase-item',
+		label: 'Q602358',
+	});
 	this.definitions.Q798490 = new WEF_Definition( {
 		code: 'P553[Q798490]/P554',
 		label: 'Q798490',
