@@ -1289,7 +1289,7 @@ window.WEF_ExternalLinks = function() {
 			return 'http://' + id + '.ya.ru/';
 		},
 	} );
-	//  1911 Encyclopædia Britannica
+	// 1911 Encyclopædia Britannica
 	this.definitions.Q867541 = new WEF_Definition( {
 		code: 'P1343[Q867541]/P248',
 		datatype: 'wikibase-item',
@@ -2114,13 +2114,17 @@ WEF_ExternalLinks.prototype.setup = function() {
 	} );
 };
 
-WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( labels, descriptions, dictionaryEntityId, mainTopicEntityId, project, pageTitle ) {
+WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( options, pageTitle, articleTitle ) {
+	var labels = {};
 	var data = {
 		type: "item",
 		labels: {},
 	};
-	data.labels = labels;
-	data.descriptions = descriptions;
+	data.labels[options.contentLanguage] = {
+		language: options.contentLanguage,
+		value: options.pageTitlePrefix + ' / ' + articleTitle,
+	};
+	data.descriptions = {};
 
 	data.claims = {
 
@@ -2151,7 +2155,7 @@ WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( labels, descr
 				"datavalue": {
 					"value": {
 						"entity-type": "item",
-						"numeric-id": Number( dictionaryEntityId.substring( 1 ) )
+						"numeric-id": Number( options.dictionaryEntityId.substring( 1 ) )
 					},
 					"type": "wikibase-entityid"
 				}
@@ -2169,7 +2173,7 @@ WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( labels, descr
 				"datavalue": {
 					"value": {
 						"entity-type": "item",
-						"numeric-id": Number( dictionaryEntityId.substring( 1 ) )
+						"numeric-id": Number( options.dictionaryEntityId.substring( 1 ) )
 					},
 					"type": "wikibase-entityid"
 				}
@@ -2187,9 +2191,27 @@ WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( labels, descr
 				"datavalue": {
 					"value": {
 						"entity-type": "item",
-						"numeric-id": Number( mainTopicEntityId.substring( 1 ) )
+						"numeric-id": Number( options.mainTopicEntityId.substring( 1 ) )
 					},
 					"type": "wikibase-entityid"
+				}
+			},
+			"type": "statement",
+			"rank": "normal"
+		} ],
+
+		// title
+		"P1476": [ {
+			"mainsnak": {
+				"snaktype": "value",
+				"property": "P1476",
+				"datatype": "monolingualtext",
+				"datavalue": {
+					"value": {
+						"language": options.contentLanguage,
+						"text": articleTitle,
+					},
+					"type": "monolingualtext"
 				}
 			},
 			"type": "statement",
@@ -2198,8 +2220,8 @@ WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( labels, descr
 	};
 
 	data.sitelinks = {};
-	data.sitelinks[project] = {
-		"site": project,
+	data.sitelinks[options.project] = {
+		"site": options.project,
 		"title": pageTitle,
 	};
 
@@ -2271,8 +2293,18 @@ options ) {
 						if ( entity.title.substring( 0, options.pageTitlePrefix.length + 1 ) !== options.pageTitlePrefix + '/' )
 							return;
 
+						/* Convert page name to article title */
+						var articleTitle = entity.title.substring( options.pageTitlePrefix.length + 1 );
+
+						/* remove special ruwikisource prefixes */
+						if ( articleTitle.substring( 0, 3 ) == 'ВТ/' )
+							articleTitle = articleTitle.substring( 3 );
+						else if ( articleTitle.substring( 0, 3 ) == 'ДО/' )
+							articleTitle = articleTitle.substring( 3 );
+
 						var item = {
-							title: entity.title,
+							articleTitle: articleTitle,
+							pageTitle: entity.title,
 							snippet: entity.snippet,
 						};
 						list.push( item );
@@ -2284,7 +2316,7 @@ options ) {
 				var item = ui.item;
 				var input = $( event.target );
 
-				if ( $.isEmpty( item ) || $.isEmpty( item.title ) ) {
+				if ( $.isEmpty( item ) || $.isEmpty( item.articleTitle ) ) {
 					input.val( '' );
 					input.removeData( DATA_ENTITY_ID );
 					input.removeData( DATA_ENTITY_LABEL );
@@ -2297,47 +2329,39 @@ options ) {
 				// check if item exists on Wikidata
 				WEF_Utils.wbGetEntities( {
 					sites: options.project,
-					titles: item.title,
+					titles: item.pageTitle,
 					redirects: 'yes',
 					props: 'info',
 					normalize: 'yes',
-				} )
-						.done(
-								function( entities ) {
+				} ).done(
+						function( entities ) {
 
-									if ( !$.isEmpty( entities ) ) {
-										entityId = WEF_Utils.getFirstObjectKey( entities );
-									}
+							if ( !$.isEmpty( entities ) ) {
+								entityId = WEF_Utils.getFirstObjectKey( entities );
+							}
 
-									if ( !$.isEmpty( entityId ) && entityId !== -1 && entityId !== "-1" ) {
-										dictinaryArticleInput.val( entityId );
-										wef_LabelsCache.receiveLabels();
-										return;
-									}
+							if ( !$.isEmpty( entityId ) && entityId !== -1 && entityId !== "-1" ) {
+								dictinaryArticleInput.val( entityId );
+								wef_LabelsCache.receiveLabels();
+								return;
+							}
 
-									if ( confirm( "There is no Wikidata item linked to page '" + item.title + "' of " + options.site
-											+ "\nDo you want to automatically create such item?" ) ) {
-										var labels = {};
-										labels[options.contentLanguage] = {
-											language: options.contentLanguage,
-											value: options.pageTitlePrefix + ' / ' + item.title.substring( options.pageTitlePrefix.length + 1 ),
-										};
-
-										WEF_ExternalLinks.prototype.createDictinaryArticleItem( labels, {}, options.dictionaryEntityId, options.mainTopicEntityId, options.project,
-												item.title ).done( function( newEntityId ) {
-											dictinaryArticleInput.val( newEntityId );
-											wef_LabelsCache.receiveLabels();
-											return;
-										} );
-									}
-
+							if ( confirm( "There is no Wikidata item linked to page '" + item.pageTitle + "' of " + options.project
+									+ "\nDo you want to automatically create such item?" ) ) {
+								WEF_ExternalLinks.prototype.createDictinaryArticleItem( options, item.pageTitle, item.articleTitle ).done( function( newEntityId ) {
+									dictinaryArticleInput.val( newEntityId );
+									wef_LabelsCache.receiveLabels();
+									return;
 								} );
+							}
+
+						} );
 				return false;
 			},
 		} );
 
 		input.data( 'autocomplete' )._renderItem = function( ul, item ) {
-			var a = $( '<a><strong>' + item.title + '</strong><br>' + '</a>' );
+			var a = $( '<a><strong>' + item.articleTitle + '</strong><br>' + '</a>' );
 			var desc = $( document.createElement( 'span' ) ).html( item.snippet ).appendTo( a );
 			return $( document.createElement( 'li' ) ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
 		};
