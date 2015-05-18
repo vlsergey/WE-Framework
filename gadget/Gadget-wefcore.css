@@ -216,6 +216,10 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 	width: 100%;
 }
 
+.wef_wikibase-item_table .wef_item_input {
+	width: 99%;
+}
+
 .wef-editor-menu {
 	border: 1px solid #CCC;
 	position: absolute;

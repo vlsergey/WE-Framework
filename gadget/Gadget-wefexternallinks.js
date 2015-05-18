@@ -1265,8 +1265,9 @@ window.WEF_ExternalLinks = function() {
 	} );
 	// Энциклопедический словарь Брокгауза и Ефрона
 	this.definitions.Q602358 = new WEF_Definition( {
-		code: 'P1343[Q602358]/P554',
+		code: 'P1343[Q602358]/P248',
 		datatype: 'wikibase-item',
+		flag: 'ru',
 		label: 'Q602358',
 		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
 			contentLanguage: 'ru',
@@ -1287,6 +1288,21 @@ window.WEF_ExternalLinks = function() {
 		url: function( id ) {
 			return 'http://' + id + '.ya.ru/';
 		},
+	} );
+	//  1911 Encyclopædia Britannica
+	this.definitions.Q867541 = new WEF_Definition( {
+		code: 'P1343[Q867541]/P248',
+		datatype: 'wikibase-item',
+		flag: 'uk',
+		label: 'Q867541',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'en',
+			dictionaryEntityId: 'Q867541',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: '1911 Encyclopædia Britannica',
+			project: 'enwikisource',
+			projectApiPrefix: '//en.wikisource.org/w/api.php?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json',
+		} ),
 	} );
 	this.definitions.Q1002972 = new WEF_Definition( {
 		code: 'P553[Q1002972]/P554',
@@ -1309,6 +1325,21 @@ window.WEF_ExternalLinks = function() {
 		url: function( id ) {
 			return 'http://www.odnoklassniki' + '.ru/profile/' + id;
 		},
+	} );
+	// Русский биографический словарь
+	this.definitions.Q1960551 = new WEF_Definition( {
+		code: 'P1343[Q1960551]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q1960551',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q1960551',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'РБС',
+			project: 'ruwikisource',
+			projectApiPrefix: '//ru.wikisource.org/w/api.php?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json',
+		} ),
 	} );
 	this.definitions.Q2498180 = new WEF_Definition( {
 		datatype: 'url',
@@ -1600,6 +1631,51 @@ window.WEF_ExternalLinks = function() {
 			} ),
 		} ],
 		qualifiers: [ d.P958 ],
+	} );
+	// Малый энциклопедический словарь Брокгауза и Ефрона
+	this.definitions.Q19180675 = new WEF_Definition( {
+		code: 'P1343[Q19180675]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q19180675',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q19180675',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'МЭСБЕ',
+			project: 'ruwikisource',
+			projectApiPrefix: '//ru.wikisource.org/w/api.php?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json',
+		} ),
+	} );
+	// Новый энциклопедический словарь
+	this.definitions.Q19190511 = new WEF_Definition( {
+		code: 'P1343[Q19190511]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q19190511',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q19190511',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'НЭС',
+			project: 'ruwikisource',
+			projectApiPrefix: '//ru.wikisource.org/w/api.php?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json',
+		} ),
+	} );
+	// Православная богословская энциклопедия
+	this.definitions.Q19211082 = new WEF_Definition( {
+		code: 'P1343[Q19211082]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q19211082',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q19211082',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'ПБЭ',
+			project: 'ruwikisource',
+			projectApiPrefix: '//ru.wikisource.org/w/api.php?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json',
+		} ),
 	} );
 
 	this.defaultQualifiers = [ d.P407 ];
@@ -1984,7 +2060,13 @@ WEF_ExternalLinks.prototype.setup = function() {
 	this.groups.push( {
 		label: i18n.tabEncyclopediasOnWikisource,
 		fields: [//
+		d.Q19180675, // Малый энциклопедический словарь Брокгауза и Ефрона
+		d.Q19190511, // Новый энциклопедический словарь
+		d.Q19211082, // Православная богословская энциклопедия
+		d.Q1960551, // Русский биографический словарь
 		d.Q602358, // Энциклопедический словарь Брокгауза и Ефрона
+
+		d.Q867541, // 1911 Encyclopædia Britannica
 		],
 	} );
 	this.groups.push( {
@@ -2065,6 +2147,24 @@ WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( labels, descr
 			"mainsnak": {
 				"snaktype": "value",
 				"property": "P361",
+				"datatype": "wikibase-item",
+				"datavalue": {
+					"value": {
+						"entity-type": "item",
+						"numeric-id": Number( dictionaryEntityId.substring( 1 ) )
+					},
+					"type": "wikibase-entityid"
+				}
+			},
+			"type": "statement",
+			"rank": "normal"
+		} ],
+
+		// published in
+		"P1433": [ {
+			"mainsnak": {
+				"snaktype": "value",
+				"property": "P1433",
 				"datatype": "wikibase-item",
 				"datavalue": {
 					"value": {
@@ -2168,6 +2268,9 @@ options ) {
 				} ).done( function( result ) {
 					var list = [];
 					$.each( result.query.search, function( index, entity ) {
+						if ( entity.title.substring( 0, options.pageTitlePrefix.length + 1 ) !== options.pageTitlePrefix + '/' )
+							return;
+
 						var item = {
 							title: entity.title,
 							snippet: entity.snippet,
@@ -2206,7 +2309,7 @@ options ) {
 										entityId = WEF_Utils.getFirstObjectKey( entities );
 									}
 
-									if ( !$.isEmpty( entityId ) && entityId !== -1 ) {
+									if ( !$.isEmpty( entityId ) && entityId !== -1 && entityId !== "-1" ) {
 										dictinaryArticleInput.val( entityId );
 										wef_LabelsCache.receiveLabels();
 										return;
@@ -2217,7 +2320,7 @@ options ) {
 										var labels = {};
 										labels[options.contentLanguage] = {
 											language: options.contentLanguage,
-											value: options.pageTitlePrefix + ' / ' + item.title,
+											value: options.pageTitlePrefix + ' / ' + item.title.substring( options.pageTitlePrefix.length + 1 ),
 										};
 
 										WEF_ExternalLinks.prototype.createDictinaryArticleItem( labels, {}, options.dictionaryEntityId, options.mainTopicEntityId, options.project,
