@@ -204,7 +204,7 @@ mediaWiki.loader.using( [ 'ext.gadget.wefcore', 'jquery.ui.button', 'wikibase.fo
 								var claims = {};
 								claims[claim.property] = [ claim ];
 								updates.data.claims = claims;
-								wef_save( updates, function() {
+								WEF_Utils.update( updates, function() {
 									WEF_Utils.purgeAsync();
 								} );
 							} );

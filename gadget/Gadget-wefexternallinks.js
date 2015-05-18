@@ -23,6 +23,7 @@ window.wef_ExternalLinks_i18n_en = {
 	tabScience: 'Profiles: Science',
 	tabOther: 'Profiles: Other',
 	tabEncyclopedias: 'Encyclopedias',
+	tabEncyclopediasOnWikisource: 'Wikisource',
 	tabAuthorityControlVIAF: 'Authority Control (VIAF)',
 	tabAuthorityControlOther: 'Authority Control (etc.)',
 
@@ -50,6 +51,7 @@ window.wef_ExternalLinks_i18n_fr = {
 	tabScience: 'Profil : Science',
 	tabOther: 'Profil : Autres',
 	tabEncyclopedias: 'Encyclopédies',
+	tabEncyclopediasOnWikisource: 'Wikisource',
 	tabAuthorityControlVIAF: 'Données d\'autorité (VIAF)',
 	tabAuthorityControlOther: 'Données d\'autorité (autres)',
 
@@ -76,6 +78,7 @@ window.wef_ExternalLinks_i18n_ru = {
 	tabScience: 'Профили: наука',
 	tabOther: 'Профили: остальное',
 	tabEncyclopedias: 'Энциклопедии',
+	tabEncyclopediasOnWikisource: 'Викитека',
 	tabAuthorityControlVIAF: 'Нормативный контроль (VIAF)',
 	tabAuthorityControlOther: 'Нормативный контроль (ост.)',
 
@@ -166,6 +169,7 @@ window.wef_ExternalLinks_i18n = {
 	tabScience: '{tabScience}',
 	tabOther: '{tabOther}',
 	tabEncyclopedias: '{tabEncyclopedias}',
+	tabEncyclopediasOnWikisource: '{tabEncyclopediasOnWikisource}',
 	tabAuthorityControlVIAF: '{tabAuthorityControlVIAF}',
 	tabAuthorityControlOther: '{tabAuthorityControlOther}',
 
@@ -1264,7 +1268,15 @@ window.WEF_ExternalLinks = function() {
 		code: 'P1343[Q602358]/P554',
 		datatype: 'wikibase-item',
 		label: 'Q602358',
-	});
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q602358',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'ЭСБЕ',
+			project: 'ruwikisource',
+			projectApiPrefix: '//ru.wikisource.org/w/api.php?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json',
+		} ),
+	} );
 	this.definitions.Q798490 = new WEF_Definition( {
 		code: 'P553[Q798490]/P554',
 		label: 'Q798490',
@@ -1970,6 +1982,12 @@ WEF_ExternalLinks.prototype.setup = function() {
 		],
 	} );
 	this.groups.push( {
+		label: i18n.tabEncyclopediasOnWikisource,
+		fields: [//
+		d.Q602358, // Энциклопедический словарь Брокгауза и Ефрона
+		],
+	} );
+	this.groups.push( {
 		label: i18n.tabAuthorityControlVIAF,
 		fields: [// 
 		d.P213, // ISNI
@@ -2012,6 +2030,258 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.P1213, // NLC
 		],
 	} );
+};
+
+WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( labels, descriptions, dictionaryEntityId, mainTopicEntityId, project, pageTitle ) {
+	var data = {
+		type: "item",
+		labels: {},
+	};
+	data.labels = labels;
+	data.descriptions = descriptions;
+
+	data.claims = {
+
+		// type
+		"P31": [ {
+			"mainsnak": {
+				"snaktype": "value",
+				"property": "P31",
+				"datatype": "wikibase-item",
+				"datavalue": {
+					"value": {
+						"entity-type": "item",
+						"numeric-id": 17329259
+					},
+					"type": "wikibase-entityid"
+				}
+			},
+			"type": "statement",
+			"rank": "normal"
+		} ],
+
+		// part from
+		"P361": [ {
+			"mainsnak": {
+				"snaktype": "value",
+				"property": "P361",
+				"datatype": "wikibase-item",
+				"datavalue": {
+					"value": {
+						"entity-type": "item",
+						"numeric-id": Number( dictionaryEntityId.substring( 1 ) )
+					},
+					"type": "wikibase-entityid"
+				}
+			},
+			"type": "statement",
+			"rank": "normal"
+		} ],
+
+		// main topic
+		"P921": [ {
+			"mainsnak": {
+				"snaktype": "value",
+				"property": "P921",
+				"datatype": "wikibase-item",
+				"datavalue": {
+					"value": {
+						"entity-type": "item",
+						"numeric-id": Number( mainTopicEntityId.substring( 1 ) )
+					},
+					"type": "wikibase-entityid"
+				}
+			},
+			"type": "statement",
+			"rank": "normal"
+		} ],
+	};
+
+	data.sitelinks = {};
+	data.sitelinks[project] = {
+		"site": project,
+		"title": pageTitle,
+	};
+
+	return WEF_Utils.createWikidataItem( data );
+};
+
+/** @class */
+WEF_ExternalLinks.DictinaryArticleInput_Options = function() {
+	this.contentLanguage = '??';
+	this.dictionaryEntityId = 'Q...';
+	this.mainTopicEntityId = 'Q...';
+	this.project = '??wikisource';
+	/** @type String */
+	this.projectApiPrefix = '//??.wikisource.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json';
+	/** @type String */
+	this.pageTitlePrefix = '????';
+};
+
+/**
+ * Creates input field that used to display or input Wikidata items
+ */
+WEF_ExternalLinks.createDictinaryArticleInputClass = function( /** @type WEF_ExternalLinks.DictinaryArticleInput_Options */
+options ) {
+	return function() {
+		var dictinaryArticleInput = this;
+		var DATA_ENTITY_ID = 'value-entity-id';
+		var DATA_ENTITY_LABEL = 'value-entity-label';
+
+		var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_item_input' );
+
+		this.val = function( entityId ) {
+			if ( typeof entityId === 'undefined' ) {
+				// return current value
+				return input.data( DATA_ENTITY_ID );
+			}
+
+			// or set value
+			input.data( DATA_ENTITY_ID, entityId );
+			input.data( DATA_ENTITY_LABEL, '' );
+			input.val( '(' + entityId + ')' );
+
+			wef_LabelsCache.getOrQueue( entityId, function( label, description ) {
+				if ( input.data( DATA_ENTITY_ID ) === entityId ) {
+					// we need to be sure user didn't start to edit field
+					var currentText = input.val();
+					if ( currentText === '(' + entityId + ')' || currentText === input.data( DATA_ENTITY_LABEL ) + ' (' + entityId + ')'
+							|| currentText === entityId + ' (' + entityId + ')' ) {
+						input.data( DATA_ENTITY_LABEL, label );
+						input.val( label + ' (' + entityId + ')' );
+						input.attr( 'title', description );
+					}
+				}
+			} );
+
+			this.change();
+		};
+
+		input.autocomplete( {
+			source: function( request, response ) {
+				var term = request.term;
+				$.ajax( {
+					dataType: 'json',
+					url: options.projectApiPrefix // 
+							+ '&action=query&list=search&swhat=text&srnamespace=0&srlimit=15' //
+							+ '&srsearch=' + encodeURIComponent( options.pageTitlePrefix + ' ' + term ),
+				} ).done( function( result ) {
+					var list = [];
+					$.each( result.query.search, function( index, entity ) {
+						var item = {
+							title: entity.title,
+							snippet: entity.snippet,
+						};
+						list.push( item );
+					} );
+					response( list );
+				} );
+			},
+			select: function( event, ui ) {
+				var item = ui.item;
+				var input = $( event.target );
+
+				if ( $.isEmpty( item ) || $.isEmpty( item.title ) ) {
+					input.val( '' );
+					input.removeData( DATA_ENTITY_ID );
+					input.removeData( DATA_ENTITY_LABEL );
+					input.removeAttr( 'title' );
+					return;
+				}
+
+				var entityId;
+
+				// check if item exists on Wikidata
+				WEF_Utils.wbGetEntities( {
+					sites: options.project,
+					titles: item.title,
+					redirects: 'yes',
+					props: 'info',
+					normalize: 'yes',
+				} )
+						.done(
+								function( entities ) {
+
+									if ( !$.isEmpty( entities ) ) {
+										entityId = WEF_Utils.getFirstObjectKey( entities );
+									}
+
+									if ( !$.isEmpty( entityId ) && entityId !== -1 ) {
+										dictinaryArticleInput.val( entityId );
+										wef_LabelsCache.receiveLabels();
+										return;
+									}
+
+									if ( confirm( "There is no Wikidata item linked to page '" + item.title + "' of " + options.site
+											+ "\nDo you want to automatically create such item?" ) ) {
+										var labels = {};
+										labels[options.contentLanguage] = {
+											language: options.contentLanguage,
+											value: options.pageTitlePrefix + ' / ' + item.title,
+										};
+
+										WEF_ExternalLinks.prototype.createDictinaryArticleItem( labels, {}, options.dictionaryEntityId, options.mainTopicEntityId, options.project,
+												item.title ).done( function( newEntityId ) {
+											dictinaryArticleInput.val( newEntityId );
+											wef_LabelsCache.receiveLabels();
+											return;
+										} );
+									}
+
+								} );
+				return false;
+			},
+		} );
+
+		input.data( 'autocomplete' )._renderItem = function( ul, item ) {
+			var a = $( '<a><strong>' + item.title + '</strong><br>' + '</a>' );
+			var desc = $( document.createElement( 'span' ) ).html( item.snippet ).appendTo( a );
+			return $( document.createElement( 'li' ) ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
+		};
+
+		input.focus( function() {
+			var id = input.data( DATA_ENTITY_ID );
+			var label = input.data( DATA_ENTITY_LABEL );
+
+			if ( typeof id === 'undefined' || typeof label === 'undefined' ) {
+				input.val( '' );
+				input.removeData( DATA_ENTITY_ID );
+				input.removeData( DATA_ENTITY_LABEL );
+			} else {
+				input.val( label );
+			}
+
+			input.change();
+		} );
+
+		input.blur( function() {
+			var id = input.data( DATA_ENTITY_ID );
+			var label = input.data( DATA_ENTITY_LABEL );
+			var currentVal = input.val();
+			if ( currentVal === label + ' (' + id + ')' ) {
+				// no op, everything is okay
+			} else if ( currentVal === label ) {
+				input.val( label + ' (' + id + ')' );
+			} else {
+				input.val( '' );
+				input.removeData( DATA_ENTITY_ID );
+				input.removeData( DATA_ENTITY_LABEL );
+			}
+
+			input.change();
+		} );
+
+		this.addClass = function() {
+			input.addClass.apply( input, arguments );
+			return this;
+		};
+		this.appendTo = function() {
+			input.appendTo.apply( input, arguments );
+			return this;
+		};
+		this.change = input.change.bind( input );
+		this.keyup = input.keyup.bind( input );
+	};
 };
 
 mw.loader.using( [ //

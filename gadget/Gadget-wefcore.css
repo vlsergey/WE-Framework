@@ -127,7 +127,7 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 }
 
 /*Snak value level -- per types */
-.wef_commonsMedia, .wef_string, .wef_url, .wef_wikibase-item {
+.wef_commonsMedia, .wef_string, .wef_url {
 	width: 99%;
 }
 
