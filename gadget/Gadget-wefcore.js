@@ -3680,12 +3680,12 @@ PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
 	datatype: 'wikibase-item',
 } ) );
 PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
-	code: 'P357', // title
-	datatype: 'string',
+	code: 'P1476', // title
+	datatype: 'monolingualtext',
 } ) );
 PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
-	code: 'P392', // subtitle
-	datatype: 'string',
+	code: 'P1680', // subtitle
+	datatype: 'monolingualtext',
 } ) );
 PROPERTIES_OF_REFERENCE.push( new WEF_Definition( {
 	code: 'P393', // editor

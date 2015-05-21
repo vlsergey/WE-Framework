@@ -8,8 +8,8 @@ function generateSourceModule( entity ) {
 	result += appendClaims( entity, 'P364', 'lang' );
 	result += appendClaims( entity, 'P50', 'authors' );
 	result += appendClaims( entity, 'P953', 'url' );
-	result += appendClaims( entity, 'P357', 'title' );
-	result += appendClaims( entity, 'P392', 'subtitle' );
+	result += appendClaims( entity, 'P1476', 'title' );
+	result += appendClaims( entity, 'P1680', 'subtitle' );
 	result += appendClaims( entity, 'P1433', 'publication' );
 	result += appendClaims( entity, 'P393', 'edition' );
 	result += appendClaims( entity, 'P98', 'editor' );

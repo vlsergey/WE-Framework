@@ -36,9 +36,9 @@ var wef_WorkEditor_html = "<div class=\'wef_workEditor_dialog\'>\r\n" +
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- title -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P357\' data-datatype=\'string\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1476\' data-datatype=\'monolingualtext\' />\r\n" + 
 		"					<!-- subtitle -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P392\' data-datatype=\'string\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1680\' data-datatype=\'monolingualtext\' />\r\n" + 
 		"					<!-- original language -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P364\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- date of foundation or creation -->\r\n" + 
