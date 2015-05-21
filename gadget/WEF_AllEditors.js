@@ -5,32 +5,37 @@
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
  */
-try {
-	mw.loader.addSource( {
-		"ruwiki": {
-			"loadScript": "//bits.wikimedia.org/ru.wikipedia.org/load.php",
-			"apiScript": "//ru.wikipedia.org/w/api.php"
-		}
-	} );
+( function() {
+	/** @const */
+	var version = 1432198771;
 
-	mw.loader.register( 'ext.gadget.wefcore', 1432185269, [ 'jquery.ui.autocomplete', //
-	'jquery.ui.dialog', //
-	'jquery.ui.tabs', //
-	'jquery.uls.data', //
-	], undefined, 'ruwiki' );
-	mw.loader.register( 'ext.gadget.wefflags', 1432185269, undefined, undefined, 'ruwiki' );
-} catch ( error ) {
-	// already registered
-}
+	try {
+		mw.loader.addSource( {
+			"ruwiki": {
+				"loadScript": "//bits.wikimedia.org/ru.wikipedia.org/load.php",
+				"apiScript": "//ru.wikipedia.org/w/api.php"
+			}
+		} );
 
-mw.loader.register( 'ext.gadget.wef-AdmUnitEditor', 1432185269, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
-mw.loader.register( 'ext.gadget.wef-EditionEditor', 1432185269, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
-mw.loader.register( 'ext.gadget.wef-EntityEditor', 1432185269, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
-mw.loader.register( 'ext.gadget.wef-ExternalLinks', 1432185269, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
-mw.loader.register( 'ext.gadget.wef-MovieEditor', 1432185269, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
-mw.loader.register( 'ext.gadget.wef-PersonEditor', 1432185269, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
-mw.loader.register( 'ext.gadget.wef-TaxonEditor', 1432185269, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
-mw.loader.register( 'ext.gadget.wef-WorkEditor', 1432185269, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+		mw.loader.register( 'ext.gadget.wefcore', version, [ 'jquery.ui.autocomplete', //
+		'jquery.ui.dialog', //
+		'jquery.ui.tabs', //
+		'jquery.uls.data', //
+		], undefined, 'ruwiki' );
+		mw.loader.register( 'ext.gadget.wefflags', version, undefined, undefined, 'ruwiki' );
+	} catch ( error ) {
+		// already registered
+	}
 
-mw.loader.using( [ 'ext.gadget.wef-AdmUnitEditor', 'ext.gadget.wef-EditionEditor', 'ext.gadget.wef-EntityEditor', 'ext.gadget.wef-ExternalLinks', 'ext.gadget.wef-MovieEditor',
-		'ext.gadget.wef-PersonEditor', 'ext.gadget.wef-TaxonEditor', 'ext.gadget.wef-WorkEditor' ] );
+	mw.loader.register( 'ext.gadget.wef-AdmUnitEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wef-EditionEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wef-EntityEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wef-ExternalLinks', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wef-MovieEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wef-PersonEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wef-TaxonEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wef-WorkEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+
+	mw.loader.using( [ 'ext.gadget.wef-AdmUnitEditor', 'ext.gadget.wef-EditionEditor', 'ext.gadget.wef-EntityEditor', 'ext.gadget.wef-ExternalLinks', 'ext.gadget.wef-MovieEditor',
+			'ext.gadget.wef-PersonEditor', 'ext.gadget.wef-TaxonEditor', 'ext.gadget.wef-WorkEditor' ] );
+} )();

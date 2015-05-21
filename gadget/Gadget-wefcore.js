@@ -1395,8 +1395,8 @@ WEF_LabelsCache = function() {
 			return;
 		}
 
-		var languages = [ mw.config.get( 'wgUserLanguage' ), mw.config.get( 'wgContentLanguage' ), 'en', 'ru' ];
-		var languagesString = encodeURIComponent( mw.config.get( 'wgUserLanguage' ) + '|' + mw.config.get( 'wgContentLanguage' ) + '|en|ru' );
+		var languages = [ mw.config.get( 'wgUserLanguage' ), mw.config.get( 'wgContentLanguage' ), 'en', 'ru', 'de' ];
+		var languagesString = encodeURIComponent( mw.config.get( 'wgUserLanguage' ) + '|' + mw.config.get( 'wgContentLanguage' ) + '|en|ru|de' );
 
 		// remove already known
 		queue = jQuery.grep( queue, function( key ) {
