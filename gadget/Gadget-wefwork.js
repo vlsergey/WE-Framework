@@ -43,6 +43,8 @@ var wef_WorkEditor_html = "<div class=\'wef_workEditor_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P364\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- date of foundation or creation -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P571\' data-datatype=\'time\' />\r\n" + 
+		"					<!-- date of publication -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P577\' data-datatype=\'time\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
