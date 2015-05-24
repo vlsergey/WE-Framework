@@ -25,12 +25,14 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetName</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- name in native language  -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1559\' data-datatype=\'monolingualtext\' />\r\n" + 
+		"					<!-- birth name -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1477\' data-datatype=\'monolingualtext\' />\r\n" + 
 		"					<!-- given name -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P735\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- surname -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P734\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"                    <!-- birth name -->\r\n" + 
-		"                    <tbody class=\'wef_claim_editors\' data-code=\'P1477\' data-datatype=\'monolingualtext\' />\r\n" + 
 		"					<!-- pseudonym -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P742\' data-datatype=\'string\'>\r\n" + 
 		"						<!--  language -->\r\n" + 
@@ -99,8 +101,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					</tbody>\r\n" + 
 		"					<!-- ethnic group -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P172\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"                    <!-- native language -->\r\n" + 
-		"                    <tbody class=\'wef_claim_editors\' data-code=\'P103\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- native language -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P103\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
@@ -163,6 +165,12 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P237\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
+		"			<table class=\'wef_table\'>\r\n" + 
+		"				<!--  Commons category -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P373\' data-datatype=\'string\' />\r\n" + 
+		"				<!-- Commons Creator page  -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P1472\' data-datatype=\'string\' />\r\n" + 
+		"			</table>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_family\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 

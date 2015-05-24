@@ -6,8 +6,9 @@
  * @author vlsergey
  */
 ( function() {
+
 	/** @const */
-	var version = 1432198771;
+	var version = 1432457710;
 
 	try {
 		mw.loader.addSource( {
