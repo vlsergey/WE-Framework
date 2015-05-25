@@ -52,7 +52,6 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
-		"				<legend class=\'wef_i18n_text\'>fieldsetGeneral</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- instance of -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P31\' data-datatype=\'wikibase-item\' />\r\n" + 
@@ -73,6 +72,11 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P1412\' data-datatype=\'wikibase-item\'>\r\n" + 
 		"						<!-- start date -->\r\n" + 
 		"						<tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
+		"					</tbody>\r\n" + 
+		"					<!-- official website -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P856\' data-datatype=\'url\'>\r\n" + 
+		"						<!--  language -->\r\n" + 
+		"						<tr data-code=\'P407\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
