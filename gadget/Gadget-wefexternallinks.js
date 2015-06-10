@@ -1725,6 +1725,51 @@ window.WEF_ExternalLinks = function() {
 			project: 'ruwikisource',
 		} ),
 	} );
+	// Толковый словарь В. Даля
+	this.definitions.Q1970746 = new WEF_Definition( {
+		code: 'P1343[Q1970746]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q1970746',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q1970746',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'ТСД',
+			pageTitleSplitChar: '/',
+			project: 'ruwikisource',
+		} ),
+	} );
+	// Техническая энциклопедия (1927—1936)
+	this.definitions.Q20078551 = new WEF_Definition( {
+		code: 'P1343[Q20078551]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q20078551',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q20078551',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'ТЭ1',
+			pageTitleSplitChar: '/',
+			project: 'ruwikisource',
+		} ),
+	} );
+	// Большая советская энциклопедия (1926—1947)
+	this.definitions.Q20078554 = new WEF_Definition( {
+		code: 'P1343[Q20078554]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q20078554',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q20078554',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'БСЭ1',
+			pageTitleSplitChar: '/',
+			project: 'ruwikisource',
+		} ),
+	} );
 
 	this.defaultQualifiers = [ d.P407 ];
 
@@ -2118,11 +2163,14 @@ WEF_ExternalLinks.prototype.setup = function() {
 		// de
 		d.Q590208, // Allgemeine Deutsche Biographie
 		// ru
+		d.Q20078554, // Большая советская энциклопедия (1926—1947)
 		d.Q4173137, // Еврейская энциклопедия Брокгауза и Ефрона
 		d.Q19180675, // Малый энциклопедический словарь Брокгауза и Ефрона
 		d.Q19190511, // Новый энциклопедический словарь
 		d.Q19211082, // Православная богословская энциклопедия
 		d.Q1960551, // Русский биографический словарь
+		d.Q20078551, // Техническая энциклопедия (1927—1936)
+		d.Q1970746, // Толковый словарь В. Даля
 		d.Q602358, // Энциклопедический словарь Брокгауза и Ефрона
 		// uk
 		d.Q867541, // 1911 Encyclopædia Britannica
