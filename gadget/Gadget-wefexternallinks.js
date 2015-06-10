@@ -1096,6 +1096,24 @@ window.WEF_ExternalLinks = function() {
 		template: 'http://www.eleven.co.il/article/$1',
 		qualifiers: [ d.P304, d.P478, d.P958 ],
 	} );
+	this.definitions.P1648 = new WEF_Definition( {
+		datatype: 'string',
+		flag: 'cy',
+		label: 'Q5273977',
+		buttons: [ {
+			icons: {
+				primary: 'ui-icon-search'
+			},
+			text: false,
+			label: 'Search on wbo.llgc.org.uk',
+			click: searchClickF( [ 'enwiki', 'cywiki', 'ruwiki' ], function( title ) {
+				return '//google.com/search?q=site%3Awbo.llgc.org.uk%2Fen%2F+' + encodeURIComponent( title );
+			} ),
+		} ],
+		check: /^s(|\\d|10)-[A-Z0]{4}-[A-Z0]{3}-[0-9]{4}$/,
+		template: 'http://wbo.llgc.org.uk/en/$1.html',
+		qualifiers: [ d.P50, d.P958 ],
+	} );
 
 	this.definitions.Q355 = new WEF_Definition( {
 		code: 'P553[Q355]/P554',
@@ -2074,11 +2092,18 @@ WEF_ExternalLinks.prototype.setup = function() {
 	this.groups.push( {
 		label: i18n.tabEncyclopedias,
 		fields: [//
+		// ca
 		d.P1296, // enciclopedia.cat
+		// cy
+		d.P1648, // Dictionary of Welsh Biography
+		// ch
 		d.P902, // hls-dhs-dss.ch
 		d.P886, // e-lir.ch
+		// en
 		d.P1417, // Encyclopædia Britannica online .en
+		// fr
 		d.Q17329836,// Encyclopédique Larousse en ligne .fr
+		// ru
 		d.Q4091875, // Большая энциклопедия Кирилла и Мефодия .ru
 		d.P1438,// Краткая еврейская .ru
 		d.Q4239850,// Краткая литературная .ru
