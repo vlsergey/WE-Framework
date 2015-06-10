@@ -1462,6 +1462,21 @@ window.WEF_ExternalLinks = function() {
 			return 'http://' + id + '.vkrugudruzei.ru/';
 		},
 	} );
+	// Военная энциклопедия Сытина
+	this.definitions.Q4114391 = new WEF_Definition( {
+		code: 'P1343[Q4114391]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q4114391',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q4114391',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'ВЭ',
+			pageTitleSplitChar: '/',
+			project: 'ruwikisource',
+		} ),
+	} );
 	// Еврейская энциклопедия Брокгауза и Ефрона
 	this.definitions.Q4173137 = new WEF_Definition( {
 		code: 'P1343[Q4173137]/P248',
@@ -2164,6 +2179,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q590208, // Allgemeine Deutsche Biographie
 		// ru
 		d.Q20078554, // Большая советская энциклопедия (1926—1947)
+		d.Q4114391, // Военная энциклопедия Сытина
 		d.Q4173137, // Еврейская энциклопедия Брокгауза и Ефрона
 		d.Q19180675, // Малый энциклопедический словарь Брокгауза и Ефрона
 		d.Q19190511, // Новый энциклопедический словарь
