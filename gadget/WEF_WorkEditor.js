@@ -8,7 +8,7 @@
 try {
 	mw.loader.addSource( {
 		"ruwiki": {
-			"loadScript": "//bits.wikimedia.org/ru.wikipedia.org/load.php",
+			"loadScript": "//ru.wikipedia.org/w/load.php",
 			"apiScript": "//ru.wikipedia.org/w/api.php"
 		}
 	} );
