@@ -1433,6 +1433,21 @@ window.WEF_ExternalLinks = function() {
 			return 'http://www.liveinternet.ru/users/' + id;
 		},
 	} );
+	// Библейская энциклопедия архимандрита Никифора
+	this.definitions.Q4086271 = new WEF_Definition( {
+		code: 'P1343[Q4086271]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q4086271',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q4086271',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'БЭАН',
+			pageTitleSplitChar: '/',
+			project: 'ruwikisource',
+		} ),
+	} );
 	this.definitions.Q4091875 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'ru',
@@ -2178,6 +2193,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		// de
 		d.Q590208, // Allgemeine Deutsche Biographie
 		// ru
+		d.Q4086271, // Библейская энциклопедия архимандрита Никифора
 		d.Q20078554, // Большая советская энциклопедия (1926—1947)
 		d.Q4114391, // Военная энциклопедия Сытина
 		d.Q4173137, // Еврейская энциклопедия Брокгауза и Ефрона
