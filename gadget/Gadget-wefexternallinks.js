@@ -1800,6 +1800,21 @@ window.WEF_ExternalLinks = function() {
 			project: 'ruwikisource',
 		} ),
 	} );
+	// The New International Encyclopædia (1902—05)
+	this.definitions.Q20089963 = new WEF_Definition( {
+		code: 'P1343[Q20089963]/P248',
+		datatype: 'wikibase-item',
+		flag: 'uk',
+		label: 'Q20089963',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'en',
+			dictionaryEntityId: 'Q20089963',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'The New International Encyclopædia',
+			pageTitleSplitChar: '/',
+			project: 'enwikisource',
+		} ),
+	} );
 
 	this.defaultQualifiers = [ d.P407 ];
 
@@ -2206,6 +2221,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q602358, // Энциклопедический словарь Брокгауза и Ефрона
 		// uk
 		d.Q867541, // 1911 Encyclopædia Britannica
+		d.Q20089963, // New International Encyclopedia (1902—05)
 		],
 	} );
 	this.groups.push( {
@@ -2264,6 +2280,14 @@ WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( options, page
 		value: options.pageTitlePrefix + ' / ' + articleTitle,
 	};
 	data.descriptions = {};
+	data.descriptions['en'] = {
+		language: 'en',
+		value: 'encyclopedic article',
+	};
+	data.descriptions['ru'] = {
+		language: 'ru',
+		value: 'энциклопедическая статья',
+	};
 
 	data.claims = {
 
