@@ -1815,6 +1815,21 @@ window.WEF_ExternalLinks = function() {
 			project: 'enwikisource',
 		} ),
 	} );
+	// Энциклопедия Британника (1875—1889)
+	this.definitions.Q20096917 = new WEF_Definition( {
+		code: 'P1343[Q20096917]/P248',
+		datatype: 'wikibase-item',
+		flag: 'uk',
+		label: 'Q20096917',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'en',
+			dictionaryEntityId: 'Q20096917',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'Encyclopædia Britannica, Ninth Edition',
+			pageTitleSplitChar: '/',
+			project: 'enwikisource',
+		} ),
+	} );
 
 	this.defaultQualifiers = [ d.P407 ];
 
@@ -2220,7 +2235,8 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q1970746, // Толковый словарь В. Даля
 		d.Q602358, // Энциклопедический словарь Брокгауза и Ефрона
 		// uk
-		d.Q867541, // 1911 Encyclopædia Britannica
+		d.Q20096917, // Encyclopædia Britannica, Ninth Edition (1875–1889)
+		d.Q867541, // Encyclopædia Britannica, 11th edition (1911)
 		d.Q20089963, // New International Encyclopedia (1902—05)
 		],
 	} );
