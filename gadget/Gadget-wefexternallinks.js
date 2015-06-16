@@ -1710,6 +1710,21 @@ window.WEF_ExternalLinks = function() {
 		} ],
 		qualifiers: [ d.P958 ],
 	} );
+	//  American Medical Biographies 1920
+	this.definitions.Q19037977 = new WEF_Definition( {
+		code: 'P1343[Q19037977]/P248',
+		datatype: 'wikibase-item',
+		flag: 'us',
+		label: 'Q19037977',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'en',
+			dictionaryEntityId: 'Q19037977',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'American Medical Biographies',
+			pageTitleSplitChar: '/',
+			project: 'enwikisource',
+		} ),
+	} );
 	// Малый энциклопедический словарь Брокгауза и Ефрона
 	this.definitions.Q19180675 = new WEF_Definition( {
 		code: 'P1343[Q19180675]/P248',
@@ -2238,6 +2253,8 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q20096917, // Encyclopædia Britannica, Ninth Edition (1875–1889)
 		d.Q867541, // Encyclopædia Britannica, 11th edition (1911)
 		d.Q20089963, // New International Encyclopedia (1902—05)
+		// us
+		d.Q19037977, // American Medical Biographies (1920)
 		],
 	} );
 	this.groups.push( {
