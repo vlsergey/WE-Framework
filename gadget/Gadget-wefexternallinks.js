@@ -1609,6 +1609,22 @@ window.WEF_ExternalLinks = function() {
 			return 'https://mixcloud.com/' + id + '/';
 		}
 	} );
+	//  Appletons' Cyclopædia of American Biography (1887—1901)
+	this.definitions.Q12912667 = new WEF_Definition( {
+		code: 'P1343[Q12912667]/P248',
+		datatype: 'wikibase-item',
+		flag: 'us',
+		label: 'Q12912667',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'en',
+			dictionaryEntityId: 'Q12912667',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'Appletons\' Cyclopædia of American Biography',
+			pageTitleSplitChar: '/',
+			project: 'enwikisource',
+			wikidataTitlePrefix: 'ACAB-1',
+		} ),
+	} );
 	this.definitions.Q17117201 = new WEF_Definition( {
 		code: 'P553[Q17117201]/P554',
 		label: 'Q17117201',
@@ -2274,6 +2290,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q867541, // Encyclopædia Britannica, 11th edition (1911)
 		d.Q20089963, // New International Encyclopedia (1902—05)
 		// us
+		d.Q12912667, // Appletons' Cyclopædia of American Biography (1887—1901)
 		d.Q19077875, // The American Cyclopædia (1879)
 		d.Q19037977, // American Medical Biographies (1920)
 		],
