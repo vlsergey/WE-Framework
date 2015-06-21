@@ -1335,6 +1335,7 @@ window.WEF_ExternalLinks = function() {
 			pageTitlePrefix: '1911 Encyclopædia Britannica',
 			pageTitleSplitChar: '/',
 			project: 'enwikisource',
+			wikidataTitlePrefix: 'EB-11',
 		} ),
 	} );
 	this.definitions.Q1002972 = new WEF_Definition( {
@@ -1710,7 +1711,7 @@ window.WEF_ExternalLinks = function() {
 		} ],
 		qualifiers: [ d.P958 ],
 	} );
-	//  American Medical Biographies 1920
+	// American Medical Biographies 1920
 	this.definitions.Q19037977 = new WEF_Definition( {
 		code: 'P1343[Q19037977]/P248',
 		datatype: 'wikibase-item',
@@ -1723,6 +1724,23 @@ window.WEF_ExternalLinks = function() {
 			pageTitlePrefix: 'American Medical Biographies',
 			pageTitleSplitChar: '/',
 			project: 'enwikisource',
+			wikidataTitlePrefix: 'AMC',
+		} ),
+	} );
+	// The American Cyclopædia (1879)
+	this.definitions.Q19077875 = new WEF_Definition( {
+		code: 'P1343[Q19077875]/P248',
+		datatype: 'wikibase-item',
+		flag: 'us',
+		label: 'Q19077875',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'en',
+			dictionaryEntityId: 'Q19077875',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'The American Cyclopædia (1879)',
+			pageTitleSplitChar: '/',
+			project: 'enwikisource',
+			wikidataTitlePrefix: 'AC',
 		} ),
 	} );
 	// Малый энциклопедический словарь Брокгауза и Ефрона
@@ -1828,6 +1846,7 @@ window.WEF_ExternalLinks = function() {
 			pageTitlePrefix: 'The New International Encyclopædia',
 			pageTitleSplitChar: '/',
 			project: 'enwikisource',
+			wikidataTitlePrefix: 'NIE',
 		} ),
 	} );
 	// Энциклопедия Британника (1875—1889)
@@ -1843,6 +1862,7 @@ window.WEF_ExternalLinks = function() {
 			pageTitlePrefix: 'Encyclopædia Britannica, Ninth Edition',
 			pageTitleSplitChar: '/',
 			project: 'enwikisource',
+			wikidataTitlePrefix: 'EB-9',
 		} ),
 	} );
 
@@ -2254,6 +2274,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q867541, // Encyclopædia Britannica, 11th edition (1911)
 		d.Q20089963, // New International Encyclopedia (1902—05)
 		// us
+		d.Q19077875, // The American Cyclopædia (1879)
 		d.Q19037977, // American Medical Biographies (1920)
 		],
 	} );
@@ -2303,14 +2324,18 @@ WEF_ExternalLinks.prototype.setup = function() {
 };
 
 WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( options, pageTitle, articleTitle ) {
-	var labels = {};
 	var data = {
 		type: "item",
 		labels: {},
 	};
+	var wikidataTitlePrefix = $.isEmpty( options.wikidataTitlePrefix ) ? options.pageTitlePrefix : options.wikidataTitlePrefix;
 	data.labels[options.contentLanguage] = {
 		language: options.contentLanguage,
-		value: options.pageTitlePrefix + ' / ' + articleTitle,
+		value: wikidataTitlePrefix + ' / ' + articleTitle,
+	};
+	data.labels['ru'] = {
+		language: 'ru',
+		value: wikidataTitlePrefix + ' / ' + articleTitle,
 	};
 	data.descriptions = {};
 	data.descriptions['en'] = {
