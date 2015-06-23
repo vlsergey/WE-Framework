@@ -1467,6 +1467,21 @@ window.WEF_ExternalLinks = function() {
 		} ],
 		qualifiers: [ d.P958 ],
 	} );
+	// Большая энциклопедия Южакова
+	this.definitions.Q4091878 = new WEF_Definition( {
+		code: 'P1343[Q4091878]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q4091878',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q4091878',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'БЭЮ',
+			pageTitleSplitChar: '/',
+			project: 'ruwikisource',
+		} ),
+	} );
 	this.definitions.Q4101720 = new WEF_Definition( {
 		code: 'P553[Q4101720]/P554',
 		label: 'Q4101720',
@@ -1609,7 +1624,7 @@ window.WEF_ExternalLinks = function() {
 			return 'https://mixcloud.com/' + id + '/';
 		}
 	} );
-	//  Appletons' Cyclopædia of American Biography (1887—1901)
+	// Appletons' Cyclopædia of American Biography (1887—1901)
 	this.definitions.Q12912667 = new WEF_Definition( {
 		code: 'P1343[Q12912667]/P248',
 		datatype: 'wikibase-item',
@@ -2276,6 +2291,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		// ru
 		d.Q4086271, // Библейская энциклопедия архимандрита Никифора
 		d.Q20078554, // Большая советская энциклопедия (1926—1947)
+		d.Q4091878, // Большая энциклопедия Южакова
 		d.Q4114391, // Военная энциклопедия Сытина
 		d.Q4173137, // Еврейская энциклопедия Брокгауза и Ефрона
 		d.Q19180675, // Малый энциклопедический словарь Брокгауза и Ефрона
