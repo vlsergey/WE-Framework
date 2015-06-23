@@ -163,14 +163,14 @@ WEF_Sources.prototype.attachToInstancesOf = function( instanceOfEntityId, editor
 
 	$( '.citetype_' + instanceOfEntityId ).prepend( $( document.createElement( 'a' ) ).text( '[edit] ' ).css( 'cursor', 'pointer' ).click( function() {
 		var entityId = $( this ).parent().data( 'entity-id' );
-		if ( !$.isEmpty( entityId ) ) {
+		if ( !WEF_Utils.isEmpty( entityId ) ) {
 			editor.edit( false, entityId );
 		}
 	} ) );
 
 	$( '.citetype_unknown' ).prepend( $( document.createElement( 'a' ) ).text( '[' + instanceOfEntityId + '?] ' ).css( 'cursor', 'pointer' ).click( function() {
 		var entityId = $( this ).parent().data( 'entity-id' );
-		if ( !$.isEmpty( entityId ) ) {
+		if ( !WEF_Utils.isEmpty( entityId ) ) {
 			editor.edit( false, entityId );
 		}
 	} ) );

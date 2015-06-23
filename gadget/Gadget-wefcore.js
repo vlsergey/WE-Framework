@@ -7,7 +7,6 @@
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
  */
-
 window.wef_Editors_i18n_en = {
 
 	actionAnalyzeChanges: 'Collecting and analyzing changes to entity',
@@ -562,11 +561,11 @@ WEF_Utils.getDefaultLanguageCode = ( function() {
 	var defaultLanguageCode;
 	return function() {
 		"use strict";
-		if ( $.isEmpty( defaultLanguageCode ) ) {
+		if ( WEF_Utils.isEmpty( defaultLanguageCode ) ) {
 			defaultLanguageCode = mw.config.get( 'wgUserLanguage' );
-			if ( $.isEmpty( defaultLanguageCode ) ) {
+			if ( WEF_Utils.isEmpty( defaultLanguageCode ) ) {
 				defaultLanguageCode = mw.config.get( 'wgContentLanguage' );
-				if ( $.isEmpty( defaultLanguageCode ) ) {
+				if ( WEF_Utils.isEmpty( defaultLanguageCode ) ) {
 					defaultLanguageCode = 'en';
 				}
 			}
@@ -605,6 +604,10 @@ WEF_Utils.getWikidataApiPrefix = function() {
 	} else {
 		return '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json';
 	}
+};
+
+WEF_Utils.isEmpty = function( obj ) {
+	return ( !obj || $.trim( obj ) === "" );
 };
 
 WEF_Utils._isLeapGregorianYear = function( year ) {
@@ -738,7 +741,7 @@ WEF_Utils.processDefinition = function( definition ) {
 			}
 			pattern += ')';
 
-			if ( $.isEmpty( rSuffix ) ) {
+			if ( WEF_Utils.isEmpty( rSuffix ) ) {
 				pattern += '$';
 			} else {
 				pattern += rSuffix + '.*$';
@@ -811,10 +814,10 @@ WEF_Utils.queryCentralAuthToken = function() {
 };
 
 WEF_Utils.queryWikidataToken = function( centralAuthToken, tokenType ) {
-	if ( !WEF_Utils.isWikidata() && $.isEmpty( centralAuthToken ) ) {
+	if ( !WEF_Utils.isWikidata() && WEF_Utils.isEmpty( centralAuthToken ) ) {
 		throw new Error( "Need to specify centralauthtoken for out-of-wikidata queries" );
 	}
-	if ( $.isEmpty( tokenType ) ) {
+	if ( WEF_Utils.isEmpty( tokenType ) ) {
 		tokenType = 'csrf';
 	}
 
@@ -1024,7 +1027,7 @@ WEF_Utils.update = function( updates ) {
 					type: 'POST',
 					url: executionContext.getPrefixWithCentralAuthToken() // 
 							+ '&action=wbeditentity' // 
-							+ ( $.isEmpty( executionContext.updates.entityId ) ? '&new=item' : '&id=' + executionContext.updates.entityId ) //
+							+ ( WEF_Utils.isEmpty( executionContext.updates.entityId ) ? '&new=item' : '&id=' + executionContext.updates.entityId ) //
 							+ '&summary=' + encodeURIComponent( i18n.summary ) //
 					,
 					data: {
@@ -1439,7 +1442,7 @@ WEF_LabelsCache = function() {
 				if ( typeof entity.labels !== 'undefined' ) {
 					for ( var l = 0; l < languages.length; l++ ) {
 						var label = entity.labels[languages[l]];
-						if ( typeof label !== 'undefined' && !$.isEmpty( label.value ) ) {
+						if ( typeof label !== 'undefined' && !WEF_Utils.isEmpty( label.value ) ) {
 							var title = label.value;
 							cacheLabels[entityId] = title;
 							if ( entityId.substring( 0, 1 ) === 'P' ) {
@@ -1449,14 +1452,14 @@ WEF_LabelsCache = function() {
 						}
 					}
 				}
-				if ( $.isEmpty( cacheLabels[entityId] ) ) {
+				if ( WEF_Utils.isEmpty( cacheLabels[entityId] ) ) {
 					cacheLabels[entityId] = '';
 				}
 
 				if ( typeof entity.descriptions !== 'undefined' ) {
 					for ( var l = 0; l < languages.length; l++ ) {
 						var description = entity.descriptions[languages[l]];
-						if ( typeof description !== 'undefined' && !$.isEmpty( description.value ) ) {
+						if ( typeof description !== 'undefined' && !WEF_Utils.isEmpty( description.value ) ) {
 							var title = description.value;
 							cacheDescriptions[entityId] = title;
 							if ( entityId.substring( 0, 1 ) === 'P' ) {
@@ -1466,7 +1469,7 @@ WEF_LabelsCache = function() {
 						}
 					}
 				}
-				if ( $.isEmpty( cacheDescriptions[entityId] ) ) {
+				if ( WEF_Utils.isEmpty( cacheDescriptions[entityId] ) ) {
 					cacheDescriptions[entityId] = '';
 				}
 
@@ -1615,7 +1618,7 @@ WEF_TypesCache = function() {
 			throw new Error( 'Incorrect property ID: ' + propertyId );
 		}
 
-		if ( !$.isEmpty( dataType ) ) {
+		if ( !WEF_Utils.isEmpty( dataType ) ) {
 			cacheTypes[propertyId] = dataType;
 			localStorage[LOCALSTORAGE_PREFIX + propertyId] = dataType;
 		}
@@ -1706,7 +1709,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				var initialValue = initialDataValue.value;
 				if ( !/^[\\+\\-][0-9]{1,4}\-/.test( initialValue.time ) ) {
 					editorDataType = 'time';
-				} else if ( !$.isEmpty( initialValue ) && !$.isEmpty( initialValue.precision ) ) {
+				} else if ( !WEF_Utils.isEmpty( initialValue ) && !WEF_Utils.isEmpty( initialValue.precision ) ) {
 					var precision = initialValue.precision;
 					if ( precision === PRECISION_CENTURIES && initialValue.calendarmodel.substr( WIKIDATA_URI_PREFIX.length ) === CALENDAR_GREGORIAN ) {
 						editorDataType = 'time-centuries';
@@ -1813,7 +1816,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				input.val( newDataValue.value );
 			};
 			this.hasValue = function() {
-				return input.val() != null && !$.isEmpty( input.val().trim() );
+				return input.val() != null && !WEF_Utils.isEmpty( input.val().trim() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -1904,7 +1907,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				inputGlobe.val( newDataValue.value.globe.substr( WIKIDATA_URI_PREFIX.length ) );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( inputLatitude.val() ) || !$.isEmpty( inputLongitude.val() ) || !$.isEmpty( inputAltitude.val() );
+				return !WEF_Utils.isEmpty( inputLatitude.val() ) || !WEF_Utils.isEmpty( inputLongitude.val() ) || !WEF_Utils.isEmpty( inputAltitude.val() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -1913,10 +1916,10 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				return {
 					type: 'globecoordinate',
 					value: {
-						latitude: !$.isEmpty( inputLatitude.val() ) ? Number( inputLatitude.val() ) : null,
-						longitude: !$.isEmpty( inputLongitude.val() ) ? Number( inputLongitude.val() ) : null,
-						altitude: !$.isEmpty( inputAltitude.val() ) ? Number( inputAltitude.val() ) : null,
-						precision: !$.isEmpty( inputPrecision.val() ) ? Number( inputPrecision.val() ) : 0,
+						latitude: !WEF_Utils.isEmpty( inputLatitude.val() ) ? Number( inputLatitude.val() ) : null,
+						longitude: !WEF_Utils.isEmpty( inputLongitude.val() ) ? Number( inputLongitude.val() ) : null,
+						altitude: !WEF_Utils.isEmpty( inputAltitude.val() ) ? Number( inputAltitude.val() ) : null,
+						precision: !WEF_Utils.isEmpty( inputPrecision.val() ) ? Number( inputPrecision.val() ) : 0,
 						globe: WIKIDATA_URI_PREFIX + inputGlobe.val(),
 					},
 				};
@@ -1962,7 +1965,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				input.val( newDataValue.value.text );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( input.val() );
+				return !WEF_Utils.isEmpty( input.val() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -2011,7 +2014,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				inputUpperBound.val( newDataValue.value.upperBound );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( inputAmount.val() );
+				return !WEF_Utils.isEmpty( inputAmount.val() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -2055,7 +2058,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				inputAmount.val( newDataValue.value.amount );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( inputAmount.val() );
+				return !WEF_Utils.isEmpty( inputAmount.val() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -2095,7 +2098,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				inputAmount.val( newDataValue.value.amount );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( inputAmount.val() );
+				return !WEF_Utils.isEmpty( inputAmount.val() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -2149,7 +2152,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				input.val( newDataValue.value );
 			};
 			this.hasValue = function() {
-				return input.val() != null && !$.isEmpty( input.val().trim() );
+				return input.val() != null && !WEF_Utils.isEmpty( input.val().trim() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -2202,7 +2205,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				inputCalendarModel.val( newDataValue.value.calendarmodel.substr( WIKIDATA_URI_PREFIX.length ) );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( inputTime.val() );
+				return !WEF_Utils.isEmpty( inputTime.val() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -2324,9 +2327,9 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			};
 
 			var ifSpecified = function( days, months, years ) {
-				return !$.isEmpty( days.val() ) && Number( days.val() ) !== 0 //
-						&& !$.isEmpty( months.val() ) && Number( months.val() ) !== -1 && Number( months.val() ) !== 0 //
-						&& !$.isEmpty( years.val() ) && Number( years.val() ) !== 0;
+				return !WEF_Utils.isEmpty( days.val() ) && Number( days.val() ) !== 0 //
+						&& !WEF_Utils.isEmpty( months.val() ) && Number( months.val() ) !== -1 && Number( months.val() ) !== 0 //
+						&& !WEF_Utils.isEmpty( years.val() ) && Number( years.val() ) !== 0;
 			};
 
 			this.setDataValue = function( newDataValue ) {
@@ -2471,9 +2474,9 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			};
 			this.hasValue = function() {
 				"use strict";
-				return !$.isEmpty( days.val() ) && Number( days.val() ) !== 0 //
-						&& !$.isEmpty( months.val() ) && Number( months.val() ) !== -1 && Number( months.val() ) !== 0 //
-						&& !$.isEmpty( years.val() ) && Number( years.val() ) !== 0;
+				return !WEF_Utils.isEmpty( days.val() ) && Number( days.val() ) !== 0 //
+						&& !WEF_Utils.isEmpty( months.val() ) && Number( months.val() ) !== -1 && Number( months.val() ) !== 0 //
+						&& !WEF_Utils.isEmpty( years.val() ) && Number( years.val() ) !== 0;
 			};
 			this.getDataValue = function() {
 				"use strict";
@@ -2534,7 +2537,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				years.val( date.getFullYear() );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( months.val() ) || !$.isEmpty( years.val() );
+				return !WEF_Utils.isEmpty( months.val() ) || !WEF_Utils.isEmpty( years.val() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -2588,7 +2591,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				years.val( date.getFullYear() );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( years.val() );
+				return !WEF_Utils.isEmpty( years.val() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -2646,7 +2649,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				centuries.val( century );
 			};
 			this.hasValue = function() {
-				return !$.isEmpty( centuries.val() );
+				return !WEF_Utils.isEmpty( centuries.val() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -2700,7 +2703,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			}
 
 			this.hasValue = function() {
-				return !$.isEmpty( input.val() );
+				return !WEF_Utils.isEmpty( input.val() );
 			};
 
 			this.getDataValue = function() {
@@ -2725,7 +2728,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 		} ).call( this );
 	} else if ( editorDataType === 'wikibase-item' ) {
 		( function() {
-			var inputClass = ( $.isEmpty( options ) || !$.isFunction( options.inputClass ) ) ? WEF_ItemInput : options.inputClass;
+			var inputClass = ( WEF_Utils.isEmpty( options ) || !$.isFunction( options.inputClass ) ) ? WEF_ItemInput : options.inputClass;
 
 			var table = $( document.createElement( 'table' ) ).addClass( 'wef_wikibase-item_table' ).appendTo( snakValueEditor.mainElement );
 			var tr = $( document.createElement( 'tr' ) ).addClass( 'wef_wikibase-item_tr' ).appendTo( table );
@@ -2736,7 +2739,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			};
 
 			this.hasValue = function() {
-				return !$.isEmpty( input.val() );
+				return !WEF_Utils.isEmpty( input.val() );
 			};
 
 			this.getDataValue = function() {
@@ -2745,7 +2748,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				}
 
 				var dataValue = {};
-				if ( !$.isEmpty( input.val() ) ) {
+				if ( !WEF_Utils.isEmpty( input.val() ) ) {
 					dataValue.value = {
 						'entity-type': 'item',
 						'numeric-id': Number( input.val().substr( 1 ) ),
@@ -2756,7 +2759,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			};
 			this.getAsLabel = function() {
 				var entityId = input.val();
-				if ( $.isEmpty( entityId ) ) {
+				if ( WEF_Utils.isEmpty( entityId ) ) {
 					return $( document.createElement( 'span' ) );
 				}
 
@@ -2791,12 +2794,12 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 
 			createOrEditButton.click( function() {
 				var entityId = input.val();
-				if ( $.isEmpty( entityId ) ) {
+				if ( WEF_Utils.isEmpty( entityId ) ) {
 					if ( selectCreateEditor == null ) {
 						selectCreateEditor = new WEF_SelectEditor( createOrEditButton, wef_Editors_i18n.buttonCreateOrEditPrefixCreate, function( id, editor ) {
 							var d = editor.edit( false, null );
 							d.done( function( newEntityId ) {
-								if ( !$.isEmpty( newEntityId ) ) {
+								if ( !WEF_Utils.isEmpty( newEntityId ) ) {
 									snakValueEditor.setDataValueImpl( newEntityId );
 									wef_LabelsCache.receiveLabels();
 								}
@@ -2833,7 +2836,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			} );
 			$( this ).on( 'change', function() {
 				var entityId = input.val();
-				if ( !$.isEmpty( entityId ) ) {
+				if ( !WEF_Utils.isEmpty( entityId ) ) {
 					onWikidata.attr( 'href', '//www.wikidata.org/wiki/' + entityId );
 					onWikidata.button( 'enable' );
 				} else {
@@ -2900,9 +2903,9 @@ WEF_ItemInput = function( options ) {
 	function labelsCacheListener() {
 		$.each( translatableDesciptions, function( index, desc ) {
 			var id = desc.data( 'entity-id' );
-			if ( !$.isEmpty( id ) ) {
+			if ( !WEF_Utils.isEmpty( id ) ) {
 				var text = wef_LabelsCache.getDescription( id, false );
-				if ( !$.isEmpty( id ) ) {
+				if ( !WEF_Utils.isEmpty( id ) ) {
 					desc.text( text );
 				}
 			}
@@ -2971,7 +2974,7 @@ WEF_ItemInput = function( options ) {
 	input.data( 'autocomplete' )._renderItem = function( ul, item ) {
 		var a = $( '<a><strong>' + item.label + '</strong> <span style="color: darkgray;">' + item.value + '</span><br>' + '</a>' );
 		var desc = $( document.createElement( 'span' ) ).appendTo( a );
-		if ( !$.isEmpty( item.desc ) ) {
+		if ( !WEF_Utils.isEmpty( item.desc ) ) {
 			desc.text( item.desc );
 		} else {
 			desc.data( 'entity-id', item.value );
@@ -3164,7 +3167,7 @@ var WEF_SelectSnakType = function() {
 window.wef_selectSnakType = new WEF_SelectSnakType();
 
 WEF_SnakEditor = function( parent, options ) {
-	if ( $.isEmpty( parent ) ) {
+	if ( WEF_Utils.isEmpty( parent ) ) {
 		throw new Error( 'parent is empty or not specified' );
 	}
 
@@ -3571,7 +3574,7 @@ WEF_SelectableQualifierEditor = function( parent, qualifierDefinitions, onRemove
 			var code = qualifierDefinition.code;
 			qualifierSelect.addOption( code );
 
-			if ( !$.isEmpty( qualifierDefinition.datatype ) ) {
+			if ( !WEF_Utils.isEmpty( qualifierDefinition.datatype ) ) {
 				wef_TypesCache.putInCache( code, qualifierDefinition.datatype );
 			}
 		} );
@@ -3836,7 +3839,7 @@ WEF_ClaimReferenceEditor.prototype.collect = function() {
 		}
 	} );
 
-	if ( !$.isEmpty( newReference.snaks ) ) {
+	if ( !WEF_Utils.isEmpty( newReference.snaks ) ) {
 		newReference["snaks-order"] = snaksOrder;
 		return newReference;
 	}
@@ -3917,7 +3920,7 @@ WEF_ClaimReferencesEditor.prototype.collect = function() {
 		/** @type WEF_ClaimReferenceEditor */
 		var claimReferenceEditor = editor;
 		var reference = claimReferenceEditor.collect();
-		if ( !$.isEmpty( reference ) ) {
+		if ( !WEF_Utils.isEmpty( reference ) ) {
 			result.push( reference );
 		}
 	} );
@@ -4326,14 +4329,14 @@ WEF_LabelsEditor.prototype.collectUpdates = function( updates ) {
 	this._storeCurrentData();
 
 	$.each( this.dataLabels, function( language, label ) {
-		if ( !$.isEmpty( label ) ) {
+		if ( !WEF_Utils.isEmpty( label ) ) {
 			if ( labelsEditor.oldLabels[language] !== label ) {
 				updates.setLabel( language, label );
 			}
 		}
 	} );
 	$.each( this.dataDescriptions, function( language, description ) {
-		if ( !$.isEmpty( description ) ) {
+		if ( !WEF_Utils.isEmpty( description ) ) {
 			if ( labelsEditor.oldDescriptions[language] !== description ) {
 				updates.setDescription( language, description );
 			}
@@ -4441,9 +4444,9 @@ var WEF_ClaimEditor = function( definition ) {
 	var sourcesButtonCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).appendTo( row1 );
 
 	var columnTables = this._columnTables = {};
-	if ( !$.isEmpty( definition.columns ) ) {
+	if ( !WEF_Utils.isEmpty( definition.columns ) ) {
 		$.each( definition.columns, function( i, columnDefinition ) {
-			if ( !$.isEmpty( columnDefinition.code ) ) {
+			if ( !WEF_Utils.isEmpty( columnDefinition.code ) ) {
 				var addColumnQualifierCell = $( document.createElement( 'td' ) ).addClass( 'wef_button_cell' ).addClass( 'wef_button_cell_addColumnQualifier' ).appendTo( row1 );
 				$( document.createElement( 'button' ) ).attr( 'type', 'button' ).button( {
 					icons: {
@@ -4469,7 +4472,7 @@ var WEF_ClaimEditor = function( definition ) {
 
 	if ( this.isPropertyEditor ) {
 		wef_LabelsCache.getOrQueue( this.propertyId, function( label, description ) {
-			if ( !$.isEmpty( description ) && description !== this.propertyId )
+			if ( !WEF_Utils.isEmpty( description ) && description !== this.propertyId )
 				row1.attr( 'title', description );
 		} );
 	}
@@ -4872,7 +4875,7 @@ WEF_ClaimEditor.prototype.collectUpdates = function( updates ) {
 WEF_ClaimEditor.prototype.addQualifier = function( qualifierId ) {
 	var claimEditor = this;
 
-	if ( $.isEmpty( qualifierId ) || typeof this._columnTables[qualifierId] === 'undefined' ) {
+	if ( WEF_Utils.isEmpty( qualifierId ) || typeof this._columnTables[qualifierId] === 'undefined' ) {
 		var qualifierEditor = new WEF_SelectableQualifierEditor( this._bottomContentTable, this.definition.qualifiers, function( removedQualifierEditor ) {
 			var hash = removedQualifierEditor.getHash();
 			if ( hash !== null ) {
@@ -4962,7 +4965,7 @@ WEF_ClaimEditorsTable = function( definition ) {
 					return value != claimEditor;
 				} );
 
-				if ( claimEditor.wikidataClaim != null && !$.isEmpty( claimEditor.wikidataClaim.id ) ) {
+				if ( claimEditor.wikidataClaim != null && !WEF_Utils.isEmpty( claimEditor.wikidataClaim.id ) ) {
 					removedClaims.push( claimEditor.wikidataClaim.id );
 				}
 				claimEditor.remove();
@@ -5146,7 +5149,7 @@ WEF_ClaimEditorsTable = function( definition ) {
 	};
 
 	function createPlaceholder( target ) {
-		if ( $.isEmpty( definition.columns ) ) {
+		if ( WEF_Utils.isEmpty( definition.columns ) ) {
 			temporaryHolder = $( document.createElement( 'tbody' ) ).html( '<!-- Temporary holder for ' + definition.code + ' -->' );
 			return temporaryHolder;
 		}
@@ -5166,7 +5169,7 @@ WEF_ClaimEditorsTable = function( definition ) {
 			} );
 		}
 		$.each( definition.columns, function( i, columnDefinition ) {
-			if ( !$.isEmpty( columnDefinition.code ) ) {
+			if ( !WEF_Utils.isEmpty( columnDefinition.code ) ) {
 				var columnName = $( document.createElement( 'th' ) ).addClass( 'wef_column_th' ).attr( 'colspan', '2' ).appendTo( columnsHeader );
 				if ( typeof columnDefinition.label !== 'undefined' ) {
 					wef_LabelsCache.getOrQueue( columnDefinition.label, function( label, description ) {
@@ -5379,7 +5382,7 @@ window.wef_analyze_and_save = function( currentPageItem, entityId, labelsEditor,
 
 	var updates = new WEF_Updates( entityId );
 	try {
-		if ( currentPageItem && $.isEmpty( entityId ) && !WEF_Utils.isWikidata() ) {
+		if ( currentPageItem && WEF_Utils.isEmpty( entityId ) && !WEF_Utils.isWikidata() ) {
 			// set label in current content language
 			updates.setLabel( mw.config.get( 'wgContentLanguage' ), mw.config.get( 'wgPageName' ) );
 
@@ -5465,10 +5468,10 @@ WEF_EditorForm = function( originalTitle, html, i18n, currentPageItem, editDefer
 			var item = $( htmlItem );
 			var code = item.text();
 			wef_LabelsCache.getOrQueue( code, function( label, description ) {
-				if ( !$.isEmpty( label ) ) {
+				if ( !WEF_Utils.isEmpty( label ) ) {
 					item.text( label );
 				}
-				if ( !$.isEmpty( description ) ) {
+				if ( !WEF_Utils.isEmpty( description ) ) {
 					item.attr( 'title', description );
 				}
 				item.removeClass( 'wef_i18n_label' );
@@ -5536,12 +5539,12 @@ WEF_EditorForm = function( originalTitle, html, i18n, currentPageItem, editDefer
 	dialog.find( '.wef_claim_editors' ).each( function( i, htmlItem ) {
 		var item = $( htmlItem );
 
-		var check = $.isEmpty( item.data( 'check' ) ) ? undefined : new RegExp( item.data( 'check' ) );
+		var check = WEF_Utils.isEmpty( item.data( 'check' ) ) ? undefined : new RegExp( item.data( 'check' ) );
 		var code = item.data( 'code' );
 		var datatype = item.data( 'datatype' );
 		var flag = item.data( 'flag' );
 		var label = item.data( 'label' );
-		var template = $.isEmpty( item.data( 'template' ) ) ? undefined : item.data( 'template' );
+		var template = WEF_Utils.isEmpty( item.data( 'template' ) ) ? undefined : item.data( 'template' );
 
 		if ( typeof label === 'undefined' ) {
 			label = code;
@@ -5566,7 +5569,7 @@ WEF_EditorForm = function( originalTitle, html, i18n, currentPageItem, editDefer
 				datatype: qualifier.data( 'datatype' ),
 				label: qualifier.data( 'label' ),
 			} );
-			if ( $.isEmpty( qDefinition.label ) ) {
+			if ( WEF_Utils.isEmpty( qDefinition.label ) ) {
 				qDefinition.label = qualifier.data( 'code' );
 			}
 			if ( qualifier.data( 'as-column' ) === true ) {
@@ -5773,7 +5776,7 @@ WEF_Editors_Registry = function() {
 };
 
 WEF_Editors_Registry.prototype.registerEditor = function( classEntityId, wef_editor ) {
-	if ( $.isEmpty( classEntityId ) ) {
+	if ( WEF_Utils.isEmpty( classEntityId ) ) {
 		throw new Error( 'Illegal argument: classEntityId not provided' );
 	}
 	if ( !( wef_editor instanceof WEF_Editor ) ) {

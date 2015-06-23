@@ -2059,7 +2059,7 @@ window.WEF_ExternalLinks = function() {
 					dataType: 'jsonp',
 					success: function( data ) {
 						viafFillCheckButtons.empty();
-						if ( $.isEmpty( data.result ) ) {
+						if ( WEF_Utils.isEmpty( data.result ) ) {
 							return;
 						}
 						$.each( data.result, function( index, entry ) {
@@ -2361,7 +2361,7 @@ WEF_ExternalLinks.prototype.createDictinaryArticleItem = function( options, page
 		type: "item",
 		labels: {},
 	};
-	var wikidataTitlePrefix = $.isEmpty( options.wikidataTitlePrefix ) ? options.pageTitlePrefix : options.wikidataTitlePrefix;
+	var wikidataTitlePrefix = WEF_Utils.isEmpty( options.wikidataTitlePrefix ) ? options.pageTitlePrefix : options.wikidataTitlePrefix;
 	data.labels[options.contentLanguage] = {
 		language: options.contentLanguage,
 		value: wikidataTitlePrefix + ' / ' + articleTitle,
@@ -2593,7 +2593,7 @@ options ) {
 				var item = ui.item;
 				var input = $( event.target );
 
-				if ( $.isEmpty( item ) || $.isEmpty( item.articleTitle ) ) {
+				if ( WEF_Utils.isEmpty( item ) || WEF_Utils.isEmpty( item.articleTitle ) ) {
 					input.val( '' );
 					input.removeData( DATA_ENTITY_ID );
 					input.removeData( DATA_ENTITY_LABEL );
@@ -2613,11 +2613,11 @@ options ) {
 				} ).done(
 						function( entities ) {
 
-							if ( !$.isEmpty( entities ) ) {
+							if ( !WEF_Utils.isEmpty( entities ) ) {
 								entityId = WEF_Utils.getFirstObjectKey( entities );
 							}
 
-							if ( !$.isEmpty( entityId ) && entityId !== -1 && entityId !== "-1" ) {
+							if ( !WEF_Utils.isEmpty( entityId ) && entityId !== -1 && entityId !== "-1" ) {
 								dictinaryArticleInput.val( entityId );
 								wef_LabelsCache.receiveLabels();
 								return;

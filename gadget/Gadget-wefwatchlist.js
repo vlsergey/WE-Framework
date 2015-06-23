@@ -110,7 +110,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 			"use strict";
 
 			var nextUrl = '/w/api.php?format=json&action=query&list=watchlistraw&wrnamespace=0&wrlimit=50';
-			if ( !$.isEmpty( wrcontinue ) ) {
+			if ( !WEF_Utils.isEmpty( wrcontinue ) ) {
 				nextUrl = nextUrl + '&wrcontinue=' + encodeURIComponent( wrcontinue );
 				jsMsg( "Запрос содержимого локального списка наблюдения: начиная с «" + wrcontinue + "»" );
 			} else {
