@@ -958,7 +958,7 @@ window.WEF_ExternalLinks = function() {
 			text: false,
 			label: 'Search on enciclopedia.cat',
 			click: searchClickF( [ 'cawiki', 'enwiki' ], function( title ) {
-				return 'http://www.enciclopedia.cat/enciclopèdies/cerca?s.q=' + encodeURIComponent( title ) + '&s.book=gec&search-go=Cerca';
+				return 'http://www.enciclopedia.cat/search/work/445460/' + encodeURIComponent( title );
 			} ),
 		} ],
 		check: /^\d{7}$/,
