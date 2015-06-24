@@ -8,7 +8,7 @@
 ( function() {
 
 	/** @const */
-	var version = 1432457710;
+	var version = 1435165398;
 
 	try {
 		mw.loader.addSource( {
