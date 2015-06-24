@@ -1941,6 +1941,7 @@ window.WEF_ExternalLinks = function() {
 		$( "div#mw-content-text" ).after( dialogForm );
 		dialogForm.dialog( {
 			autoOpen: false,
+			autoResize: true,
 			height: 'auto',
 			width: externalLinksEdit.dialogWidth,
 			modal: false,
@@ -1991,8 +1992,19 @@ window.WEF_ExternalLinks = function() {
 					// recenter
 					tabs.tabs();
 					tabs.tabs( "destroy" );
-					tabs.tabs();
+					tabs.tabs( {
+						activate: function( event, ui ) {
+							dialogForm.dialog( {
+								height: "auto",
+								autoResize: true,
+							} );
+						}
+					} );
 					tabs.show();
+					dialogForm.dialog( {
+						height: "auto",
+						autoResize: true,
+					} );
 					dialogForm.dialog( "option", "position", "center" );
 				};
 
@@ -2306,7 +2318,8 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q867541, // Encyclopædia Britannica, 11th edition (1911)
 		d.Q20089963, // New International Encyclopedia (1902—05)
 		// us
-		d.Q12912667, // Appletons' Cyclopædia of American Biography (1887—1901)
+		d.Q12912667, // Appletons' Cyclopædia of American Biography
+		// (1887—1901)
 		d.Q19077875, // The American Cyclopædia (1879)
 		d.Q19037977, // American Medical Biographies (1920)
 		],
