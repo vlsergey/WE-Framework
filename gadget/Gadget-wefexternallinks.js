@@ -1242,6 +1242,22 @@ window.WEF_ExternalLinks = function() {
 		check: regexpPath,
 		template: 'https://$1.livejournal.com/',
 	} );
+	// Catholic Encyclopedia
+	this.definitions.Q302556 = new WEF_Definition( {
+		code: 'P1343[Q302556]/P248',
+		datatype: 'wikibase-item',
+		flag: 'us',
+		label: 'Q302556',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'de',
+			dictionaryEntityId: 'Q302556',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'Catholic Encyclopedia (1913)',
+			pageTitleSplitChar: '/',
+			project: 'enwikisource',
+			wikidataTitlePrefix: 'CE',
+		} ),
+	} );
 	this.definitions.Q372827 = new WEF_Definition( {
 		code: 'P553[Q372827]/P554',
 		label: 'Q372827',
@@ -2318,10 +2334,11 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q867541, // Encyclopædia Britannica, 11th edition (1911)
 		d.Q20089963, // New International Encyclopedia (1902—05)
 		// us
-		d.Q12912667, // Appletons' Cyclopædia of American Biography
-		// (1887—1901)
 		d.Q19077875, // The American Cyclopædia (1879)
 		d.Q19037977, // American Medical Biographies (1920)
+		d.Q12912667, // Appletons' Cyclopædia of American Biography
+		// (1887—1901)
+		d.Q302556, // Catholic Encyclopedia (1913)
 		],
 	} );
 	this.groups.push( {
