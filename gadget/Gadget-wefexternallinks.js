@@ -1354,6 +1354,22 @@ window.WEF_ExternalLinks = function() {
 			wikidataTitlePrefix: 'EB-11',
 		} ),
 	} );
+	// 1922 Encyclopædia Britannica
+	this.definitions.Q15987490 = new WEF_Definition( {
+		code: 'P1343[Q15987490]/P248',
+		datatype: 'wikibase-item',
+		flag: 'uk',
+		label: 'Q15987490',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'en',
+			dictionaryEntityId: 'Q15987490',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: '1922 Encyclopædia Britannica',
+			pageTitleSplitChar: '/',
+			project: 'enwikisource',
+			wikidataTitlePrefix: 'EB-12',
+		} ),
+	} );
 	this.definitions.Q1002972 = new WEF_Definition( {
 		code: 'P553[Q1002972]/P554',
 		label: 'Q1002972',
@@ -2332,6 +2348,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		// uk
 		d.Q20096917, // Encyclopædia Britannica, Ninth Edition (1875–1889)
 		d.Q867541, // Encyclopædia Britannica, 11th edition (1911)
+		d.Q15987490, // Encyclopædia Britannica, 12th edition (1922)
 		d.Q20089963, // New International Encyclopedia (1902—05)
 		// us
 		d.Q19077875, // The American Cyclopædia (1879)
