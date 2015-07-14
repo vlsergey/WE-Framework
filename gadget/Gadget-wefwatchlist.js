@@ -1,6 +1,11 @@
 if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 	( function() {
 
+		var notifyOptions = {
+			autoHide: true,
+			tag: 'WEF-Watchlist',
+		}
+
 		var i18n = {
 			errorObtainCentralAuthToken: 'Произошла ошибка при получении нового токена глобальной аутентификации',
 			errorObtainEditToken: 'Произошла ошибка при получении нового токена редактирования',
@@ -39,7 +44,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 			"use strict";
 			var d = $.Deferred();
 
-			jsMsg( i18n.actionObtainCentralAuthToken );
+			mw.notify( i18n.actionObtainCentralAuthToken, notifyOptions );
 			$.ajax( {
 				type: 'GET',
 				url: '/w/api.php?format=json&action=tokens&type=centralauth',
@@ -70,7 +75,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 			"use strict";
 			var d = $.Deferred();
 
-			jsMsg( i18n.actionObtainEditToken );
+			mw.notify( i18n.actionObtainEditToken, notifyOptions );
 			$.ajax( {
 				type: 'GET',
 				url: getWikidataApiPrefix() //
@@ -112,9 +117,9 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 			var nextUrl = '/w/api.php?format=json&action=query&list=watchlistraw&wrnamespace=0&wrlimit=50';
 			if ( !WEF_Utils.isEmpty( wrcontinue ) ) {
 				nextUrl = nextUrl + '&wrcontinue=' + encodeURIComponent( wrcontinue );
-				jsMsg( "Запрос содержимого локального списка наблюдения: начиная с «" + wrcontinue + "»" );
+				mw.notify( "Запрос содержимого локального списка наблюдения: начиная с «" + wrcontinue + "»", notifyOptions );
 			} else {
-				jsMsg( "Запрос содержимого локального списка наблюдения" );
+				mw.notify( "Запрос содержимого локального списка наблюдения", notifyOptions );
 			}
 
 			$.ajax( {
@@ -132,11 +137,10 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 					mw.log.warn( "List to get from Wikidata: " + titles.join( '|' ) );
 
 					var newWRcontinue = false;
-					if ( typeof result["query-continue"] !== 'undefined' //
-							&& typeof result["query-continue"] !== 'undefined' //
-							&& typeof result["query-continue"].watchlistraw !== 'undefined' //
-							&& typeof result["query-continue"].watchlistraw.wrcontinue !== 'undefined' ) {
-						newWRcontinue = result["query-continue"].watchlistraw.wrcontinue;
+					if ( typeof result["continue"] !== 'undefined' //
+							&& typeof result["continue"] !== 'undefined' //
+							&& typeof result["continue"].wrcontinue !== 'undefined' ) {
+						newWRcontinue = result["continue"].wrcontinue;
 					}
 					if ( newWRcontinue ) {
 						asyncGetWatchlistRaw( newWRcontinue );
@@ -190,7 +194,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 				getCentralAuthToken().done( function( firstCentralAuthToken ) {
 					getEditToken( firstCentralAuthToken, wlCopyPageTitle ).done( function( editToken ) {
 						getCentralAuthToken().done( function( secondCentralAuthToken ) {
-							jsMsg( "Сохранение списка наблюдения на Викиданных (элементов: " + qIds.length + ")" );
+							mw.notify( "Сохранение списка наблюдения на Викиданных (элементов: " + qIds.length + ")", notifyOptions );
 
 							var url = getWikidataApiPrefix() //
 									+ '&format=json' //
@@ -211,7 +215,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 										alert( i18n.errorEdit + ': ' + result.error.info );
 										return;
 									}
-									jsMsg( "Список наблюдения успешно сихнронизирован (элементов: " + qIds.length + ")" );
+									mw.notify( "Список наблюдения успешно сихнронизирован (элементов: " + qIds.length + ")", notifyOptions );
 								}
 							} );
 						} );
@@ -223,14 +227,14 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 		function syncWatchlist() {
 			"use strict";
 
-			jsMsg( i18n.statusSync );
+			mw.notify( i18n.statusSync, notifyOptions );
 			asyncGetWatchlistRaw( null );
 		}
 
 		function showChanges() {
 			"use strict";
 
-			jsMsg( i18n.actionObtain );
+			mw.notify( i18n.actionObtain, notifyOptions );
 			var wlCopyPageTitle = 'User:' + mw.config.get( 'wgUserName' ) + '/Watchlist/' + mw.config.get( 'wgDBname' );
 			var url = getWikidataApiPrefix() //
 					+ '&hideminor=' + mw.user.options.get( 'watchlisthideminor' ) //
@@ -246,7 +250,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 				dataType: 'xml',
 				success: function( result ) {
 
-					jsMsg( i18n.actionIntegrate );
+					mw.notify( i18n.actionIntegrate, notifyOptions );
 
 					var headers = {};
 					var changeList = $( '.mw-changeslist' );
@@ -287,7 +291,8 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 			"use strict";
 
 			var updatedString = jEntry.children( 'updated' ).text();
-			var updated = new Date( Date.parse( updatedString ) );
+			var tzOffset = parseInt( mw.user.options.get( 'timecorrection' ).split( '|' )[1], 10 ) + new Date().getTimezoneOffset();
+			var updated = new Date( Date.parse( updatedString ) + tzOffset * 60 * 1000 );
 			var date = updated.getDate() + ' ' + i18n.monthes[updated.getMonth()] + ' ' + updated.getFullYear();
 
 			if ( typeof headers[date] !== 'undefined' ) {
