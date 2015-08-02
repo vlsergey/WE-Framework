@@ -121,15 +121,16 @@ window.wef_ExternalLinks_i18n_ru = {
 		'P1258': 'Идентификатор Rotten Tomatoes должен начинаться с префикса «m/» для фильма, «tv/» для сериала или «celebrity/» для персон',
 		'P1315': 'Идентификатор NLA Persistent Identifier задаётся в числа до 10 цифр',
 		'P1361': 'Идентификатор Anime News Network должен начинаться с префикса «anime/», «company/», «manga/», «releases/» или «people/» и заканчиваться цифровым кодом',
+		'P2003': 'Идентификатор «Instagram» содержит недопустимые символы',
+		'P2013': 'Идентификатор «Facebook» содержит недопустимые символы',
 
-		'Q355': 'Идентификатор «Facebook» содержит недопустимые символы',
+
 		'Q866': 'Идентификатор «YouTube» содержит недопустимые символы',
 		'Q103204': 'Идентификатор «Flickr» содержит недопустимые символы',
 		'Q116933': 'Идентификатор «ВКонтакте» должен иметь форму id+цифры (например «id123456789»), иначе его не пропустит спам-лист',
 		'Q156376': 'Идентификатор «Vimeo» содержит недопустимые символы',
 		'Q171186': 'Идентификатор «Blogger» содержит недопустимые символы',
 		'Q183718': 'Идентификатор Last FM содержит недопустимые символы',
-		'Q209330': 'Идентификатор «Instagram» содержит недопустимые символы',
 		'Q219523': 'Идентификатор «Живого журнала» содержит недопустимые символы',
 		'Q372827': 'Идентификатор «Rutube» содержит недопустимые символы',
 		'Q384060': 'Идентификатор «Tumblr» содержит недопустимые символы',
@@ -1114,9 +1115,29 @@ window.WEF_ExternalLinks = function() {
 		template: 'http://wbo.llgc.org.uk/en/$1.html',
 		qualifiers: [ d.P50, d.P958 ],
 	} );
-
-	this.definitions.Q355 = new WEF_Definition( {
-		code: 'P553[Q355]/P554',
+	this.definitions.P2002 = new WEF_Definition( {
+		code: 'P2002',
+		label: 'Q918',
+		normalize: function( id ) {
+			return id.replace( /^https?:\/\/(www\.)?twitter\.com\/(.*)$/i, '$2' );
+		},
+		url: function( id ) {
+			return 'https://twitter.com/' + id;
+		}
+	} );
+	this.definitions.P2003 = new WEF_Definition( {
+		code: 'P2003',
+		label: 'Q209330',
+		normalize: function( id ) {
+			return id.replace( /^https?:\/\/(www\.)?instagram\.com\/(.+)$/i, '$2' );
+		},
+		check: regexpPath,
+		url: function( id ) {
+			return 'http://instagram.com/' + id;
+		},
+	} );
+	this.definitions.P2013 = new WEF_Definition( {
+		code: 'P2013',
 		label: 'Q355',
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?facebook\.com\/(.+)$/i, '$2' );
@@ -1126,6 +1147,7 @@ window.WEF_ExternalLinks = function() {
 			return 'https://www.facebook.com/' + id;
 		},
 	} );
+
 	this.definitions.Q356 = new WEF_Definition( {
 		code: 'P553[Q356]/P554',
 		label: 'Q356',
@@ -1140,16 +1162,6 @@ window.WEF_ExternalLinks = function() {
 		check: regexpPath,
 		url: function( id ) {
 			return 'https://youtube.com/' + id;
-		}
-	} );
-	this.definitions.Q918 = new WEF_Definition( {
-		code: 'P553[Q918]/P554',
-		label: 'Q918',
-		normalize: function( id ) {
-			return id.replace( /^https?:\/\/(www\.)?twitter\.com\/(.*)$/i, '$2' );
-		},
-		url: function( id ) {
-			return 'https://twitter.com/' + id;
 		}
 	} );
 	this.definitions.Q40629 = new WEF_Definition( {
@@ -1224,17 +1236,6 @@ window.WEF_ExternalLinks = function() {
 			return 'http://www.lastfm.ru/music/' + id;
 		},
 		qualifiers: [],
-	} );
-	this.definitions.Q209330 = new WEF_Definition( {
-		code: 'P553[Q209330]/P554',
-		label: 'Q209330',
-		normalize: function( id ) {
-			return id.replace( /^https?:\/\/(www\.)?instagram\.com\/(.+)$/i, '$2' );
-		},
-		check: regexpPath,
-		url: function( id ) {
-			return 'http://instagram.com/' + id;
-		},
 	} );
 	this.definitions.Q219523 = new WEF_Definition( {
 		code: 'P553[Q219523]/P554',
@@ -2229,14 +2230,14 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q798490, // ya.ru
 		d.Q171186, // blogspot.com
 		d.Q4037665, // dudu.com
-		d.Q355, // facebook.com
+		d.P2013, // facebook.com
 		d.Q356, // plus.google.com
 		d.Q4043051, // liveinternet.ru
 		d.Q40629, // myspace.com
 		d.Q17144398, // qroom.ru
 		d.Q1002972, // spring.me
 		d.Q384060, // tumblr.com
-		d.Q918, // twitter.com
+		d.P2002, // twitter.com
 		],
 	} );
 	this.groups.push( {
@@ -2254,7 +2255,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		fields: [//
 		d.P373, // commons.wikimedia.org
 		d.Q103204, // flickr.com
-		d.Q209330, // instagram.com
+		d.P2003, // instagram.com
 		d.Q6883832, // mixcloud.com
 		d.Q17117201, // promodj.com
 		d.Q372827, // rutube.ru
