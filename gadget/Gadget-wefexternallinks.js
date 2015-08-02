@@ -1250,7 +1250,7 @@ window.WEF_ExternalLinks = function() {
 		flag: 'us',
 		label: 'Q302556',
 		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
-			contentLanguage: 'de',
+			contentLanguage: 'en',
 			dictionaryEntityId: 'Q302556',
 			mainTopicEntityId: entityId,
 			pageTitlePrefix: 'Catholic Encyclopedia (1913)',
