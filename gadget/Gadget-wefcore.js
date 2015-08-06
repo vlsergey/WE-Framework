@@ -1339,8 +1339,8 @@ WEF_LabelsCache = function() {
 	 * @param key
 	 *            {string}
 	 * @param listener
-	 *            {function(string,string)}callback to be called (may be several
-	 *            times) after cache or Wikidata retrieve
+	 *            {function(string,string)} callback to be called (may be
+	 *            several times) after cache or Wikidata retrieve
 	 * @return {string} immediatly available value
 	 */
 	this.getOrQueue = function( key, listener ) {
@@ -1965,7 +1965,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				input.val( newDataValue.value.text );
 			};
 			this.hasValue = function() {
-				return !WEF_Utils.isEmpty( input.val() );
+				return !WEF_Utils.isEmpty( input.val().trim() );
 			};
 			this.getDataValue = function() {
 				if ( !this.hasValue() ) {
@@ -1974,7 +1974,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				return {
 					type: 'monolingualtext',
 					value: {
-						text: input.val(),
+						text: input.val() == null ? null : input.val().trim(),
 						language: langSelect.val(),
 					},
 				};
@@ -2935,6 +2935,11 @@ WEF_ItemInput = function( options ) {
 						item.desc = 'a.k.a.: ' + entity.aliases.join( '; ' );
 					}
 					list.push( item );
+					wef_LabelsCache.getOrQueue( entity.id, new function( label, description ) {
+						item.label = label;
+						if ( !WEF_Utils.isEmpty( description ) )
+							item.desc = description;
+					} );
 				} );
 
 				// clear before render
