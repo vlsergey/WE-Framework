@@ -1,0 +1,13 @@
+.wef_documentEditor_dialog table, .wef_documentEditor_dialog tbody,
+	.wef_documentEditor_dialog tr, .wef_documentEditor_dialog th,
+	.wef_documentEditor_dialog td {
+	padding: 0;
+	margin: 0;
+	line-height: 1.2em;
+}
+
+.wef_documentEditor_dialog .wef_fieldset {
+	margin: 0.1em;
+	padding: 0.1em;
+	line-height: 0.75em;
+}
