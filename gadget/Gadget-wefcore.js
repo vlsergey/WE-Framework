@@ -1381,6 +1381,18 @@ WEF_LabelsCache = function() {
 	};
 
 	/**
+	 * Add key to the queue if his label is missing from cache
+	 * 
+	 * @param key
+	 *            {string}
+	 */
+	this.queueForLabel = function( key ) {
+		if ( !isValid( cacheLabels[key] ) ) {
+			queue.push( key );
+		}
+	};
+
+	/**
 	 * Add key to the queue if his description is missing from cache
 	 * 
 	 * @param key
@@ -2899,16 +2911,18 @@ WEF_ItemInput = function( options ) {
 		input.change();
 	};
 
-	var translatableDesciptions = [];
+	/* currently displayed items */
+	var displayedItems = [];
 	function labelsCacheListener() {
-		$.each( translatableDesciptions, function( index, desc ) {
-			var id = desc.data( 'entity-id' );
-			if ( !WEF_Utils.isEmpty( id ) ) {
-				var text = wef_LabelsCache.getDescription( id, false );
-				if ( !WEF_Utils.isEmpty( id ) ) {
-					desc.text( text );
-				}
-			}
+		$.each( displayedItems,
+		/**
+		 * @param {Number}
+		 *            index
+		 * @param {WEF_ItemInput_Item}
+		 *            item
+		 */
+		function( index, item ) {
+			item.onWefLabelsCacheUpdate();
 		} );
 	}
 
@@ -2925,26 +2939,12 @@ WEF_ItemInput = function( options ) {
 			} ).done( function( result ) {
 				var list = [];
 				$.each( result.search, function( index, entity ) {
-					var item = {
-						label: entity.label,
-						value: entity.id,
-					};
-					if ( typeof entity.description !== 'undefined' ) {
-						item.desc = entity.description;
-					} else if ( $.isArray( entity.aliases ) ) {
-						item.desc = 'a.k.a.: ' + entity.aliases.join( '; ' );
-					}
+					var item = new WEF_ItemInput_Item( entity.id, entity.label );
 					list.push( item );
-					wef_LabelsCache.getOrQueue( entity.id, new function( label, description ) {
-						item.label = label;
-						if ( !WEF_Utils.isEmpty( description ) )
-							item.desc = description;
-					} );
 				} );
 
 				// clear before render
-				translatableDesciptions = [];
-
+				displayedItems = [];
 				response( list );
 
 				// just in case everything in cache already
@@ -2959,14 +2959,15 @@ WEF_ItemInput = function( options ) {
 			$( wef_LabelsCache ).bind( 'change', labelsCacheListener );
 		},
 		select: function( event, ui ) {
+			/** @type {WEF_ItemInput_Item} */
 			var item = ui.item;
 			var input = $( event.target );
-			input.data( DATA_ENTITY_ID, item.value );
+			input.data( DATA_ENTITY_ID, item.entityId );
 			input.data( DATA_ENTITY_LABEL, item.label );
 			input.val( item.label );
 
 			if ( typeof item.desc !== 'undefined' ) {
-				input.attr( 'title', item.desc );
+				input.attr( 'title', item.description );
 			} else {
 				input.removeAttr( 'title' );
 			}
@@ -2976,17 +2977,15 @@ WEF_ItemInput = function( options ) {
 		},
 	} );
 
-	input.data( 'autocomplete' )._renderItem = function( ul, item ) {
-		var a = $( '<a><strong>' + item.label + '</strong> <span style="color: darkgray;">' + item.value + '</span><br>' + '</a>' );
-		var desc = $( document.createElement( 'span' ) ).appendTo( a );
-		if ( !WEF_Utils.isEmpty( item.desc ) ) {
-			desc.text( item.desc );
-		} else {
-			desc.data( 'entity-id', item.value );
-			wef_LabelsCache.queueForDescription( item.value );
-			translatableDesciptions.push( desc );
-		}
-		return $( document.createElement( 'li' ) ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
+	input.data( 'autocomplete' )._renderItem =
+	/**
+	 * @param ul
+	 * @param {WEF_ItemInput_Item}
+	 *            item
+	 */
+	function( ul, item ) {
+		displayedItems.push( item );
+		return $( document.createElement( 'li' ) ).append( item.a ).data( 'item.autocomplete', item ).appendTo( ul );
 	};
 
 	input.focus( function() {
@@ -3030,6 +3029,42 @@ WEF_ItemInput = function( options ) {
 	this.change = input.change.bind( input );
 	this.keyup = input.keyup.bind( input );
 };
+
+WEF_ItemInput_Item = function( entityId, label ) {
+	this.entityId = entityId;
+	this.label = label;
+	this.description = '';
+
+	this._labelWrapper = $( '<strong></strong>' );
+	this._labelWrapper.text( label );
+
+	this._entityIdWrapper = $( '<span style="color: darkgray;">' + entityId + '</span>' );
+	this._descriptionWrapper = $( '<span></span>' );
+
+	var space = $( '<span> </span>' );
+	var br = $( '<br>' );
+
+	var a = this.a = $( '<a></a>' );
+	a.append( this._labelWrapper );
+	a.append( space );
+	a.append( this._entityIdWrapper );
+	a.append( br );
+
+	/*
+	 * do not add self as listener to wef_LabelsCache, because self is fast to
+	 * destroy. translatableDesciptions from WEF_ItemInput is used for this
+	 */
+	wef_LabelsCache.queueForLabel( entityId );
+	wef_LabelsCache.queueForDescription( entityId );
+}
+
+WEF_ItemInput_Item.prototype.onWefLabelsCacheUpdate = function() {
+	this.label = wef_LabelsCache.getLabel( this.entityId, true );
+	this._labelWrapper.text( this.label );
+
+	this.description = wef_LabelsCache.getDescription( this.entityId, true );
+	this._descriptionWrapper.text( this.description );
+}
 
 /**
  * Creates select field that has predefined number of values, but also support
