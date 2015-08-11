@@ -292,7 +292,7 @@
 
 		/** @return {string} */
 		var entityId = mw.config.get( 'wgWikibaseItemId' );
-		if ( typeof entityId === 'undefined' ) {
+		if ( typeof entityId === 'undefined' || entityId == null ) {
 			return;
 		}
 
