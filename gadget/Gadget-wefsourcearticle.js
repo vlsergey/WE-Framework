@@ -100,5 +100,7 @@ mw.loader.using( [ //
 	var editor = new WEF_Editor( wef_SourceArticleEditor_html );
 	editor.localize( 'wef_SourceArticleEditor_i18n_' );
 	editor.addEditButtons();
+	
 	window.wef_editors_registry.registerEditor( 'Q191067', editor );
+	window.wef_editors_registry.registerEditor( 'Q13442814', editor );
 } );
