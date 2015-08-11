@@ -76,5 +76,6 @@ mw.loader.using( [ //
 	var editor = new WEF_Editor( wef_WorkEditor_html );
 	editor.localize( 'wef_WorkEditor_i18n_' );
 	editor.addEditButtons();
+	window.wef_editors_registry.registerEditor( 'Q2061228', editor );
 	window.wef_editors_registry.registerEditor( 'Q740464', editor );
 } );
