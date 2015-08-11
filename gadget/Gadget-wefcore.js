@@ -380,6 +380,12 @@ WEF_Utils.appendToNamedMap = function( element, mapName, key, obj ) {
 	element[mapName][key].push( obj );
 };
 
+WEF_Utils.assertCorrectEntityId = function( entityId ) {
+	if ( WEF_Utils.isEmpty( entityId ) || !/^[PQ]\d+$/.test( entityId ) ) {
+		throw new Error( 'Incorrect entity ID: ' + entityId );
+	}
+};
+
 WEF_Utils.convertGregorianToJulian = function( year, month, day ) {
 	"use strict";
 	return WEF_Utils._convertJulianDayToJulian( WEF_Utils._convertGregorianToJulianDay( Number( year ), Number( month ), Number( day ), true ) );
@@ -574,6 +580,35 @@ WEF_Utils.getDefaultLanguageCode = ( function() {
 		return defaultLanguageCode;
 	};
 } )();
+
+WEF_Utils.getEntityIdFromClaim = function( claim ) {
+	if ( typeof claim == 'undefined' )
+		return;
+
+	return WEF_Utils.getEntityIdFromSnak( claim.mainsnak );
+};
+
+WEF_Utils.getEntityIdFromSnak = function( snak ) {
+	if ( typeof snak === 'undefined' // 
+			|| typeof snak.datavalue === 'undefined' // 
+			|| typeof snak.datavalue.value === 'undefined'// 
+			|| typeof snak.datavalue.value['entity-type'] === 'undefined'// 
+			|| typeof snak.datavalue.value['numeric-id'] === 'undefined'// 
+	)
+		return;
+
+	var entityType = snak.datavalue.value['entity-type'];
+	var numericId = snak.datavalue.value['numeric-id'];
+
+	switch ( entityType ) {
+	case 'property':
+		return 'P' + numericId;
+	case 'item':
+		return 'Q' + numericId;
+	default:
+		throw new Error( "Unknown entity type: " + entityType );
+	}
+};
 
 /** @return {string} */
 WEF_Utils.getEntityId = function() {
@@ -1265,16 +1300,6 @@ WEF_LabelsCache = function() {
 	};
 
 	/**
-	 * @param key
-	 *            {string} key to check
-	 */
-	var assertKeyCorrect = function( key ) {
-		if ( !/^[PQ]\d+$/.test( key ) ) {
-			throw new Error( 'Incorrect key: ' + key );
-		}
-	};
-
-	/**
 	 * Return cached value
 	 * 
 	 * @param key
@@ -1284,7 +1309,7 @@ WEF_LabelsCache = function() {
 	 * @returns {string}
 	 */
 	this.getLabel = function( key, returnKeyIfEmpty ) {
-		assertKeyCorrect( key );
+		WEF_Utils.assertCorrectEntityId( key );
 
 		var cached = cacheLabels[key];
 		if ( typeof cached !== 'undefined' ) {
@@ -1311,7 +1336,7 @@ WEF_LabelsCache = function() {
 	 * @returns {string}
 	 */
 	this.getDescription = function( key, returnKeyIfEmpty ) {
-		assertKeyCorrect( key );
+		WEF_Utils.assertCorrectEntityId( key );
 
 		var cached = cacheDescriptions[key];
 		if ( typeof cached !== 'undefined' ) {
@@ -1344,7 +1369,7 @@ WEF_LabelsCache = function() {
 	 * @return {string} immediatly available value
 	 */
 	this.getOrQueue = function( key, listener ) {
-		assertKeyCorrect( key );
+		WEF_Utils.assertCorrectEntityId( key );
 		if ( typeof listener !== 'function' ) {
 			throw new Error( 'Listener not specified or not a function' );
 		}
@@ -1516,7 +1541,34 @@ WEF_LabelsCache = function() {
 			onUpdate();
 		}
 	};
+
+	// wef_i18n_label / wef_i18n_label_pending support
+	$( this ).bind( 'change', function() {
+		$( ".wef_i18n_label" ).each( function( index, item ) {
+			var jqItem = $( item );
+			var entityId = jqItem.data( 'wef_i18n_entityId' );
+			if ( !WEF_Utils.isEmpty( entityId ) ) {
+				var newLabel = wef_LabelsCache.getLabel( entityId, false );
+				if ( !WEF_Utils.isEmpty( newLabel ) ) {
+					jqItem.text( newLabel );
+				}
+			}
+		} );
+	} );
 };
+
+WEF_LabelsCache.prototype.localizeLabel = function( jqElement, entityId ) {
+	WEF_Utils.assertCorrectEntityId( entityId );
+
+	jqElement.addClass( 'wef_i18n_label' );
+	jqElement.data( 'wef_i18n_entityId', entityId );
+
+	this.queueForLabel( entityId );
+	var newLabel = this.getLabel( entityId, WEF_Utils.isEmpty( jqElement.text() ) );
+	if ( !WEF_Utils.isEmpty( newLabel ) )
+		jqElement.text( newLabel );
+};
+
 var wef_LabelsCache = window.wef_LabelsCache = new WEF_LabelsCache();
 
 /**
@@ -3453,19 +3505,8 @@ window.WEF_filterClaims = function( definition, claims ) {
 	if ( isQualifierEditor ) {
 		var result = [];
 		$.each( byPropertyId, function( index, claim ) {
-			if ( typeof claim === 'undefined' // 
-					|| typeof claim.mainsnak === 'undefined' // 
-					|| typeof claim.mainsnak.datavalue === 'undefined' // 
-					|| typeof claim.mainsnak.datavalue.value === 'undefined'// 
-					|| typeof claim.mainsnak.datavalue.value['entity-type'] === 'undefined'// 
-					|| typeof claim.mainsnak.datavalue.value['numeric-id'] === 'undefined'// 
-			)
-				return;
-
-			var entityType = claim.mainsnak.datavalue.value['entity-type'];
-			var numericId = claim.mainsnak.datavalue.value['numeric-id'];
-
-			if ( entityType === 'item' && ( 'Q' + numericId ) === propertyValue ) {
+			var entityId = WEF_Utils.getEntityIdFromClaim( claim );
+			if ( typeof entityId != 'undefined' && entityId === propertyValue ) {
 				result.push( claim );
 			}
 		} );
