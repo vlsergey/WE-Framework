@@ -589,16 +589,22 @@ WEF_Utils.getEntityIdFromClaim = function( claim ) {
 };
 
 WEF_Utils.getEntityIdFromSnak = function( snak ) {
-	if ( typeof snak === 'undefined' // 
-			|| typeof snak.datavalue === 'undefined' // 
-			|| typeof snak.datavalue.value === 'undefined'// 
-			|| typeof snak.datavalue.value['entity-type'] === 'undefined'// 
-			|| typeof snak.datavalue.value['numeric-id'] === 'undefined'// 
+	if ( typeof snak === 'undefined' )
+		return;
+
+	return WEF_Utils.getEntityIdFromDatavalue( snak.datavalue );
+};
+
+WEF_Utils.getEntityIdFromDatavalue = function( datavalue ) {
+	if ( typeof datavalue === 'undefined' // 
+			|| typeof datavalue.value === 'undefined'// 
+			|| typeof datavalue.value['entity-type'] === 'undefined'// 
+			|| typeof datavalue.value['numeric-id'] === 'undefined'// 
 	)
 		return;
 
-	var entityType = snak.datavalue.value['entity-type'];
-	var numericId = snak.datavalue.value['numeric-id'];
+	var entityType = datavalue.value['entity-type'];
+	var numericId = datavalue.value['numeric-id'];
 
 	switch ( entityType ) {
 	case 'property':
@@ -1526,7 +1532,7 @@ WEF_LabelsCache = function() {
 			$.ajax( {
 				url: WEF_Utils.getWikidataApiPrefix() //
 						+ '&action=wbgetentities' //
-						+ '&props=' + encodeURIComponent( 'labels|descriptions' ) // 
+						+ '&props=' + encodeURIComponent( 'labels|descriptions|aliases' ) // 
 						+ '&languages=' + languagesString // 
 						+ '&ids=' + encodeURIComponent( idsString ),
 				dataType: 'json',
@@ -1542,7 +1548,7 @@ WEF_LabelsCache = function() {
 		}
 	};
 
-	// wef_i18n_label / wef_i18n_label_pending support
+	// wef_i18n_label / wef_i18n_description support
 	$( this ).bind( 'change', function() {
 		$( ".wef_i18n_label" ).each( function( index, item ) {
 			var jqItem = $( item );
@@ -1554,7 +1560,29 @@ WEF_LabelsCache = function() {
 				}
 			}
 		} );
+		$( ".wef_i18n_description" ).each( function( index, item ) {
+			var jqItem = $( item );
+			var entityId = jqItem.data( 'wef_i18n_entityId' );
+			if ( !WEF_Utils.isEmpty( entityId ) ) {
+				var newDescription = wef_LabelsCache.getDescription( entityId, false );
+				if ( !WEF_Utils.isEmpty( newDescription ) ) {
+					jqItem.text( newDescription );
+				}
+			}
+		} );
 	} );
+};
+
+WEF_LabelsCache.prototype.localizeDescription = function( jqElement, entityId ) {
+	WEF_Utils.assertCorrectEntityId( entityId );
+
+	jqElement.addClass( 'wef_i18n_description' );
+	jqElement.data( 'wef_i18n_entityId', entityId );
+
+	this.queueForDescription( entityId );
+	var newDescription = this.getDescription( entityId, WEF_Utils.isEmpty( jqElement.text() ) );
+	if ( !WEF_Utils.isEmpty( newDescription ) )
+		jqElement.text( newDescription );
 };
 
 WEF_LabelsCache.prototype.localizeLabel = function( jqElement, entityId ) {
@@ -2799,7 +2827,10 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			var input = new inputClass().appendTo( $( document.createElement( 'td' ) ).addClass( 'wef_wikibase-item_td_input' ).appendTo( tr ) );
 
 			this.setDataValue = function( newDataValue ) {
-				input.val( 'Q' + newDataValue.value['numeric-id'] );
+				this.setDataValueImpl( WEF_Utils.getEntityIdFromDatavalue( newDataValue ) );
+			};
+			this.setDataValueImpl = function( entityId ) {
+				input.val( entityId );
 			};
 
 			this.hasValue = function() {
@@ -2963,21 +2994,6 @@ WEF_ItemInput = function( options ) {
 		input.change();
 	};
 
-	/* currently displayed items */
-	var displayedItems = [];
-	function labelsCacheListener() {
-		$.each( displayedItems,
-		/**
-		 * @param {Number}
-		 *            index
-		 * @param {WEF_ItemInput_Item}
-		 *            item
-		 */
-		function( index, item ) {
-			item.onWefLabelsCacheUpdate();
-		} );
-	}
-
 	input.autocomplete( {
 		source: function( request, response ) {
 			var term = request.term;
@@ -2995,31 +3011,27 @@ WEF_ItemInput = function( options ) {
 					list.push( item );
 				} );
 
-				// clear before render
-				displayedItems = [];
 				response( list );
 
 				// just in case everything in cache already
-				labelsCacheListener();
 				wef_LabelsCache.receiveLabels();
 			} );
-		},
-		close: function() {
-			$( wef_LabelsCache ).unbind( 'change', labelsCacheListener );
-		},
-		open: function() {
-			$( wef_LabelsCache ).bind( 'change', labelsCacheListener );
 		},
 		select: function( event, ui ) {
 			/** @type {WEF_ItemInput_Item} */
 			var item = ui.item;
 			var input = $( event.target );
-			input.data( DATA_ENTITY_ID, item.entityId );
-			input.data( DATA_ENTITY_LABEL, item.label );
-			input.val( item.label );
 
-			if ( typeof item.desc !== 'undefined' ) {
-				input.attr( 'title', item.description );
+			var entityId = item.entityId;
+			var label = wef_LabelsCache.getLabel( entityId, true );
+			var description = wef_LabelsCache.getDescription( entityId, false );
+
+			input.data( DATA_ENTITY_ID, entityId );
+			input.data( DATA_ENTITY_LABEL, label );
+			input.val( label );
+
+			if ( !WEF_Utils.isEmpty( description ) ) {
+				input.attr( 'title', description );
 			} else {
 				input.removeAttr( 'title' );
 			}
@@ -3036,7 +3048,6 @@ WEF_ItemInput = function( options ) {
 	 *            item
 	 */
 	function( ul, item ) {
-		displayedItems.push( item );
 		return $( document.createElement( 'li' ) ).append( item.a ).data( 'item.autocomplete', item ).appendTo( ul );
 	};
 
@@ -3084,39 +3095,25 @@ WEF_ItemInput = function( options ) {
 
 WEF_ItemInput_Item = function( entityId, label ) {
 	this.entityId = entityId;
-	this.label = label;
-	this.description = '';
 
-	this._labelWrapper = $( '<strong></strong>' );
-	this._labelWrapper.text( label );
+	var labelWrapper = $( '<strong></strong>' );
+	wef_LabelsCache.localizeLabel( labelWrapper, entityId );
 
-	this._entityIdWrapper = $( '<span style="color: darkgray;">' + entityId + '</span>' );
-	this._descriptionWrapper = $( '<span></span>' );
+	var entityIdWrapper = $( '<span style="color: darkgray;">' + entityId + '</span>' );
+
+	var descriptionWrapper = $( '<span></span>' );
+	wef_LabelsCache.localizeDescription( descriptionWrapper, entityId );
 
 	var space = $( '<span> </span>' );
 	var br = $( '<br>' );
 
 	var a = this.a = $( '<a></a>' );
-	a.append( this._labelWrapper );
+	a.append( labelWrapper );
 	a.append( space );
-	a.append( this._entityIdWrapper );
+	a.append( entityIdWrapper );
 	a.append( br );
-
-	/*
-	 * do not add self as listener to wef_LabelsCache, because self is fast to
-	 * destroy. translatableDesciptions from WEF_ItemInput is used for this
-	 */
-	wef_LabelsCache.queueForLabel( entityId );
-	wef_LabelsCache.queueForDescription( entityId );
-}
-
-WEF_ItemInput_Item.prototype.onWefLabelsCacheUpdate = function() {
-	this.label = wef_LabelsCache.getLabel( this.entityId, true );
-	this._labelWrapper.text( this.label );
-
-	this.description = wef_LabelsCache.getDescription( this.entityId, true );
-	this._descriptionWrapper.text( this.description );
-}
+	a.append( descriptionWrapper );
+};
 
 /**
  * Creates select field that has predefined number of values, but also support

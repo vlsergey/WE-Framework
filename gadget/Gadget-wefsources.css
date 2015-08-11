@@ -1,8 +1,8 @@
-.wefInsertSourceForm_input {
+.wefSelectOrFindSourceForm_input {
 	width: 100%;
 }
 
-.wefInsertSourceForm_list {
+.wefSelectOrFindSourceForm_list {
 	margin-top: 1em;
 	width: 100%;
 	height: 400px;
@@ -10,30 +10,34 @@
 	overflow-y: scroll;
 }
 
-.wefInsertSourceForm_list_item {
+.wefSelectOrFindSourceForm_list_item {
 	padding: 0.5em 1em;
 	text-align: left;
 	color: inherit !important;
 	width: calc(100% - 50px) !important;
 }
 
-.wefInsertSourceForm_list_item a {
+.wefSelectOrFindSourceForm_list_item a {
 	pointer-events: none;
 }
 
-.wefInsertSourceForm_list_item_id {
+.wefSelectOrFindSourceForm_list_item_id {
 	margin-left: 0.5em;
 	margin-right: 0.5em;
 	color: gray;
 	font-size: 80%;
 }
 
-.wefInsertSourceForm_list_item_parenthesis {
+.wefSelectOrFindSourceForm_list_item_parenthesis {
 	color: gray;
 	font-size: 80%;
 }
 
-.wefInsertSourceForm_list_item_types {
+.wefSelectOrFindSourceForm_list_item_types {
 	color: gray;
 	font-size: 80%;
+}
+
+.wefSelectOrFindSourceForm_tab_create_button {
+	padding: 0.5em 1em;
 }

@@ -3,44 +3,105 @@
 	/**
 	 * @class
 	 */
-	WEF_InsertSourceForm_List_Item = function( entityId, defaultLabel ) {
-		WEF_Utils.assertCorrectEntityId( entityId );
-		this.entityId = entityId;
+	WEF_SelectOrFindSourceForm = function() {
 
-		var htmlElement = this.htmlElement = $( '<div class="wefInsertSourceForm_list_item ui-button ui-corner-all">' );
-		htmlElement.data( 'WEF_InsertSourceForm_List_Item', this );
+		var form = this;
+		var html = this._html = $( '<div class="wefSelectOrFindSourceForm"></div>' );
 
-		var divDescription = $( '<div>' ).appendTo( htmlElement );
+		var tabs = this._tabs = $( '<div class="wefSelectOrFindSourceForm_tabs"></div>' ).appendTo( html );
+		var tabsList = $( '<ul class="wefSelectOrFindSourceForm_tabsList"></ul>' ).appendTo( tabs );
 
-		$( '<span class="wefInsertSourceForm_list_item_id"></span>' ).text( entityId ).appendTo( divDescription );
-		this.labelElement = $( '<span class="wefInsertSourceForm_list_item_label"></span>' ).text( defaultLabel ).appendTo( divDescription );
-		wef_LabelsCache.localizeLabel( this.labelElement, entityId );
+		{
+			$( '<li><a href="#wefSelectOrFindSourceForm_tab_lookup">Поиск</a></li>' ).appendTo( tabsList );
+			var tabLookup = $( '<div id="wefSelectOrFindSourceForm_tab_lookup" class="wefSelectOrFindSourceForm_tab">' ).appendTo( tabs );
 
-		$( '<span class="wefInsertSourceForm_list_item_parenthesis"></span>' ).text( ' (' ).appendTo( divDescription );
-		this.typesElement = $( '<span class="wefInsertSourceForm_list_item_types"></span>' ).appendTo( divDescription );
-		$( '<span class="wefInsertSourceForm_list_item_parenthesis"></span>' ).text( ')' ).appendTo( divDescription );
+			var input = this._input = $( '<input class="wefSelectOrFindSourceForm_input">' );
+			tabLookup.append( input );
+			tabLookup.append( $( '<br />' ) );
 
-		this.visualElement = $( '<div>' ).appendTo( htmlElement );
+			var list = this._list = new WEF_SelectOrFindSourceForm_List();
+			tabLookup.append( list.htmlElement );
 
-		this.htmlElement.click( entityId, WEF_InsertSourceForm_List_Item.clickHandler );
+			var changeHandler = function() {
+				form._scheduleLookup( input.val() );
+			};
+
+			input.change( changeHandler );
+			input.keyup( changeHandler );
+			input.keydown( changeHandler );
+			input.keypress( changeHandler );
+		}
+
+		// create source tab
+		{
+			$( '<li><a href="#wefSelectOrFindSourceForm_tab_create">Создать</a></li>' ).appendTo( tabsList );
+			var tabCreate = $( '<div id="wefSelectOrFindSourceForm_tab_create" class="wefSelectOrFindSourceForm_tab">' ).appendTo( tabs );
+
+			$.each( wef_editors_registry.registry, function( classEntityId, editor ) {
+				var button = $( '<span>' ).addClass('wefSelectOrFindSourceForm_tab_create_button').appendTo( tabCreate );
+				wef_LabelsCache.localizeLabel( button, classEntityId );
+				button.button();
+				button.click( function() {
+					var d = editor.edit( false, null );
+					d.done( function( newEntityId ) {
+						if ( !WEF_Utils.isEmpty( newEntityId ) ) {
+							showInsertSourceDialog( newEntityId );
+						}
+					} );
+				} );
+			} );
+
+			wef_LabelsCache.receiveLabels();
+		}
 	};
 
-	WEF_InsertSourceForm_List_Item.clickHandler = function( event ) {
-		var entityId = event.data;
-		$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
-			post: '{{source|' + entityId + '}}'
+	WEF_SelectOrFindSourceForm.prototype._scheduleLookup = function( newLookupTerm ) {
+		if ( !WEF_Utils.isEmpty( newLookupTerm ) && this._scheduledLookupTerm != newLookupTerm ) {
+			this._scheduledLookupTerm = newLookupTerm;
+
+			// reset timer
+			if ( typeof this._scheduleLookupTimeoutID !== "undefined" ) {
+				window.clearTimeout( this._scheduleLookupTimeoutID );
+				delete this.timeoutID;
+			}
+
+			var form = this;
+			this._scheduleLookupTimeoutID = window.setTimeout( function() {
+				form._lookup();
+			}, 500 );
+		}
+	};
+
+	WEF_SelectOrFindSourceForm.prototype._lookup = function() {
+		this._list.lookup( this._scheduledLookupTerm );
+	};
+
+	WEF_SelectOrFindSourceForm.prototype.display = function() {
+		var tabs = this._tabs;
+		tabs.tabs();
+
+		this._html.dialog( {
+			title: 'Добавление ссылки на источник из Викиданных',
+			height: 'auto',
+			width: '700px',
+			open: function() {
+				tabs.tabs();
+			},
+			close: function() {
+				$( this ).dialog( 'destroy' ).remove();
+			},
 		} );
 	};
 
 	/**
 	 * @class
 	 */
-	WEF_InsertSourceForm_List = function() {
+	WEF_SelectOrFindSourceForm_List = function() {
 		this._map = {};
-		this.htmlElement = $( '<div class="wefInsertSourceForm_list">' );
+		this.htmlElement = $( '<div class="wefSelectOrFindSourceForm_list">' );
 	};
 
-	WEF_InsertSourceForm_List.prototype.lookup = function( searchTerm ) {
+	WEF_SelectOrFindSourceForm_List.prototype.lookup = function( searchTerm ) {
 		this.htmlElement.empty();
 
 		var list = this;
@@ -57,7 +118,7 @@
 			var ids = [];
 
 			$.each( searchEntitiesResult.search, function( index, entity ) {
-				var item = new WEF_InsertSourceForm_List_Item( entity.id, entity.label );
+				var item = new WEF_SelectOrFindSourceForm_List_Item( entity.id, entity.label );
 				list._map[entity.id] = item;
 				list.htmlElement.append( item.htmlElement );
 				ids.push( entity.id );
@@ -84,7 +145,7 @@
 					}
 					$.each( getEntitiesResult.entities, function( entityIndex, entity ) {
 						var entityId = entity.id;
-						/** @type {WEF_InsertSourceForm_List_Item} */
+						/** @type {WEF_SelectOrFindSourceForm_List_Item} */
 						var item = list._map[entityId];
 						if ( typeof item === 'undefined' ) {
 							return;
@@ -143,68 +204,101 @@
 	/**
 	 * @class
 	 */
-	WEF_InsertSourceForm = function() {
+	WEF_SelectOrFindSourceForm_List_Item = function( entityId, defaultLabel ) {
+		WEF_Utils.assertCorrectEntityId( entityId );
+		this.entityId = entityId;
 
-		var form = this;
+		var htmlElement = this.htmlElement = $( '<div class="wefSelectOrFindSourceForm_list_item ui-button ui-corner-all">' );
+		htmlElement.data( 'WEF_SelectOrFindSourceForm_List_Item', this );
+
+		var divDescription = $( '<div>' ).appendTo( htmlElement );
+
+		$( '<span class="wefSelectOrFindSourceForm_list_item_id"></span>' ).text( entityId ).appendTo( divDescription );
+		this.labelElement = $( '<span class="wefSelectOrFindSourceForm_list_item_label"></span>' ).text( defaultLabel ).appendTo( divDescription );
+		wef_LabelsCache.localizeLabel( this.labelElement, entityId );
+
+		$( '<span class="wefSelectOrFindSourceForm_list_item_parenthesis"></span>' ).text( ' (' ).appendTo( divDescription );
+		this.typesElement = $( '<span class="wefSelectOrFindSourceForm_list_item_types"></span>' ).appendTo( divDescription );
+		$( '<span class="wefSelectOrFindSourceForm_list_item_parenthesis"></span>' ).text( ')' ).appendTo( divDescription );
+
+		this.visualElement = $( '<div>' ).appendTo( htmlElement );
+
+		this.htmlElement.click( entityId, WEF_SelectOrFindSourceForm_List_Item.clickHandler );
+	};
+
+	WEF_SelectOrFindSourceForm_List_Item.clickHandler = function( event ) {
+		var entityId = event.data;
+		$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
+			post: '{{source|' + entityId + '}}'
+		} );
+	};
+
+	function showInsertSourceDialog( sourceEntityId ) {
 		var html = this._html = $( '<div class="wefInsertSourceForm"></div>' );
 
-		var tabs = this._tabs = $( '<div class="wefInsertSourceForm_tabs"></div>' ).appendTo( html );
-		var tabsList = $( '<ul class="wefInsertSourceForm_tabsList"></ul>' ).appendTo( tabs );
+		$( '<p>При необходимости укажите дополнительные параметры источника</p>' );
 
-		{
-			$( '<li><a href="#wefInsertSourceForm_tab_lookup">Поиск</a></li>' ).appendTo( tabsList );
-			var tabLookup = $( '<div id="wefInsertSourceForm_tab_lookup" class="wefInsertSourceForm_tab">' ).appendTo( tabs );
+		var inputPart = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_part">' ).appendTo(
+				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_part">Название главы, части или раздела:</label>' ) )
+						.appendTo( html ) );
+		var inputUrl = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_url">' ).appendTo(
+				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_url">URL для главы, части или раздела:</label>' ) )
+						.appendTo( html ) );
+		var inputPages = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_pages">' ).appendTo(
+				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_pages">Номера страниц:</label>' ) ).appendTo( html ) );
+		var inputVolume = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_volume">' ).appendTo(
+				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_volume">Том:</label>' ) ).appendTo( html ) );
+		var inputIssue = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_volume">' ).appendTo(
+				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_volume">Выпуск:</label>' ) ).appendTo( html ) );
 
-			var input = this._input = $( '<input class="wefInsertSourceForm_input">' );
-			tabLookup.append( input );
-			tabLookup.append( $( '<br />' ) );
+		$( '<hr>' ).appendTo( html );
+		$( '<p>Если Вам необходимо указать другие параметры, например, автора, нужно завести отдельный элемент источника.</p>' ).appendTo( html );
+		$( '<hr>' ).appendTo( html );
 
-			var list = this._list = new WEF_InsertSourceForm_List();
-			tabLookup.append( list.htmlElement );
+		var checkboxRef = $( '<input type="checkbox" class="wefInsertSourceForm_checkbox" id="wefInsertSourceForm_checkbox_ref">' ).appendTo(
+				$( '<div class="wefInsertSourceForm_labelAndInput">' ).appendTo( html ) ).after( $( '<label for="wefInsertSourceForm_checkbox_ref">Вставить как сноску</label>' ) );
 
-			var changeHandler = function() {
-				form._scheduleLookup( input.val() );
-			};
-
-			input.change( changeHandler );
-			input.keyup( changeHandler );
-			input.keydown( changeHandler );
-			input.keypress( changeHandler );
-		}
-	};
-
-	WEF_InsertSourceForm.prototype._scheduleLookup = function( newLookupTerm ) {
-		if ( !WEF_Utils.isEmpty( newLookupTerm ) && this._scheduledLookupTerm != newLookupTerm ) {
-			this._scheduledLookupTerm = newLookupTerm;
-
-			// reset timer
-			if ( typeof this._scheduleLookupTimeoutID !== "undefined" ) {
-				window.clearTimeout( this._scheduleLookupTimeoutID );
-				delete this.timeoutID;
-			}
-
-			var form = this;
-			this._scheduleLookupTimeoutID = window.setTimeout( function() {
-				form._lookup();
-			}, 500 );
-		}
-	};
-
-	WEF_InsertSourceForm.prototype._lookup = function() {
-		this._list.lookup( this._scheduledLookupTerm );
-	};
-
-	WEF_InsertSourceForm.prototype.display = function() {
-		this._tabs.tabs();
-		this._html.dialog( {
-			title: 'Добавление ссылки на источник из Викиданных',
+		html.dialog( {
+			title: 'Дополнительные параметры источника',
 			height: 'auto',
-			width: '700px',
+			width: '400px',
+			buttons: {
+				"Добавить": function() {
+					$( this ).dialog( "close" );
+
+					var textToInsert;
+					if ( checkboxRef.is( ':checked' ) ) {
+						textToInsert = '{{source-ref|';
+					} else {
+						textToInsert = '{{source|';
+					}
+
+					textToInsert += entityId;
+					if ( !WEF_Utils.isEmpty( inputPart.val() ) )
+						textToInsert += '|part=' + inputPart.val();
+					if ( !WEF_Utils.isEmpty( inputUrl.val() ) )
+						textToInsert += '|parturl=' + inputUrl.val();
+					if ( !WEF_Utils.isEmpty( inputPages.val() ) )
+						textToInsert += '|pages=' + inputPages.val();
+					if ( !WEF_Utils.isEmpty( inputVolume.val() ) )
+						textToInsert += '|volume=' + inputVolume.val();
+					if ( !WEF_Utils.isEmpty( inputIssue.val() ) )
+						textToInsert += '|issue=' + inputIssue.val();
+					textToInsert += '}}';
+
+					$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
+						post: textToInsert,
+					} );
+				},
+				"Отменить": function() {
+					$( this ).dialog( "close" );
+				}
+			},
 			close: function() {
 				$( this ).dialog( 'destroy' ).remove();
 			},
 		} );
-	};
+	}
 
 	function addOldToolbarButton() {
 		var $toolbar = $( '#gadget-toolbar' );
@@ -217,7 +311,7 @@
 		.attr( 'title', 'Вставить ссылку на источник' ) //
 		.css( 'background-image', 'url(//upload.wikimedia.org/wikipedia/commons/b/b8/Bouton_Faut_sourcer.png)' ) //
 		.appendTo( $toolbar ) //
-		.on( 'click', new WEF_InsertSourceForm().display() );
+		.on( 'click', new WEF_SelectOrFindSourceForm().display() );
 	}
 
 	function addNewToolbarButton() {
@@ -232,7 +326,7 @@
 					action: {
 						type: 'callback',
 						execute: function( context ) {
-							new WEF_InsertSourceForm().display();
+							new WEF_SelectOrFindSourceForm().display();
 						}
 					}
 				}
