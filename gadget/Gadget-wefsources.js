@@ -228,12 +228,10 @@
 
 	WEF_SelectOrFindSourceForm_List_Item.clickHandler = function( event ) {
 		var entityId = event.data;
-		$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
-			post: '{{source|' + entityId + '}}'
-		} );
+		showInsertSourceDialog( entityId );
 	};
 
-	function showInsertSourceDialog( sourceEntityId ) {
+	function showInsertSourceDialog( entityId ) {
 		var html = this._html = $( '<div class="wefInsertSourceForm"></div>' );
 
 		$( '<p>При необходимости укажите дополнительные параметры источника</p>' );
