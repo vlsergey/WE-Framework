@@ -381,7 +381,7 @@ WEF_Utils.appendToNamedMap = function( element, mapName, key, obj ) {
 };
 
 WEF_Utils.assertCorrectEntityId = function( entityId ) {
-	if ( WEF_Utils.isEmpty( entityId ) || !/^[PQ]\d+$/.test( entityId ) ) {
+	if ( !WEF_Utils.isCorrectEntityId( entityId ) ) {
 		throw new Error( 'Incorrect entity ID: ' + entityId );
 	}
 };
@@ -645,6 +645,10 @@ WEF_Utils.getWikidataApiPrefix = function() {
 	} else {
 		return '//www.wikidata.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json';
 	}
+};
+
+WEF_Utils.isCorrectEntityId = function( entityId ) {
+	return !WEF_Utils.isEmpty( entityId ) && /^[PQ]\d+$/.test( entityId );
 };
 
 WEF_Utils.isEmpty = function( obj ) {

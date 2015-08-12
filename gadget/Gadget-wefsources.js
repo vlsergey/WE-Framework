@@ -1,5 +1,44 @@
 ( function() {
 
+	/** @class */
+	WEF_LatestUsedSources = function() {
+	};
+
+	WEF_LatestUsedSources.get = function() {
+		if ( !WEF_LatestUsedSources.isEnabled() )
+			return;
+
+		var serialized = window.localStorage.getItem( 'WEF_LatestUsedSources' );
+		if ( WEF_Utils.isEmpty( serialized ) )
+			return [];
+
+		var result = [];
+		var entityIds = serialized.split( ',', 10 );
+		$.each( entityIds, function( index, item ) {
+			if ( WEF_Utils.isCorrectEntityId( item ) ) {
+				result.push( item );
+			}
+		} );
+		return result;
+	}
+
+	WEF_LatestUsedSources.isEnabled = function() {
+		return !WEF_Utils.isEmpty( window.localStorage );
+	}
+
+	WEF_LatestUsedSources.add = function( entityId ) {
+		if ( !WEF_LatestUsedSources.isEnabled() )
+			return;
+
+		var newValue;
+		var serialized = window.localStorage.getItem( 'WEF_LatestUsedSources' );
+		if ( WEF_Utils.isEmpty( serialized ) ) {
+			newValue = entityId;
+		} else {
+			newValue = entityId + ',' + newValue;
+		}
+	}
+
 	/**
 	 * @class
 	 */
@@ -10,6 +49,17 @@
 
 		var tabs = this._tabs = $( '<div class="wefSelectOrFindSourceForm_tabs"></div>' ).appendTo( html );
 		var tabsList = $( '<ul class="wefSelectOrFindSourceForm_tabsList"></ul>' ).appendTo( tabs );
+
+		if ( WEF_LatestUsedSources.isEnabled() ) {
+			var latest = WEF_LatestUsedSources.get();
+			if ( !WEF_Utils.isEmpty( latest ) ) {
+				$( '<li><a href="#wefSelectOrFindSourceForm_tab_lookup">Последние</a></li>' ).appendTo( tabsList );
+				var tabLatest = $( '<div id="wefSelectOrFindSourceForm_tab_latest" class="wefSelectOrFindSourceForm_tab">' ).appendTo( tabs );
+
+				var list = this._listLatest = new WEF_SelectOrFindSourceForm_List();
+				tabLatest.append( list.htmlElement );
+			}
+		}
 
 		{
 			$( '<li><a href="#wefSelectOrFindSourceForm_tab_lookup">Поиск</a></li>' ).appendTo( tabsList );
@@ -38,7 +88,7 @@
 			var tabCreate = $( '<div id="wefSelectOrFindSourceForm_tab_create" class="wefSelectOrFindSourceForm_tab">' ).appendTo( tabs );
 
 			$.each( wef_editors_registry.registry, function( classEntityId, editor ) {
-				var button = $( '<span>' ).addClass('wefSelectOrFindSourceForm_tab_create_button').appendTo( tabCreate );
+				var button = $( '<span>' ).addClass( 'wefSelectOrFindSourceForm_tab_create_button' ).appendTo( tabCreate );
 				wef_LabelsCache.localizeLabel( button, classEntityId );
 				button.button();
 				button.click( function() {
@@ -101,6 +151,11 @@
 		this.htmlElement = $( '<div class="wefSelectOrFindSourceForm_list">' );
 	};
 
+	WEF_SelectOrFindSourceForm_List.prototype.latest = function( entityIds ) {
+		this.htmlElement.empty();
+		this._add( entityIds );
+	};
+
 	WEF_SelectOrFindSourceForm_List.prototype.lookup = function( searchTerm ) {
 		this.htmlElement.empty();
 
@@ -115,96 +170,101 @@
 					+ '&limit=50' //
 					+ '&search=' + encodeURIComponent( searchTerm ),
 		} ).done( function( searchEntitiesResult ) {
-			var ids = [];
-
+			var entityIds = [];
 			$.each( searchEntitiesResult.search, function( index, entity ) {
-				var item = new WEF_SelectOrFindSourceForm_List_Item( entity.id, entity.label );
-				list._map[entity.id] = item;
-				list.htmlElement.append( item.htmlElement );
-				ids.push( entity.id );
+				entityIds.push( entity.id );
 			} );
-			wef_LabelsCache.receiveLabels();
 
-			// TODO: add some local cache
-			// receive elements info... on each try?
+			list._add( entityIds );
+		} );
+	};
 
-			var idsString = ids.join( '|' );
-			$.ajax( {
-				url: WEF_Utils.getWikidataApiPrefix() //
-						+ '&action=wbgetentities' //
-						+ '&props=' + encodeURIComponent( 'claims' ) // 
-						+ '&ids=' + encodeURIComponent( idsString ),
-				dataType: 'json',
-				error: function( jqXHR, textStatus, errorThrown ) {
-					mw.log( textStatus );
-				},
-				success: function( getEntitiesResult ) {
-					if ( typeof getEntitiesResult.error !== 'undefined' ) {
-						mw.log.warn( getEntitiesResult.error );
+	WEF_SelectOrFindSourceForm_List.prototype._add = function( entityIds ) {
+		$.each( ids, function( index, entityId ) {
+			var item = new WEF_SelectOrFindSourceForm_List_Item( entityId );
+			list._map[entityId] = item;
+			list.htmlElement.append( item.htmlElement );
+			ids.push( entityId );
+		} );
+		wef_LabelsCache.receiveLabels();
+
+		// TODO: add some local cache
+		// receive elements info... on each try?
+
+		var idsString = ids.join( '|' );
+		$.ajax( {
+			url: WEF_Utils.getWikidataApiPrefix() //
+					+ '&action=wbgetentities' //
+					+ '&props=' + encodeURIComponent( 'claims' ) // 
+					+ '&ids=' + encodeURIComponent( idsString ),
+			dataType: 'json',
+			error: function( jqXHR, textStatus, errorThrown ) {
+				mw.log( textStatus );
+			},
+			success: function( getEntitiesResult ) {
+				if ( typeof getEntitiesResult.error !== 'undefined' ) {
+					mw.log.warn( getEntitiesResult.error );
+					return;
+				}
+				$.each( getEntitiesResult.entities, function( entityIndex, entity ) {
+					var entityId = entity.id;
+					/** @type {WEF_SelectOrFindSourceForm_List_Item} */
+					var item = list._map[entityId];
+					if ( typeof item === 'undefined' ) {
 						return;
 					}
-					$.each( getEntitiesResult.entities, function( entityIndex, entity ) {
-						var entityId = entity.id;
-						/** @type {WEF_SelectOrFindSourceForm_List_Item} */
-						var item = list._map[entityId];
-						if ( typeof item === 'undefined' ) {
-							return;
-						}
 
-						// TODO: check if compatible and exclude
-						if ( typeof entity.claims !== 'undefined' && typeof entity.claims.P31 !== 'undefined' ) {
-							$.each( entity.claims.P31, function( index, claim ) {
-								var typeId = WEF_Utils.getEntityIdFromClaim( claim );
-								if ( typeof typeId !== 'undefined' ) {
-									var typeSpan = $( '<span>' );
-									wef_LabelsCache.localizeLabel( typeSpan, typeId );
-									item.typesElement.append( typeSpan );
-									item.typesElement.append( $( '<span>' ).text( '; ' ) );
-								}
-							} );
-						}
-
-						$.ajax( {
-							url: mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php?format=json' // 
-									+ '&action=parse' // 
-									+ '&prop=text' // 
-									+ '&disablepp=true' // 
-									+ '&disableeditsection=true' // 
-									+ '&preview=true' // 
-									+ '&disabletoc=true' // 
-									+ '&contentformat=' + encodeURIComponent( 'text/x-wiki' ) // 
-									+ '&contentmodel=' + encodeURIComponent( 'wikitext' ) // 
-									+ '&text=' + encodeURIComponent( '{{source|' + entityId + '}}' ),
-							dataType: 'json',
-							error: function( jqXHR, textStatus, errorThrown ) {
-								mw.log( textStatus );
-							},
-							success: function( parseResult ) {
-								if ( typeof parseResult.error !== 'undefined' ) {
-									mw.log.warn( parseResult.error );
-									return;
-								}
-
-								var text = parseResult.parse.text['*'];
-								if ( !WEF_Utils.isEmpty( text ) ) {
-									item.visualElement.html( text );
-								}
-							},
+					// TODO: check if compatible and exclude
+					if ( typeof entity.claims !== 'undefined' && typeof entity.claims.P31 !== 'undefined' ) {
+						$.each( entity.claims.P31, function( index, claim ) {
+							var typeId = WEF_Utils.getEntityIdFromClaim( claim );
+							if ( typeof typeId !== 'undefined' ) {
+								var typeSpan = $( '<span>' );
+								wef_LabelsCache.localizeLabel( typeSpan, typeId );
+								item.typesElement.append( typeSpan );
+								item.typesElement.append( $( '<span>' ).text( '; ' ) );
+							}
 						} );
+					}
 
+					$.ajax( {
+						url: mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php?format=json' // 
+								+ '&action=parse' // 
+								+ '&prop=text' // 
+								+ '&disablepp=true' // 
+								+ '&disableeditsection=true' // 
+								+ '&preview=true' // 
+								+ '&disabletoc=true' // 
+								+ '&contentformat=' + encodeURIComponent( 'text/x-wiki' ) // 
+								+ '&contentmodel=' + encodeURIComponent( 'wikitext' ) // 
+								+ '&text=' + encodeURIComponent( '{{source|' + entityId + '}}' ),
+						dataType: 'json',
+						error: function( jqXHR, textStatus, errorThrown ) {
+							mw.log( textStatus );
+						},
+						success: function( parseResult ) {
+							if ( typeof parseResult.error !== 'undefined' ) {
+								mw.log.warn( parseResult.error );
+								return;
+							}
+
+							var text = parseResult.parse.text['*'];
+							if ( !WEF_Utils.isEmpty( text ) ) {
+								item.visualElement.html( text );
+							}
+						},
 					} );
-					wef_LabelsCache.receiveLabels();
-				},
-			} );
 
+				} );
+				wef_LabelsCache.receiveLabels();
+			},
 		} );
-
-	};
+	}
 
 	/**
 	 * @class
 	 */
-	WEF_SelectOrFindSourceForm_List_Item = function( entityId, defaultLabel ) {
+	WEF_SelectOrFindSourceForm_List_Item = function( entityId ) {
 		WEF_Utils.assertCorrectEntityId( entityId );
 		this.entityId = entityId;
 
@@ -214,7 +274,7 @@
 		var divDescription = $( '<div>' ).appendTo( htmlElement );
 
 		$( '<span class="wefSelectOrFindSourceForm_list_item_id"></span>' ).text( entityId ).appendTo( divDescription );
-		this.labelElement = $( '<span class="wefSelectOrFindSourceForm_list_item_label"></span>' ).text( defaultLabel ).appendTo( divDescription );
+		this.labelElement = $( '<span class="wefSelectOrFindSourceForm_list_item_label"></span>' ).appendTo( divDescription );
 		wef_LabelsCache.localizeLabel( this.labelElement, entityId );
 
 		$( '<span class="wefSelectOrFindSourceForm_list_item_parenthesis"></span>' ).text( ' (' ).appendTo( divDescription );
