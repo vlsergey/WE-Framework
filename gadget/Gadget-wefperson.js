@@ -480,6 +480,6 @@ mw.loader.using( [ //
 ], function() {
 	var editor = new WEF_Editor( wef_PersonEditor_html );
 	editor.localize( 'wef_PersonEditor_i18n_' );
-	editor.addEditButtons();
+	editor.addEditButtons( 'Q5' );
 	window.wef_editors_registry.registerEditor( 'Q5', editor );
 } );

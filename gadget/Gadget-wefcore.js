@@ -337,11 +337,13 @@ WEF_RANK_DEPRECATED = 'deprecated';
  */
 
 /**
- * @param args
- *            {WEF_Definition}
+ * @param {WEF_Definition}
+ *            args
  * @class
  */
 WEF_Definition = function( args ) {
+	/** @type {string} */
+	this.code = args.code;
 	/** @type {string} */
 	this.datatype = 'string';
 	/** @type {string} */
@@ -657,7 +659,7 @@ WEF_Utils.isEmpty = function( obj ) {
 
 WEF_Utils._isLeapGregorianYear = function( year ) {
 	"use strict";
-	return ( ( year % 4 ) == 0 ) && ( !( ( ( year % 100 ) == 0 ) && ( ( year % 400 ) != 0 ) ) );
+	return ( ( year % 4 ) === 0 ) && ( !( ( ( year % 100 ) === 0 ) && ( ( year % 400 ) !== 0 ) ) );
 };
 
 /** @returns {Boolean} */
@@ -676,12 +678,40 @@ WEF_Utils.localize = function( targetObject, globalVariablesPrefix ) {
 	} );
 };
 
+WEF_Utils.mockEntityWithType =
+/**
+ * @param {String}
+ *            typeEntityId
+ */
+function( typeEntityId ) {
+	WEF_Utils.assertCorrectEntityId( typeEntityId );
+
+	return {
+		"claims": {
+			"P31": [ {
+				"mainsnak": WEF_Utils.newWikibaseItemSnak( "P31", "item", Number( typeEntityId.substr( 1 ) ) ),
+				"type": "statement",
+				"rank": "normal",
+			} ]
+		}
+	};
+};
+
 WEF_Utils._mod = function( a, b ) {
 	"use strict";
 	return a - ( b * Math.floor( a / b ) );
 };
 
-WEF_Utils.newWikibaseItemSnak = function( property, entityType, numericId ) {
+WEF_Utils.newWikibaseItemSnak =
+/**
+ * @param {String}
+ *            property
+ * @param {String}
+ *            entityType
+ * @param {Number}
+ *            numericId
+ */
+function( property, entityType, numericId ) {
 	return {
 		snaktype: 'value',
 		property: property,
@@ -4982,11 +5012,12 @@ WEF_ClaimEditor.prototype.addQualifier = function( qualifierId ) {
 /**
  * Organize multiple claim edit rows into single structure
  * 
- * @param definition
- *            {WEF_Definition}
+ * @param {WEF_Definition}
+ *            definition
  * @class
  */
 WEF_ClaimEditorsTable = function( definition ) {
+	this.definition = definition;
 
 	var propertyEditorsTable = this;
 	var i18n = wef_Editors_i18n;
@@ -5740,7 +5771,17 @@ WEF_EditorForm = function( originalTitle, html, i18n, currentPageItem, editDefer
 		} );
 	};
 
-	this.initAsEmpty = function( currentPageItem ) {
+	this.initAsEmpty =
+	/**
+	 * @param {Boolean}
+	 *            currentPageItem
+	 * @param {?String}
+	 *            initTypeId
+	 */
+	function( currentPageItem, initTypeId ) {
+		if ( !WEF_Utils.isEmpty( initTypeId ) )
+			WEF_Utils.assertCorrectEntityId( initTypeId );
+
 		this.entityId = null;
 
 		var newTitle = i18n.dialogTitleNewElement + ' — ' + originalTitle;
@@ -5750,8 +5791,19 @@ WEF_EditorForm = function( originalTitle, html, i18n, currentPageItem, editDefer
 		if ( labelsEditor != null ) {
 			labelsEditor.initAsEmpty( currentPageItem );
 		}
-		$.each( claimEditorsTables, function( i, claimEditorsTable ) {
-			claimEditorsTable.initAsEmpty( currentPageItem );
+		$.each( claimEditorsTables,
+		/**
+		 * @param {number}
+		 *            i
+		 * @param {WEF_ClaimEditorsTable}
+		 *            claimEditorsTable
+		 */
+		function( i, claimEditorsTable ) {
+			if ( !WEF_Utils.isEmpty( initTypeId ) && claimEditorsTable.definition.code == 'P31' ) {
+				claimEditorsTable.init( WEF_Utils.mockEntityWithType( initTypeId ) );
+			} else {
+				claimEditorsTable.initAsEmpty( currentPageItem );
+			}
 		} );
 		enableAnchorCounterUpdate = true;
 		dialog.find( 'a.wef_editor_tab_anchor' ).each( function( i, anchor ) {
@@ -5780,13 +5832,18 @@ WEF_Editor = function( dialogHtml ) {
 };
 window.WEF_Editor = WEF_Editor;
 
-WEF_Editor.prototype.addEditButtons = function() {
+WEF_Editor.prototype.addEditButtons =
+/**
+ * @param {?String}
+ *            initTypeId
+ */
+function( initTypeId ) {
 	"use strict";
 
 	var editor = this;
 	var li = $( document.createElement( 'li' ) ).addClass( 'plainlinks' );
 	$( document.createElement( 'a' ) ).css( 'cursor', 'pointer' ).click( function() {
-		var editDeferred = editor.edit( true );
+		var editDeferred = editor.edit( true, undefined, initTypeId );
 		editDeferred.done( function() {
 			WEF_Utils.purge();
 		} );
@@ -5794,8 +5851,22 @@ WEF_Editor.prototype.addEditButtons = function() {
 	$( '#p-tb div ul' ).append( li );
 };
 
-WEF_Editor.prototype.edit = function( currentPageItem, entityId ) {
+WEF_Editor.prototype.edit =
+/**
+ * @param {!Boolean}
+ *            currentPageItem
+ * @param {?String}
+ *            entityId
+ * @param {?String}
+ *            entityTypeId
+ */
+function( currentPageItem, entityId, entityTypeId ) {
 	"use strict";
+
+	if ( !WEF_Utils.isEmpty( entityId ) )
+		WEF_Utils.assertCorrectEntityId( entityId );
+	if ( !WEF_Utils.isEmpty( entityTypeId ) )
+		WEF_Utils.assertCorrectEntityId( entityTypeId );
 
 	var editDeferred = $.Deferred();
 
@@ -5809,7 +5880,7 @@ WEF_Editor.prototype.edit = function( currentPageItem, entityId ) {
 	if ( entityId === null ) {
 		// empty item
 		var editorForm = new WEF_EditorForm( editor.i18n.dialogTitle, editor.dialogHtml, editor.i18n, currentPageItem, editDeferred );
-		editorForm.initAsEmpty( currentPageItem );
+		editorForm.initAsEmpty( currentPageItem, entityTypeId );
 		wef_LabelsCache.receiveLabels();
 		editorForm.open();
 		return editDeferred;

@@ -92,7 +92,7 @@
 				wef_LabelsCache.localizeLabel( button, classEntityId );
 				button.button();
 				button.click( function() {
-					var d = editor.edit( false, null );
+					var d = editor.edit( false, null, classEntityId );
 					d.done( function( newEntityId ) {
 						if ( !WEF_Utils.isEmpty( newEntityId ) ) {
 							showInsertSourceDialog( newEntityId );

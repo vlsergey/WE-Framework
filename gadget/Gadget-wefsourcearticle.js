@@ -99,8 +99,8 @@ mw.loader.using( [ //
 ], function() {
 	var editor = new WEF_Editor( wef_SourceArticleEditor_html );
 	editor.localize( 'wef_SourceArticleEditor_i18n_' );
-	editor.addEditButtons();
-	
+	editor.addEditButtons( 'Q191067' );
+
 	window.wef_editors_registry.registerEditor( 'Q191067', editor );
 	window.wef_editors_registry.registerEditor( 'Q13442814', editor );
 } );

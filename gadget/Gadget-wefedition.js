@@ -197,6 +197,6 @@ mw.loader.using( [ //
 ], function() {
 	var editor = new WEF_Editor( wef_EditionEditor_html );
 	editor.localize( 'wef_EditionEditor_i18n_' );
-	editor.addEditButtons();
+	editor.addEditButtons( 'Q3331189' );
 	window.wef_editors_registry.registerEditor( 'Q3331189', editor );
 } );

@@ -396,6 +396,6 @@ mw.loader.using( [ //
 ], function() {
 	var editor = new WEF_Editor( wef_AdmUnitEditor_html );
 	editor.localize( 'wef_AdmUnitEditor_i18n_' );
-	editor.addEditButtons();
+	editor.addEditButtons( 'Q56061' );
 	window.wef_editors_registry.registerEditor( 'Q56061', editor );
 } );

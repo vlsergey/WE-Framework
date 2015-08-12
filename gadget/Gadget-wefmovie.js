@@ -137,6 +137,6 @@ mw.loader.using( [ //
 ], function() {
 	var editor = new WEF_Editor( wef_MovieEditor_html );
 	editor.localize( 'wef_MovieEditor_i18n_' );
-	editor.addEditButtons();
+	editor.addEditButtons( 'Q11424' );
 	window.wef_editors_registry.registerEditor( 'Q11424', editor );
 } );

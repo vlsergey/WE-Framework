@@ -164,6 +164,6 @@ mw.loader.using( [ //
 ], function() {
 	var editor = new WEF_Editor( wef_WorkEditor_html );
 	editor.localize( 'wef_WorkEditor_i18n_' );
-	editor.addEditButtons();
+	editor.addEditButtons( 'Q386724' );
 	window.wef_editors_registry.registerEditor( 'Q386724', editor );
 } );

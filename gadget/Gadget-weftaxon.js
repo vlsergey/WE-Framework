@@ -166,6 +166,6 @@ mw.loader.using( [ //
 ], function() {
 	var editor = new WEF_Editor( wef_TaxonEditor_html );
 	editor.localize( 'wef_TaxonEditor_i18n_' );
-	editor.addEditButtons();
+	editor.addEditButtons( 'Q16521' );
 	window.wef_editors_registry.registerEditor( 'Q16521', editor );
 } );
