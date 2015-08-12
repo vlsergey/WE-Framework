@@ -347,6 +347,8 @@
 					$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
 						post: textToInsert,
 					} );
+
+					WEF_LatestUsedSources.add( entityId );
 				},
 				"Отменить": function() {
 					$( this ).dialog( "close" );

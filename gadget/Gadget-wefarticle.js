@@ -2,6 +2,7 @@ var wef_SourceArticleEditor_html = "<div class=\'wef_sourceArticleEditor_dialog\
 		"	<div class=\'wef_tabs\'>\r\n" + 
 		"		<ul>\r\n" + 
 		"			<li><a href=\'#wef_sourceArticleEditor_tab_general\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupGeneral</a></li>\r\n" + 
+		"			<li><a href=\'#wef_sourceArticleEditor_tab_codes\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q5962346</a></li>\r\n" + 
 		"		</ul>\r\n" + 
 		"		<div id=\'wef_sourceArticleEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
@@ -49,16 +50,20 @@ var wef_SourceArticleEditor_html = "<div class=\'wef_sourceArticleEditor_dialog\
 		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
-		"				<table class=\'wef_table\'>\r\n" + 
+		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>P953</legend>\r\n" + 
+		"				<table class=\'wef_table \'>\r\n" + 
 		"					<!-- URL -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P953\' data-datatype=\'url\' />\r\n" + 
-		"					<!-- check date -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P813\' data-datatype=\'time\' />\r\n" + 
-		"					<!-- archive URL -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P1065\' data-datatype=\'url\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P953\' data-datatype=\'url\'>\r\n" + 
+		"						<!-- check date -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P813\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- archive URL -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1065\' data-datatype=\'url\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
+		"		</div>\r\n" + 
+		"		<div id=\'wef_sourceArticleEditor_tab_codes\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- DOI -->\r\n" + 
