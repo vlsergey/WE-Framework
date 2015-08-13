@@ -174,24 +174,23 @@
 			$.each( searchEntitiesResult.search, function( index, entity ) {
 				entityIds.push( entity.id );
 			} );
-
 			list._add( entityIds );
 		} );
 	};
 
 	WEF_SelectOrFindSourceForm_List.prototype._add = function( entityIds ) {
-		$.each( ids, function( index, entityId ) {
+		var list = this;
+		$.each( entityIds, function( index, entityId ) {
 			var item = new WEF_SelectOrFindSourceForm_List_Item( entityId );
 			list._map[entityId] = item;
 			list.htmlElement.append( item.htmlElement );
-			ids.push( entityId );
 		} );
 		wef_LabelsCache.receiveLabels();
 
 		// TODO: add some local cache
 		// receive elements info... on each try?
 
-		var idsString = ids.join( '|' );
+		var idsString = entityIds.join( '|' );
 		$.ajax( {
 			url: WEF_Utils.getWikidataApiPrefix() //
 					+ '&action=wbgetentities' //
