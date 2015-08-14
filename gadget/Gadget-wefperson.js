@@ -29,10 +29,6 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P1559\' data-datatype=\'monolingualtext\' />\r\n" + 
 		"					<!-- birth name -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P1477\' data-datatype=\'monolingualtext\' />\r\n" + 
-		"					<!-- given name -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P735\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"					<!-- surname -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P734\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- pseudonym -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P742\' data-datatype=\'string\'>\r\n" + 
 		"						<!--  language -->\r\n" + 
