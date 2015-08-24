@@ -851,6 +851,22 @@ WEF_Utils.processDefinition = function( definition ) {
 	}
 },
 
+WEF_Utils.putOrClearLocalStorage = function( key, value ) {
+	if ( typeof window.localStorage === 'undefined' )
+		return;
+
+	try {
+		localStorage[key] = value;
+	} catch ( err ) {
+		mw.log.warn( 'Unable to populate local storage: ' + err );
+		try {
+			localStorage.removeItem( key );
+		} catch ( err ) {
+			mw.log.warn( 'Unable to remove outdated item from local storage: ' + err );
+		}
+	}
+}
+
 WEF_Utils.purge = function() {
 	window.location
 			.replace( mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/index.php?action=purge&title=' + encodeURIComponent( mw.config.get( 'wgPageName' ) ) );
@@ -1523,7 +1539,7 @@ WEF_LabelsCache = function() {
 							var title = label.value;
 							cacheLabels[entityId] = title;
 							if ( entityId.substring( 0, 1 ) === 'P' ) {
-								localStorage[LOCALSTORAGE_PREFIX_LABELS + entityId] = title;
+								WEF_Utils.putOrClearLocalStorage( LOCALSTORAGE_PREFIX_LABELS + entityId, title );
 							}
 							break;
 						}
@@ -1540,7 +1556,7 @@ WEF_LabelsCache = function() {
 							var title = description.value;
 							cacheDescriptions[entityId] = title;
 							if ( entityId.substring( 0, 1 ) === 'P' ) {
-								localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + entityId] = title;
+								WEF_Utils.putOrClearLocalStorage( LOCALSTORAGE_PREFIX_DESCRIPTIONS + entityId, title );
 							}
 							break;
 						}
@@ -1722,7 +1738,6 @@ WEF_TypesCache = function() {
 				$.each( result.entities, function( entityIndex, entity ) {
 					var dataType = entity.datatype;
 					if ( typeof dataType !== 'undefined' && dataType !== null ) {
-						localStorage[LOCALSTORAGE_PREFIX + entity.id] = dataType;
 						cacheTypes[entity.id] = dataType;
 						return;
 					}
@@ -1746,7 +1761,7 @@ WEF_TypesCache = function() {
 
 		if ( !WEF_Utils.isEmpty( dataType ) ) {
 			cacheTypes[propertyId] = dataType;
-			localStorage[LOCALSTORAGE_PREFIX + propertyId] = dataType;
+			WEF_Utils.putOrClearLocalStorage( LOCALSTORAGE_PREFIX + propertyId, dataType );
 		}
 	};
 };
