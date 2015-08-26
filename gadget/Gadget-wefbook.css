@@ -1,0 +1,13 @@
+.wef_sourceBookEditor_dialog table, .wef_sourceBookEditor_dialog tbody,
+	.wef_sourceBookEditor_dialog tr, .wef_sourceBookEditor_dialog th,
+	.wef_sourceBookEditor_dialog td {
+	padding: 0;
+	margin: 0;
+	line-height: 1.2em;
+}
+
+.wef_sourceBookEditor_dialog .wef_fieldset {
+	margin: 0.1em;
+	padding: 0.1em;
+	line-height: 0.75em;
+}

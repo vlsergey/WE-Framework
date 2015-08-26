@@ -2187,7 +2187,7 @@ window.WEF_ExternalLinks = function() {
 										newValue = definition.normalize( newValue );
 									}
 
-									editors.onFoundValue( newValue );
+									editors.onFoundStringValue( newValue );
 								} );
 							}
 						} );
