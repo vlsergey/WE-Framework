@@ -66,14 +66,19 @@
 		<div id='wef_sourceArticleEditor_tab_codes' class='wef_editor_tab'>
 			<fieldset class='wef_fieldset'>
 				<table class='wef_table'>
+					<!-- arXiv -->
+					<tbody class='wef_claim_editors' data-code='P818' data-datatype='string' data-template='http://arxiv.org/abs/$1' />
 					<!-- DOI -->
-					<tbody class='wef_claim_editors' data-code='P356' data-datatype='string' />
+					<tbody class='wef_claim_editors' data-code='P356' data-datatype='string' data-template='https://dx.doi.org/$1' />
 					<!-- JSTOR -->
-					<tbody class='wef_claim_editors' data-code='P888' data-datatype='string' />
+					<tbody class='wef_claim_editors' data-code='P888' data-datatype='string'
+						data-template='http://www.jstor.org/stable/$1' />
 					<!-- Math. Reviews -->
-					<tbody class='wef_claim_editors' data-code='P889' data-datatype='string' />
+					<tbody class='wef_claim_editors' data-code='P889' data-datatype='string'
+						data-template='http://www.ams.org/mathscinet-getitem?mr=$1' />
 					<!-- Zentralblatt MATH -->
-					<tbody class='wef_claim_editors' data-code='P894' data-datatype='string' />
+					<tbody class='wef_claim_editors' data-code='P894' data-datatype='string'
+						data-template='https://zbmath.org/?q=an:$1' />
 				</table>
 			</fieldset>
 		</div>

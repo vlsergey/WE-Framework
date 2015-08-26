@@ -66,14 +66,19 @@ var wef_SourceArticleEditor_html = "<div class=\'wef_sourceArticleEditor_dialog\
 		"		<div id=\'wef_sourceArticleEditor_tab_codes\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- arXiv -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P818\' data-datatype=\'string\' data-template=\'http://arxiv.org/abs/$1\' />\r\n" + 
 		"					<!-- DOI -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P356\' data-datatype=\'string\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P356\' data-datatype=\'string\' data-template=\'https://dx.doi.org/$1\' />\r\n" + 
 		"					<!-- JSTOR -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P888\' data-datatype=\'string\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P888\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.jstor.org/stable/$1\' />\r\n" + 
 		"					<!-- Math. Reviews -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P889\' data-datatype=\'string\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P889\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.ams.org/mathscinet-getitem?mr=$1\' />\r\n" + 
 		"					<!-- Zentralblatt MATH -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P894\' data-datatype=\'string\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P894\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'https://zbmath.org/?q=an:$1\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
