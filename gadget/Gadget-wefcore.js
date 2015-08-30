@@ -75,7 +75,7 @@ window.wef_Editors_i18n_en = {
 	inputTimePrecisionLabel: 'Precision',
 	inputTimePrecisionTitle: 'To what unit is the given date/time significant?',
 
-	labelLabels: 'Label, description and aliases',
+	labelLabels: 'Label and description',
 	labelLabel: 'Label',
 	labelDescription: 'Description',
 	labelAliases: 'Aliases',
@@ -193,7 +193,7 @@ window.wef_Editors_i18n_ru = {
 	inputTimeCalendarModelLabel: 'Календарь для отображения',
 	inputTimeCalendarModelTitle: 'Календарь, например,  юлианский или григорианский',
 
-	labelLabels: 'Метка, описание и синонимы',
+	labelLabels: 'Метка и описание',
 	labelLabel: 'Метка',
 	labelDescription: 'Описание',
 	labelAliases: 'Также известен как',
@@ -4387,13 +4387,19 @@ WEF_LabelsEditor.prototype.initAsEmpty = function( currentPageItem ) {
 		this.dataLabels[contentLang] = mw.config.get( 'wgPageName' );
 	}
 
+	var languagesSet = {};
+	languagesSet[contentLang] = contentLang;
+	languagesSet[userLang] = userLang;
+	languagesSet['ru'] = 'ru';
+	languagesSet['en'] = 'en';
+	languagesSet['nl'] = 'nl';
+
 	var languages = [];
-	if ( contentLang === userLang ) {
-		languages.push( contentLang );
-	} else {
-		languages.push( userLang );
-		languages.push( contentLang );
-	}
+	$.each( languagesSet, function( key ) {
+		languages.push( key );
+	} );
+	languages.sort();
+
 	$.each( languages, function( i, language ) {
 		$( document.createElement( 'option' ) ).attr( 'value', language ).text( language ).appendTo( labelsEditor.langSelect );
 	} );
