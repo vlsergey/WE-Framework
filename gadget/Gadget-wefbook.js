@@ -57,7 +57,7 @@ var wef_SourceBookEditor_html = "<div class=\'wef_sourceBookEditor_dialog\'>\r\n
 		"					<!-- issue -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P433\' data-datatype=\'string\' />\r\n" + 
 		"					<!-- total pages -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P1104\' data-datatype=\'string\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1104\' data-datatype=\'quantity\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
