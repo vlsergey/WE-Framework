@@ -13,7 +13,10 @@ var wef_SourceArticleEditor_html = "<div class=\'wef_sourceArticleEditor_dialog\
 		"				</table>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- author -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P50\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P50\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- title -->\r\n" + 
@@ -31,6 +34,8 @@ var wef_SourceArticleEditor_html = "<div class=\'wef_sourceArticleEditor_dialog\
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- published in -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P1433\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
 		"						<!-- date of publication -->\r\n" + 
 		"						<tr class=\'wef_claim_editors\' data-code=\'P577\' data-datatype=\'time\' />\r\n" + 
 		"						<!-- volume -->\r\n" + 

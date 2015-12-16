@@ -29,33 +29,60 @@ var wef_SourceBookEditor_html = "<div class=\'wef_sourceBookEditor_dialog\'>\r\n
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- author -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P50\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P50\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"					<!-- contributor  -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P767\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P767\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"					<!-- editor -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P98\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P98\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"					<!-- illustrator -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P110\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P110\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"					<!-- translator -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P655\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P655\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- place of publication -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P291\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P291\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"					<!-- publisher -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P123\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P123\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"					<!-- date of publication -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P577\' data-datatype=\'time\' />\r\n" + 
 		"					<!-- printed by -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P872\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P872\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- part of -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P361\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P361\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated as -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"					<!-- volume -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P478\' data-datatype=\'string\' />\r\n" + 
 		"					<!-- issue -->\r\n" + 
@@ -157,6 +184,7 @@ mw.loader.using( [ //
 'jquery.ui.dialog', //
 'jquery.ui.tabs', //
 'jquery.uls.data', //
+'ext.gadget.isbnjs', //
 'ext.gadget.wefcore', //
 'ext.gadget.wefflags', //
 ], function() {
