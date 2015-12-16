@@ -8,16 +8,10 @@
 ( function() {
 
 	/** @const */
-	var version = 1440624593;
+	var version = 1450295338;
 
 	try {
-		mw.loader.addSource( {
-			"ruwiki": {
-				"loadScript": "//ru.wikipedia.org/w/load.php",
-				"apiScript": "//ru.wikipedia.org/w/api.php"
-			}
-		} );
-
+		mw.loader.addSource( "ruwiki", "//ru.wikipedia.org/w/load.php" );
 		mw.loader.register( 'ext.gadget.wefcore', version, [ 'jquery.ui.autocomplete', //
 		'jquery.ui.dialog', //
 		'jquery.ui.tabs', //
