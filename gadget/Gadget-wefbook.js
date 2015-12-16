@@ -16,6 +16,8 @@ var wef_SourceBookEditor_html = "<div class=\'wef_sourceBookEditor_dialog\'>\r\n
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P1476\' data-datatype=\'monolingualtext\' />\r\n" + 
 		"					<!-- subtitle -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P1680\' data-datatype=\'monolingualtext\' />\r\n" + 
+		"					<!--  ISO 4 abbreviation -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1160\' data-datatype=\'string\' />\r\n" + 
 		"					<!-- language -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P407\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- date of foundation or creation -->\r\n" + 
@@ -52,6 +54,8 @@ var wef_SourceBookEditor_html = "<div class=\'wef_sourceBookEditor_dialog\'>\r\n
 		"			</fieldset>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- part of -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P361\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					<!-- volume -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P478\' data-datatype=\'string\' />\r\n" + 
 		"					<!-- issue -->\r\n" + 
@@ -79,6 +83,8 @@ var wef_SourceBookEditor_html = "<div class=\'wef_sourceBookEditor_dialog\'>\r\n
 		"		<div id=\'wef_sourceBookEditor_tab_codes\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- DOI -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P356\' data-datatype=\'string\' data-template=\'https://dx.doi.org/$1\' />\r\n" + 
 		"					<!-- ISBN 10 -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P957\' data-datatype=\'string\' />\r\n" + 
 		"					<!-- ISBN 13 -->\r\n" + 
