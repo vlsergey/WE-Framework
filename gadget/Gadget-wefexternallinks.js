@@ -1952,16 +1952,6 @@ window.WEF_ExternalLinks = function() {
 	/** code -> table row */
 	this.editors = {};
 
-	/* Usually already in cache */
-	/** @private */
-	var getLabelTextShort = function( definition ) {
-		if ( typeof ( definition.label ) !== "undefined" ) {
-			return wef_LabelsCache.getLabel( definition.label );
-		} else {
-			return wef_LabelsCache.getLabel( definition.code );
-		}
-	};
-
 	this.addButtonsEdit = function() {
 		if ( !this.enabled )
 			return;
@@ -2041,7 +2031,7 @@ window.WEF_ExternalLinks = function() {
 					tabs.tabs();
 					tabs.tabs( "destroy" );
 					tabs.tabs( {
-						activate: function( event, ui ) {
+						activate: function() {
 							dialogForm.dialog( {
 								height: "auto",
 								autoResize: true,
@@ -2568,7 +2558,7 @@ window.WEF_ExternalLinks.getWikisourceApiPrefix = function( languageCode ) {
 	} else {
 		return '//' + languageCode + '.wikisource.org/w/api.php' + '?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json';
 	}
-}
+};
 
 window.WEF_ExternalLinks.prefixes = {
 	dewikisource: window.WEF_ExternalLinks.getWikisourceApiPrefix( 'de' ),
@@ -2708,7 +2698,6 @@ options ) {
 		};
 
 		input.focus( function() {
-			var id = input.data( DATA_ENTITY_ID );
 			var label = input.data( DATA_ENTITY_LABEL );
 
 			if ( typeof id === 'undefined' || typeof label === 'undefined' ) {
