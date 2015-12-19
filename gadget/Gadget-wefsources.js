@@ -2,6 +2,7 @@
 
 	/** @class */
 	WEF_LatestUsedSources = function() {
+		// no op
 	};
 
 	WEF_LatestUsedSources.get = function() {
@@ -20,24 +21,23 @@
 			}
 		} );
 		return result;
-	}
+	};
 
 	WEF_LatestUsedSources.isEnabled = function() {
 		return !WEF_Utils.isEmpty( window.localStorage );
-	}
+	};
 
 	WEF_LatestUsedSources.add = function( entityId ) {
 		if ( !WEF_LatestUsedSources.isEnabled() )
 			return;
 
-		var newValue;
-		var serialized = window.localStorage.getItem( 'WEF_LatestUsedSources' );
-		if ( WEF_Utils.isEmpty( serialized ) ) {
-			newValue = entityId;
+		var existing = get();
+		if ( existing.length > 0 ) {
+			window.localStorage.setItem( 'WEF_LatestUsedSources', entityId + "," + existing.join( "," ) );
 		} else {
-			newValue = entityId + ',' + newValue;
+			window.localStorage.setItem( 'WEF_LatestUsedSources', entityId );
 		}
-	}
+	};
 
 	/**
 	 * @class
@@ -116,7 +116,6 @@
 				delete this.timeoutID;
 			}
 
-			var form = this;
 			this._scheduleLookupTimeoutID = window.setTimeout( function() {
 				form._lookup();
 			}, 500 );
@@ -259,7 +258,7 @@
 				wef_LabelsCache.receiveLabels();
 			},
 		} );
-	}
+	};
 
 	/**
 	 * @class
