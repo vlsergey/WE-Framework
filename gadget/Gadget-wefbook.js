@@ -82,6 +82,8 @@ var wef_SourceBookEditor_html = "<div class=\'wef_sourceBookEditor_dialog\'>\r\n
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P361\' data-datatype=\'wikibase-item\'>\r\n" + 
 		"						<!-- stated as -->\r\n" + 
 		"						<tr class=\'wef_claim_editors\' data-code=\'P1932\' data-datatype=\'string\' />\r\n" + 
+		"						<!-- volume -->\r\n" + 
+		"						<tr class=\'wef_claim_editors\' data-code=\'P478\' data-datatype=\'string\' />\r\n" + 
 		"					</tbody>\r\n" + 
 		"					<!-- volume -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P478\' data-datatype=\'string\' />\r\n" + 
