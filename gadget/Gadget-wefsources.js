@@ -93,6 +93,7 @@
 				button.button();
 				button.click( function() {
 					var d = editor.edit( false, null, classEntityId );
+					form._html.dialog( "close" );
 					d.done( function( newEntityId ) {
 						if ( !WEF_Utils.isEmpty( newEntityId ) ) {
 							showInsertSourceDialog( newEntityId );
