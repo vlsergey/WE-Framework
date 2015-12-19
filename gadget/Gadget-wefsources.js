@@ -411,6 +411,8 @@
 		} );
 	}
 
+	mw.hook( 'ext.lqt.textareaCreated' ).add( addNewToolbarButton );
+
 	$.each( window.wef_editors_registry.registry, function( classId, editor ) {
 
 		$( '.citetype_' + classId ).prepend( $( document.createElement( 'a' ) ).addClass( 'wef_attached_edit' ).text( '[edit] ' ).css( 'cursor', 'pointer' ).click( function() {
