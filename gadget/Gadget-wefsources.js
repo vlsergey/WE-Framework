@@ -116,6 +116,7 @@
 				delete this.timeoutID;
 			}
 
+			var form = this;
 			this._scheduleLookupTimeoutID = window.setTimeout( function() {
 				form._lookup();
 			}, 500 );
@@ -205,6 +206,9 @@
 					mw.log.warn( getEntitiesResult.error );
 					return;
 				}
+				if ( WEF_Utils.isEmpty( getEntitiesResult.entities ) )
+					return;
+
 				$.each( getEntitiesResult.entities, function( entityIndex, entity ) {
 					var entityId = entity.id;
 					/** @type {WEF_SelectOrFindSourceForm_List_Item} */
