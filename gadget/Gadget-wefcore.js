@@ -3391,7 +3391,7 @@ WEF_SnakEditor.prototype.equalsStringValue = function( value ) {
 	if ( !this.hasValue() || "string" != this.getDataType() )
 		return false;
 
-	return this.toDataValue().value === lookupValue;
+	return this.toDataValue().value === value;
 };
 
 WEF_SnakEditor.prototype.equalsWikibaseItemValue = function( entityId ) {
