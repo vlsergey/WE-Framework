@@ -1125,6 +1125,16 @@ window.WEF_ExternalLinks = function() {
 			return 'https://twitter.com/' + id;
 		}
 	} );
+	this.definitions.P1960 = new WEF_Definition( {
+		code: 'P1960',
+		label: 'Q494817',
+		normalize: function( id ) {
+			return id.replace( /^https?:\/\/scholar\.google\.com\/citations\?user=([^&]*)(&.*)?$/i, '$2' );
+		},
+		url: function( id ) {
+			return 'https://scholar.google.com/citations?user=' + id;
+		}
+	} );
 	this.definitions.P2003 = new WEF_Definition( {
 		code: 'P2003',
 		label: 'Q209330',
@@ -2294,6 +2304,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		label: i18n.tabScience,
 		fields: [// 
 		d.P549, // genealogy.ams.org
+		d.P1960, // Google Scholar
 		d.P496, // orcid.org
 		d.P1053, // researcherid.com
 		d.P1153, // scopus.com

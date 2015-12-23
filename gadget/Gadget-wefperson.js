@@ -248,6 +248,14 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P1026\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
 		"			<fieldset>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>Q5962346</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- Google Scholar ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1960\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'https://scholar.google.com/citations?user=$1\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetBiology</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- botanist author abbreviation -->\r\n" + 
