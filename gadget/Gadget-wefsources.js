@@ -1,5 +1,19 @@
 ( function() {
 
+	/**
+	 * @const
+	 * 
+	 * @type {String[]}
+	 */
+	var WEF_SOURCES_LOOKUP_LANGUAGES = ( function() {
+		"use strict";
+		var languages = [ mw.config.get( 'wgUserLanguage' ), mw.config.get( 'wgContentLanguage' ), 'ru', 'en', 'nl', 'de' ];
+		var uniqueLanguages = languages.filter( function( v, i ) {
+			return languages.indexOf( v ) == i;
+		} );
+		return uniqueLanguages;
+	} )();
+
 	/** @class */
 	WEF_LatestUsedSources = function() {
 		// no op
@@ -161,25 +175,40 @@
 		this.htmlElement.empty();
 
 		var list = this;
-		$.ajax( {
-			dataType: 'json',
-			url: WEF_Utils.getWikidataApiPrefix() // 
-					+ '&action=wbsearchentities' //
-					+ '&language=' + encodeURIComponent( mw.config.get( 'wgUserLanguage' ) ) // 
-					+ '&strictlanguage=false' //
-					+ '&type=item' //
-					+ '&limit=50' //
-					+ '&search=' + encodeURIComponent( searchTerm ),
-		} ).done( function( searchEntitiesResult ) {
-			var entityIds = [];
-			$.each( searchEntitiesResult.search, function( index, entity ) {
-				entityIds.push( entity.id );
+		var alreadyAdded = {};
+
+		$.each( WEF_SOURCES_LOOKUP_LANGUAGES, function( i, languageCode ) {
+			$.ajax( {
+				dataType: 'json',
+				url: WEF_Utils.getWikidataApiPrefix() // 
+						+ '&action=wbsearchentities' //
+						+ '&language=' + encodeURIComponent( languageCode ) // 
+						+ '&strictlanguage=false' //
+						+ '&type=item' //
+						+ '&limit=50' //
+						+ '&search=' + encodeURIComponent( searchTerm ),
+			} ).done( function( searchEntitiesResult ) {
+				var entityIds = [];
+				$.each( searchEntitiesResult.search, function( index, entity ) {
+					if ( alreadyAdded.hasOwnProperty( entity.id ) ) {
+						return;
+					}
+					alreadyAdded[entity.id] = true;
+					entityIds.push( entity.id );
+				} );
+				list._add( entityIds );
 			} );
-			list._add( entityIds );
 		} );
 	};
 
+	/**
+	 * @param {String[]}
+	 *            entityIds
+	 */
 	WEF_SelectOrFindSourceForm_List.prototype._add = function( entityIds ) {
+		if ( entityIds.length === 0 )
+			return;
+
 		var list = this;
 		$.each( entityIds, function( index, entityId ) {
 			var item = new WEF_SelectOrFindSourceForm_List_Item( entityId );
