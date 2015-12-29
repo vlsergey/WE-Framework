@@ -144,6 +144,13 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P119\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
+		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- Find a Grave grave ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P535\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.findagrave.com/cgi-bin/fg.cgi?page=gr&GRid=$1\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_media\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
