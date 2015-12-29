@@ -351,10 +351,8 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 					.appendTo( firstLine );
 
 			var title = $( document.createElement( 'a' ) ).addClass( 'mw-changeslist-title' ).attr( 'href', '//www.wikidata.org/wiki/' + id ).text( id );
-			window.wef_LabelsCache.getOrQueue( id, function( label, description ) {
-				title.text( label );
-				title.attr( 'title', description );
-			} );
+			window.wef_LabelsCache.localizeLabel( title, id );
+			window.wef_LabelsCache.localizeDescriptionAsTitle( title, id );
 
 			var mainLine = $( document.createElement( 'td' ) ).addClass( 'mw-title' ).append( title );
 			mainLine.append( " (" );
