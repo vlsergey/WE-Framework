@@ -891,8 +891,8 @@ WEF_Utils.putOrClearLocalStorage = function( key, value ) {
 		mw.log.warn( 'Unable to populate local storage: ' + err );
 		try {
 			localStorage.removeItem( key );
-		} catch ( err ) {
-			mw.log.warn( 'Unable to remove outdated item from local storage: ' + err );
+		} catch ( err2 ) {
+			mw.log.warn( 'Unable to remove outdated item from local storage: ' + err2 );
 		}
 	}
 }
@@ -1334,6 +1334,45 @@ window.wef_Editors_i18n = new WEF_Editors_i18n();
  */
 WEF_LabelsCache = function() {
 
+	/** @const */
+	LABELS_CACHE_DB_NAME = 'WEFLabelsCache';
+	LABELS_CACHE_STORE_NAME = 'NameAndDescription';
+	LABELS_CACHE_FIELD_ID = 'id';
+	LABELS_CACHE_FIELD_LABEL = 'label';
+	LABELS_CACHE_FIELD_DESCRIPTION = 'description';
+
+	/** @type {IDBDatabase} */
+	var dbCacheDb = null;
+	var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+	if ( window.indexedDB ) {
+		try {
+			console.log( "[WEF_LabelsCache] " + LABELS_CACHE_DB_NAME + " DB is opening..." );
+			var dbCacheDbOpenRequest = indexedDB.open( LABELS_CACHE_DB_NAME, 1 );
+			dbCacheDbOpenRequest.onerror = function( event ) {
+				console.log( "[WEF_LabelsCache] " + "Unable to open cache DB: " + event );
+			};
+			dbCacheDbOpenRequest.onsuccess = function( event ) {
+				console.log( "[WEF_LabelsCache] " + LABELS_CACHE_DB_NAME + " DB is open" );
+				dbCacheDb = dbCacheDbOpenRequest.result;
+			};
+			dbCacheDbOpenRequest.onupgradeneeded = function( ounEvent ) {
+				console.log( LABELS_CACHE_DB_NAME + " DB is upgrading..." );
+				var db = ounEvent.target.result;
+				db.onerror = function( oeEvent ) {
+					"use strict";
+					console.log( "[WEF_LabelsCache] " + "Unable to open cache DB: " + oeEvent );
+				};
+				// Create an objectStore for this database
+				db.createObjectStore( LABELS_CACHE_STORE_NAME, {
+					keyPath: LABELS_CACHE_FIELD_ID
+				} );
+				console.log( "[WEF_LabelsCache] " + LABELS_CACHE_DB_NAME + " DB is upgraded" );
+			};
+		} catch ( e ) {
+			console.log( "[WEF_LabelsCache] " + "Unable to initialize cache DB: " + e );
+		}
+	}
+
 	/**
 	 * @const
 	 * @private
@@ -1343,20 +1382,28 @@ WEF_LabelsCache = function() {
 	/**
 	 * @const
 	 * @private
+	 * @deprecated
 	 */
 	var LOCALSTORAGE_PREFIX_LABELS = 'wef-d-label-';
+	/**
+	 * @const
+	 * @private
+	 * @deprecated
+	 */
 	var LOCALSTORAGE_PREFIX_DESCRIPTIONS = 'wef-d-description-';
 
 	/** @private */
-	var cacheLabels = {};
-	/** @private */
-	var cacheDescriptions = {};
+	var pageCache = this._pageCache = {};
+
 	/** @private */
 	var queue = [];
 
 	this.clear = function() {
-		cacheLabels = {};
-		cacheDescriptions = {};
+		for ( var prop in pageCache )
+			if ( pageCache.hasOwnProperty( prop ) )
+				delete pageCache[prop];
+
+		// clear local storage -- not used anymore
 		$.each( localStorage, function( key, value ) {
 			if ( key.substr( 0, LOCALSTORAGE_PREFIX_LABELS.length ) === LOCALSTORAGE_PREFIX_LABELS ) {
 				localStorage.removeItem( key );
@@ -1365,22 +1412,31 @@ WEF_LabelsCache = function() {
 				localStorage.removeItem( key );
 			}
 		} );
+
+		if ( dbCacheDb )
+			dbCacheDb.transaction( [ LABELS_CACHE_STORE_NAME ], "readwrite" ) //
+			/**/.objectStore( LABELS_CACHE_STORE_NAME ) //
+			/**/.clear();
+
 		onUpdate();
 	};
 
 	this.clearCacheAndRequeue = function() {
-		$.each( cacheLabels, function( key, item ) {
+		if ( dbCacheDb )
+			dbCacheDb.transaction( [ LABELS_CACHE_STORE_NAME ], "readwrite" ) //
+			/**/.objectStore( LABELS_CACHE_STORE_NAME ) //
+			/**/.clear();
+
+		$.each( pageCache, function( key, item ) {
+			// clear local storage -- not used anymore
 			localStorage.removeItem( LOCALSTORAGE_PREFIX_LABELS + key );
-			delete cacheLabels[key];
-			if ( queue.indexOf( key ) === -1 ) {
-				queue.push( key );
-			}
-		} );
-		$.each( cacheDescriptions, function( key, item ) {
 			localStorage.removeItem( LOCALSTORAGE_PREFIX_DESCRIPTIONS + key );
-			delete cacheDescriptions[key];
-			if ( queue.indexOf( key ) === -1 ) {
-				queue.push( key );
+
+			delete pageCache[key];
+			queue.push( key );
+			if ( !checkScheduled ) {
+				checkScheduled = true;
+				setTimeout( scheduleQueueCheck, 0 );
 			}
 		} );
 	};
@@ -1397,15 +1453,9 @@ WEF_LabelsCache = function() {
 	this.getLabel = function( key, returnKeyIfEmpty ) {
 		WEF_Utils.assertCorrectEntityId( key );
 
-		var cached = cacheLabels[key];
+		var cached = pageCache[key];
 		if ( typeof cached !== 'undefined' ) {
-			return cached;
-		}
-
-		var localCached = localStorage[LOCALSTORAGE_PREFIX_LABELS + key];
-		if ( isValid( localCached ) ) {
-			cacheLabels[key] = localCached;
-			return localCached;
+			return cached[LABELS_CACHE_FIELD_LABEL];
 		}
 
 		if ( returnKeyIfEmpty !== false )
@@ -1413,46 +1463,14 @@ WEF_LabelsCache = function() {
 	};
 
 	/**
-	 * Return cached value
-	 * 
-	 * @param key
-	 *            {string}
-	 * @param returnKeyIfEmpty
-	 *            {boolean}
-	 * @returns {string}
-	 */
-	this.getDescription = function( key, returnKeyIfEmpty ) {
-		WEF_Utils.assertCorrectEntityId( key );
-
-		var cached = cacheDescriptions[key];
-		if ( typeof cached !== 'undefined' ) {
-			return cached;
-		}
-
-		var localCached = localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + key];
-		if ( isValid( localCached ) ) {
-			cacheDescriptions[key] = localCached;
-			return localCached;
-		}
-
-		if ( returnKeyIfEmpty !== false )
-			return key;
-	};
-
-	/** @private */
-	var isValid = function( value ) {
-		return typeof value !== 'undefined' && value !== null;
-	};
-
-	/**
-	 * Return cached value or queue values to be received from Wikidata
+	 * Pass cached values to listener or queue values to be received from
+	 * Wikidata
 	 * 
 	 * @param key
 	 *            {string}
 	 * @param listener
 	 *            {function(string,string)} callback to be called (may be
 	 *            several times) after cache or Wikidata retrieve
-	 * @return {string} immediatly available value
 	 */
 	this.getOrQueue = function( key, listener ) {
 		WEF_Utils.assertCorrectEntityId( key );
@@ -1460,36 +1478,40 @@ WEF_LabelsCache = function() {
 			throw new Error( 'Listener not specified or not a function' );
 		}
 
-		var getLabel = this.getLabel;
-		var getDescription = this.getDescription;
-
-		var cachedLabel = getLabel( key );
-		var cachedDescription = getDescription( key );
-		// call listener even if got from cache
-		listener( cachedLabel, cachedDescription );
-
 		// label can be updated later, or user can change language
 		$( this ).bind( 'change', function() {
-			var label = getLabel( key );
-			var description = getDescription( key );
-			listener( label, description );
+			var cached = pageCache[key];
+			if ( typeof cached !== 'undefined' ) {
+				listener( cached.label, cached.description );
+			}
 		} );
-		if ( !isValid( cachedLabel ) || cachedLabel === key || !isValid( cachedDescription ) || cachedDescription === key ) {
+
+		var cached = pageCache[key];
+		if ( typeof cached !== 'undefined' ) {
+			// call listener even if got from cache
+			listener( cached.label, cached.description );
+		} else {
 			queue.push( key );
-			return key;
 		}
-		return cachedLabel;
 	};
 
-	var _this = this;
+	var jThis = $( this );
+
 	/**
 	 * Notify listeners
 	 * 
 	 * @private
 	 */
 	var onUpdate = function() {
-		$( _this ).change();
+		// remove already known from queue
+		queue = jQuery.grep( queue, function( key ) {
+			return typeof pageCache[key] === 'undefined';
+		} );
+
+		jThis.change();
 	};
+
+	var checkScheduled = false;
 
 	/**
 	 * Add key to the queue if his label is missing from cache
@@ -1497,136 +1519,180 @@ WEF_LabelsCache = function() {
 	 * @param key
 	 *            {string}
 	 */
-	this.queueForLabel = function( key ) {
-		if ( !isValid( cacheLabels[key] ) ) {
+	this.queue = function( key ) {
+		if ( typeof pageCache[key] === 'undefined' ) {
 			queue.push( key );
+
+			if ( !checkScheduled ) {
+				checkScheduled = true;
+				setTimeout( scheduleQueueCheck, 0 );
+			}
 		}
 	};
 
-	/**
-	 * Add key to the queue if his description is missing from cache
-	 * 
-	 * @param key
-	 *            {string}
-	 */
-	this.queueForDescription = function( key ) {
-		if ( !isValid( cacheDescriptions[key] ) ) {
-			queue.push( key );
+	function scheduleQueueCheck() {
+		checkScheduled = false;
+		if ( queue.length > 0 ) {
+			var pCopy = jQuery.grep( queue, function( key ) {
+				return key[0] === 'P';
+			} );
+			var qCopy = jQuery.grep( queue, function( key ) {
+				return key[0] !== 'P';
+			} );
+			receiveLabels( pCopy, true );
+			receiveLabels( qCopy, false );
+			queue = [];
 		}
-	};
+	}
 
 	/** Receive values from Wikidata, if any queued */
-	this.receiveLabels = function() {
-		if ( queue.length === 0 ) {
+	function receiveLabels( queueCopy, useCacheDb ) {
+
+		if ( queueCopy.length === 0 )
+			return;
+
+		// remove already known
+		queueCopy = jQuery.grep( queueCopy, function( key ) {
+			return typeof pageCache[key] === 'undefined';
+		} );
+
+		if ( queueCopy.length === 0 ) {
+			onUpdate();
 			return;
 		}
 
-		var languages = [ mw.config.get( 'wgUserLanguage' ), mw.config.get( 'wgContentLanguage' ), 'en', 'ru', 'de' ];
-		var languagesString = encodeURIComponent( mw.config.get( 'wgUserLanguage' ) + '|' + mw.config.get( 'wgContentLanguage' ) + '|en|ru|de' );
+		var getAllDeferredPromise;
+		{
+			var getAllDeferred = $.Deferred();
+			getAllDeferredPromise = getAllDeferred.promise();
 
-		// remove already known
-		queue = jQuery.grep( queue, function( key ) {
-			return !isValid( cacheLabels[key] ) || !isValid( cacheDescriptions[key] );
-		} );
+			console.log( "[WEF_LabelsCache] " + "Looking up cache DB..." );
+			if ( useCacheDb && dbCacheDb ) {
+				var queueSet = {};
+				for ( var i = 0; i < queueCopy.length; i++ ) {
+					// looking up only properties
+					if ( queueCopy[i][0] !== 'P' )
+						continue;
+					queueSet[queueCopy[i]] = true;
+				}
 
-		var gotFromCache = [];
-		var idsToQuery = [];
-
-		$.each( queue, function( index, key ) {
-			var cachedLabel = localStorage[LOCALSTORAGE_PREFIX_LABELS + key];
-			var cachedDescription = localStorage[LOCALSTORAGE_PREFIX_DESCRIPTIONS + key];
-
-			if ( isValid( cachedLabel ) ) {
-				cacheLabels[key] = cachedLabel;
-				gotFromCache.push( key );
+				var transaction = dbCacheDb.transaction( [ LABELS_CACHE_STORE_NAME ], "readonly" );
+				var objectStore = transaction.objectStore( LABELS_CACHE_STORE_NAME );
+				var getAllRequest = objectStore.openCursor();
+				getAllRequest.onsuccess = function( event ) {
+					var cursor = event.target.result;
+					if ( cursor ) {
+						var key = cursor.key;
+						if ( queueSet[key] ) {
+							pageCache[key] = cursor.value;
+							queueSet[key] = false;
+						}
+						// instead of continue() to simplify IDE work
+						cursor.advance( 1 );
+					} else {
+						// on done
+						console.log( "[WEF_LabelsCache] " + "Looking up cache DB... Done" );
+						onUpdate();
+						getAllDeferred.resolve();
+					}
+				};
+				getAllRequest.onerror = function( event ) {
+					console.log( "[WEF_LabelsCache] " + 'Unable to open cursor: ' + event );
+					getAllDeferred.reject( event );
+				};
+			} else {
+				getAllDeferred.reject( 'db not opened yet or disabled' );
+				console.log( "[WEF_LabelsCache] " + 'Cache DB is not opened yet or disabled' );
 			}
-			if ( isValid( cachedDescription ) ) {
-				cacheDescriptions[key] = cachedDescription;
-				gotFromCache.push( key );
-			}
-
-			if ( !isValid( cachedLabel ) || isValid( cachedDescription ) ) {
-				idsToQuery.push( key );
-			}
-		} );
-
-		function onError( jqXHR, textStatus, errorThrown ) {
-			mw.log.warn( 'Unable to load labels and descriptions from Wikidata: ' + textStatus );
 		}
-		function onSuccess( result ) {
-			if ( typeof result.error !== 'undefined' ) {
-				mw.log.warn( result.error );
+
+		getAllDeferredPromise.always( function() {
+			queueCopy = jQuery.grep( queueCopy, function( key ) {
+				return typeof pageCache[key] === 'undefined';
+			} );
+
+			if ( queueCopy.length === 0 ) {
+				onUpdate();
 				return;
 			}
 
-			$.each( result.entities, function( entityIndex, entity ) {
-				var entityId = entity.id;
+			// TODO: add user languages setting
+			var languages = [ mw.config.get( 'wgUserLanguage' ), mw.config.get( 'wgContentLanguage' ), 'en', 'ru', 'de' ];
+			var languagesString = encodeURIComponent( mw.config.get( 'wgUserLanguage' ) + '|' + mw.config.get( 'wgContentLanguage' ) + '|en|ru|de' );
 
-				if ( typeof entity.labels !== 'undefined' ) {
-					for ( var l = 0; l < languages.length; l++ ) {
-						var label = entity.labels[languages[l]];
-						if ( typeof label !== 'undefined' && !WEF_Utils.isEmpty( label.value ) ) {
-							var title = label.value;
-							cacheLabels[entityId] = title;
-							if ( entityId.substring( 0, 1 ) === 'P' ) {
-								WEF_Utils.putOrClearLocalStorage( LOCALSTORAGE_PREFIX_LABELS + entityId, title );
-							}
-							break;
-						}
-					}
-				}
-				if ( WEF_Utils.isEmpty( cacheLabels[entityId] ) ) {
-					cacheLabels[entityId] = '';
-				}
-
-				if ( typeof entity.descriptions !== 'undefined' ) {
-					for ( var l = 0; l < languages.length; l++ ) {
-						var description = entity.descriptions[languages[l]];
-						if ( typeof description !== 'undefined' && !WEF_Utils.isEmpty( description.value ) ) {
-							var title = description.value;
-							cacheDescriptions[entityId] = title;
-							if ( entityId.substring( 0, 1 ) === 'P' ) {
-								WEF_Utils.putOrClearLocalStorage( LOCALSTORAGE_PREFIX_DESCRIPTIONS + entityId, title );
-							}
-							break;
-						}
-					}
-				}
-				if ( WEF_Utils.isEmpty( cacheDescriptions[entityId] ) ) {
-					cacheDescriptions[entityId] = '';
-				}
-
-			} );
-			onUpdate();
-		}
-
-		var total = idsToQuery.length;
-		for ( var i = 0; i < total; i += MAX_ITEMS_PER_REQUEST ) {
-			var idsString = '';
-			for ( var k = i; k < i + MAX_ITEMS_PER_REQUEST && k < total; k++ ) {
-				if ( k != i ) {
-					idsString = idsString + '|';
-				}
-				idsString = idsString + idsToQuery[k];
+			function onError( jqXHR, textStatus, errorThrown ) {
+				mw.log.warn( 'Unable to load labels and descriptions from Wikidata: ' + textStatus );
 			}
-			$.ajax( {
-				url: WEF_Utils.getWikidataApiPrefix() //
-						+ '&action=wbgetentities' //
-						+ '&props=' + encodeURIComponent( 'labels|descriptions|aliases' ) // 
-						+ '&languages=' + languagesString // 
-						+ '&ids=' + encodeURIComponent( idsString ),
-				dataType: 'json',
-				error: onError,
-				success: onSuccess,
-			} );
-		}
-		queue = jQuery.grep( queue, function( value ) {
-			return idsToQuery.indexOf( value ) === -1;
+			function onSuccess( result ) {
+				if ( typeof result.error !== 'undefined' ) {
+					mw.log.warn( result.error );
+					return;
+				}
+
+				$.each( result.entities, function( entityIndex, entity ) {
+					var entityId = entity.id;
+					var label = '';
+					var description = '';
+
+					if ( typeof entity.labels !== 'undefined' ) {
+						for ( var l = 0; l < languages.length; l++ ) {
+							var langLabel = entity.labels[languages[l]];
+							if ( typeof langLabel !== 'undefined' && !WEF_Utils.isEmpty( langLabel.value ) ) {
+								label = langLabel.value;
+								break;
+							}
+						}
+					}
+					if ( typeof entity.descriptions !== 'undefined' ) {
+						for ( var l = 0; l < languages.length; l++ ) {
+							var langDescription = entity.descriptions[languages[l]];
+							if ( typeof langDescription !== 'undefined' && !WEF_Utils.isEmpty( langDescription.value ) ) {
+								description = langDescription.value;
+								break;
+							}
+						}
+					}
+
+					var dataToPut = {};
+					dataToPut[LABELS_CACHE_FIELD_ID] = entityId;
+					dataToPut[LABELS_CACHE_FIELD_LABEL] = label;
+					dataToPut[LABELS_CACHE_FIELD_DESCRIPTION] = description;
+
+					{
+						// schedule update db cache
+						var objectStore = dbCacheDb.transaction( [ LABELS_CACHE_STORE_NAME ], "readwrite" ).objectStore( LABELS_CACHE_STORE_NAME );
+						objectStore.put( dataToPut );
+					}
+
+					// update page cache
+					pageCache[entityId] = dataToPut;
+				} );
+
+				onUpdate();
+			}
+
+			var total = queueCopy.length;
+			for ( var i = 0; i < total; i += MAX_ITEMS_PER_REQUEST ) {
+				var idsString = '';
+				for ( var k = i; k < i + MAX_ITEMS_PER_REQUEST && k < total; k++ ) {
+					if ( k != i ) {
+						idsString = idsString + '|';
+					}
+					idsString = idsString + queueCopy[k];
+				}
+				$.ajax( {
+					url: WEF_Utils.getWikidataApiPrefix() //
+							+ '&action=wbgetentities' //
+							+ '&props=' + encodeURIComponent( 'labels|descriptions|aliases' ) // 
+							+ '&languages=' + languagesString // 
+							+ '&ids=' + encodeURIComponent( idsString ),
+					dataType: 'json',
+					error: onError,
+					success: onSuccess,
+				} );
+			}
 		} );
-		if ( gotFromCache.length > 0 ) {
-			onUpdate();
-		}
-	};
+	}
 
 	// wef_i18n_label / wef_i18n_description support
 	$( this ).bind( 'change', function() {
@@ -1634,9 +1700,9 @@ WEF_LabelsCache = function() {
 			var jqItem = $( item );
 			var entityId = jqItem.data( 'wef_i18n_entityId' );
 			if ( !WEF_Utils.isEmpty( entityId ) ) {
-				var newLabel = wef_LabelsCache.getLabel( entityId, false );
-				if ( !WEF_Utils.isEmpty( newLabel ) ) {
-					jqItem.text( newLabel );
+				var cached = pageCache[entityId];
+				if ( typeof cached !== 'undefined' && typeof cached[LABELS_CACHE_FIELD_LABEL] !== 'undefined' ) {
+					jqItem.text( cached[LABELS_CACHE_FIELD_LABEL] );
 				}
 			}
 		} );
@@ -1644,25 +1710,23 @@ WEF_LabelsCache = function() {
 			var jqItem = $( item );
 			var entityId = jqItem.data( 'wef_i18n_entityId' );
 			if ( !WEF_Utils.isEmpty( entityId ) ) {
-				var newDescription = wef_LabelsCache.getDescription( entityId, false );
-				if ( !WEF_Utils.isEmpty( newDescription ) ) {
-					jqItem.text( newDescription );
+				var cached = pageCache[entityId];
+				if ( typeof cached !== 'undefined' && typeof cached[LABELS_CACHE_FIELD_DESCRIPTION] !== 'undefined' ) {
+					jqItem.text( cached[LABELS_CACHE_FIELD_DESCRIPTION] );
+				}
+			}
+		} );
+		$( ".wef_i18n_description_as_title" ).each( function( index, item ) {
+			var jqItem = $( item );
+			var entityId = jqItem.data( 'wef_i18n_entityId' );
+			if ( !WEF_Utils.isEmpty( entityId ) ) {
+				var cached = pageCache[entityId];
+				if ( typeof cached !== 'undefined' && typeof cached[LABELS_CACHE_FIELD_DESCRIPTION] !== 'undefined' ) {
+					jqItem.attr( 'title', cached[LABELS_CACHE_FIELD_DESCRIPTION] );
 				}
 			}
 		} );
 	} );
-};
-
-WEF_LabelsCache.prototype.localizeDescription = function( jqElement, entityId ) {
-	WEF_Utils.assertCorrectEntityId( entityId );
-
-	jqElement.addClass( 'wef_i18n_description' );
-	jqElement.data( 'wef_i18n_entityId', entityId );
-
-	this.queueForDescription( entityId );
-	var newDescription = this.getDescription( entityId, WEF_Utils.isEmpty( jqElement.text() ) );
-	if ( !WEF_Utils.isEmpty( newDescription ) )
-		jqElement.text( newDescription );
 };
 
 WEF_LabelsCache.prototype.localizeLabel = function( jqElement, entityId ) {
@@ -1670,11 +1734,38 @@ WEF_LabelsCache.prototype.localizeLabel = function( jqElement, entityId ) {
 
 	jqElement.addClass( 'wef_i18n_label' );
 	jqElement.data( 'wef_i18n_entityId', entityId );
+	this.queue( entityId );
 
-	this.queueForLabel( entityId );
-	var newLabel = this.getLabel( entityId, WEF_Utils.isEmpty( jqElement.text() ) );
-	if ( !WEF_Utils.isEmpty( newLabel ) )
-		jqElement.text( newLabel );
+	var cached = this._pageCache[entityId];
+	if ( typeof cached !== 'undefined' && !WEF_Utils.isEmpty( cached[LABELS_CACHE_FIELD_LABEL] ) ) {
+		jqElement.text( cached[LABELS_CACHE_FIELD_LABEL] );
+	}
+};
+
+WEF_LabelsCache.prototype.localizeDescription = function( jqElement, entityId ) {
+	WEF_Utils.assertCorrectEntityId( entityId );
+
+	jqElement.addClass( 'wef_i18n_description' );
+	jqElement.data( 'wef_i18n_entityId', entityId );
+	this.queue( entityId );
+
+	var cached = this._pageCache[entityId];
+	if ( typeof cached !== 'undefined' && !WEF_Utils.isEmpty( cached[LABELS_CACHE_FIELD_DESCRIPTION] ) ) {
+		jqElement.text( cached[LABELS_CACHE_FIELD_DESCRIPTION] );
+	}
+};
+
+WEF_LabelsCache.prototype.localizeDescriptionAsTitle = function( jqElement, entityId ) {
+	WEF_Utils.assertCorrectEntityId( entityId );
+
+	jqElement.addClass( 'wef_i18n_description_as_title' );
+	jqElement.data( 'wef_i18n_entityId', entityId );
+	this.queue( entityId );
+
+	var cached = this._pageCache[entityId];
+	if ( typeof cached !== 'undefined' && typeof cached[LABELS_CACHE_FIELD_DESCRIPTION] !== 'undefined' ) {
+		jqElement.attr( 'title', cached[LABELS_CACHE_FIELD_DESCRIPTION] );
+	}
 };
 
 var wef_LabelsCache = window.wef_LabelsCache = new WEF_LabelsCache();
@@ -2609,7 +2700,6 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					} else {
 						switchDataType( 'time-days', undefined );
 					}
-					wef_LabelsCache.receiveLabels();
 				}
 			};
 			showJulianCheckbox.change( afterCalendarModelChange );
@@ -2974,7 +3064,6 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 							d.done( function( newEntityId ) {
 								if ( !WEF_Utils.isEmpty( newEntityId ) ) {
 									snakValueEditor.setDataValueImpl( newEntityId );
-									wef_LabelsCache.receiveLabels();
 								}
 								WEF_Utils.purgeAsync();
 							} );
@@ -3090,9 +3179,6 @@ WEF_ItemInput = function( options ) {
 				} );
 
 				response( list );
-
-				// just in case everything in cache already
-				wef_LabelsCache.receiveLabels();
 			} );
 		},
 		select: function( event, ui ) {
@@ -3101,20 +3187,25 @@ WEF_ItemInput = function( options ) {
 			var input = $( event.target );
 
 			var entityId = item.entityId;
-			var label = wef_LabelsCache.getLabel( entityId, true );
-			var description = wef_LabelsCache.getDescription( entityId, false );
-
 			input.data( DATA_ENTITY_ID, entityId );
-			input.data( DATA_ENTITY_LABEL, label );
-			input.val( label );
-
-			if ( !WEF_Utils.isEmpty( description ) ) {
-				input.attr( 'title', description );
-			} else {
-				input.removeAttr( 'title' );
-			}
-
+			input.val( entityId );
+			input.removeAttr( 'title' );
 			input.change();
+
+			wef_LabelsCache.getOrQueue( entityId, function( newLabel, newDescription ) {
+				// still the same
+				if ( input.data( DATA_ENTITY_ID ) === entityId ) {
+					input.data( DATA_ENTITY_LABEL, newLabel );
+					input.val( newLabel );
+
+					if ( !WEF_Utils.isEmpty( newDescription ) ) {
+						input.attr( 'title', newDescription );
+					} else {
+						input.removeAttr( 'title' );
+					}
+					input.change();
+				}
+			} );
 			return false;
 		},
 	} );
@@ -4073,7 +4164,6 @@ WEF_ClaimReferencesEditor = function() {
 			label: i18n.sourcesButtonUpdateLabelsLabel,
 			click: function() {
 				wef_LabelsCache.clearCacheAndRequeue();
-				wef_LabelsCache.receiveLabels();
 			},
 			style: 'float: left;',
 		}, {
@@ -4114,7 +4204,6 @@ WEF_ClaimReferencesEditor.prototype.collect = function() {
 WEF_ClaimReferencesEditor.prototype.initAsEmpty = function() {
 	"use strict";
 	this.loadUsedSources();
-	wef_LabelsCache.receiveLabels();
 };
 
 WEF_ClaimReferencesEditor.prototype.load = function( references ) {
@@ -4124,7 +4213,6 @@ WEF_ClaimReferencesEditor.prototype.load = function( references ) {
 		claimReferencesEditor.addReference( reference );
 	} );
 	this.loadUsedSources();
-	wef_LabelsCache.receiveLabels();
 };
 
 WEF_ClaimReferencesEditor.prototype.addReference = function( reference ) {
@@ -4760,50 +4848,44 @@ var WEF_ClaimEditor = function( definition ) {
 WEF_ClaimEditor._getLabel = function( definition ) {
 	var label = $( document.createElement( 'label' ) );
 
-	var updateLabel = function() {
-		var newLabel = '';
+	var spanPrefix = $( document.createElement( 'span' ) );
+	spanPrefix.text( definition.labelPrefix );
+	spanPrefix.appendTo( label );
 
-		if ( typeof definition.labelPrefix !== 'undefined' ) {
-			newLabel += definition.labelPrefix;
-		}
-
-		if ( typeof definition.label !== 'undefined' ) {
-			newLabel += wef_LabelsCache.getLabel( definition.label );
-		}
-
-		if ( typeof definition.labelQualifier !== 'undefined' ) {
-			if ( $.isArray( definition.labelQualifier ) ) {
-				newLabel += ' (';
-				$.each( definition.labelQualifier, function( index, qualifier ) {
-					if ( index !== 0 ) {
-						newLabel += ', ';
-					}
-					newLabel += wef_LabelsCache.getLabel( qualifier );
-				} );
-				newLabel += ')';
-			} else {
-				newLabel += ' (' + wef_LabelsCache.getLabel( definition.labelQualifier ) + ')';
-			}
-		}
-
-		label.text( newLabel );
-		label.attr( 'title', wef_LabelsCache.getDescription( definition.label ) );
-	};
-
-	if ( typeof definition.label !== 'undefined' ) {
-		wef_LabelsCache.getOrQueue( definition.label, updateLabel );
+	var spanLabel = $( document.createElement( 'span' ) );
+	spanLabel.text( definition.label );
+	if ( WEF_Utils.isCorrectEntityId( definition.label ) ) {
+		wef_LabelsCache.localizeLabel( spanLabel, definition.label );
+		wef_LabelsCache.localizeDescriptionAsTitle( label, definition.label );
 	}
+	spanLabel.appendTo( label );
+
 	if ( typeof definition.labelQualifier !== 'undefined' ) {
+		label.append( $( document.createElement( 'span' ) ).text( ' (' ) );
 		if ( $.isArray( definition.labelQualifier ) ) {
 			$.each( definition.labelQualifier, function( index, qualifier ) {
-				wef_LabelsCache.getOrQueue( qualifier, updateLabel );
+				if ( index !== 0 ) {
+					label.append( $( document.createElement( 'span' ) ).text( ', ' ) );
+				}
+
+				var spanQualifier = $( document.createElement( 'span' ) );
+				spanQualifier.text( qualifier );
+				if ( WEF_Utils.isCorrectEntityId( qualifier ) ) {
+					wef_LabelsCache.localizeLabel( spanQualifier, qualifier );
+				}
+				label.append( spanQualifier );
 			} );
 		} else {
-			wef_LabelsCache.getOrQueue( definition.labelQualifier, updateLabel );
+			var spanQualifier = $( document.createElement( 'span' ) );
+			spanQualifier.text( definition.labelQualifier );
+			if ( WEF_Utils.isCorrectEntityId( definition.labelQualifier ) ) {
+				wef_LabelsCache.localizeLabel( spanQualifier, definition.labelQualifier );
+			}
+			label.append( spanQualifier );
 		}
+		label.append( $( document.createElement( 'span' ) ).text( ')' ) );
 	}
 
-	updateLabel();
 	return label;
 };
 
@@ -5892,7 +5974,6 @@ WEF_EditorForm = function( originalTitle, html, definitionEnhanceCallback, i18n,
 			label: i18n.dialogButtonUpdateLabelsLabel,
 			click: function() {
 				wef_LabelsCache.clearCacheAndRequeue();
-				wef_LabelsCache.receiveLabels();
 			},
 			style: 'position: absolute; left: 1em;',
 		}, {
@@ -6048,7 +6129,6 @@ function( currentPageItem, entityId, entityTypeId ) {
 		// empty item
 		var editorForm = new WEF_EditorForm( editor.i18n.dialogTitle, editor.dialogHtml, editor.definitionEnhanceCallback, editor.i18n, currentPageItem, editDeferred );
 		editorForm.initAsEmpty( currentPageItem, entityTypeId );
-		wef_LabelsCache.receiveLabels();
 		editorForm.open();
 		return editDeferred;
 	}
@@ -6065,7 +6145,6 @@ function( currentPageItem, entityId, entityTypeId ) {
 		success: function( result ) {
 			var editorForm = new WEF_EditorForm( editor.i18n.dialogTitle, editor.dialogHtml, editor.definitionEnhanceCallback, editor.i18n, currentPageItem, editDeferred );
 			editorForm.load( result.entities[entityId] );
-			wef_LabelsCache.receiveLabels();
 			editorForm.open();
 		},
 		complete: function() {
@@ -6134,7 +6213,6 @@ var WEF_SelectEditor = function( anchor, optionPrefix, listener ) {
 			jOption.attr( 'title', description );
 		} );
 	} );
-	wef_LabelsCache.receiveLabels();
 
 	select.click( changeF );
 	select.change( changeF );

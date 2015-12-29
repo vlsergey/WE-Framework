@@ -272,7 +272,6 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 							mw.log.warn( "Can't add change line", error );
 						}
 					} );
-					window.wef_LabelsCache.receiveLabels();
 				},
 			} );
 		}

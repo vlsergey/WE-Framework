@@ -115,8 +115,6 @@
 					} );
 				} );
 			} );
-
-			wef_LabelsCache.receiveLabels();
 		}
 	};
 
@@ -215,7 +213,6 @@
 			list._map[entityId] = item;
 			list.htmlElement.append( item.htmlElement );
 		} );
-		wef_LabelsCache.receiveLabels();
 
 		// TODO: add some local cache
 		// receive elements info... on each try?
@@ -288,7 +285,6 @@
 					} );
 
 				} );
-				wef_LabelsCache.receiveLabels();
 			},
 		} );
 	};

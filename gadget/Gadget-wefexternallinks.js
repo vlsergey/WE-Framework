@@ -2035,8 +2035,6 @@ window.WEF_ExternalLinks = function() {
 						claimEditorsTable.init( externalLinksEdit.entity );
 					} );
 
-					wef_LabelsCache.receiveLabels();
-
 					// recenter
 					tabs.tabs();
 					tabs.tabs( "destroy" );
@@ -2072,7 +2070,6 @@ window.WEF_ExternalLinks = function() {
 				label: i18n.dialogButtonUpdateLabelsLabel,
 				click: function() {
 					wef_LabelsCache.clearCacheAndRequeue();
-					wef_LabelsCache.receiveLabels();
 				},
 				style: 'position: absolute; left: 1em;',
 			}, {
@@ -2684,7 +2681,6 @@ options ) {
 
 							if ( !WEF_Utils.isEmpty( entityId ) && entityId !== -1 && entityId !== "-1" ) {
 								dictinaryArticleInput.val( entityId );
-								wef_LabelsCache.receiveLabels();
 								return;
 							}
 
@@ -2692,7 +2688,6 @@ options ) {
 									+ "\nDo you want to automatically create such item?" ) ) {
 								WEF_ExternalLinks.prototype.createDictinaryArticleItem( options, item.pageTitle, item.articleTitle ).done( function( newEntityId ) {
 									dictinaryArticleInput.val( newEntityId );
-									wef_LabelsCache.receiveLabels();
 									return;
 								} );
 							}
