@@ -157,8 +157,8 @@ window.wef_ExternalLinks_i18n = {
 	dialogButtonUpdateLabelsLabel: '{dialogButtonUpdateLabelsLabel}',
 	dialogButtonSaveText: '{dialogButtonSaveText}',
 	dialogButtonSaveLabel: '{dialogButtonSaveLabel}',
-	dialogButtonCloseText: '{dialogButtonCloseText}',
-	dialogButtonCloseLabel: '{dialogButtonCloseLabel}',
+	dialogButtonCancelText: '{dialogButtonCancelText}',
+	dialogButtonCancelLabel: '{dialogButtonCancelLabel}',
 	dialogTitle: '{dialogTitle}',
 
 	tabOfficialPages: '{tabOfficialPages}',
@@ -2086,8 +2086,8 @@ window.WEF_ExternalLinks = function() {
 					} );
 				}
 			}, {
-				text: i18n.dialogButtonCloseText,
-				label: i18n.dialogButtonCloseLabel,
+				text: i18n.dialogButtonCancelText,
+				label: i18n.dialogButtonCancelLabel,
 				click: function() {
 					$( this ).dialog( "close" );
 				}
