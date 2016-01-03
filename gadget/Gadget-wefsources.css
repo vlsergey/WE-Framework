@@ -41,3 +41,16 @@
 .wefSelectOrFindSourceForm_tab_create_button {
 	padding: 0.5em 1em;
 }
+
+.wefInsertSourceFormParameters, .wefInsertSourceForm_input {
+	width: 100%
+}
+
+.wefInsertSourceFormParameters th {
+	white-space: nowrap;
+	text-align: left;
+}
+
+.wefInsertSourceFormParameters td {
+	width: 90%;
+}

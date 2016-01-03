@@ -1,5 +1,10 @@
 ( function() {
 
+	var notifyOptions = {
+		autoHide: true,
+		tag: 'WEF-Sources',
+	};
+
 	/**
 	 * @const
 	 * 
@@ -45,7 +50,7 @@
 		if ( !WEF_LatestUsedSources.isEnabled() )
 			return;
 
-		var existing = get();
+		var existing = this.get();
 		if ( existing.length > 0 ) {
 			window.localStorage.setItem( 'WEF_LatestUsedSources', entityId + "," + existing.join( "," ) );
 		} else {
@@ -67,7 +72,7 @@
 		if ( WEF_LatestUsedSources.isEnabled() ) {
 			var latest = WEF_LatestUsedSources.get();
 			if ( !WEF_Utils.isEmpty( latest ) ) {
-				$( '<li><a href="#wefSelectOrFindSourceForm_tab_lookup">Последние</a></li>' ).appendTo( tabsList );
+				$( '<li><a href="#wefSelectOrFindSourceForm_tab_latest">Последние</a></li>' ).appendTo( tabsList );
 				var tabLatest = $( '<div id="wefSelectOrFindSourceForm_tab_latest" class="wefSelectOrFindSourceForm_tab">' ).appendTo( tabs );
 
 				var list = this._listLatest = new WEF_SelectOrFindSourceForm_List();
@@ -322,20 +327,34 @@
 	function showInsertSourceDialog( entityId ) {
 		var html = this._html = $( '<div class="wefInsertSourceForm"></div>' );
 
-		$( '<p>При необходимости укажите дополнительные параметры источника</p>' );
+		$( '<p>При необходимости укажите дополнительные параметры источника</p>' ).appendTo( html );
+
+		var parameters = $( '<table class="wefInsertSourceFormParameters"></div>' ).appendTo( html );
 
 		var inputPart = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_part">' ).appendTo(
-				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_part">Название главы, части или раздела:</label>' ) )
-						.appendTo( html ) );
+				$( '<td></td>' ).appendTo(
+						$( '<tr class="wefInsertSourceForm_labelAndInput">' ).append(
+								$( '<th><label for="wefInsertSourceForm_input_part">Название главы, части или раздела:</label></th>' ) ).appendTo( parameters ) ) );
+
 		var inputUrl = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_url">' ).appendTo(
-				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_url">URL для главы, части или раздела:</label>' ) )
-						.appendTo( html ) );
+				$( '<td></td>' ).appendTo(
+						$( '<tr class="wefInsertSourceForm_labelAndInput">' ).append(
+								$( '<th><label for="wefInsertSourceForm_input_url">URL для главы, части или раздела:</label></th>' ) ).appendTo( parameters ) ) );
+
 		var inputPages = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_pages">' ).appendTo(
-				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_pages">Номера страниц:</label>' ) ).appendTo( html ) );
+				$( '<td></td>' ).appendTo(
+						$( '<tr class="wefInsertSourceForm_labelAndInput">' ).append( $( '<th><label for="wefInsertSourceForm_input_pages">Номера страниц:</label></th>' ) )
+								.appendTo( parameters ) ) );
+
 		var inputVolume = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_volume">' ).appendTo(
-				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_volume">Том:</label>' ) ).appendTo( html ) );
-		var inputIssue = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_volume">' ).appendTo(
-				$( '<div class="wefInsertSourceForm_labelAndInput">' ).append( $( '<label for="wefInsertSourceForm_input_volume">Выпуск:</label>' ) ).appendTo( html ) );
+				$( '<td></td>' ).appendTo(
+						$( '<tr class="wefInsertSourceForm_labelAndInput">' ).append( $( '<th><label for="wefInsertSourceForm_input_volume">Том:</label></th>' ) ).appendTo(
+								parameters ) ) );
+
+		var inputIssue = $( '<input class="wefInsertSourceForm_input" id="wefInsertSourceForm_input_issue">' ).appendTo(
+				$( '<td></td>' ).appendTo(
+						$( '<tr class="wefInsertSourceForm_labelAndInput">' ).append( $( '<th><label for="wefInsertSourceForm_input_issue">Выпуск:</label></th>' ) ).appendTo(
+								parameters ) ) );
 
 		$( '<hr>' ).appendTo( html );
 		$( '<p>Если Вам необходимо указать другие параметры, например, автора, нужно завести отдельный элемент источника.</p>' ).appendTo( html );
@@ -344,48 +363,112 @@
 		var checkboxRef = $( '<input type="checkbox" class="wefInsertSourceForm_checkbox" id="wefInsertSourceForm_checkbox_ref">' ).appendTo(
 				$( '<div class="wefInsertSourceForm_labelAndInput">' ).appendTo( html ) ).after( $( '<label for="wefInsertSourceForm_checkbox_ref">Вставить как сноску</label>' ) );
 
-		html.dialog( {
-			title: 'Дополнительные параметры источника',
-			height: 'auto',
-			width: '400px',
-			buttons: {
-				"Добавить": function() {
-					$( this ).dialog( "close" );
+		html
+				.dialog( {
+					title: 'Дополнительные параметры источника',
+					height: 'auto',
+					width: '400px',
+					buttons: {
+						"Добавить": function() {
+							$( this ).dialog( "close" );
 
-					var textToInsert;
-					if ( checkboxRef.is( ':checked' ) ) {
-						textToInsert = '{{source-ref|';
-					} else {
-						textToInsert = '{{source|';
-					}
+							var textToInsert;
+							if ( checkboxRef.is( ':checked' ) ) {
+								textToInsert = '{{source-ref|';
+							} else {
+								textToInsert = '{{source|';
+							}
 
-					textToInsert += entityId;
-					if ( !WEF_Utils.isEmpty( inputPart.val() ) )
-						textToInsert += '|part=' + inputPart.val();
-					if ( !WEF_Utils.isEmpty( inputUrl.val() ) )
-						textToInsert += '|parturl=' + inputUrl.val();
-					if ( !WEF_Utils.isEmpty( inputPages.val() ) )
-						textToInsert += '|pages=' + inputPages.val();
-					if ( !WEF_Utils.isEmpty( inputVolume.val() ) )
-						textToInsert += '|volume=' + inputVolume.val();
-					if ( !WEF_Utils.isEmpty( inputIssue.val() ) )
-						textToInsert += '|issue=' + inputIssue.val();
-					textToInsert += '}}';
+							textToInsert += entityId;
+							if ( !WEF_Utils.isEmpty( inputPart.val() ) )
+								textToInsert += '|part=' + inputPart.val();
+							if ( !WEF_Utils.isEmpty( inputUrl.val() ) )
+								textToInsert += '|parturl=' + inputUrl.val();
+							if ( !WEF_Utils.isEmpty( inputPages.val() ) )
+								textToInsert += '|pages=' + inputPages.val();
+							if ( !WEF_Utils.isEmpty( inputVolume.val() ) )
+								textToInsert += '|volume=' + inputVolume.val();
+							if ( !WEF_Utils.isEmpty( inputIssue.val() ) )
+								textToInsert += '|issue=' + inputIssue.val();
+							textToInsert += '}}';
 
-					$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
-						post: textToInsert,
-					} );
+							$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
+								post: textToInsert,
+							} );
 
-					WEF_LatestUsedSources.add( entityId );
-				},
-				"Отменить": function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function() {
-				$( this ).dialog( 'destroy' ).remove();
-			},
-		} );
+							WEF_LatestUsedSources.add( entityId );
+
+							// also automatically insert template on Wikidata
+							// talk page:
+							mw.notify( "Получение токена централизованной аутентификации", notifyOptions );
+							WEF_Utils
+									.queryCentralAuthToken()
+									.fail( function( textStatus ) {
+										mw.notify( "Ошибка получения токена централизованной аутентификации: " + textStatus, notifyOptions );
+									} )
+									.done(
+											function( centralauthtoken1 ) {
+												mw.notify( "Получение токена редактирования...", notifyOptions );
+												WEF_Utils
+														.queryWikidataToken( centralauthtoken1, 'csrf' )
+														.fail( function( textStatus ) {
+															mw.notify( "Ошибка получения токена редактирования: " + textStatus, notifyOptions );
+														} )
+														.done(
+																function( editToken ) {
+																	mw.notify( "Токен редактирования получен. Повторное получение токена централизованной аутентификации...",
+																			notifyOptions );
+																	WEF_Utils
+																			.queryCentralAuthToken()
+																			.fail(
+																					function( textStatus ) {
+																						mw.notify( "Ошибка повторного получения токена централизованной аутентификации: "
+																								+ textStatus, notifyOptions );
+																					} )
+																			.done(
+																					function( centralauthtoken2 ) {
+																						mw
+																								.notify(
+																										"Токен централизованной аутентификации повторно получен. Отправка запроса на обновление страницы обсуждения...",
+																										notifyOptions );
+
+																						var url = WEF_Utils.getWikidataApiPrefix() //
+																								+ '&centralauthtoken=' + encodeURIComponent( centralauthtoken2 ) //
+																								+ '&action=edit' //
+																								+ '&title=' + encodeURI( "Talk:" + entityId ) //
+																								+ '&createonly=1' //
+																								+ '&tags=' + encodeURIComponent( 'WE-Framework gadget' ) //
+																								+ '&minor=1' //
+																								+ '&format=json';
+
+																						$
+																								.ajax( {
+																									type: 'POST',
+																									url: url,
+																									dataType: 'json',
+																									data: {
+																										text: '{{source talkpage placeholder}}',
+																										token: editToken,
+																										summary: 'Add source talkpage placehoder {{source talkpage placeholder}} via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from '
+																												+ mw.config.get( 'wgDBname' ),
+																									},
+																									success: function( result ) {
+																										mw.notify( "Запрос на создание страницы обсуждения отправлен",
+																												notifyOptions );
+																									},
+																								} );
+																					} );
+																} );
+											} );
+						},
+						"Отменить": function() {
+							$( this ).dialog( "close" );
+						}
+					},
+					close: function() {
+						$( this ).dialog( 'destroy' ).remove();
+					},
+				} );
 	}
 
 	function addOldToolbarButton() {
