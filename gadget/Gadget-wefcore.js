@@ -1150,6 +1150,7 @@ WEF_Utils.update = function( updates ) {
 							+ '&action=wbeditentity' // 
 							+ ( WEF_Utils.isEmpty( executionContext.updates.entityId ) ? '&new=item' : '&id=' + executionContext.updates.entityId ) //
 							+ '&summary=' + encodeURIComponent( i18n.summary ) //
+							+ '&tags=' + encodeURIComponent( 'WE-Framework gadget' ) //
 					,
 					data: {
 						data: JSON.stringify( updates.data ),
@@ -1202,6 +1203,7 @@ WEF_Utils.update = function( updates ) {
 					url: executionContext.getPrefixWithCentralAuthToken() // 
 							+ '&action=wbremoveclaims' // 
 							+ '&summary=' + encodeURIComponent( i18n.summary ) //
+							+ '&tags=' + encodeURIComponent( 'WE-Framework gadget' ) //
 					,
 					data: {
 						claim: updates.removedClaims.join( '|' ),
