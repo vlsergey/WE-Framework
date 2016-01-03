@@ -3059,8 +3059,8 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				var entityId = input.val();
 				if ( WEF_Utils.isEmpty( entityId ) ) {
 					if ( selectCreateEditor == null ) {
-						selectCreateEditor = new WEF_SelectEditor( createOrEditButton, wef_Editors_i18n.buttonCreateOrEditPrefixCreate, function( id, editor ) {
-							var d = editor.edit( false, null );
+						selectCreateEditor = new WEF_SelectEditor( createOrEditButton, wef_Editors_i18n.buttonCreateOrEditPrefixCreate, function( classEntityId, editor ) {
+							var d = editor.edit( false, null, classEntityId );
 							d.done( function( newEntityId ) {
 								if ( !WEF_Utils.isEmpty( newEntityId ) ) {
 									snakValueEditor.setDataValueImpl( newEntityId );
@@ -3074,7 +3074,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					}
 				} else {
 					if ( selectEditEditor == null ) {
-						selectEditEditor = new WEF_SelectEditor( createOrEditButton, wef_Editors_i18n.buttonCreateOrEditPrefixEdit, function( id, editor ) {
+						selectEditEditor = new WEF_SelectEditor( createOrEditButton, wef_Editors_i18n.buttonCreateOrEditPrefixEdit, function( classEntityId, editor ) {
 							var d = editor.edit( false, entityId );
 							d.done( function() {
 								WEF_Utils.purgeAsync();
@@ -6195,20 +6195,20 @@ var WEF_SelectEditor = function( anchor, optionPrefix, listener ) {
 	var called = false;
 	var _this = this;
 	function changeF() {
-		var value = _this.val();
-		if ( value !== null ) {
+		var classEntityId = _this.val();
+		if ( classEntityId !== null ) {
 			if ( called ) {
 				return;
 			}
 			called = true;
 			_this.hide();
-			listener( value, wef_editors_registry.registry[value] );
+			listener( classEntityId, wef_editors_registry.registry[classEntityId] );
 		}
 	}
 
-	$.each( wef_editors_registry.registry, function( id, editor ) {
-		var jOption = $( document.createElement( 'option' ) ).attr( 'value', id ).text( optionPrefix + id ).appendTo( select );
-		wef_LabelsCache.getOrQueue( id, function( label, description ) {
+	$.each( wef_editors_registry.registry, function( entityId, editor ) {
+		var jOption = $( document.createElement( 'option' ) ).attr( 'value', entityId ).text( optionPrefix + entityId ).appendTo( select );
+		wef_LabelsCache.getOrQueue( entityId, function( label, description ) {
 			jOption.text( optionPrefix + label );
 			jOption.attr( 'title', description );
 		} );
