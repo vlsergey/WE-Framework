@@ -1,10 +1,5 @@
 ( function() {
 
-	var notifyOptions = {
-		autoHide: true,
-		tag: 'WEF-Sources',
-	};
-
 	/**
 	 * @const
 	 * 
@@ -36,7 +31,8 @@
 		var entityIds = serialized.split( ',', 10 );
 		$.each( entityIds, function( index, item ) {
 			if ( WEF_Utils.isCorrectEntityId( item ) ) {
-				result.push( item );
+				if ( result.indexOf( item ) === -1 )
+					result.push( item );
 			}
 		} );
 		return result;
@@ -77,6 +73,7 @@
 
 				var list = this._listLatest = new WEF_SelectOrFindSourceForm_List();
 				tabLatest.append( list.htmlElement );
+				list._add( latest );
 			}
 		}
 
@@ -363,112 +360,89 @@
 		var checkboxRef = $( '<input type="checkbox" class="wefInsertSourceForm_checkbox" id="wefInsertSourceForm_checkbox_ref">' ).appendTo(
 				$( '<div class="wefInsertSourceForm_labelAndInput">' ).appendTo( html ) ).after( $( '<label for="wefInsertSourceForm_checkbox_ref">Вставить как сноску</label>' ) );
 
-		html
-				.dialog( {
-					title: 'Дополнительные параметры источника',
-					height: 'auto',
-					width: '400px',
-					buttons: {
-						"Добавить": function() {
-							$( this ).dialog( "close" );
+		html.dialog( {
+			title: 'Дополнительные параметры источника',
+			height: 'auto',
+			width: '400px',
+			buttons: {
+				"Добавить": function() {
+					$( this ).dialog( "close" );
 
-							var textToInsert;
-							if ( checkboxRef.is( ':checked' ) ) {
-								textToInsert = '{{source-ref|';
-							} else {
-								textToInsert = '{{source|';
-							}
+					var textToInsert;
+					if ( checkboxRef.is( ':checked' ) ) {
+						textToInsert = '{{source-ref|';
+					} else {
+						textToInsert = '{{source|';
+					}
 
-							textToInsert += entityId;
-							if ( !WEF_Utils.isEmpty( inputPart.val() ) )
-								textToInsert += '|part=' + inputPart.val();
-							if ( !WEF_Utils.isEmpty( inputUrl.val() ) )
-								textToInsert += '|parturl=' + inputUrl.val();
-							if ( !WEF_Utils.isEmpty( inputPages.val() ) )
-								textToInsert += '|pages=' + inputPages.val();
-							if ( !WEF_Utils.isEmpty( inputVolume.val() ) )
-								textToInsert += '|volume=' + inputVolume.val();
-							if ( !WEF_Utils.isEmpty( inputIssue.val() ) )
-								textToInsert += '|issue=' + inputIssue.val();
-							textToInsert += '}}';
+					textToInsert += entityId;
+					if ( !WEF_Utils.isEmpty( inputPart.val() ) )
+						textToInsert += '|part=' + inputPart.val();
+					if ( !WEF_Utils.isEmpty( inputUrl.val() ) )
+						textToInsert += '|parturl=' + inputUrl.val();
+					if ( !WEF_Utils.isEmpty( inputPages.val() ) )
+						textToInsert += '|pages=' + inputPages.val();
+					if ( !WEF_Utils.isEmpty( inputVolume.val() ) )
+						textToInsert += '|volume=' + inputVolume.val();
+					if ( !WEF_Utils.isEmpty( inputIssue.val() ) )
+						textToInsert += '|issue=' + inputIssue.val();
+					textToInsert += '}}';
 
-							$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
-								post: textToInsert,
-							} );
+					$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
+						post: textToInsert,
+					} );
 
-							WEF_LatestUsedSources.add( entityId );
+					WEF_LatestUsedSources.add( entityId );
+					createTalkPageWithPlaceholder( entityId );
+				},
+				"Отменить": function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function() {
+				$( this ).dialog( 'destroy' ).remove();
+			},
+		} );
+	}
 
-							// also automatically insert template on Wikidata
-							// talk page:
-							mw.notify( "Получение токена централизованной аутентификации", notifyOptions );
-							WEF_Utils
-									.queryCentralAuthToken()
-									.fail( function( textStatus ) {
-										mw.notify( "Ошибка получения токена централизованной аутентификации: " + textStatus, notifyOptions );
-									} )
-									.done(
-											function( centralauthtoken1 ) {
-												mw.notify( "Получение токена редактирования...", notifyOptions );
-												WEF_Utils
-														.queryWikidataToken( centralauthtoken1, 'csrf' )
-														.fail( function( textStatus ) {
-															mw.notify( "Ошибка получения токена редактирования: " + textStatus, notifyOptions );
-														} )
-														.done(
-																function( editToken ) {
-																	mw.notify( "Токен редактирования получен. Повторное получение токена централизованной аутентификации...",
-																			notifyOptions );
-																	WEF_Utils
-																			.queryCentralAuthToken()
-																			.fail(
-																					function( textStatus ) {
-																						mw.notify( "Ошибка повторного получения токена централизованной аутентификации: "
-																								+ textStatus, notifyOptions );
-																					} )
-																			.done(
-																					function( centralauthtoken2 ) {
-																						mw
-																								.notify(
-																										"Токен централизованной аутентификации повторно получен. Отправка запроса на обновление страницы обсуждения...",
-																										notifyOptions );
+	/**
+	 * insert template {{source talkpage placeholder}} on Wikidata talk page:
+	 */
+	function createTalkPageWithPlaceholder( entityId ) {
+		var notifyOptions = {
+			autoHide: true,
+			tag: 'WEF-Sources Talkpage',
+		};
 
-																						var url = WEF_Utils.getWikidataApiPrefix() //
-																								+ '&centralauthtoken=' + encodeURIComponent( centralauthtoken2 ) //
-																								+ '&action=edit' //
-																								+ '&title=' + encodeURI( "Talk:" + entityId ) //
-																								+ '&createonly=1' //
-																								+ '&tags=' + encodeURIComponent( 'WE-Framework gadget' ) //
-																								+ '&minor=1' //
-																								+ '&format=json';
+		mw.notify( "Получение токенов редактирования и централизованной аутентификации", notifyOptions );
 
-																						$
-																								.ajax( {
-																									type: 'POST',
-																									url: url,
-																									dataType: 'json',
-																									data: {
-																										text: '{{source talkpage placeholder}}',
-																										token: editToken,
-																										summary: 'Add source talkpage placehoder {{source talkpage placeholder}} via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from '
-																												+ mw.config.get( 'wgDBname' ),
-																									},
-																									success: function( result ) {
-																										mw.notify( "Запрос на создание страницы обсуждения отправлен",
-																												notifyOptions );
-																									},
-																								} );
-																					} );
-																} );
-											} );
-						},
-						"Отменить": function() {
-							$( this ).dialog( "close" );
-						}
-					},
-					close: function() {
-						$( this ).dialog( 'destroy' ).remove();
-					},
-				} );
+		WEF_Utils.queryWikidataEditAndAuthTokens().fail( function( textStatus ) {
+			mw.notify( "Ошибка получения токенов: " + textStatus, notifyOptions );
+		} ).done( function( editToken, centralAuthToken ) {
+			mw.notify( "Токены получены, отправка запроса на обновление страницы обсуждения...", notifyOptions );
+
+			var url = WEF_Utils.getWikidataApiPrefix() //
+					+ '&centralauthtoken=' + encodeURIComponent( centralauthtoken2 ) //
+					+ '&action=edit' //
+					+ '&title=' + encodeURI( "Talk:" + entityId ) //
+					+ '&createonly=1' //
+					+ '&minor=1' //
+					+ '&format=json';
+			$.ajax( {
+				type: 'POST',
+				url: url,
+				dataType: 'json',
+				data: {
+					tags: 'WE-Framework gadget',
+					text: '{{source talkpage placeholder}}',
+					token: editToken,
+					summary: 'Add source talkpage placehoder {{source talkpage placeholder}} via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' ),
+				},
+				success: function( result ) {
+					mw.notify( "Запрос на создание страницы обсуждения отправлен", notifyOptions );
+				},
+			} );
+		} );
 	}
 
 	function addOldToolbarButton() {
