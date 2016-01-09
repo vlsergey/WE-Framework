@@ -124,7 +124,6 @@ window.wef_ExternalLinks_i18n_ru = {
 		'P2003': 'Идентификатор «Instagram» содержит недопустимые символы',
 		'P2013': 'Идентификатор «Facebook» содержит недопустимые символы',
 
-
 		'Q866': 'Идентификатор «YouTube» содержит недопустимые символы',
 		'Q103204': 'Идентификатор «Flickr» содержит недопустимые символы',
 		'Q116933': 'Идентификатор «ВКонтакте» должен иметь форму id+цифры (например «id123456789»), иначе его не пропустит спам-лист',
@@ -1155,6 +1154,17 @@ window.WEF_ExternalLinks = function() {
 		check: regexpPath,
 		url: function( id ) {
 			return 'https://www.facebook.com/' + id;
+		},
+	} );
+	this.definitions.P2338 = new WEF_Definition( {
+		code: 'P2338',
+		label: 'Q2572292',
+		normalize: function( id ) {
+			return id.replace( /^https?:\/\/(www\.)?musopen\.org\/composer\/([^\/]+)(\/)?$/i, '$2' );
+		},
+		check: regexpPath,
+		url: function( id ) {
+			return 'https://musopen.org/composer/' + id + '/';
 		},
 	} );
 
@@ -2285,6 +2295,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.P434, // musicbrainz.org
 		d.P435, // musicbrainz.org
 		d.P436, // musicbrainz.org
+		d.P2338, // musopen.org
 		],
 	} );
 	this.groups.push( {
