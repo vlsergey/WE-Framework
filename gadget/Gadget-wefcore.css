@@ -262,3 +262,17 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 .wef_references_editor_dialog .ui-dialog-buttonset {
 	float: none !important;
 }
+
+/** Editors */
+.wef_editor_dialog table, .wef_editor_dialog tbody, .wef_editor_dialog tr,
+	.wef_editor_dialog th, .wef_editor_dialog td {
+	padding: 0;
+	margin: 0;
+	line-height: 1.2em;
+}
+
+.wef_editor_dialog .wef_fieldset {
+	margin: 0.1em;
+	padding: 0.1em;
+	line-height: 0.75em;
+}

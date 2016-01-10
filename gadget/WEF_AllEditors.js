@@ -8,7 +8,7 @@
 ( function() {
 
 	/** @const */
-	var version = 1452367450;
+	var version = 1452432051;
 
 	try {
 		mw.loader.addSource( "ruwiki", "//ru.wikipedia.org/w/load.php" );
@@ -32,10 +32,11 @@
 	mw.loader.register( 'ext.gadget.wef-ExternalLinks', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 	mw.loader.register( 'ext.gadget.wef-MovieEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 	mw.loader.register( 'ext.gadget.wef-PersonEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wef-SoftwareEditor', version, [ 'ext.gadget.wefcore', ], undefined, 'ruwiki' );
 	mw.loader.register( 'ext.gadget.wef-TaxonEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 	mw.loader.register( 'ext.gadget.wef-WorkEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 
 	mw.loader.using( [ 'ext.gadget.wef-AdmUnitEditor', 'ext.gadget.wef-ArticleEditor', 'ext.gadget.wef-BookEditor', 'ext.gadget.wef-DocumentEditor',
 			'ext.gadget.wef-EditionEditor', 'ext.gadget.wef-EntityEditor', 'ext.gadget.wef-ExternalLinks', 'ext.gadget.wef-MovieEditor', 'ext.gadget.wef-PersonEditor',
-			'ext.gadget.wef-TaxonEditor', 'ext.gadget.wef-WorkEditor' ] );
+			'ext.gadget.wef-SoftwareEditor', 'ext.gadget.wef-TaxonEditor', 'ext.gadget.wef-WorkEditor' ] );
 } )();
