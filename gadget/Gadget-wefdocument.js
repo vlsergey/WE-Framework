@@ -66,16 +66,8 @@ window.wef_WorkEditor_i18n_ru = {
 	menuButton: 'WEF: Документ',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.wefcore', //
-], function() {
-	var editor = new WEF_Editor( wef_WorkEditor_html );
-	editor.localize( 'wef_WorkEditor_i18n_' );
-	editor.addEditButtons( 'Q2061228' );
-	window.wef_editors_registry.registerEditor( 'Q2061228', editor );
-	window.wef_editors_registry.registerEditor( 'Q740464', editor );
-} );
+var editor = new WEF_Editor( wef_WorkEditor_html );
+editor.localize( 'wef_WorkEditor_i18n_' );
+editor.addEditButtons( 'Q2061228' );
+window.wef_editors_registry.registerEditor( 'Q2061228', editor );
+window.wef_editors_registry.registerEditor( 'Q740464', editor );

@@ -156,16 +156,7 @@ window.wef_TaxonEditor_i18n_ru = {
 	menuButton: 'WEF: Таксон',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.wefcore', //
-'ext.gadget.wefflags', //
-], function() {
-	var editor = new WEF_Editor( wef_TaxonEditor_html );
-	editor.localize( 'wef_TaxonEditor_i18n_' );
-	editor.addEditButtons( 'Q16521' );
-	window.wef_editors_registry.registerEditor( 'Q16521', editor );
-} );
+var editor = new WEF_Editor( wef_TaxonEditor_html );
+editor.localize( 'wef_TaxonEditor_i18n_' );
+editor.addEditButtons( 'Q16521' );
+window.wef_editors_registry.registerEditor( 'Q16521', editor );

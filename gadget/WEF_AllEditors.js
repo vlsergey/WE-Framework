@@ -8,7 +8,7 @@
 ( function() {
 
 	/** @const */
-	var version = 1452713506;
+	var version = 1452717858;
 
 	try {
 		mw.loader.addSource( "ruwiki", "//ru.wikipedia.org/w/load.php" );
@@ -32,11 +32,31 @@
 	mw.loader.register( 'ext.gadget.wef-ExternalLinks', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 	mw.loader.register( 'ext.gadget.wef-MovieEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 	mw.loader.register( 'ext.gadget.wef-PersonEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
-	mw.loader.register( 'ext.gadget.wef-SoftwareEditor', version, [ 'ext.gadget.wefcore', ], undefined, 'ruwiki' );
+	mw.loader.register( 'ext.gadget.wef-SoftwareEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 	mw.loader.register( 'ext.gadget.wef-TaxonEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 	mw.loader.register( 'ext.gadget.wef-WorkEditor', version, [ 'ext.gadget.wefcore', 'ext.gadget.wefflags', ], undefined, 'ruwiki' );
 
-	mw.loader.using( [ 'ext.gadget.wef-AdmUnitEditor', 'ext.gadget.wef-ArticleEditor', 'ext.gadget.wef-BookEditor', 'ext.gadget.wef-DocumentEditor',
-			'ext.gadget.wef-EditionEditor', 'ext.gadget.wef-EntityEditor', 'ext.gadget.wef-ExternalLinks', 'ext.gadget.wef-MovieEditor', 'ext.gadget.wef-PersonEditor',
-			'ext.gadget.wef-SoftwareEditor', 'ext.gadget.wef-TaxonEditor', 'ext.gadget.wef-WorkEditor' ] );
+	mw.loader.using( [ //
+	'ext.gadget.wefcore', //
+	'ext.gadget.isbnjs', //
+	'ext.gadget.wefflags', //
+	'ext.gadget.wef-AdmUnitEditor', //
+	'ext.gadget.wef-ArticleEditor', //
+	'ext.gadget.wef-BookEditor', //
+	'ext.gadget.wef-DocumentEditor', //
+	'ext.gadget.wef-EditionEditor', //
+	'ext.gadget.wef-EntityEditor', //
+	'ext.gadget.wef-ExternalLinks', //
+	'ext.gadget.wef-MovieEditor', // 
+	'ext.gadget.wef-PersonEditor', //
+	'ext.gadget.wef-SoftwareEditor', //
+	'ext.gadget.wef-TaxonEditor', //
+	'ext.gadget.wef-WorkEditor' //
+	], function() {
+		console.log( '[WE-F] all WE-F modules were loaded' );
+	}, function() {
+		console.log( '[WE-F] unable to load WE-F functions: ' );
+		console.log( arguments );
+	} );
+
 } )();

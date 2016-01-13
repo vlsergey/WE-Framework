@@ -386,16 +386,7 @@ window.wef_AdmUnitEditor_i18n_ru = {
 	menuButton: 'WEF: Адм. Единица',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.wefcore', //
-'ext.gadget.wefflags', //
-], function() {
-	var editor = new WEF_Editor( wef_AdmUnitEditor_html );
-	editor.localize( 'wef_AdmUnitEditor_i18n_' );
-	editor.addEditButtons( 'Q56061' );
-	window.wef_editors_registry.registerEditor( 'Q56061', editor );
-} );
+var editor = new WEF_Editor( wef_AdmUnitEditor_html );
+editor.localize( 'wef_AdmUnitEditor_i18n_' );
+editor.addEditButtons( 'Q56061' );
+window.wef_editors_registry.registerEditor( 'Q56061', editor );

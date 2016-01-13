@@ -2765,16 +2765,7 @@ options ) {
 	};
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete',// 
-'jquery.ui.dialog',// 
-'jquery.ui.tabs', // 
-'jquery.uls.data', //
-'ext.gadget.wefcore',// 
-'ext.gadget.wefflags',//
-], function() {
-	window.externalLinksEdit = new WEF_ExternalLinks();
-	window.externalLinksEdit.init();
-	window.externalLinksEdit.setup();
-	window.externalLinksEdit.addButtonsEdit();
-} );
+window.externalLinksEdit = new WEF_ExternalLinks();
+window.externalLinksEdit.init();
+window.externalLinksEdit.setup();
+window.externalLinksEdit.addButtonsEdit();

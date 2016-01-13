@@ -495,16 +495,7 @@ window.wef_PersonEditor_i18n_ru = {
 	menuButton: 'WEF: Персона',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.wefcore', //
-'ext.gadget.wefflags', //
-], function() {
-	var editor = new WEF_Editor( wef_PersonEditor_html );
-	editor.localize( 'wef_PersonEditor_i18n_' );
-	editor.addEditButtons( 'Q5' );
-	window.wef_editors_registry.registerEditor( 'Q5', editor );
-} );
+var editor = new WEF_Editor( wef_PersonEditor_html );
+editor.localize( 'wef_PersonEditor_i18n_' );
+editor.addEditButtons( 'Q5' );
+window.wef_editors_registry.registerEditor( 'Q5', editor );

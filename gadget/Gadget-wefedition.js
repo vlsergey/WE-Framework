@@ -187,16 +187,7 @@ window.wef_EditionEditor_i18n_ru = {
 	menuButton: 'WEF: FRBR издание',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.wefcore', //
-'ext.gadget.wefflags', //
-], function() {
-	var editor = new WEF_Editor( wef_EditionEditor_html );
-	editor.localize( 'wef_EditionEditor_i18n_' );
-	editor.addEditButtons( 'Q3331189' );
-	window.wef_editors_registry.registerEditor( 'Q3331189', editor );
-} );
+var editor = new WEF_Editor( wef_EditionEditor_html );
+editor.localize( 'wef_EditionEditor_i18n_' );
+editor.addEditButtons( 'Q3331189' );
+window.wef_editors_registry.registerEditor( 'Q3331189', editor );

@@ -6342,6 +6342,8 @@ WEF_Editors_Registry = function() {
 	/** @type {WEF_Editor[]} */
 	this.registry = {};
 	this.registryLength = 0;
+
+	console.log( '[WE-F] Editors registry initialized' );
 };
 
 WEF_Editors_Registry.prototype.registerEditor = function( classEntityId, wef_editor ) {
@@ -6353,6 +6355,7 @@ WEF_Editors_Registry.prototype.registerEditor = function( classEntityId, wef_edi
 	}
 	this.registry[classEntityId] = wef_editor;
 	this.registryLength++;
+	console.log( '[WE-F] Successfully registered editor ' + wef_editor + ' for class ' + classEntityId );
 };
 var wef_editors_registry = window.wef_editors_registry = new WEF_Editors_Registry();
 

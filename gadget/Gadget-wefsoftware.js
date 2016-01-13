@@ -102,16 +102,7 @@ window.wef_SoftwareEditor_i18n_ru = {
 	menuButton: 'WEF: Программа',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.wefcore', //
-'ext.gadget.wefflags', //
-], function() {
-	var editor = new WEF_Editor( wef_SoftwareEditor_html );
-	editor.localize( 'wef_SoftwareEditor_i18n_' );
-	editor.addEditButtons( 'Q7397' );
-	window.wef_editors_registry.registerEditor( 'Q7397', editor );
-} );
+var editor = new WEF_Editor( wef_SoftwareEditor_html );
+editor.localize( 'wef_SoftwareEditor_i18n_' );
+editor.addEditButtons( 'Q7397' );
+window.wef_editors_registry.registerEditor( 'Q7397', editor );

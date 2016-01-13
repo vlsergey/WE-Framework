@@ -104,18 +104,9 @@ window.wef_SourceArticleEditor_i18n_ru = {
 	menuButton: 'WEF: Статья',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.wefcore', //
-'ext.gadget.wefflags', //
-], function() {
-	var editor = new WEF_Editor( wef_SourceArticleEditor_html );
-	editor.localize( 'wef_SourceArticleEditor_i18n_' );
-	editor.addEditButtons( 'Q191067' );
+var editor = new WEF_Editor( wef_SourceArticleEditor_html );
+editor.localize( 'wef_SourceArticleEditor_i18n_' );
+editor.addEditButtons( 'Q191067' );
 
-	window.wef_editors_registry.registerEditor( 'Q191067', editor );
-	window.wef_editors_registry.registerEditor( 'Q13442814', editor );
-} );
+window.wef_editors_registry.registerEditor( 'Q191067', editor );
+window.wef_editors_registry.registerEditor( 'Q13442814', editor );

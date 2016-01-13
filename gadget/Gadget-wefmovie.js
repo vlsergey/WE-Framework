@@ -127,16 +127,7 @@ window.wef_MovieEditor_i18n_ru = {
 	menuButton: 'WEF: Фильм',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.wefcore', //
-'ext.gadget.wefflags', //
-], function() {
-	var editor = new WEF_Editor( wef_MovieEditor_html );
-	editor.localize( 'wef_MovieEditor_i18n_' );
-	editor.addEditButtons( 'Q11424' );
-	window.wef_editors_registry.registerEditor( 'Q11424', editor );
-} );
+var editor = new WEF_Editor( wef_MovieEditor_html );
+editor.localize( 'wef_MovieEditor_i18n_' );
+editor.addEditButtons( 'Q11424' );
+window.wef_editors_registry.registerEditor( 'Q11424', editor );

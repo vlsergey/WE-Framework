@@ -32,16 +32,7 @@ window.wef_EntityEditor_i18n_ru = {
 	menuButton: 'WEF: Сущность',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.wefcore', //
-'ext.gadget.wefflags', //
-], function() {
-	var editor = new WEF_Editor( wef_EntityEditor_html );
-	editor.localize( 'wef_EntityEditor_i18n_' );
-	editor.addEditButtons();
-	window.wef_editors_registry.registerEditor( 'Q35120', editor );
-} );
+var editor = new WEF_Editor( wef_EntityEditor_html );
+editor.localize( 'wef_EntityEditor_i18n_' );
+editor.addEditButtons();
+window.wef_editors_registry.registerEditor( 'Q35120', editor );

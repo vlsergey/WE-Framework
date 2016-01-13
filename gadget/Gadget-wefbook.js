@@ -181,63 +181,54 @@ window.wef_SourceBookEditor_i18n_ru = {
 	menuButton: 'WEF: Книга',
 };
 
-mw.loader.using( [ //
-'jquery.ui.autocomplete', //
-'jquery.ui.dialog', //
-'jquery.ui.tabs', //
-'jquery.uls.data', //
-'ext.gadget.isbnjs', //
-'ext.gadget.wefcore', //
-'ext.gadget.wefflags', //
-], function() {
-	var editor = new WEF_Editor( wef_SourceBookEditor_html );
-	editor.definitionEnhanceCallback =
-	/**
-	 * @type WEF_Definition
-	 */
-	function( definition ) {
-		// ISBN 10
-		if ( definition.code === 'P957' ) {
-			definition.buttons = [ {
-				icons: {
-					primary: 'ui-icon-transfer-e-w'
-				},
-				text: false,
-				label: 'hyphenate',
-				click: function( claimEditor ) {
-					var str = claimEditor.getStringValue();
-					if ( !WEF_Utils.isEmpty( str ) ) {
-						var parsed = window.ISBN.parse( str.replace( '-', '' ).replace( ' ', '' ) );
-						if ( parsed ) {
-							claimEditor.setStringValue( parsed.asIsbn10( true ) );
-						}
-					}
-				},
-			} ];
-		}
-		// ISBN 13
-		if ( definition.code === 'P212' ) {
-			definition.buttons = [ {
-				icons: {
-					primary: 'ui-icon-transfer-e-w'
-				},
-				text: false,
-				label: 'hyphenate',
-				click: function( claimEditor ) {
-					var str = claimEditor.getStringValue();
-					if ( !WEF_Utils.isEmpty( str ) ) {
-						var parsed = window.ISBN.parse( str.replace( '-', '' ).replace( ' ', '' ) );
-						if ( parsed ) {
-							claimEditor.setStringValue( parsed.asIsbn13( true ) );
-						}
-					}
-				},
-			} ];
-		}
-	};
-	editor.localize( 'wef_SourceBookEditor_i18n_' );
-	editor.addEditButtons( 'Q3331189' );
 
-	window.wef_editors_registry.registerEditor( 'Q571', editor );
-	window.wef_editors_registry.registerEditor( 'Q3331189', editor );
-} );
+var editor = new WEF_Editor( wef_SourceBookEditor_html );
+editor.definitionEnhanceCallback =
+/**
+ * @type WEF_Definition
+ */
+function( definition ) {
+	// ISBN 10
+	if ( definition.code === 'P957' ) {
+		definition.buttons = [ {
+			icons: {
+				primary: 'ui-icon-transfer-e-w'
+			},
+			text: false,
+			label: 'hyphenate',
+			click: function( claimEditor ) {
+				var str = claimEditor.getStringValue();
+				if ( !WEF_Utils.isEmpty( str ) ) {
+					var parsed = window.ISBN.parse( str.replace( '-', '' ).replace( ' ', '' ) );
+					if ( parsed ) {
+						claimEditor.setStringValue( parsed.asIsbn10( true ) );
+					}
+				}
+			},
+		} ];
+	}
+	// ISBN 13
+	if ( definition.code === 'P212' ) {
+		definition.buttons = [ {
+			icons: {
+				primary: 'ui-icon-transfer-e-w'
+			},
+			text: false,
+			label: 'hyphenate',
+			click: function( claimEditor ) {
+				var str = claimEditor.getStringValue();
+				if ( !WEF_Utils.isEmpty( str ) ) {
+					var parsed = window.ISBN.parse( str.replace( '-', '' ).replace( ' ', '' ) );
+					if ( parsed ) {
+						claimEditor.setStringValue( parsed.asIsbn13( true ) );
+					}
+				}
+			},
+		} ];
+	}
+};
+editor.localize( 'wef_SourceBookEditor_i18n_' );
+editor.addEditButtons( 'Q3331189' );
+
+window.wef_editors_registry.registerEditor( 'Q571', editor );
+window.wef_editors_registry.registerEditor( 'Q3331189', editor );
