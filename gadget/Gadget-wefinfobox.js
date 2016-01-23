@@ -200,6 +200,8 @@ mediaWiki.loader.using( [ 'ext.gadget.wefcore', 'jquery.ui.button', 'wikibase.fo
 								var newValue = valueView.value().toJSON();
 								claim.mainsnak.datavalue.value = newValue;
 
+								// XXX: WEF_Utils.getEntityId() is deleted
+								throw new Error( 'rewrite me' );
 								var updates = new WEF_Updates( WEF_Utils.getEntityId() );
 								var claims = {};
 								claims[claim.property] = [ claim ];

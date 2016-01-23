@@ -624,14 +624,53 @@ WEF_Utils.getEntityIdFromDatavalue = function( datavalue ) {
 };
 
 /** @return {string} */
-WEF_Utils.getEntityId = function() {
+WEF_Utils.getEntityIdDeferred = function() {
 	"use strict";
-	// TODO: add check
-	if ( WEF_Utils.isWikidata() ) {
-		return mw.config.get( 'wgTitle' );
-	} else {
-		return mw.config.get( 'wgWikibaseItemId' );
+
+	if ( typeof WEF_Utils._entityIdDeferred !== 'undefined' ) {
+		return WEF_Utils._entityIdDeferred;
 	}
+
+	var articleId = mw.config.get( 'wgArticleId' );
+	if ( !articleId ) {
+		deferred.reject( 'wgArticleId configuration variable is not set' );
+		throw new Error( 'wgArticleId configuration variable is not set' );
+	}
+
+	var deferred = WEF_Utils._entityIdDeferred = $.Deferred();
+	if ( WEF_Utils.isWikidata() ) {
+		deferred.resolve( mw.config.get( 'wgTitle' ) );
+	} else {
+		if ( mw.config.get( 'wgWikibaseItemId' ) ) {
+			deferred.resolve( mw.config.get( 'wgWikibaseItemId' ) );
+		} else {
+			// more complicated case, need API call
+			new mw.Api().get( {
+				action: 'query',
+				prop: 'pageprops',
+				pageids: articleId
+			} ).done( function( data ) {
+				try {
+					var resolved = false;
+					if ( data.query && data.query.pages ) {
+						$.each( data.query.pages, function( pageId, page ) {
+							if ( page.pageid && page.pageprops && page.pageprops.wikibase_item && page.pageid == articleId ) {
+								deferred.resolve( page.pageprops.wikibase_item );
+								resolved = true;
+							}
+						} );
+					}
+					if ( !resolved ) {
+						deferred.resolve( null );
+					}
+				} catch ( error ) {
+					deferred.reject( error );
+				}
+			} );
+		}
+	}
+
+	return deferred.promise();
 };
 
 WEF_Utils.getFirstObjectKey = function( obj ) {
@@ -912,32 +951,30 @@ WEF_Utils.purge = function() {
 };
 
 WEF_Utils.purgeAsync = function() {
-	$.ajax( {
-		url: mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php?action=purge&titles=' + encodeURIComponent( mw.config.get( 'wgPageName' ) ),
+	return new mw.Api().get( {
+		action: 'purge',
+		titles: mw.config.get( 'wgPageName' ),
 	} );
 };
 
 WEF_Utils.queryCentralAuthToken = function() {
 	var d = $.Deferred();
 
-	$.ajax( {
-		type: 'GET',
-		url: mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php' + '?format=json&action=centralauthtoken',
-		error: function( jqXHR, textStatus, errorThrown ) {
-			d.reject( textStatus );
-		},
-		success: function( result ) {
-			if ( result.error ) {
-				d.reject( result.error.info );
-				return;
-			}
-			if ( !result.centralauthtoken || !result.centralauthtoken.centralauthtoken ) {
-				d.reject( 'no centralauthtoken in response' );
-				return;
-			}
+	new mw.Api().get( {
+		action: 'centralauthtoken'
+	} ).done( function( result ) {
+		if ( result.error ) {
+			d.reject( result.error.info );
+			return;
+		}
+		if ( !result.centralauthtoken || !result.centralauthtoken.centralauthtoken ) {
+			d.reject( 'no centralauthtoken in response' );
+			return;
+		}
 
-			d.resolve( result.centralauthtoken.centralauthtoken );
-		},
+		d.resolve( result.centralauthtoken.centralauthtoken );
+	} ).fail( function( jqXHR, textStatus, errorThrown ) {
+		d.reject( textStatus );
 	} );
 
 	return d.promise();
@@ -4641,7 +4678,7 @@ WEF_LabelsEditor.prototype.initAsEmpty = function( currentPageItem ) {
 	var userLang = mw.config.get( 'wgUserLanguage' );
 
 	if ( currentPageItem && !WEF_Utils.isWikidata() ) {
-		this.dataLabels[contentLang] = mw.config.get( 'wgPageName' );
+		this.dataLabels[contentLang] = mw.config.get( 'wgTitle' );
 	}
 
 	var languagesSet = {};
@@ -6258,15 +6295,19 @@ WEF_Editor.prototype.addEditButtons =
 function( initTypeId ) {
 	"use strict";
 
-	var editor = this;
-	var li = $( document.createElement( 'li' ) ).addClass( 'plainlinks' );
-	$( document.createElement( 'a' ) ).css( 'cursor', 'pointer' ).click( function() {
-		var editDeferred = editor.edit( true, undefined, initTypeId );
-		editDeferred.done( function() {
-			WEF_Utils.purge();
+	if ( mw.config.get( 'wgArticleId' ) ) {
+		var editor = this;
+		WEF_Utils.getEntityIdDeferred().done( function( entityId ) {
+			var li = $( document.createElement( 'li' ) ).addClass( 'plainlinks' );
+			$( document.createElement( 'a' ) ).css( 'cursor', 'pointer' ).click( function() {
+				var editDeferred = editor.edit( true, entityId, initTypeId );
+				editDeferred.done( function() {
+					WEF_Utils.purge();
+				} );
+			} ).text( editor.i18n.menuButton ).appendTo( li );
+			$( '#p-tb div ul' ).append( li );
 		} );
-	} ).text( this.i18n.menuButton ).appendTo( li );
-	$( '#p-tb div ul' ).append( li );
+	}
 };
 
 WEF_Editor.prototype.edit =
@@ -6287,11 +6328,6 @@ function( currentPageItem, entityId, entityTypeId ) {
 		WEF_Utils.assertCorrectEntityId( entityTypeId );
 
 	var editDeferred = $.Deferred();
-
-	if ( currentPageItem ) {
-		entityId = WEF_Utils.getEntityId();
-	}
-
 	var editor = this;
 	var i18n = this.i18n;
 
@@ -6433,16 +6469,3 @@ var WEF_SelectEditor = function( anchor, optionPrefix, listener ) {
 		}
 	};
 };
-
-// TEMP function to update existing tags
-$( function() {
-	if ( WEF_Utils.isWikidata() ) {
-		if ( mw.config.get( 'wgNamespaceNumber' ) === 0 ) {
-			WEF_Utils.tagRevisions( mw.config.get( 'wgPageName' ), false );
-		}
-	} else {
-		if ( !WEF_Utils.isEmpty( mw.config.get( 'wgWikibaseItemId' ) ) ) {
-			WEF_Utils.tagRevisions( mw.config.get( 'wgWikibaseItemId' ), false );
-		}
-	}
-} );

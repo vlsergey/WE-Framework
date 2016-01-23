@@ -195,17 +195,14 @@ window.wef_ExternalLinks_i18n = {
 };
 
 /** @class */
-window.WEF_ExternalLinks = function() {
+window.WEF_ExternalLinks = function( entityId ) {
 	var externalLinksEdit = this;
 
 	var URI_PREFIX;
-	var entityId;
 
 	if ( WEF_Utils.isWikidata() ) {
-		entityId = mw.config.get( 'wgTitle' );
 		URI_PREFIX = '//www.wikidata.org/w/api.php?format=json';
 	} else {
-		entityId = mw.config.get( 'wgWikibaseItemId' );
 		URI_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json';
 	}
 
@@ -2765,7 +2762,15 @@ options ) {
 	};
 };
 
-window.externalLinksEdit = new WEF_ExternalLinks();
-window.externalLinksEdit.init();
-window.externalLinksEdit.setup();
-window.externalLinksEdit.addButtonsEdit();
+$( function() {
+	if ( mw.config.get( 'wgArticleId' ) ) {
+		WEF_Utils.getEntityIdDeferred().done( function( entityId ) {
+			if ( !WEF_Utils.isEmpty( entityId ) ) {
+				window.externalLinksEdit = new WEF_ExternalLinks( entityId );
+				window.externalLinksEdit.init();
+				window.externalLinksEdit.setup();
+				window.externalLinksEdit.addButtonsEdit();
+			}
+		} );
+	}
+} );
