@@ -8,7 +8,7 @@
 ( function() {
 
 	/** @const */
-	var version = 1453545426;
+	var version = 1453570759;
 
 	try {
 		mw.loader.addSource( "ruwiki", "//ru.wikipedia.org/w/load.php" );
@@ -16,6 +16,7 @@
 		'jquery.ui.dialog', //
 		'jquery.ui.tabs', //
 		'jquery.uls.data', //
+		'mediawiki.ForeignApi', //
 		], undefined, 'ruwiki' );
 		mw.loader.register( 'ext.gadget.isbnjs', version, undefined, undefined, 'ruwiki' );
 		mw.loader.register( 'ext.gadget.wefflags', version, undefined, undefined, 'ruwiki' );

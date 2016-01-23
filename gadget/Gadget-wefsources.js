@@ -172,21 +172,20 @@
 	};
 
 	WEF_SelectOrFindSourceForm_List.prototype.lookup = function( searchTerm ) {
+		var wikidataApi = WEF_Utils.getWikidataApi();
 		this.htmlElement.empty();
 
 		var list = this;
 		var alreadyAdded = {};
 
 		$.each( WEF_SOURCES_LOOKUP_LANGUAGES, function( i, languageCode ) {
-			$.ajax( {
-				dataType: 'json',
-				url: WEF_Utils.getWikidataApiPrefix() // 
-						+ '&action=wbsearchentities' //
-						+ '&language=' + encodeURIComponent( languageCode ) // 
-						+ '&strictlanguage=false' //
-						+ '&type=item' //
-						+ '&limit=50' //
-						+ '&search=' + encodeURIComponent( searchTerm ),
+			wikidataApi.get( {
+				action: 'wbsearchentities',
+				language: languageCode,
+				strictlanguage: false,
+				type: 'item',
+				limit: 50,
+				search: searchTerm,
 			} ).done( function( searchEntitiesResult ) {
 				var entityIds = [];
 				$.each( searchEntitiesResult.search, function( index, entity ) {
@@ -206,6 +205,8 @@
 	 *            entityIds
 	 */
 	WEF_SelectOrFindSourceForm_List.prototype._add = function( entityIds ) {
+		var localApi = new mw.Api();
+
 		if ( entityIds.length === 0 )
 			return;
 
@@ -219,75 +220,65 @@
 		// TODO: add some local cache
 		// receive elements info... on each try?
 
-		var idsString = entityIds.join( '|' );
-		$.ajax( {
-			url: WEF_Utils.getWikidataApiPrefix() //
-					+ '&action=wbgetentities' //
-					+ '&props=' + encodeURIComponent( 'claims' ) // 
-					+ '&ids=' + encodeURIComponent( idsString ),
-			dataType: 'json',
-			error: function( jqXHR, textStatus, errorThrown ) {
-				mw.log( textStatus );
-			},
-			success: function( getEntitiesResult ) {
-				if ( typeof getEntitiesResult.error !== 'undefined' ) {
-					mw.log.warn( getEntitiesResult.error );
+		WEF_Utils.getWikidataApi().get( {
+			action: 'wbgetentities',
+			props: 'claims',
+			ids: entityIds.join( '|' ),
+		} ).done( function( getEntitiesResult ) {
+			if ( typeof getEntitiesResult.error !== 'undefined' ) {
+				mw.log.warn( getEntitiesResult.error );
+				return;
+			}
+			if ( WEF_Utils.isEmpty( getEntitiesResult.entities ) )
+				return;
+
+			$.each( getEntitiesResult.entities, function( entityIndex, entity ) {
+				var entityId = entity.id;
+				/** @type {WEF_SelectOrFindSourceForm_List_Item} */
+				var item = list._map[entityId];
+				if ( typeof item === 'undefined' ) {
 					return;
 				}
-				if ( WEF_Utils.isEmpty( getEntitiesResult.entities ) )
-					return;
 
-				$.each( getEntitiesResult.entities, function( entityIndex, entity ) {
-					var entityId = entity.id;
-					/** @type {WEF_SelectOrFindSourceForm_List_Item} */
-					var item = list._map[entityId];
-					if ( typeof item === 'undefined' ) {
+				// TODO: check if compatible and exclude
+				if ( typeof entity.claims !== 'undefined' && typeof entity.claims.P31 !== 'undefined' ) {
+					$.each( entity.claims.P31, function( index, claim ) {
+						var typeId = WEF_Utils.getEntityIdFromClaim( claim );
+						if ( typeof typeId !== 'undefined' ) {
+							var typeSpan = $( '<span>' );
+							wef_LabelsCache.localizeLabel( typeSpan, typeId );
+							item.typesElement.append( typeSpan );
+							item.typesElement.append( $( '<span>' ).text( '; ' ) );
+						}
+					} );
+				}
+
+				localApi.get( {
+					action: 'parse',
+					prop: 'text',
+					disablepp: true,
+					disableeditsection: true,
+					preview: true,
+					disabletoc: true,
+					contentformat: 'text/x-wiki',
+					contentmodel: 'wikitext',
+					text: '{{source|' + entityId + '}}'
+				} ).done( function( parseResult ) {
+					if ( typeof parseResult.error !== 'undefined' ) {
+						mw.log.warn( parseResult.error );
 						return;
 					}
 
-					// TODO: check if compatible and exclude
-					if ( typeof entity.claims !== 'undefined' && typeof entity.claims.P31 !== 'undefined' ) {
-						$.each( entity.claims.P31, function( index, claim ) {
-							var typeId = WEF_Utils.getEntityIdFromClaim( claim );
-							if ( typeof typeId !== 'undefined' ) {
-								var typeSpan = $( '<span>' );
-								wef_LabelsCache.localizeLabel( typeSpan, typeId );
-								item.typesElement.append( typeSpan );
-								item.typesElement.append( $( '<span>' ).text( '; ' ) );
-							}
-						} );
+					var text = parseResult.parse.text['*'];
+					if ( !WEF_Utils.isEmpty( text ) ) {
+						item.visualElement.html( text );
 					}
-
-					$.ajax( {
-						url: mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/api.php?format=json' // 
-								+ '&action=parse' // 
-								+ '&prop=text' // 
-								+ '&disablepp=true' // 
-								+ '&disableeditsection=true' // 
-								+ '&preview=true' // 
-								+ '&disabletoc=true' // 
-								+ '&contentformat=' + encodeURIComponent( 'text/x-wiki' ) // 
-								+ '&contentmodel=' + encodeURIComponent( 'wikitext' ) // 
-								+ '&text=' + encodeURIComponent( '{{source|' + entityId + '}}' ),
-						dataType: 'json',
-						error: function( jqXHR, textStatus, errorThrown ) {
-							mw.log( textStatus );
-						},
-						success: function( parseResult ) {
-							if ( typeof parseResult.error !== 'undefined' ) {
-								mw.log.warn( parseResult.error );
-								return;
-							}
-
-							var text = parseResult.parse.text['*'];
-							if ( !WEF_Utils.isEmpty( text ) ) {
-								item.visualElement.html( text );
-							}
-						},
-					} );
-
+				} ).fail( function( jqXHR, textStatus, errorThrown ) {
+					mw.log( textStatus );
 				} );
-			},
+			} );
+		} ).fail( function( jqXHR, textStatus, errorThrown ) {
+			mw.log( textStatus );
 		} );
 	};
 
@@ -414,34 +405,17 @@
 			tag: 'WEF-Sources Talkpage',
 		};
 
-		mw.notify( "Получение токенов редактирования и централизованной аутентификации", notifyOptions );
-
-		WEF_Utils.queryWikidataEditAndAuthTokens().fail( function( textStatus ) {
-			mw.notify( "Ошибка получения токенов: " + textStatus, notifyOptions );
-		} ).done( function( editToken, centralAuthToken ) {
-			mw.notify( "Токены получены, отправка запроса на обновление страницы обсуждения...", notifyOptions );
-
-			var url = WEF_Utils.getWikidataApiPrefix() //
-					+ '&centralauthtoken=' + encodeURIComponent( centralauthtoken2 ) //
-					+ '&action=edit' //
-					+ '&title=' + encodeURI( "Talk:" + entityId ) //
-					+ '&createonly=1' //
-					+ '&minor=1' //
-					+ '&format=json';
-			$.ajax( {
-				type: 'POST',
-				url: url,
-				dataType: 'json',
-				data: {
-					tags: 'WE-Framework gadget',
-					text: '{{source talkpage placeholder}}',
-					token: editToken,
-					summary: 'Add source talkpage placehoder {{source talkpage placeholder}} via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' ),
-				},
-				success: function( result ) {
-					mw.notify( "Запрос на создание страницы обсуждения отправлен", notifyOptions );
-				},
-			} );
+		mw.notify( "Отправка запроса на обновление страницы обсуждения...", notifyOptions );
+		WEF_Utils.getWikidataApi().postWithEditToken( {
+			action: 'edit',
+			title: "Talk:" + entityId,
+			createonly: true,
+			minor: true,
+			tags: 'WE-Framework gadget',
+			text: '{{source talkpage placeholder}}',
+			summary: 'Add source talkpage placehoder {{source talkpage placeholder}} via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' ),
+		} ).done( function() {
+			mw.notify( "Запрос на создание страницы обсуждения отправлен", notifyOptions );
 		} );
 	}
 

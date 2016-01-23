@@ -158,7 +158,7 @@
 		var entityId = mw.config.get( 'wgWikibaseItemId' ).toUpperCase();
 		$.ajax( {
 			type: 'GET',
-			url: WEF_Utils.getWikidataApiPrefix() + '&action=wbgetentities&ids=' + entityId,
+			url: getWikidataApiPrefix() + '&action=wbgetentities&ids=' + entityId,
 			dataType: 'json',
 			success: function( result ) {
 				var entity = result.entities[entityId];

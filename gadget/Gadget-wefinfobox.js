@@ -35,6 +35,7 @@ mediaWiki.loader.using( [ 'ext.gadget.wefcore', 'jquery.ui.button', 'wikibase.fo
 
 					var notifier = this._viewNotifier, $input = this.$input, self = this;
 
+					throw new Error( 'FIXME: getWikidataApiPrefix is removed' );
 					$input.entityselector( {
 						url: WEF_Utils.getWikidataApiPrefix(),
 						selectOnAutocomplete: true
@@ -103,6 +104,7 @@ mediaWiki.loader.using( [ 'ext.gadget.wefcore', 'jquery.ui.button', 'wikibase.fo
 			} );
 		}
 
+		throw new Error( 'FIXME: getWikidataApiPrefix is removed' );
 		$.ajax( {
 			type: 'GET',
 			url: WEF_Utils.getWikidataApiPrefix() + '&action=wbgetentities&ids=' + mw.config.get( 'wgWikibaseItemId' ) + '&ungroupedlist=1',
