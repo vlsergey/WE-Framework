@@ -1444,7 +1444,7 @@ WEF_LabelsCache = function() {
 			// call listener even if got from cache
 			listener( cached.label, cached.description );
 		} else {
-			queue.push( key );
+			this.queue( key );
 		}
 	};
 
