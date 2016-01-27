@@ -12,7 +12,11 @@ window.wef_Editors_i18n_en = {
 	actionAnalyzeChanges: 'Collecting and analyzing changes to entity',
 	actionNoChangesPurge: 'No changes found, purge and refresh current page',
 	actionUpdateEntity: 'Saving changes in entity (update and create statements)',
+	actionUpdateEntityDone: 'Saving changes in entity (update and create statements): done',
+	actionUpdateEntityFail: 'Saving changes in entity (update and create statements): fail',
 	actionRemoveClaims: 'Saving changes in entity (remove statements)',
+	actionRemoveClaimsDone: 'Saving changes in entity (remove statements): done',
+	actionRemoveClaimsFail: 'Saving changes in entity (remove statements): fail',
 
 	buttonSelectSnakType: 'select snak type',
 	buttonAddClaim: 'add claim',
@@ -126,7 +130,11 @@ window.wef_Editors_i18n_ru = {
 	actionAnalyzeChanges: 'Сбор и анализ изменений в элементе',
 	actionNoChangesPurge: 'Изменения не найдены, перезагрузка текущей страницы',
 	actionUpdateEntity: 'Сохранение изменений в элемент (обновление и создание утверждений)',
+	actionUpdateEntityDone: 'Сохранение изменений в элемент (обновление и создание утверждений): успешно.',
+	actionUpdateEntityFail: 'Сохранение изменений в элемент (обновление и создание утверждений): ошибка!',
 	actionRemoveClaims: 'Сохранение изменений в элемент (удаление утверждений)',
+	actionRemoveClaimsDone: 'Сохранение изменений в элемент (удаление утверждений): успешно.',
+	actionRemoveClaimsFail: 'Сохранение изменений в элемент (удаление утверждений): ошибка!',
 
 	buttonSelectSnakType: 'выбрать тип значения',
 	buttonAddClaim: 'добавить утверждение',
@@ -229,11 +237,6 @@ window.wef_Editors_i18n_ru = {
 };
 
 window.WEF_Editors_i18n = function() {
-
-	this.htmlInProgress = '<img alt="⌚" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/17px-Pictogram_voting_wait.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/26px-Pictogram_voting_wait.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Pictogram_voting_wait.svg/34px-Pictogram_voting_wait.svg.png 2x" data-file-width="250" data-file-height="250" height="17" width="17">';
-	this.htmlSuccess = '<img alt="✔" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/15px-Yes_check.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/23px-Yes_check.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Yes_check.svg/30px-Yes_check.svg.png 2x" data-file-width="600" data-file-height="600" height="15" width="15">';
-	this.htmlFailure = '<img alt="×" src="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/16px-Red_x.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/24px-Red_x.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Red_x.svg/32px-Red_x.svg.png 2x" data-file-width="600" data-file-height="600" height="16" width="16">';
-	this.htmlNotNeeded = '<img alt="(=)" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/15px-Pictogram_voting_neutral.svg.png" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/23px-Pictogram_voting_neutral.svg.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/25/Pictogram_voting_neutral.svg/30px-Pictogram_voting_neutral.svg.png 2x" data-file-width="250" data-file-height="250" height="15" width="15">';
 
 	this.summary = 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' );
 
@@ -1088,7 +1091,6 @@ WEF_Utils.toRoman = ( function() {
 } )();
 
 WEF_Utils.update = function( updates ) {
-
 	if ( !( updates instanceof WEF_Updates ) ) {
 		throw new Error( 'WEF_Updates object is expected' );
 	}
@@ -1096,107 +1098,86 @@ WEF_Utils.update = function( updates ) {
 	var d = $.Deferred();
 
 	var i18n = wef_Editors_i18n;
-	var dialog = $( document.createElement( 'div' ) );
-	dialog.attr( 'title', i18n.dialogSaveChangesTitle );
-
-	var progressUl = $( document.createElement( 'ul' ) ).appendTo( dialog );
-
-	var actions = [];
-	var actionFinal = function() {
-		dialog.dialog( 'close' );
-		d.resolve( updates.entityId );
-	};
-
 	var wikidataApi = WEF_Utils.getWikidataApi();
-	var currentAction = 0;
 
 	/* Saving changes in entity, if required */
+	var saveAction;
 	if ( !$.isEmptyObject( updates.data ) ) {
-		( function() {
-			var nextAction = currentAction + 1;
-			var progressItem = new WEF_ProgressItem( progressUl, i18n.actionUpdateEntity );
-			actions[currentAction] = function() {
-				var onFailureAction = actions[nextAction];
-				var onSuccessAction = actions[nextAction];
-				progressItem.inProgress();
+		var notifySaveOptions = {
+			autoHide: true,
+			tag: 'WE-F wbeditentity',
+		};
 
-				var params = {
-					action: 'wbeditentity',
-					summary: i18n.summary,
-					tags: WEF_Utils.tag,
-					data: JSON.stringify( updates.data ),
-				}
-				if ( WEF_Utils.isEmpty( updates.entityId ) ) {
-					params['new'] = 'item';
-				} else {
-					params['id'] = updates.entityId;
-				}
+		var params = {
+			action: 'wbeditentity',
+			summary: i18n.summary,
+			tags: WEF_Utils.tag,
+			data: JSON.stringify( updates.data ),
+		};
 
-				wikidataApi.postWithEditToken( params ).done( function( result ) {
-					if ( result.error ) {
-						progressItem.failure( result.error.info );
-						alert( i18n.errorUpdateEntity + ': ' + result.error.info );
-						onFailureAction();
-						return;
-					}
-					if ( result.entity ) {
-						updates.entityId = result.entity.id;
-					}
-					progressItem.success();
-					onSuccessAction();
-				} ).fail( function( jqXHR, textStatus, errorThrown ) {
-					progressItem.failure( textStatus );
-					alert( i18n.errorUpdateEntity + ': ' + textStatus );
-					onFailureAction();
-					return;
-				} );
-			};
-			currentAction++;
-		} )();
+		if ( WEF_Utils.isEmpty( updates.entityId ) ) {
+			params['new'] = 'item';
+		} else {
+			params['id'] = updates.entityId;
+		}
+
+		mw.notify( i18n.actionUpdateEntity, notifySaveOptions );
+		saveAction = wikidataApi.postWithEditToken( params ).done( function( result ) {
+			if ( result.error ) {
+				mw.notify( i18n.actionUpdateEntityFail, notifySaveOptions );
+				alert( i18n.errorUpdateEntity + ': ' + result.error.info );
+				return;
+			}
+			mw.notify( i18n.actionUpdateEntityDone, notifySaveOptions );
+			if ( result.entity ) {
+				updates.entityId = result.entity.id;
+			}
+		} ).fail( function( jqXHR, textStatus, errorThrown ) {
+			mw.notify( i18n.actionUpdateEntityFail, notifySaveOptions );
+			alert( i18n.errorUpdateEntity + ': ' + textStatus );
+		} );
+	} else {
+		saveAction = $.when();
 	}
+
+	var removeClaimAction = $.Deferred();
 
 	/* Remove claims in separate request */
 	if ( updates.removedClaims.length !== 0 ) {
-		( function() {
-			var nextAction = currentAction + 1;
-			var progressItem = new WEF_ProgressItem( progressUl, i18n.actionRemoveClaims );
-			actions[currentAction] = function() {
-				var onFailureAction = actions[nextAction];
-				var onSuccessAction = actions[nextAction];
-				progressItem.inProgress();
-
-				wikidataApi.postWithEditToken( {
-					action: 'wbremoveclaims',
-					summary: i18n.summary,
-					tags: WEF_Utils.tag,
-					claim: updates.removedClaims.join( '|' )
-				} ).done( function( result ) {
-					if ( result.error ) {
-						progressItem.failure( result.error.info );
-						alert( i18n.errorRemoveClaims + ': ' + result.error.info );
-						onFailureAction();
-						return;
-					}
-					progressItem.success();
-					onSuccessAction();
-				} ).fail( function( jqXHR, textStatus, errorThrown ) {
-					progressItem.failure( textStatus );
-					alert( i18n.errorRemoveClaims + ': ' + textStatus );
-					onFailureAction();
-					return;
-				} );
+		saveAction.always( function() {
+			var notifyRemoveClainsOptions = {
+				autoHide: true,
+				tag: 'WE-F wbremoveclaims',
 			};
-			currentAction++;
-		} )();
+
+			mw.notify( i18n.actionRemoveClaims, notifyRemoveClainsOptions );
+			wikidataApi.postWithEditToken( {
+				action: 'wbremoveclaims',
+				summary: i18n.summary,
+				tags: WEF_Utils.tag,
+				claim: updates.removedClaims.join( '|' )
+			} ).done( function( result ) {
+				if ( result.error ) {
+					mw.notify( i18n.actionRemoveClaimsFail, notifyRemoveClainsOptions );
+					alert( i18n.errorRemoveClaims + ': ' + result.error.info );
+					removeClaimAction.reject.apply( removeClaimAction, arguments );
+					return;
+				}
+				mw.notify( i18n.actionRemoveClaimsDone, notifyRemoveClainsOptions );
+				removeClaimAction.resolve.apply( removeClaimAction, arguments );
+			} ).fail( function( jqXHR, textStatus, errorThrown ) {
+				mw.notify( i18n.actionRemoveClaimsFail, notifyRemoveClainsOptions );
+				alert( i18n.errorRemoveClaims + ': ' + textStatus );
+				removeClaimAction.reject.apply( removeClaimAction, arguments );
+			} );
+		} );
+	} else {
+		removeClaimAction.resolve();
 	}
 
-	actions[currentAction] = actionFinal;
-
-	dialog.dialog( {
-		height: 'auto',
-		width: 'auto',
+	removeClaimAction.always( function() {
+		d.resolve( updates.entityId );
 	} );
-	actions[0]();
 
 	return d.promise();
 };
@@ -1749,51 +1730,27 @@ WEF_TypesCache = function() {
 	 *            {function} callback handler for success
 	 * @param onFailure {
 	 */
-	this.getPropertyType = function( propertyId, onSuccess, onFailure ) {
+	this.getPropertyType = function( propertyId ) {
 		if ( !/^[P]\d+$/.test( propertyId ) ) {
 			throw new Error( 'Incorrect property ID: ' + propertyId );
 		}
 
+		var d = $.Deferred();
+
 		var cached = cacheTypes[propertyId];
 		if ( typeof cached !== 'undefined' ) {
-			onSuccess( cached );
+			d.resolve( cached );
 			return;
 		}
 
 		var localCached = localStorage[LOCALSTORAGE_PREFIX + propertyId];
 		if ( typeof localCached !== 'undefined' && localCached !== null ) {
 			cacheTypes[propertyId] = localCached;
-			onSuccess( localCached );
+			d.resolve( localCached );
 			return;
 		}
 
-		// still no luck. Display modal window and ask Wikidata
-
-		// TODO: i18n
-		var dialog = $( document.createElement( 'div' ) ).attr( 'title', 'Get Wikidata property type' ).addClass( 'wef_dialog_no_close' );
-		var ul = $( document.createElement( 'ul' ) ).appendTo( dialog );
-		var progress = new WEF_ProgressItem( ul, 'Request property type from Wikidata' );
-
-		dialog.dialog( {
-			width: 'auto',
-			height: 'auto',
-			resizable: false,
-			modal: true,
-		} );
-
-		/* We need new handlers to close dialog */
-		var onFailureNew = function( reason ) {
-			progress.failure( reason );
-			dialog.dialog( 'close' );
-			onFailure( reason );
-		};
-		var onSuccessNew = function( datatype ) {
-			progress.success();
-			dialog.dialog( 'close' );
-			onSuccess( datatype );
-		};
-
-		progress.inProgress();
+		mw.notify( 'Request property type from Wikidata' );
 		WEF_Utils.getWikidataApi().get( {
 			action: 'wbgetentities',
 			props: 'datatype',
@@ -1801,7 +1758,7 @@ WEF_TypesCache = function() {
 		} ).done( function( result ) {
 			if ( typeof result.error !== 'undefined' ) {
 				mw.log.warn( result.error );
-				onFailureNew( result.error );
+				d.reject( result.error );
 				return;
 			}
 
@@ -1812,17 +1769,18 @@ WEF_TypesCache = function() {
 					return;
 				}
 			} );
+
 			if ( typeof cacheTypes[propertyId] !== 'undefined' ) {
-				onSuccessNew( cacheTypes[propertyId] );
+				d.resolve( cacheTypes[propertyId] );
 			} else {
-				onFailureNew( 'no results returned for ' + propertyId );
+				d.reject( 'no results returned for ' + propertyId );
 			}
 			return;
-		} ).fail( function( jqXHR, textStatus, errorThrown ) {
-			onFailure( textStatus );
+		} ).fail( function() {
+			d.reject.apply( d, arguments );
 		} );
 
-		return;
+		return d.promise();
 	};
 
 	this.putInCache = function( propertyId, dataType ) {
@@ -3583,12 +3541,12 @@ WEF_SnakEditor.prototype.switchToSnakType = function( snakType ) {
 	var snakEditor = this;
 	if ( snakType === 'value' ) {
 		if ( this.valueEditor === null ) {
-			wef_TypesCache.getPropertyType( snakEditor.propertyId, function( dataType ) {
+			wef_TypesCache.getPropertyType( snakEditor.propertyId ).done( function( dataType ) {
 				snakEditor._snakTypeLabel.hide();
 				snakEditor.valueEditor = new WEF_SnakValueEditor( snakEditor._td2, dataType, undefined, undefined, snakEditor.options );
 				snakEditor._initValueEditor();
 				snakEditor._change();
-			}, function( failureReason ) {
+			} ).fail( function( failureReason ) {
 				alert( "Can't change snak value type bacause property data type is unknown: " + failureReason );
 				snakEditor.snakTypeMode = oldSnakType;
 			} );
@@ -5590,32 +5548,6 @@ WEF_ClaimEditorsTable.prototype.size = function() {
 	return this._claimEditors.length;
 };
 
-WEF_ProgressItem = function( parentUl, text ) {
-	this._span1 = $( document.createElement( 'span' ) );
-	this._span2 = $( document.createElement( 'span' ) ).text( text );
-
-	this._li = $( document.createElement( 'li' ) ).addClass( 'wef_progress_item' ).append( this._span1 ).append( '&nbsp;' ).append( this._span2 ).appendTo( parentUl );
-};
-
-WEF_ProgressItem.prototype.inProgress = function() {
-	this._span1.html( wef_Editors_i18n.htmlInProgress );
-};
-
-WEF_ProgressItem.prototype.success = function() {
-	this._span1.html( wef_Editors_i18n.htmlSuccess );
-};
-
-WEF_ProgressItem.prototype.failure = function( failureReason ) {
-	this._span1.html( wef_Editors_i18n.htmlFailure );
-	if ( failureReason ) {
-		this._span2.append( ': ' + failureReason );
-	}
-};
-
-WEF_ProgressItem.prototype.notNeeded = function() {
-	this._span1.html( wef_Editors_i18n.htmlNotNeeded );
-};
-
 /**
  * @param {string}
  *            entityId
@@ -5677,16 +5609,7 @@ window.wef_analyze_and_save = function( currentPageItem, entityId, labelsEditor,
 	var i18n = wef_Editors_i18n;
 	var d = $.Deferred();
 
-	var dialog = $( document.createElement( 'div' ) );
-	dialog.attr( 'title', i18n.dialogAnalyzeChangesTitle );
-	var analyzeProgressUl = $( document.createElement( 'ul' ) ).appendTo( dialog );
-	var analyzeProgress = new WEF_ProgressItem( analyzeProgressUl, i18n.actionAnalyzeChanges );
-	analyzeProgress.inProgress();
-	dialog.dialog( {
-		height: 'auto',
-		width: 'auto'
-	} );
-
+	mw.notify( i18n.actionAnalyzeChanges );
 	var updates = new WEF_Updates( entityId );
 	try {
 		if ( currentPageItem && WEF_Utils.isEmpty( entityId ) && !WEF_Utils.isWikidata() ) {
@@ -5706,33 +5629,25 @@ window.wef_analyze_and_save = function( currentPageItem, entityId, labelsEditor,
 		} );
 
 		if ( $.isEmptyObject( updates.data ) && updates.removedClaims.length === 0 ) {
-			var purgeProgress = new WEF_ProgressItem( analyzeProgressUl, i18n.actionNoChangesPurge );
-			analyzeProgress.success();
-			purgeProgress.inProgress();
+			mw.notify( i18n.actionNoChangesPurge );
 			d.resolve( updates.entityId );
-			dialog.dialog( 'close' );
 			return d;
 		}
 
-		analyzeProgress.success();
 	} catch ( error ) {
 		mw.log.warn( i18n.errorAnalyzeChanges + ': ' + error );
-		analyzeProgress.failure( '' + error );
 		alert( i18n.errorAnalyzeChanges + ': ' + error );
 		d.reject( error );
 		return d;
 	}
-	dialog.dialog( 'close' );
 
-	var d2 = WEF_Utils.update( updates );
-	d2.done( function() {
+	WEF_Utils.update( updates ).done( function() {
 		d.resolve( updates.entityId );
-	} );
-	d2.fail( function( arg ) {
-		d.reject( arg );
+	} ).fail( function() {
+		d.reject.apply( d, arguments );
 	} );
 
-	return d;
+	return d.promise();
 };
 
 WEF_EditorForm = function( originalTitle, html, definitionEnhanceCallback, i18n, currentPageItem, editDeferred ) {

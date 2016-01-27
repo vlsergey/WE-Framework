@@ -8,7 +8,7 @@
 ( function() {
 
 	/** @const */
-	var version = 1453570759;
+	var version = 1453928851;
 
 	try {
 		mw.loader.addSource( "ruwiki", "//ru.wikipedia.org/w/load.php" );
