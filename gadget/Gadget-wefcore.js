@@ -665,6 +665,11 @@ WEF_Utils.getWikidataApi = function() {
 	} else {
 		api = new mw.Api();
 	}
+	if ( typeof api.postWithEditToken === 'undefined' ) {
+		api.postWithEditToken = function( params, ajaxOptions ) {
+			return this.postWithToken( 'edit', params, ajaxOptions );
+		}
+	}
 	return api;
 };
 
