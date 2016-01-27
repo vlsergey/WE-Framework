@@ -1740,14 +1740,14 @@ WEF_TypesCache = function() {
 		var cached = cacheTypes[propertyId];
 		if ( typeof cached !== 'undefined' ) {
 			d.resolve( cached );
-			return;
+			return d.promise();
 		}
 
 		var localCached = localStorage[LOCALSTORAGE_PREFIX + propertyId];
 		if ( typeof localCached !== 'undefined' && localCached !== null ) {
 			cacheTypes[propertyId] = localCached;
 			d.resolve( localCached );
-			return;
+			return d.promise();
 		}
 
 		mw.notify( 'Request property type from Wikidata' );
@@ -1775,7 +1775,6 @@ WEF_TypesCache = function() {
 			} else {
 				d.reject( 'no results returned for ' + propertyId );
 			}
-			return;
 		} ).fail( function() {
 			d.reject.apply( d, arguments );
 		} );
