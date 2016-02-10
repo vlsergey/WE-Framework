@@ -520,6 +520,9 @@ WEF_Utils.formatQuantity = function( value ) {
 WEF_Utils.formatValueRemotely = function( datatype, datavalue, span ) {
 	"use strict";
 
+	if ( !( span instanceof jQuery ) )
+		throw new Error( 'Passed «span» argument is not a jQuery object' );
+
 	WEF_Utils.getWikidataApi().post( {
 		action: 'wbformatvalue',
 		generate: 'text/html',
@@ -1034,6 +1037,7 @@ WEF_Utils.tagRevisions = function( entityId, displayNotifications ) {
 	revisionsPromise.done( function( revisions ) {
 		if ( revisions.length == 0 ) {
 			notify( "Nothing to update in revisions history of " + entityId, notifyOptions );
+			tagDeferred.resolve();
 			return;
 		}
 
@@ -1098,7 +1102,6 @@ WEF_Utils.update = function( updates ) {
 	var d = $.Deferred();
 
 	var i18n = wef_Editors_i18n;
-	var wikidataApi = WEF_Utils.getWikidataApi();
 
 	/* Saving changes in entity, if required */
 	var saveAction;
@@ -1122,8 +1125,10 @@ WEF_Utils.update = function( updates ) {
 		}
 
 		mw.notify( i18n.actionUpdateEntity, notifySaveOptions );
-		saveAction = wikidataApi.postWithEditToken( params ).done( function( result ) {
+		saveAction = WEF_Utils.getWikidataApi().postWithEditToken( params ).done( function( result ) {
 			if ( result.error ) {
+				console.log( i18n.errorUpdateEntity );
+				console.log( result.error );
 				mw.notify( i18n.actionUpdateEntityFail, notifySaveOptions );
 				alert( i18n.errorUpdateEntity + ': ' + result.error.info );
 				return;
@@ -1133,6 +1138,8 @@ WEF_Utils.update = function( updates ) {
 				updates.entityId = result.entity.id;
 			}
 		} ).fail( function( jqXHR, textStatus, errorThrown ) {
+			console.log( i18n.errorUpdateEntity );
+			console.log( arguments );
 			mw.notify( i18n.actionUpdateEntityFail, notifySaveOptions );
 			alert( i18n.errorUpdateEntity + ': ' + textStatus );
 		} );
@@ -1151,7 +1158,7 @@ WEF_Utils.update = function( updates ) {
 			};
 
 			mw.notify( i18n.actionRemoveClaims, notifyRemoveClainsOptions );
-			wikidataApi.postWithEditToken( {
+			WEF_Utils.getWikidataApi().postWithEditToken( {
 				action: 'wbremoveclaims',
 				summary: i18n.summary,
 				tags: WEF_Utils.tag,
@@ -1172,7 +1179,9 @@ WEF_Utils.update = function( updates ) {
 			} );
 		} );
 	} else {
-		removeClaimAction.resolve();
+		saveAction.always( function() {
+			removeClaimAction.resolve();
+		} );
 	}
 
 	removeClaimAction.always( function() {
@@ -2547,8 +2556,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				"use strict";
 				var span = $( document.createElement( 'span' ) ).addClass( 'wef_snak_replacement_label_time_days' ).text(
 						juDays.val() + ' ' + mw.config.get( 'wgMonthNames' )[juMonths.val()] + ' ' + juYears.val() + ' ( ' + grDays.val() + ' '
-								+ mw.config.get( 'wgMonthNames' )[grMonths.val()] + ' ' + grYears.val() )
-						+ ' )';
+								+ mw.config.get( 'wgMonthNames' )[grMonths.val()] + ' ' + grYears.val() + ' )' );
 				if ( this.hasValue() )
 					WEF_Utils.formatValueRemotely( 'time', this.toDataValue(), span );
 				return span;
