@@ -30,10 +30,21 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    <!-- instance of -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P31\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                    <!-- is in the administrative territorial entity -->\r\n" + 
-		"                    <tbody class=\'wef_claim_editors\' data-code=\'P131\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"\r\n" + 
+		"                    <tbody class=\'wef_claim_editors\' data-code=\'P131\' data-datatype=\'wikibase-item\' >\r\n" + 
+		"                        <!-- start date -->\r\n" + 
+		"                        <tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
+		"                        <!-- end date -->\r\n" + 
+		"                        <tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
+		"                    </tbody>\r\n" + 
 		"                    <!-- part of -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P361\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"                    <!-- country -->\r\n" + 
+		"                    <tbody class=\'wef_claim_editors\' data-code=\'P17\' data-datatype=\'wikibase-item\' >\r\n" + 
+		"                        <!-- start date -->\r\n" + 
+		"                        <tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
+		"                        <!-- end date -->\r\n" + 
+		"                        <tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
+		"                    </tbody>\r\n" + 
 		"                    <!-- territory claimed by -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P1336\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                </table>\r\n" + 
