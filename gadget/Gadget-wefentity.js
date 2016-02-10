@@ -9,6 +9,7 @@ var wef_EntityEditor_html = "<div class=\'wef_entityEditor_dialog\'>\r\n" +
 		"	<div class=\'wef_tabs\'>\r\n" + 
 		"		<ul>\r\n" + 
 		"			<li><a href=\'#wef_entityEditor_tab_general\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupGeneral</a></li>\r\n" + 
+		"			<li><a href=\'#wef_entityEditor_tab_sources\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P1343</a></li>\r\n" + 
 		"		</ul>\r\n" + 
 		"		<div id=\'wef_entityEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
@@ -16,6 +17,26 @@ var wef_EntityEditor_html = "<div class=\'wef_entityEditor_dialog\'>\r\n" +
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- instance of -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P31\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"		</div>\r\n" + 
+		"		<div id=\'wef_entityEditor_tab_sources\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>P1343</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- described by source -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1343\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated in -->\r\n" + 
+		"						<tr data-code=\'P248\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"						<!-- section, verse, or paragraph -->\r\n" + 
+		"						<tr data-code=\'P958\' data-datatype=\'string\' />\r\n" + 
+		"						<!-- volume -->\r\n" + 
+		"						<tr data-code=\'P478\' data-datatype=\'string\' />\r\n" + 
+		"						<!-- page -->\r\n" + 
+		"						<tr data-code=\'P304\' data-datatype=\'string\' />\r\n" + 
+		"						<!-- reference URL -->\r\n" + 
+		"						<tr data-code=\'P854\' data-datatype=\'url\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 

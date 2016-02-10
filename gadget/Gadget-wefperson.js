@@ -19,6 +19,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"			<li><a href=\'#wef_personEditor_tab_sport\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupSport</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_culture\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupCulture</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_awards\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupAwards</a></li>\r\n" + 
+		"			<li><a href=\'#wef_personEditor_tab_sources\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P1343</a></li>\r\n" + 
 		"		</ul>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
@@ -209,6 +210,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<!-- end date -->\r\n" + 
 		"					<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
 		"				</tbody>\r\n" + 
+		"				<!-- number of children -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P1971\' data-datatype=\'quantity\' />\r\n" + 
 		"				<!-- child -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P40\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- relative -->\r\n" + 
@@ -372,19 +375,27 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"		</div>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_sport\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
+		"				<!-- sports discipline competed in  -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P2416\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- member of sports team -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P54\' data-datatype=\'wikibase-item\'>\r\n" + 
 		"					<!-- start date -->\r\n" + 
 		"					<tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
 		"					<!-- end date -->\r\n" + 
 		"					<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
+		"					<!-- position played on team -->\r\n" + 
+		"					<tr data-code=\'P413\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</tbody>\r\n" + 
 		"				<!-- position played on team -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P413\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- shooting handedness -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P423\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				<!--  playing hand -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P741\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- dan/kyu rank -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P468\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				<!-- personal best -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P2415\' data-datatype=\'quantity\' />\r\n" + 
 		"			</table>\r\n" + 
 		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>Q18002875</legend>\r\n" + 
@@ -461,6 +472,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P1303\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- notable works -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P800\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				<!-- discography -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P358\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_awards\' class=\'wef_editor_tab\'>\r\n" + 
@@ -473,6 +486,26 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"						<tr data-code=\'P585\' data-datatype=\'time\' data-as-column=\'true\' data-editordatatype=\'time-years\' />\r\n" + 
 		"						<!-- awarded by -->\r\n" + 
 		"						<tr data-code=\'P1027\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					</tbody>\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"		</div>\r\n" + 
+		"		<div id=\'wef_personEditor_tab_sources\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>P1343</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- described by source -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1343\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- stated in -->\r\n" + 
+		"						<tr data-code=\'P248\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"						<!-- section, verse, or paragraph -->\r\n" + 
+		"						<tr data-code=\'P958\' data-datatype=\'string\' />\r\n" + 
+		"						<!-- volume -->\r\n" + 
+		"						<tr data-code=\'P478\' data-datatype=\'string\' />\r\n" + 
+		"						<!-- page -->\r\n" + 
+		"						<tr data-code=\'P304\' data-datatype=\'string\' />\r\n" + 
+		"						<!-- reference URL -->\r\n" + 
+		"						<tr data-code=\'P854\' data-datatype=\'url\' />\r\n" + 
 		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
