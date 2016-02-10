@@ -386,6 +386,70 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"				<!-- dan/kyu rank -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P468\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
+		"			<fieldset>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>Q18002875</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- Sports Reference ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1447\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.sports-reference.com/olympics/athletes/$1.html\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset>\r\n" + 
+		"				<!-- sport of athletics -->\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>Q542</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- IAAF ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1146\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.iaaf.org/athletes/athlete=$1\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset>\r\n" + 
+		"				<!-- cycling -->\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>Q53121</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- Cycling Archives ID (cyclist) -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1409\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.cyclingarchives.com/coureurfiche.php?coureurid=$1\' />\r\n" + 
+		"					<!-- Cycling Quotient identifier (cyclist, man) -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-check=\'[1-9]\\d*\' data-code=\'P1541\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.cqranking.com/men/asp/gen/rider.asp?riderid=$1\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset>\r\n" + 
+		"				<!-- association football -->\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>Q2736</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- FIFA player code -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1469\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.fifa.com/worldfootball/statisticsandrecords/players/player=$1\' />\r\n" + 
+		"					<!-- Swedish Football Association ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-check=\'(1|2|3|4|5|6|7|8|9|10|11|12|13)[0-9]{3}\' data-code=\'P1241\'\r\n" + 
+		"						data-datatype=\'string\' data-flag=\'ch\' />\r\n" + 
+		"					<!-- Swedish Football Association ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1238\' data-datatype=\'string\' data-flag=\'se\'\r\n" + 
+		"						data-template=\'http://svenskfotboll.se/allsvenskan/person/?playerid=$1\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>Q847</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- WTA -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P597\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.wtatennis.com/players/player/$1\' />\r\n" + 
+		"					<!-- ITF ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P599\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.itftennis.com/procircuit/players/player/profile.aspx?playerid=$1\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset>\r\n" + 
+		"				<!-- table tennis  -->\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>Q3930</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- ITTF ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1364\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://www.ittf.com/ittf_ranking/WR_Table_3_A2_Details.asp?ID=$1\' />\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_culture\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
