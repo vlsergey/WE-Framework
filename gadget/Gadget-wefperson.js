@@ -14,16 +14,18 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"			<li><a href=\'#wef_personEditor_tab_family\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupFamily</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_education_and_science\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupEducationAndScience</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_profession\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupProfession</a></li>\r\n" + 
+		"			<li><a href=\'#wef_personEditor_tab_history\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q309</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_military\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupMilitary</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_views\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupViews</a></li>\r\n" + 
-		"			<li><a href=\'#wef_personEditor_tab_sport\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupSport</a></li>\r\n" + 
+		"			<li><a href=\'#wef_personEditor_tab_sport_1\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q349</a></li>\r\n" + 
+		"			<li><a href=\'#wef_personEditor_tab_sport_2\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q349</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_culture\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupCulture</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_awards\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupAwards</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_sources\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P1343</a></li>\r\n" + 
 		"		</ul>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetName</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- name in native language  -->\r\n" + 
@@ -37,7 +39,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetTitle</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- noble family -->\r\n" + 
@@ -48,7 +50,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P511\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- instance of -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P31\' data-datatype=\'wikibase-item\' />\r\n" + 
@@ -79,7 +81,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_birthAndDeath\' class=\'wef_editor_tab\'>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetBirth</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- birth date -->\r\n" + 
@@ -106,7 +108,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P103\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- place of origin (Switzerland) -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P1321\' data-datatype=\'wikibase-item\' data-flag=\'ch\' />\r\n" + 
@@ -114,7 +116,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P66\' data-datatype=\'wikibase-item\' data-flag=\'cn\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetDeath</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- Death date -->\r\n" + 
@@ -145,7 +147,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P119\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- Find a Grave grave ID -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P535\' data-datatype=\'string\'\r\n" + 
@@ -164,7 +166,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"				<!-- grave picture -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P1442\' data-datatype=\'commonsMedia\' />\r\n" + 
 		"			</table>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetCoatOfArms</legend>\r\n" + 
 		"				<table>\r\n" + 
 		"					<!-- coat of arms image -->\r\n" + 
@@ -305,7 +307,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"				<!-- official residence -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P263\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
-		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"			<fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P39</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!--  position held -->\r\n" + 
@@ -329,7 +331,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"					</tbody>\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
-		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"			<fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P463</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- member of -->\r\n" + 
@@ -338,6 +340,44 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"						<tr data-code=\'P580\' data-datatype=\'time\' data-as-column=\'true\' />\r\n" + 
 		"						<!-- end date -->\r\n" + 
 		"						<tr data-code=\'P582\' data-datatype=\'time\' data-as-column=\'true\' />\r\n" + 
+		"						<!-- subject -->\r\n" + 
+		"						<tr data-code=\'P805\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					</tbody>\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"		</div>\r\n" + 
+		"		<div id=\'wef_personEditor_tab_history\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>P793</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- significant event -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P793\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- point in time -->\r\n" + 
+		"						<tr data-code=\'P585\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- start date -->\r\n" + 
+		"						<tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- end date -->\r\n" + 
+		"						<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- location -->\r\n" + 
+		"						<tr data-code=\'P276\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"						<!-- subject -->\r\n" + 
+		"						<tr data-code=\'P805\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					</tbody>\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"			<fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>P1344</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- participant of -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1344\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- point in time -->\r\n" + 
+		"						<tr data-code=\'P585\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- start date -->\r\n" + 
+		"						<tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- end date -->\r\n" + 
+		"						<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- location -->\r\n" + 
+		"						<tr data-code=\'P276\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"						<!-- subject -->\r\n" + 
 		"						<tr data-code=\'P805\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"					</tbody>\r\n" + 
@@ -373,7 +413,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P841\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"			</table>\r\n" + 
 		"		</div>\r\n" + 
-		"		<div id=\'wef_personEditor_tab_sport\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_personEditor_tab_sport_1\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
 		"				<!-- sports discipline competed in  -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P2416\' data-datatype=\'wikibase-item\' />\r\n" + 
@@ -405,6 +445,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"						data-template=\'http://www.sports-reference.com/olympics/athletes/$1.html\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
+		"		</div>\r\n" + 
+		"		<div id=\'wef_personEditor_tab_sport_2\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset>\r\n" + 
 		"				<!-- sport of athletics -->\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>Q542</legend>\r\n" + 
@@ -477,7 +519,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"			</table>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_awards\' class=\'wef_editor_tab\'>\r\n" + 
-		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"			<fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P166</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- award received -->\r\n" + 
@@ -491,7 +533,7 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_sources\' class=\'wef_editor_tab\'>\r\n" + 
-		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"			<fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P1343</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- described by source -->\r\n" + 
@@ -533,7 +575,6 @@ window.wef_PersonEditor_i18n_en = {
 	groupMedia: 'Media',
 	groupMilitary: 'Military',
 	groupProfession: 'Profession',
-	groupSport: 'Sport',
 	groupViews: 'Views',
 
 	menuButton: 'WEF: Person',
@@ -586,7 +627,6 @@ window.wef_PersonEditor_i18n_ru = {
 	groupMedia: 'Медиа',
 	groupMilitary: 'Военные',
 	groupProfession: 'Проф. деятельность',
-	groupSport: 'Спорт',
 	groupViews: 'Взгляды',
 
 	menuButton: 'WEF: Персона',

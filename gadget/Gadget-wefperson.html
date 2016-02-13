@@ -7,16 +7,18 @@
 			<li><a href='#wef_personEditor_tab_family' class='wef_editor_tab_anchor wef_i18n_text'>groupFamily</a></li>
 			<li><a href='#wef_personEditor_tab_education_and_science' class='wef_editor_tab_anchor wef_i18n_text'>groupEducationAndScience</a></li>
 			<li><a href='#wef_personEditor_tab_profession' class='wef_editor_tab_anchor wef_i18n_text'>groupProfession</a></li>
+			<li><a href='#wef_personEditor_tab_history' class='wef_editor_tab_anchor wef_i18n_label'>Q309</a></li>
 			<li><a href='#wef_personEditor_tab_military' class='wef_editor_tab_anchor wef_i18n_text'>groupMilitary</a></li>
 			<li><a href='#wef_personEditor_tab_views' class='wef_editor_tab_anchor wef_i18n_text'>groupViews</a></li>
-			<li><a href='#wef_personEditor_tab_sport' class='wef_editor_tab_anchor wef_i18n_text'>groupSport</a></li>
+			<li><a href='#wef_personEditor_tab_sport_1' class='wef_editor_tab_anchor wef_i18n_label'>Q349</a></li>
+			<li><a href='#wef_personEditor_tab_sport_2' class='wef_editor_tab_anchor wef_i18n_label'>Q349</a></li>
 			<li><a href='#wef_personEditor_tab_culture' class='wef_editor_tab_anchor wef_i18n_text'>groupCulture</a></li>
 			<li><a href='#wef_personEditor_tab_awards' class='wef_editor_tab_anchor wef_i18n_text'>groupAwards</a></li>
 			<li><a href='#wef_personEditor_tab_sources' class='wef_editor_tab_anchor wef_i18n_label'>P1343</a></li>
 		</ul>
 		<div id='wef_personEditor_tab_general' class='wef_editor_tab'>
 			<div class="wef_labels_editor"></div>
-			<fieldset class='wef_fieldset'>
+			<fieldset>
 				<legend class='wef_i18n_text'>fieldsetName</legend>
 				<table class='wef_table'>
 					<!-- name in native language  -->
@@ -30,7 +32,7 @@
 					</tbody>
 				</table>
 			</fieldset>
-			<fieldset class='wef_fieldset'>
+			<fieldset>
 				<legend class='wef_i18n_text'>fieldsetTitle</legend>
 				<table class='wef_table'>
 					<!-- noble family -->
@@ -41,7 +43,7 @@
 					<tbody class='wef_claim_editors' data-code='P511' data-datatype='wikibase-item' />
 				</table>
 			</fieldset>
-			<fieldset class='wef_fieldset'>
+			<fieldset>
 				<table class='wef_table'>
 					<!-- instance of -->
 					<tbody class='wef_claim_editors' data-code='P31' data-datatype='wikibase-item' />
@@ -72,7 +74,7 @@
 			</fieldset>
 		</div>
 		<div id='wef_personEditor_tab_birthAndDeath' class='wef_editor_tab'>
-			<fieldset class='wef_fieldset'>
+			<fieldset>
 				<legend class='wef_i18n_text'>fieldsetBirth</legend>
 				<table class='wef_table'>
 					<!-- birth date -->
@@ -99,7 +101,7 @@
 					<tbody class='wef_claim_editors' data-code='P103' data-datatype='wikibase-item' />
 				</table>
 			</fieldset>
-			<fieldset class='wef_fieldset'>
+			<fieldset>
 				<table class='wef_table'>
 					<!-- place of origin (Switzerland) -->
 					<tbody class='wef_claim_editors' data-code='P1321' data-datatype='wikibase-item' data-flag='ch' />
@@ -107,7 +109,7 @@
 					<tbody class='wef_claim_editors' data-code='P66' data-datatype='wikibase-item' data-flag='cn' />
 				</table>
 			</fieldset>
-			<fieldset class='wef_fieldset'>
+			<fieldset>
 				<legend class='wef_i18n_text'>fieldsetDeath</legend>
 				<table class='wef_table'>
 					<!-- Death date -->
@@ -138,7 +140,7 @@
 					<tbody class='wef_claim_editors' data-code='P119' data-datatype='wikibase-item' />
 				</table>
 			</fieldset>
-			<fieldset class='wef_fieldset'>
+			<fieldset>
 				<table class='wef_table'>
 					<!-- Find a Grave grave ID -->
 					<tbody class='wef_claim_editors' data-code='P535' data-datatype='string'
@@ -157,7 +159,7 @@
 				<!-- grave picture -->
 				<tbody class='wef_claim_editors' data-code='P1442' data-datatype='commonsMedia' />
 			</table>
-			<fieldset class='wef_fieldset'>
+			<fieldset>
 				<legend class='wef_i18n_text'>fieldsetCoatOfArms</legend>
 				<table>
 					<!-- coat of arms image -->
@@ -298,7 +300,7 @@
 				<!-- official residence -->
 				<tbody class='wef_claim_editors' data-code='P263' data-datatype='wikibase-item' />
 			</table>
-			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+			<fieldset class='wef_single_property_fieldset'>
 				<legend class='wef_i18n_label'>P39</legend>
 				<table class='wef_table'>
 					<!--  position held -->
@@ -322,7 +324,7 @@
 					</tbody>
 				</table>
 			</fieldset>
-			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+			<fieldset class='wef_single_property_fieldset'>
 				<legend class='wef_i18n_label'>P463</legend>
 				<table class='wef_table'>
 					<!-- member of -->
@@ -331,6 +333,44 @@
 						<tr data-code='P580' data-datatype='time' data-as-column='true' />
 						<!-- end date -->
 						<tr data-code='P582' data-datatype='time' data-as-column='true' />
+						<!-- subject -->
+						<tr data-code='P805' data-datatype='wikibase-item' />
+					</tbody>
+				</table>
+			</fieldset>
+		</div>
+		<div id='wef_personEditor_tab_history' class='wef_editor_tab'>
+			<fieldset class='wef_single_property_fieldset'>
+				<legend class='wef_i18n_label'>P793</legend>
+				<table class='wef_table'>
+					<!-- significant event -->
+					<tbody class='wef_claim_editors' data-code='P793' data-datatype='wikibase-item'>
+						<!-- point in time -->
+						<tr data-code='P585' data-datatype='time' />
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' />
+						<!-- location -->
+						<tr data-code='P276' data-datatype='wikibase-item' />
+						<!-- subject -->
+						<tr data-code='P805' data-datatype='wikibase-item' />
+					</tbody>
+				</table>
+			</fieldset>
+			<fieldset class='wef_single_property_fieldset'>
+				<legend class='wef_i18n_label'>P1344</legend>
+				<table class='wef_table'>
+					<!-- participant of -->
+					<tbody class='wef_claim_editors' data-code='P1344' data-datatype='wikibase-item'>
+						<!-- point in time -->
+						<tr data-code='P585' data-datatype='time' />
+						<!-- start date -->
+						<tr data-code='P580' data-datatype='time' />
+						<!-- end date -->
+						<tr data-code='P582' data-datatype='time' />
+						<!-- location -->
+						<tr data-code='P276' data-datatype='wikibase-item' />
 						<!-- subject -->
 						<tr data-code='P805' data-datatype='wikibase-item' />
 					</tbody>
@@ -366,7 +406,7 @@
 				<tbody class='wef_claim_editors' data-code='P841' data-datatype='wikibase-item' />
 			</table>
 		</div>
-		<div id='wef_personEditor_tab_sport' class='wef_editor_tab'>
+		<div id='wef_personEditor_tab_sport_1' class='wef_editor_tab'>
 			<table class='wef_table'>
 				<!-- sports discipline competed in  -->
 				<tbody class='wef_claim_editors' data-code='P2416' data-datatype='wikibase-item' />
@@ -398,6 +438,8 @@
 						data-template='http://www.sports-reference.com/olympics/athletes/$1.html' />
 				</table>
 			</fieldset>
+		</div>
+		<div id='wef_personEditor_tab_sport_2' class='wef_editor_tab'>
 			<fieldset>
 				<!-- sport of athletics -->
 				<legend class='wef_i18n_label'>Q542</legend>
@@ -470,7 +512,7 @@
 			</table>
 		</div>
 		<div id='wef_personEditor_tab_awards' class='wef_editor_tab'>
-			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+			<fieldset class='wef_single_property_fieldset'>
 				<legend class='wef_i18n_label'>P166</legend>
 				<table class='wef_table'>
 					<!-- award received -->
@@ -484,7 +526,7 @@
 			</fieldset>
 		</div>
 		<div id='wef_personEditor_tab_sources' class='wef_editor_tab'>
-			<fieldset class='wef_fieldset wef_single_property_fieldset'>
+			<fieldset class='wef_single_property_fieldset'>
 				<legend class='wef_i18n_label'>P1343</legend>
 				<table class='wef_table'>
 					<!-- described by source -->

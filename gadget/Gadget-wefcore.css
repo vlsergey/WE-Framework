@@ -6,10 +6,10 @@
 	line-height: 1.2em;
 }
 
-.wef_dialog .wef_fieldset {
-	margin: 0.1em;
-	padding: 0.1em;
+.wef_dialog fieldset {
 	line-height: 0.75em;
+	margin: 0;
+	padding: 0 0.25em 0.25em;
 }
 
 .wef_button_cell {
