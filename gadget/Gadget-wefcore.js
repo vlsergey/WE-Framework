@@ -2308,9 +2308,9 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			inputDifference.change( changeF );
 			inputDifference.keyup( changeF );
 		} ).call( this );
-	} else if ( editorDataType === 'string' ) {
+	} else if ( editorDataType === 'string' || editorDataType === 'external-id' ) {
 		( function() {
-			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_string' ).appendTo( this.mainElement );
+			var input = $( document.createElement( 'input' ) ).attr( 'type', 'text' ).addClass( 'wef_' + editorDataType ).appendTo( this.mainElement );
 
 			if ( typeof options === 'object' && typeof options.autocomplete === 'object' ) {
 				input.autocomplete( options.autocomplete );
@@ -2338,7 +2338,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					throw new Error( 'No value' );
 				}
 				return {
-					type: 'string',
+					type: editorDataType,
 					value: input.val() == null ? null : input.val().trim(),
 				};
 			};
