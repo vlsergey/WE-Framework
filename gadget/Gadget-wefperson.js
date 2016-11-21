@@ -20,8 +20,9 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"			<li><a href=\'#wef_personEditor_tab_sport_1\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q349</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_sport_2\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q349</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_culture\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupCulture</a></li>\r\n" + 
+		"			<li><a href=\'#wef_personEditor_tab_P1830\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P1830</a></li>\r\n" + 
 		"			<li><a href=\'#wef_personEditor_tab_awards\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupAwards</a></li>\r\n" + 
-		"			<li><a href=\'#wef_personEditor_tab_sources\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P1343</a></li>\r\n" + 
+		"			<li><a href=\'#wef_personEditor_tab_P1343\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P1343</a></li>\r\n" + 
 		"		</ul>\r\n" + 
 		"		<div id=\'wef_personEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
@@ -158,13 +159,33 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"		<div id=\'wef_personEditor_tab_media\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<table class=\'wef_table\'>\r\n" + 
 		"				<!-- Image -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P18\' data-datatype=\'commonsMedia\' />\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P18\' data-datatype=\'commonsMedia\' >\r\n" + 
+		"					<!-- moment in time -->\r\n" + 
+		"					<tr data-code=\'P585\' data-datatype=\'time\' />\r\n" + 
+		"					<!-- media legend -->\r\n" + 
+		"					<tr data-code=\'P2096\' data-datatype=\'monolingualtext\' />\r\n" + 
+		"				</tbody>\r\n" + 
 		"				<!-- signature -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P109\' data-datatype=\'commonsMedia\' />\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P109\' data-datatype=\'commonsMedia\' >\r\n" + 
+		"					<!-- moment in time -->\r\n" + 
+		"					<tr data-code=\'P585\' data-datatype=\'time\' />\r\n" + 
+		"					<!-- media legend -->\r\n" + 
+		"					<tr data-code=\'P2096\' data-datatype=\'monolingualtext\' />\r\n" + 
+		"				</tbody>\r\n" + 
 		"				<!-- recording of the subject\'s voice -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P990\' data-datatype=\'commonsMedia\' />\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P990\' data-datatype=\'commonsMedia\' >\r\n" + 
+		"					<!-- moment in time -->\r\n" + 
+		"					<tr data-code=\'P585\' data-datatype=\'time\' />\r\n" + 
+		"					<!-- media legend -->\r\n" + 
+		"					<tr data-code=\'P2096\' data-datatype=\'monolingualtext\' />\r\n" + 
+		"				</tbody>\r\n" + 
 		"				<!-- grave picture -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P1442\' data-datatype=\'commonsMedia\' />\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P1442\' data-datatype=\'commonsMedia\' >\r\n" + 
+		"					<!-- moment in time -->\r\n" + 
+		"					<tr data-code=\'P585\' data-datatype=\'time\' />\r\n" + 
+		"					<!-- media legend -->\r\n" + 
+		"					<tr data-code=\'P2096\' data-datatype=\'monolingualtext\' />\r\n" + 
+		"				</tbody>\r\n" + 
 		"			</table>\r\n" + 
 		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_text\'>fieldsetCoatOfArms</legend>\r\n" + 
@@ -532,7 +553,21 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
-		"		<div id=\'wef_personEditor_tab_sources\' class=\'wef_editor_tab\'>\r\n" + 
+		"		<div id=\'wef_personEditor_tab_P1830\' class=\'wef_editor_tab\'>\r\n" + 
+		"			<fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
+		"				<legend class=\'wef_i18n_label\'>P1830</legend>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- entities owned by the subject -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1830\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"						<!-- start date -->\r\n" + 
+		"						<tr data-code=\'P580\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- end date -->\r\n" + 
+		"						<tr data-code=\'P582\' data-datatype=\'time\' />\r\n" + 
+		"					</tbody>\r\n" + 
+		"				</table>\r\n" + 
+		"			</fieldset>\r\n" + 
+		"		</div>\r\n" + 
+		"		<div id=\'wef_personEditor_tab_P1343\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P1343</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
