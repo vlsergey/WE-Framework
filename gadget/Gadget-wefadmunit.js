@@ -24,7 +24,14 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"\r\n" + 
 		"        <div id=\'wef_admUnitEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
 		"            <div class=\"wef_labels_editor\"></div>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
+		"                <legend class=\'wef_i18n_label\'>P1448</legend>\r\n" + 
+		"                <table class=\'wef_table\'>\r\n" + 
+		"                    <!-- official name -->\r\n" + 
+		"                    <tbody class=\'wef_claim_editors\' data-code=\'P1448\' data-datatype=\'monolingualtext\' />\r\n" + 
+		"                </table>\r\n" + 
+		"            </fieldset>\r\n" + 
+		"            <fieldset>\r\n" + 
 		"                <legend class=\'wef_i18n_text\'>fieldsetGeneral</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- instance of -->\r\n" + 
@@ -49,7 +56,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P1336\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
+		"            <fieldset>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- official language -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P37\' data-datatype=\'wikibase-item\' />\r\n" + 
@@ -57,7 +64,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P38\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
+		"            <fieldset>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- song -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P85\' data-datatype=\'wikibase-item\' />\r\n" + 
@@ -66,11 +73,18 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"        </div>\r\n" + 
 		"\r\n" + 
 		"        <div id=\'wef_admUnitEditor_tab_media\' class=\'wef_editor_tab\'>\r\n" + 
-		"            <table class=\'wef_table\'>\r\n" + 
-		"                <!-- commons -->\r\n" + 
-		"                <tbody class=\'wef_claim_editors\' data-code=\'P373\' data-datatype=\'string\' />\r\n" + 
-		"            </table>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
+		"            <fieldset>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"					<!-- Image -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P18\' data-datatype=\'commonsMedia\' >\r\n" + 
+		"						<!-- moment in time -->\r\n" + 
+		"						<tr data-code=\'P585\' data-datatype=\'time\' />\r\n" + 
+		"						<!-- media legend -->\r\n" + 
+		"						<tr data-code=\'P2096\' data-datatype=\'monolingualtext\' />\r\n" + 
+		"					</tbody>\r\n" + 
+		"				</table>\r\n" + 
+		"            </fieldset>\r\n" + 
+		"            <fieldset>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>Q14660</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- flag image -->\r\n" + 
@@ -84,7 +98,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P163\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
+		"            <fieldset>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>Q14659</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- coat of arms image -->\r\n" + 
@@ -98,10 +112,16 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P237\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
+		"            <fieldset>\r\n" + 
+		"				<table class=\'wef_table\'>\r\n" + 
+		"	                <!-- commons -->\r\n" + 
+		"	                <tbody class=\'wef_claim_editors\' data-code=\'P373\' data-datatype=\'string\' />\r\n" + 
+		"				</table>\r\n" + 
+		"            </fieldset>\r\n" + 
 		"        </div>\r\n" + 
 		"\r\n" + 
 		"        <div id=\'wef_admUnitEditor_tab_history\' class=\'wef_editor_tab\'>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
+		"            <fieldset>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- est. date -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P571\' data-datatype=\'time\' />\r\n" + 
@@ -111,7 +131,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P156\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>P138</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- named after -->\r\n" + 
@@ -121,7 +141,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    </tbody>\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>P793</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- significant event -->\r\n" + 
@@ -153,7 +173,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                <!-- time zone -->\r\n" + 
 		"                <tbody class=\'wef_claim_editors\' data-code=\'P421\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"            </table>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>P47</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- shares border with -->\r\n" + 
@@ -167,7 +187,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    </tbody>\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- located next to body of water -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P206\' data-datatype=\'wikibase-item\' />\r\n" + 
@@ -185,6 +205,8 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                <tbody class=\'wef_claim_editors\' data-code=\'P194\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                <!-- highest judicial authority -->\r\n" + 
 		"                <tbody class=\'wef_claim_editors\' data-code=\'P209\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"                <!-- head of government -->\r\n" + 
+		"                <tbody class=\'wef_claim_editors\' data-code=\'P6\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                <!-- office held by head of government -->\r\n" + 
 		"                <tbody class=\'wef_claim_editors\' data-code=\'P1313\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                <!-- central bank -->\r\n" + 
@@ -193,7 +215,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"        </div>\r\n" + 
 		"\r\n" + 
 		"        <div id=\'wef_admUnitEditor_tab_subdivisions\' class=\'wef_editor_tab\'>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>P150</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- member of -->\r\n" + 
@@ -214,7 +236,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                <!-- Gini coefficient -->\r\n" + 
 		"                <tbody class=\'wef_claim_editors\' data-code=\'P1125\' data-datatype=\'quantity\' />\r\n" + 
 		"            </table>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>P1082</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- member of -->\r\n" + 
@@ -227,7 +249,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"        </div>\r\n" + 
 		"\r\n" + 
 		"        <div id=\'wef_admUnitEditor_tab_clubs\' class=\'wef_editor_tab\'>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>P463</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- member of -->\r\n" + 
@@ -244,7 +266,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"        </div>\r\n" + 
 		"\r\n" + 
 		"        <div id=\'wef_admUnitEditor_tab_codes_1\' class=\'wef_editor_tab\'>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>P281</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- postal code -->\r\n" + 
@@ -256,7 +278,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    </tbody>\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>P395</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P395\' data-datatype=\'string\'>\r\n" + 
@@ -267,7 +289,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    </tbody>\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"                <legend class=\'wef_i18n_label\'>P473</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P473\' data-datatype=\'string\'>\r\n" + 
@@ -281,8 +303,8 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"        </div>\r\n" + 
 		"\r\n" + 
 		"        <div id=\'wef_admUnitEditor_tab_codes_2\' class=\'wef_editor_tab\'>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
-		"                <legend class=\'wef_i18n_label\'>Q25275</legend>\r\n" + 
+		"            <fieldset>\r\n" + 
+		"                <legend class=\'wef_i18n_label\'>Q106487</legend>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- ISO 3166-1 alpha-2 -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P297\' data-datatype=\'string\' />\r\n" + 
@@ -290,16 +312,11 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P298\' data-datatype=\'string\' />\r\n" + 
 		"                    <!-- ISO 3166-1 numeric -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P299\' data-datatype=\'string\' />\r\n" + 
-		"                </table>\r\n" + 
-		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
-		"                <legend class=\'wef_i18n_label\'>Q133153</legend>\r\n" + 
-		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- ISO 3166-2 -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P300\' data-datatype=\'string\' />\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
+		"            <fieldset>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!--  local administrative unit -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-flag=\'eu\' data-code=\'P782\' data-datatype=\'string\' />\r\n" + 
@@ -360,7 +377,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"        </div>\r\n" + 
 		"\r\n" + 
 		"        <div id=\'wef_admUnitEditor_tab_categories\' class=\'wef_editor_tab\'>\r\n" + 
-		"            <fieldset class=\'wef_fieldset\'>\r\n" + 
+		"            <fieldset>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
 		"                    <!-- main category -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P910\' data-datatype=\'wikibase-item\' />\r\n" + 

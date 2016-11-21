@@ -16,6 +16,13 @@
 
         <div id='wef_admUnitEditor_tab_general' class='wef_editor_tab'>
             <div class="wef_labels_editor"></div>
+            <fieldset class='wef_single_property_fieldset'>
+                <legend class='wef_i18n_label'>P1448</legend>
+                <table class='wef_table'>
+                    <!-- official name -->
+                    <tbody class='wef_claim_editors' data-code='P1448' data-datatype='monolingualtext' />
+                </table>
+            </fieldset>
             <fieldset>
                 <legend class='wef_i18n_text'>fieldsetGeneral</legend>
                 <table class='wef_table'>
@@ -58,10 +65,17 @@
         </div>
 
         <div id='wef_admUnitEditor_tab_media' class='wef_editor_tab'>
-            <table class='wef_table'>
-                <!-- commons -->
-                <tbody class='wef_claim_editors' data-code='P373' data-datatype='string' />
-            </table>
+            <fieldset>
+				<table class='wef_table'>
+					<!-- Image -->
+					<tbody class='wef_claim_editors' data-code='P18' data-datatype='commonsMedia' >
+						<!-- moment in time -->
+						<tr data-code='P585' data-datatype='time' />
+						<!-- media legend -->
+						<tr data-code='P2096' data-datatype='monolingualtext' />
+					</tbody>
+				</table>
+            </fieldset>
             <fieldset>
                 <legend class='wef_i18n_label'>Q14660</legend>
                 <table class='wef_table'>
@@ -89,6 +103,12 @@
                     <!-- coat of arms -->
                     <tbody class='wef_claim_editors' data-code='P237' data-datatype='wikibase-item' />
                 </table>
+            </fieldset>
+            <fieldset>
+				<table class='wef_table'>
+	                <!-- commons -->
+	                <tbody class='wef_claim_editors' data-code='P373' data-datatype='string' />
+				</table>
             </fieldset>
         </div>
 
@@ -159,7 +179,7 @@
                     </tbody>
                 </table>
             </fieldset>
-            <fieldset class='wef_single_property_fieldset'>
+            <fieldset>
                 <table class='wef_table'>
                     <!-- located next to body of water -->
                     <tbody class='wef_claim_editors' data-code='P206' data-datatype='wikibase-item' />
@@ -177,6 +197,8 @@
                 <tbody class='wef_claim_editors' data-code='P194' data-datatype='wikibase-item' />
                 <!-- highest judicial authority -->
                 <tbody class='wef_claim_editors' data-code='P209' data-datatype='wikibase-item' />
+                <!-- head of government -->
+                <tbody class='wef_claim_editors' data-code='P6' data-datatype='wikibase-item' />
                 <!-- office held by head of government -->
                 <tbody class='wef_claim_editors' data-code='P1313' data-datatype='wikibase-item' />
                 <!-- central bank -->
@@ -274,7 +296,7 @@
 
         <div id='wef_admUnitEditor_tab_codes_2' class='wef_editor_tab'>
             <fieldset>
-                <legend class='wef_i18n_label'>Q25275</legend>
+                <legend class='wef_i18n_label'>Q106487</legend>
                 <table class='wef_table'>
                     <!-- ISO 3166-1 alpha-2 -->
                     <tbody class='wef_claim_editors' data-code='P297' data-datatype='string' />
@@ -282,11 +304,6 @@
                     <tbody class='wef_claim_editors' data-code='P298' data-datatype='string' />
                     <!-- ISO 3166-1 numeric -->
                     <tbody class='wef_claim_editors' data-code='P299' data-datatype='string' />
-                </table>
-            </fieldset>
-            <fieldset>
-                <legend class='wef_i18n_label'>Q133153</legend>
-                <table class='wef_table'>
                     <!-- ISO 3166-2 -->
                     <tbody class='wef_claim_editors' data-code='P300' data-datatype='string' />
                 </table>
