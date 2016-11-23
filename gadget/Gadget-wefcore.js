@@ -148,7 +148,7 @@ window.wef_Editors_i18n_ru = {
 	buttonOnWikidata: 'открыть указанный элемент Викиданных на сайте Викиданных',
 
 	checkboxShowJulian: 'показывать по Юлианскому календарю',
-	checkboxShowJulianTitle: 'при отображении даты включать режим отображения по юлинскому календарю. Данная опция не влияет на формат ввода или хранения.',
+	checkboxShowJulianTitle: 'при отображении даты включать режим отображения по Юлианскому календарю. Данная опция не влияет на формат ввода или хранения.',
 
 	confirmDeleteClaim: 'Удалить значение свойства «{label}»?',
 
@@ -931,16 +931,18 @@ WEF_Utils.putOrClearLocalStorage = function( key, value ) {
 	}
 }
 
-WEF_Utils.purge = function() {
-	window.location
-			.replace( mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/index.php?action=purge&title=' + encodeURIComponent( mw.config.get( 'wgPageName' ) ) );
+WEF_Utils.purgeAsync = function() {
+	return new mw.Api().post( {
+		action: 'purge',
+		titles: mw.config.get( 'wgPageName' )
+	} );
 };
 
-WEF_Utils.purgeAsync = function() {
-	return new mw.Api().get( {
-		action: 'purge',
-		titles: mw.config.get( 'wgPageName' ),
-	} );
+WEF_Utils.purge = function() {
+	WEF_Utils.purgeAsync().then(function() {
+		var url = mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/index.php?title=' + encodeURIComponent( mw.config.get( 'wgPageName' ) ) + '&r=' + Math.random();
+		window.location.replace( url );
+	});
 };
 
 /**
@@ -2338,7 +2340,7 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					throw new Error( 'No value' );
 				}
 				return {
-					type: editorDataType,
+					type: 'string',
 					value: input.val() == null ? null : input.val().trim(),
 				};
 			};
@@ -2524,11 +2526,20 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 					switchDataType( 'time', newDataValue );
 					return;
 				}
-				date = new Date( date );
-				grYears.val( date.getUTCFullYear() );
-				grMonths.val( date.getUTCMonth() + 1 );
-				grDays.val( date.getUTCDate() );
-				recalculateJulian();
+				// TODO: реализовать по-человечески. Временный фикс, см. тему «Формат двойной даты в Викиданных» на ВП:Ф-Т
+				if ( newDataValue.switched ) {
+					date = new Date( date );
+					grYears.val( date.getUTCFullYear() );
+					grMonths.val( date.getUTCMonth() + 1 );
+					grDays.val( date.getUTCDate() );
+					recalculateJulian();
+				} else {
+					date = new Date( date );
+					juYears.val( date.getUTCFullYear() );
+					juMonths.val( date.getUTCMonth() + 1 );
+					juDays.val( date.getUTCDate() );
+					recalculateGregorian();
+				}
 			};
 			this.hasValue = function() {
 				"use strict";
@@ -2543,7 +2554,9 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 				return {
 					type: 'time',
 					value: {
-						time: WEF_Utils.formatDate( grYears.val(), grMonths.val(), grDays.val() ),
+						time: inputCalendarModel.val() === CALENDAR_GREGORIAN
+							? WEF_Utils.formatDate( grYears.val(), grMonths.val(), grDays.val() )
+							: WEF_Utils.formatDate( juYears.val(), juMonths.val(), juDays.val() ),
 						timezone: 0,
 						precision: PRECISION_DAYS,
 						before: 0,
@@ -2611,7 +2624,10 @@ WEF_SnakValueEditor = function( parent, dataDataType, editorDataType, initialDat
 			var afterCalendarModelChange = function() {
 				if ( showJulianCheckbox.is( ':checked' ) ) {
 					if ( snakValueEditor.hasValue() ) {
-						switchDataType( 'time-days', snakValueEditor.toDataValue() );
+						// TODO: реализовать по-человечески. Временный фикс, см. тему «Формат двойной даты в Викиданных» на ВП:Ф-Т
+						var tempFixObject = snakValueEditor.toDataValue();
+						tempFixObject.switched = true;
+						switchDataType( 'time-days', tempFixObject );
 					} else {
 						switchDataType( 'time-days', undefined );
 					}
