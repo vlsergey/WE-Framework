@@ -3107,6 +3107,10 @@ WEF_ItemInput = function( options ) {
 					list.push( item );
 				} );
 
+				if ( list.length == 0 ) {
+					list.push( new WEF_ItemInput_NothingFound( "nothing found by term «" + term + "»" ) );
+				}
+
 				response( list );
 			} );
 		},
@@ -3146,7 +3150,11 @@ WEF_ItemInput = function( options ) {
 	 *            item
 	 */
 	function( ul, item ) {
-		return $( document.createElement( 'li' ) ).append( item.a ).data( 'item.autocomplete', item ).appendTo( ul );
+		if ( item.entityId ) {
+			return $( document.createElement( 'li' ) ).append( item.a ).data( 'item.autocomplete', item ).appendTo( ul );
+		} else {
+			return $( document.createElement( 'li' )).addClass( 'ui-state-disabled' ).append( item.a ).appendTo( ul );
+		}
 	};
 
 	input.focus( function() {
@@ -3211,6 +3219,13 @@ WEF_ItemInput_Item = function( entityId, label ) {
 	a.append( entityIdWrapper );
 	a.append( br );
 	a.append( descriptionWrapper );
+};
+
+WEF_ItemInput_NothingFound = function( label ) {
+	var labelWrapper = $( '<strong></strong>' );
+	labelWrapper.text(label);
+	var a = this.a = $( '<a></a>' );
+	a.append( labelWrapper );
 };
 
 /**
