@@ -1,5 +1,14 @@
 ( function() {
 
+	var notifyOptions = {
+		autoHide: true,
+		tag: 'WE-F Sources Gadget',
+	};
+
+	function notify( text ) {
+		mw.notify( '[WE-F] ' + text, notifyOptions );
+	}
+
 	/**
 	 * @const
 	 * 
@@ -164,6 +173,7 @@
 	WEF_SelectOrFindSourceForm_List = function() {
 		this._map = {};
 		this.htmlElement = $( '<div class="wefSelectOrFindSourceForm_list">' );
+		this.statusElement = $( '<p></p>').appendTo(this.htmlElement);
 	};
 
 	WEF_SelectOrFindSourceForm_List.prototype.latest = function( entityIds ) {
@@ -174,11 +184,18 @@
 	WEF_SelectOrFindSourceForm_List.prototype.lookup = function( searchTerm ) {
 		var wikidataApi = WEF_Utils.getWikidataApi();
 		this.htmlElement.empty();
+		this.statusElement.appendTo( this.htmlElement );
 
 		var list = this;
 		var alreadyAdded = {};
+		var alreadyAddedCount = 0;
 
+		list.searchesInProgress = 0;
 		$.each( WEF_SOURCES_LOOKUP_LANGUAGES, function( i, languageCode ) {
+			list.statusElement.text("Looking for sources by term «" + searchTerm + "»...");
+			list.statusElement.show();
+
+			list.searchesInProgress++;
 			wikidataApi.get( {
 				action: 'wbsearchentities',
 				language: languageCode,
@@ -193,9 +210,20 @@
 						return;
 					}
 					alreadyAdded[entity.id] = true;
+					alreadyAddedCount++;
 					entityIds.push( entity.id );
 				} );
 				list._add( entityIds );
+
+				list.searchesInProgress--;
+				if ( list.searchesInProgress == 0 ) {
+					if ( alreadyAddedCount == 0) {
+						list.statusElement.text("Nothing found by term «" + searchTerm + "»");
+						list.statusElement.show();
+					} else {
+						list.statusElement.hide();
+					}
+				}
 			} );
 		} );
 	};
@@ -262,7 +290,7 @@
 					disabletoc: true,
 					contentformat: 'text/x-wiki',
 					contentmodel: 'wikitext',
-					text: '{{source|' + entityId + '}}'
+					text: '{' + '{source|' + entityId + '}}'
 				} ).done( function( parseResult ) {
 					if ( typeof parseResult.error !== 'undefined' ) {
 						mw.log.warn( parseResult.error );
@@ -312,6 +340,30 @@
 		showInsertSourceDialog( entityId );
 	};
 
+	function appendCheckboxRow( checkbox, labelText, input, parametersTable ) {
+		var label = $( '<label></label>' ).text( labelText ).prepend( checkbox );
+		var th = $( '<th></th>' ).append( label );
+		var td = $( '<td></td>' ).append( input );
+
+		$( '<tr class="wefInsertSourceForm_labelAndInput">' ).append( th ).append( td ).appendTo( parametersTable );
+	}
+
+	function renderSourceProperty( renderModule, renderFunction, entityId, targetInput ) {
+		new mw.Api().post( {
+			action: 'expandtemplates',
+			format: 'json',
+			prop: 'wikitext',
+			text: '{' + '{#invoke:' + renderModule + ' | ' + renderFunction + ' | ' + entityId + '}}'
+		} ).done( function( result ) {
+			if ( result.error ) {
+				console.log( result );
+				notify( "Unable to call " + renderModule + "." + renderFunction + " for " + entityId + ": " + result.error.info );
+				return;
+			}
+			targetInput.val( result.expandtemplates.wikitext );
+		} );
+	}
+
 	function showInsertSourceDialog( entityId ) {
 		var html = this._html = $( '<div class="wefInsertSourceForm"></div>' );
 
@@ -345,11 +397,29 @@
 								parameters ) ) );
 
 		$( '<hr>' ).appendTo( html );
-		$( '<p>Если Вам необходимо указать другие параметры, например, автора, нужно завести отдельный элемент источника.</p>' ).appendTo( html );
+		$( '<p>Если Вам необходимо указать другие параметры, например, автора или год публикации, нужно завести отдельный элемент источника.</p>' ).appendTo( html );
 		$( '<hr>' ).appendTo( html );
 
-		var checkboxRef = $( '<input type="checkbox" class="wefInsertSourceForm_checkbox" id="wefInsertSourceForm_checkbox_ref">' ).appendTo(
-				$( '<div class="wefInsertSourceForm_labelAndInput">' ).appendTo( html ) ).after( $( '<label for="wefInsertSourceForm_checkbox_ref">Вставить как сноску</label>' ) );
+		var wikitextParameters = $( '<table class="wefInsertSourceFormParameters"></div>' ).appendTo( html );
+
+		var checkboxAsRef = $( '<input type="checkbox" class="wefInsertSourceForm_checkbox">' );
+		appendCheckboxRow( checkboxAsRef, 'Вставить как сноску', $(''), wikitextParameters );
+
+		var checkboxRefAuthor = $( '<input type="checkbox" class="wefInsertSourceForm_checkbox" checked>' );
+		var inputRefAuthor = $( '<input class="wefInsertSourceForm_input">' );
+		appendCheckboxRow( checkboxRefAuthor, 'Добавить параметр ref', inputRefAuthor, wikitextParameters );
+
+		var checkboxRefYear = $( '<input type="checkbox" class="wefInsertSourceForm_checkbox" checked>' );
+		var inputRefYear = $( '<input class="wefInsertSourceForm_input">' );
+		appendCheckboxRow( checkboxRefYear, 'Добавить параметр ref-year', inputRefYear, wikitextParameters );
+
+		var checkboxSourceTitle = $( '<input type="checkbox" class="wefInsertSourceForm_checkbox" checked>' );
+		var inputSourceTitle = $( '<input class="wefInsertSourceForm_input">' );
+		appendCheckboxRow( checkboxSourceTitle, 'Добавить комм. с названием', inputSourceTitle, wikitextParameters );
+
+		renderSourceProperty( 'Sources-authors', 'renderSourceAuthors', entityId, inputRefAuthor );
+		renderSourceProperty( 'Sources-year', 'renderSourceYear', entityId, inputRefYear );
+		renderSourceProperty( 'Sources-title', 'renderSourceTitle', entityId, inputSourceTitle );
 
 		html.dialog( {
 			title: 'Дополнительные параметры источника',
@@ -360,10 +430,10 @@
 					$( this ).dialog( "close" );
 
 					var textToInsert;
-					if ( checkboxRef.is( ':checked' ) ) {
-						textToInsert = '{{source-ref|';
+					if ( checkboxAsRef.is( ':checked' ) ) {
+						textToInsert = '{' + '{source-ref|';
 					} else {
-						textToInsert = '{{source|';
+						textToInsert = '{' + '{source|';
 					}
 
 					textToInsert += entityId;
@@ -377,7 +447,17 @@
 						textToInsert += '|volume=' + inputVolume.val();
 					if ( !WEF_Utils.isEmpty( inputIssue.val() ) )
 						textToInsert += '|issue=' + inputIssue.val();
+
+					if ( checkboxRefAuthor.is( ':checked' ) && !WEF_Utils.isEmpty( inputRefAuthor.val() ) )
+						textToInsert += '|ref=' + inputRefAuthor.val();
+					if ( checkboxRefYear.is( ':checked' ) && !WEF_Utils.isEmpty( inputRefYear.val() ) )
+						textToInsert += '|ref-year=' + inputRefYear.val();
+
 					textToInsert += '}}';
+
+					if ( checkboxSourceTitle.is( ':checked' ) && !WEF_Utils.isEmpty( inputSourceTitle.val() ) ) {
+						textToInsert += ' <!-- ' + inputSourceTitle.val() + ' -->';
+					}
 
 					$( '#wpTextbox1' ).textSelection( 'encapsulateSelection', {
 						post: textToInsert,
@@ -397,7 +477,7 @@
 	}
 
 	/**
-	 * insert template {{source talkpage placeholder}} on Wikidata talk page:
+	 * insert template { { source talkpage placeholder } } on Wikidata talk page:
 	 */
 	function createTalkPageWithPlaceholder( entityId ) {
 		var notifyOptions = {
@@ -412,8 +492,8 @@
 			createonly: true,
 			minor: true,
 			tags: 'WE-Framework gadget',
-			text: '{{source talkpage placeholder}}',
-			summary: 'Add source talkpage placehoder {{source talkpage placeholder}} via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' ),
+			text: '{' + '{source talkpage placeholder}}',
+			summary: 'Add source talkpage placehoder {' + '{source talkpage placeholder}} via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' ),
 		} ).done( function() {
 			mw.notify( "Запрос на создание страницы обсуждения отправлен", notifyOptions );
 		} );
