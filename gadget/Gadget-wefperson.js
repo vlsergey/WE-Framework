@@ -283,23 +283,31 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"			<fieldset>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>Q5962346</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
-		"					<!-- Google Scholar ID -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P1960\' data-datatype=\'string\'\r\n" + 
-		"						data-template=\'https://scholar.google.com/citations?user=$1\' />\r\n" + 
 		"					<!--  Mathematics Genealogy Project identifier -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P549\' data-datatype=\'string\'\r\n" + 
 		"						data-template=\'http://genealogy.math.ndsu.nodak.edu/id.php?id=$1\' />\r\n" + 
 		"					<!-- ORCID -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P496\' data-datatype=\'string\' data-template=\'http://orcid.org/$1\' />\r\n" + 
+		"\r\n" + 
+		"					<!-- ACM Digital Library author ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P864\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'https://dl.acm.org/author_page.cfm?id=$1\' />\r\n" + 
+		"					<!--  DBLP pID  -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P2456\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'http://dblp.org/pid/$1\' />\r\n" + 
+		"					<!-- Zentralblatt MATH author ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1556\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'https://zbmath.org/authors/?q=ai:$1\' />\r\n" + 
+		"\r\n" + 
+		"					<!-- Google Scholar ID -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P1960\' data-datatype=\'string\'\r\n" + 
+		"						data-template=\'https://scholar.google.com/citations?user=$1\' />\r\n" + 
 		"					<!-- ResearcherID -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P1053\' data-datatype=\'string\'\r\n" + 
 		"						data-template=\'http://www.researcherid.com/rid/$1\' />\r\n" + 
 		"					<!-- Scopus Author ID -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P1153\' data-datatype=\'string\'\r\n" + 
 		"						data-template=\'https://www.scopus.com/authid/detail.url?authorId=$1\' />\r\n" + 
-		"					<!-- Zentralblatt MATH author ID -->\r\n" + 
-		"					<tbody class=\'wef_claim_editors\' data-code=\'P1556\' data-datatype=\'string\'\r\n" + 
-		"						data-template=\'https://zbmath.org/authors/?q=ai:$1\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"			<fieldset>\r\n" + 
