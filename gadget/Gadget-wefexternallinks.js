@@ -1070,7 +1070,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		qualifiers: [ d.P50, d.P958, ],
 	} );
 	this.definitions.P1422 = new WEF_Definition( {
-		datatype: 'string',
+		datatype: 'external-id',
 		flag: 'de',
 		label: 'Q17298559',
 		buttons: buttonsSearchF( [ 'dewiki', 'enwiki' ], 'http://ta.sandrart.net/en/persons/?query=' ),
@@ -1100,7 +1100,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		},
 	} );
 	this.definitions.P1648 = new WEF_Definition( {
-		datatype: 'string',
+		datatype: 'external-id',
 		flag: 'cy',
 		label: 'Q5273977',
 		buttons: buttonsSearchF( [ 'enwiki', 'cywiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:wbo.llgc.org.uk/en/ ' ) ),
@@ -1166,12 +1166,21 @@ window.WEF_ExternalLinks = function( entityId ) {
 			return 'https://musopen.org/composer/' + id + '/';
 		},
 	} );
+	this.definitions.P2924 = new WEF_Definition( {
+		code: 'P2924',
+		flag: 'ru',
+		label: 'Q1768199',
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:bigenc.ru ' ) ),
+		template: 'http://bigenc.ru/text/$1',
+		qualifiers: [ d.P50, d.P958 ],
+	} );
 	this.definitions.P3217 = new WEF_Definition( {
 		code: 'P3217',
 		flag: 'se',
 		label: 'Q379406',
-		buttons: buttonsSearchF( [ 'sewiki', 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:sok.riksarkivet.se/sbl/ ' ) ),
+		buttons: buttonsSearchF( [ 'svwiki', 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:sok.riksarkivet.se/sbl/ ' ) ),
 		template: 'https://sok.riksarkivet.se/sbl/Presentation.aspx?id=$1',
+		qualifiers: [ d.P50, d.P958 ],
 	} );
 
 	this.definitions.Q356 = new WEF_Definition( {
@@ -2096,7 +2105,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 				label: i18n.dialogButtonSaveLabel,
 				click: function() {
 					dialogForm.dialog( 'close' );
-					var d = wef_analyze_and_save( true, WEF_Utils.getEntityId(), null, externalLinksEdit.editors );
+					var d = wef_analyze_and_save( true, entityId, null, externalLinksEdit.editors );
 					d.always( function() {
 						WEF_Utils.purge();
 					} );
@@ -2354,6 +2363,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		// fr
 		d.Q17329836,// Encyclopédique Larousse en ligne .fr
 		// ru
+		d.P2924, // Большая российская энциклопедия
 		d.Q4091875, // Большая энциклопедия Кирилла и Мефодия .ru
 		d.P1438,// Краткая еврейская .ru
 		d.Q4239850,// Краткая литературная .ru
