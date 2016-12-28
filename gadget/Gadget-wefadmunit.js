@@ -16,6 +16,7 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"            <li><a href=\'#wef_admUnitEditor_tab_politic\' class=\'wef_editor_tab_anchor wef_i18n_label\'>Q7163</a></li>\r\n" + 
 		"            <li><a href=\'#wef_admUnitEditor_tab_subdivisions\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P150</a></li>\r\n" + 
 		"            <li><a href=\'#wef_admUnitEditor_tab_demography\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P1082</a></li>\r\n" + 
+		"            <li><a href=\'#wef_admUnitEditor_tab_P190\' class=\'wef_editor_tab_anchor wef_i18n_label\'>P190</a></li>\r\n" + 
 		"            <li><a href=\'#wef_admUnitEditor_tab_clubs\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupClubs</a></li>\r\n" + 
 		"            <li><a href=\'#wef_admUnitEditor_tab_codes_1\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupCodes</a></li>\r\n" + 
 		"            <li><a href=\'#wef_admUnitEditor_tab_codes_2\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupCodes</a></li>\r\n" + 
@@ -242,7 +243,22 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    <!-- member of -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P1082\' data-datatype=\'quantity\'>\r\n" + 
 		"                        <!-- point in time -->\r\n" + 
-		"                        <tr data-code=\'P585\' data-datatype=\'time\' data-as-column=\'true\' />\r\n" + 
+		"                        <tr data-code=\'P585\' data-datatype=\'time\' data-editordatatype=\'time-years\' data-as-column=\'true\' />\r\n" + 
+		"                    </tbody>\r\n" + 
+		"                </table>\r\n" + 
+		"            </fieldset>\r\n" + 
+		"        </div>\r\n" + 
+		"\r\n" + 
+		"        <div id=\'wef_admUnitEditor_tab_P190\' class=\'wef_editor_tab\'>\r\n" + 
+		"            <fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
+		"                <legend class=\'wef_i18n_label\'>P190</legend>\r\n" + 
+		"                <table class=\'wef_table\'>\r\n" + 
+		"                    <!-- member of -->\r\n" + 
+		"                    <tbody class=\'wef_claim_editors\' data-code=\'P190\' data-datatype=\'wikibase-item\'>\r\n" + 
+		"                        <!-- start date -->\r\n" + 
+		"                        <tr data-code=\'P580\' data-datatype=\'time\' data-editordatatype=\'time-years\' data-as-column=\'true\' />\r\n" + 
+		"                        <!-- end date -->\r\n" + 
+		"                        <tr data-code=\'P582\' data-datatype=\'time\' data-editordatatype=\'time-years\' data-as-column=\'true\' />\r\n" + 
 		"                    </tbody>\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
@@ -255,9 +271,9 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"                    <!-- member of -->\r\n" + 
 		"                    <tbody class=\'wef_claim_editors\' data-code=\'P463\' data-datatype=\'wikibase-item\'>\r\n" + 
 		"                        <!-- start date -->\r\n" + 
-		"                        <tr data-code=\'P580\' data-datatype=\'time\' data-as-column=\'true\' />\r\n" + 
+		"                        <tr data-code=\'P580\' data-datatype=\'time\' data-editordatatype=\'time-years\' data-as-column=\'true\' />\r\n" + 
 		"                        <!-- end date -->\r\n" + 
-		"                        <tr data-code=\'P582\' data-datatype=\'time\' data-as-column=\'true\' />\r\n" + 
+		"                        <tr data-code=\'P582\' data-datatype=\'time\' data-editordatatype=\'time-years\' data-as-column=\'true\' />\r\n" + 
 		"                        <!-- subject -->\r\n" + 
 		"                        <tr data-code=\'P805\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"                    </tbody>\r\n" + 
