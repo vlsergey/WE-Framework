@@ -975,7 +975,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		qualifiers: [],
 	} );
 	this.definitions.P1296 = new WEF_Definition( {
-		datatype: 'string',
+		datatype: 'external-id',
 		flag: 'ct',
 		label: 'Q2664168',
 		buttons: buttonsSearchF( [ 'cawiki', 'enwiki', 'ruwiki' ], 'http://www.enciclopedia.cat/search/work/445460/' ),
@@ -1061,13 +1061,12 @@ window.WEF_ExternalLinks = function( entityId ) {
 		qualifiers: [],
 	} );
 	this.definitions.P1417 = new WEF_Definition( {
-		datatype: 'string',
+		datatype: 'external-id',
 		flag: 'uk',
 		code: 'P1417',
 		label: 'Q5375741',
 		buttons: buttonsSearchF( [ 'enwiki' ], 'http://global.britannica.com/search?query=' ),
-		check: /^\d+$/,
-		template: 'http://global.britannica.com/EBchecked/topic/$1/',
+		template: 'https://www.britannica.com/$1',
 		qualifiers: [ d.P50, d.P958, ],
 	} );
 	this.definitions.P1422 = new WEF_Definition( {
@@ -1109,17 +1108,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		template: 'http://wbo.llgc.org.uk/en/$1.html',
 		qualifiers: [ d.P50, d.P958 ],
 	} );
-	this.definitions.P2002 = new WEF_Definition( {
-		code: 'P2002',
-		label: 'Q918',
-		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:twitter.com ' ) ),
-		normalize: function( id ) {
-			return id.replace( /^https?:\/\/(www\.)?twitter\.com\/(.*)$/i, '$2' );
-		},
-		url: function( id ) {
-			return 'https://twitter.com/' + id;
-		}
-	} );
 	this.definitions.P1960 = new WEF_Definition( {
 		code: 'P1960',
 		label: 'Q494817',
@@ -1129,6 +1117,17 @@ window.WEF_ExternalLinks = function( entityId ) {
 		},
 		url: function( id ) {
 			return 'https://scholar.google.com/citations?user=' + id;
+		}
+	} );
+	this.definitions.P2002 = new WEF_Definition( {
+		code: 'P2002',
+		label: 'Q918',
+		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:twitter.com ' ) ),
+		normalize: function( id ) {
+			return id.replace( /^https?:\/\/(www\.)?twitter\.com\/(.*)$/i, '$2' );
+		},
+		url: function( id ) {
+			return 'https://twitter.com/' + id;
 		}
 	} );
 	this.definitions.P2003 = new WEF_Definition( {
@@ -1166,6 +1165,13 @@ window.WEF_ExternalLinks = function( entityId ) {
 		url: function( id ) {
 			return 'https://musopen.org/composer/' + id + '/';
 		},
+	} );
+	this.definitions.P3217 = new WEF_Definition( {
+		code: 'P3217',
+		flag: 'se',
+		label: 'Q379406',
+		buttons: buttonsSearchF( [ 'sewiki', 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:sok.riksarkivet.se/sbl/ ' ) ),
+		template: 'https://sok.riksarkivet.se/sbl/Presentation.aspx?id=$1',
 	} );
 
 	this.definitions.Q356 = new WEF_Definition( {
@@ -2354,6 +2360,8 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q2627728,// Кругосвет .ru
 		d.Q4263804,// Литературная .ru
 		d.Q2498180,// Православная .ru
+		// se
+		d.P3217,//Swedish National Biography
 		],
 	} );
 	this.groups.push( {
