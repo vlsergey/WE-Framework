@@ -3423,7 +3423,7 @@ WEF_SnakEditor.prototype._change = function() {
 };
 
 WEF_SnakEditor.prototype.equalsStringValue = function( value ) {
-	if ( !this.hasValue() || "string" != this.getDataType() )
+	if ( !this.hasValue() )
 		return false;
 
 	return this.toDataValue().value === value;
@@ -5050,8 +5050,8 @@ WEF_ClaimEditor.prototype.initWithDataValue = function( datatype, datavalue ) {
 	} );
 };
 
-WEF_ClaimEditor.prototype.initWithStringValue = function( strValue ) {
-	this.initWithDataValue( 'string', {
+WEF_ClaimEditor.prototype.initWithStringValue = function( datatype, strValue ) {
+	this.initWithDataValue( datatype, {
 		value: strValue,
 		type: 'string'
 	} );
@@ -5095,7 +5095,7 @@ WEF_ClaimEditor.prototype.setRank = function( newRank ) {
 };
 
 WEF_ClaimEditor.prototype.setStringValue = function( strValue ) {
-	this.setDataValue( 'string', {
+	this.setDataValue( this.editorDataType, {
 		value: strValue,
 		type: 'string'
 	} );
@@ -5573,7 +5573,7 @@ WEF_ClaimEditorsTable.prototype.onFoundStringValue = function( strValue ) {
 
 	if ( withEmpty.length === 0 ) {
 		var newClaimEditor = this.add();
-		newClaimEditor.initWithStringValue( strValue );
+		newClaimEditor.initWithStringValue( this.definition.datatype, strValue );
 		newClaimEditor.tbody.addClass( 'wef-lookup-found-new' );
 	} else {
 		var newClaimEditor = withEmpty[0];

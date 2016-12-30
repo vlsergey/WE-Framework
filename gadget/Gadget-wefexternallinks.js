@@ -267,9 +267,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 	var regexpTitle = new RegExp( '^[' + mw.config.get( 'wgLegalTitleChars' ) + ']+$' );
 
 	/* author, автор */
-	this.definitions.P50 = new WEF_Definition( {
-		datatype: 'wikibase-item'
-	} );
+	this.definitions.P50 = new WEF_Definition( { } );
 	this.definitions.P213 = new WEF_Definition( {
 		label: 'Q423048',
 		labelPrefix: 'ISNI — ',
@@ -279,11 +277,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 			}
 			return id;
 		},
-		check: /^\d{4} \d{4} \d{4} \d{3}[\dX]$/,
-		url: function( id ) {
-			var fixedId = id.substring( 0, 4 ) + id.substring( 5, 9 ) + id.substring( 10, 14 ) + id.substring( 15, 19 );
-			return 'http://isni-url.oclc.nl/isni/' + fixedId;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P214 = new WEF_Definition( {
@@ -292,10 +285,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		viaf: 'viafid',
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?viaf\.org\/viaf\/(.*)$/i, '$2' );
-		},
-		check: /^[1-9]\d{1,8}$/,
-		url: function( id ) {
-			return 'http://viaf.org/viaf/' + id;
 		},
 		buttons: [ {
 			icons: {
@@ -317,10 +306,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^(.*)x$/, '$1X' );
 		},
-		check: /^(1|10)\d{7}[0-9X]|[47]\d{6}-\d|[1-9]\d{0,7}-[0-9X]|3\d{7}[0-9X]$/,
-		url: function( id ) {
-			return 'http://d-nb.info/gnd/' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P244 = new WEF_Definition( {
@@ -328,9 +313,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q620946',
 		labelPrefix: 'LCCN — ',
 		viaf: 'lc',
-		url: function( id ) {
-			return 'http://id.loc.gov/authorities/names/' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P245 = new WEF_Definition( {
@@ -338,9 +320,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q2494649',
 		labelPrefix: 'ULAN — ',
 		viaf: 'jpg',
-		url: function( id ) {
-			return 'http://www.getty.edu/vow/ULANFullDisplay?find=&role=&nation=&subjectid=' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P268 = new WEF_Definition( {
@@ -366,10 +345,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 
 			return result;
 		},
-		check: /^\d{8}[0-9bcdfghjkmnpqrstvwxz]$/,
-		url: function( id ) {
-			return 'http://catalogue.bnf.fr/ark:/12148/cb' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P269 = new WEF_Definition( {
@@ -377,40 +352,25 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q2597810',
 		labelPrefix: 'SUDOC — ',
 		viaf: 'sudoc',
-		url: function( id ) {
-			return 'http://www.idref.fr/' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P270 = new WEF_Definition( {
 		flag: 'cn',
 		label: 'Q9384291',
 		labelPrefix: 'CALIS — ',
-		check: /^n[0-9]{10}$/,
-		url: function( id ) {
-			return 'http://opac.calis.edu.cn/aopac/ajsp/detail.jsp?actionfrom=1&actl=CAL++' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P271 = new WEF_Definition( {
 		flag: 'jp',
 		label: 'Q10726338',
 		labelPrefix: 'CiNii — ',
-		normalize: function( id ) {
-			return id.replace( /^\d{7}[\dX]$/, 'DA$1' );
-		},
-		check: /^DA\d{7}[\dX]$/,
-		template: 'http://ci.nii.ac.jp/author/$1',
 		qualifiers: [],
 	} );
 	/* pages; страницы */
-	this.definitions.P304 = new WEF_Definition( {
-		datatype: 'string',
-	} );
+	this.definitions.P304 = new WEF_Definition( {} );
 	this.definitions.P345 = new WEF_Definition( {
 		label: 'Q37312',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:imdb.com ' ) ),
-		check: /^(ch|co|nm|tt)\d{7}$/,
 		normalize: function( id ) {
 			var result = id;
 			result = result.replace( /^https?:\/\/(www\.)?imdb\.com\/Name\?(.*)$/i, '$2' );
@@ -437,7 +397,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q477675',
 		labelPrefix: 'NDL — ',
 		viaf: 'ndl',
-		template: 'http://id.ndl.go.jp/auth/ndlna/$1',
 		qualifiers: [],
 	} );
 	this.definitions.P350 = new WEF_Definition( {
@@ -447,13 +406,10 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?explore\.rkd\.nl\/[a-z]{2}\/images\/(\d+)$/i, '$2' );
 		},
-		template: 'http://explore.rkd.nl/en/images/$1',
 		qualifiers: [],
 	} );
 	/* title; название */
-	this.definitions.P357 = new WEF_Definition( {
-		datatype: 'string',
-	} );
+	this.definitions.P357 = new WEF_Definition( { } );
 	this.definitions.P373 = new WEF_Definition( {
 		label: 'Q565',
 		autocomplete: {
@@ -505,7 +461,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		qualifiers: [],
 	} );
 	this.definitions.P407 = new WEF_Definition( {
-		datatype: 'wikibase-item',
 		qualifiers: [],
 	} );
 	this.definitions.P409 = new WEF_Definition( {
@@ -516,10 +471,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^0*([1-9][0-9]{0,11})$/, '$1' );
 		},
-		check: /^[1-9][0-9]{0,11}$/,
-		url: function( id ) {
-			return 'http://nla.gov.au/anbd.aut-an' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P434 = new WEF_Definition( {
@@ -527,8 +478,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		// person, musical ensemble
 		labelQualifier: [ 'Q215627', 'Q2088357' ],
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:musicbrainz.org ' ) ),
-		check: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
-		template: 'https://musicbrainz.org/artist/$1',
 		qualifiers: [],
 	} );
 	this.definitions.P435 = new WEF_Definition( {
@@ -536,8 +485,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		// музыкальное произведение (Q2188189), mainly сингл (Q134556)
 		labelQualifier: [ 'Q2188189', 'Q134556' ],
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:musicbrainz.org ' ) ),
-		check: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
-		template: 'https://musicbrainz.org/work/$1',
 		qualifiers: [],
 	} );
 	this.definitions.P436 = new WEF_Definition( {
@@ -546,14 +493,10 @@ window.WEF_ExternalLinks = function( entityId ) {
 		// mainly музыкальный альбом (Q482994)
 		labelQualifier: [ 'Q2188189', 'Q482994' ],
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:musicbrainz.org ' ) ),
-		check: /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
-		template: 'https://musicbrainz.org/release-group/$1',
 		qualifiers: [],
 	} );
 	/* Volume, том */
-	this.definitions.P478 = new WEF_Definition( {
-		datatype: 'string',
-	} );
+	this.definitions.P478 = new WEF_Definition( { } );
 	this.definitions.P480 = new WEF_Definition( {
 		label: 'Q2638147',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:filmaffinity.com ' ) ),
@@ -561,7 +504,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?filmaffinity\.com\/[a-z]+\/film(\d+)\.html?$/i, '$2' );
 		},
-		template: 'http://www.filmaffinity.com/en/film$1.html',
 		qualifiers: [],
 	} );
 	this.definitions.P496 = new WEF_Definition( {
@@ -576,8 +518,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 			}
 			return id;
 		},
-		check: /^\d\d\d\d-\d\d\d\d-\d\d\d\d-\d\d\d[\dX]$/,
-		template: 'http://orcid.org/$1',
 		qualifiers: [],
 	} );
 	this.definitions.P497 = new WEF_Definition( {
@@ -591,35 +531,22 @@ window.WEF_ExternalLinks = function( entityId ) {
 			.replace( /^https?:\/\/db1\.ihp\.\sinica\.edu\.tw\/cbdbc\/cbdbkmeng\?\~\~AAA(\d{7})$/i, '$1' ) //
 			;
 		},
-		url: function( id ) {
-			return 'http://db1.ihp.sinica.edu.tw/cbdbc/cbdbkmeng?~~AAA' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P535 = new WEF_Definition( {
 		label: 'Q63056',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:findagrave.com ' ) ),
-		check: /^\d+$/,
-		template: 'http://www.findagrave.com/cgi-bin/fg.cgi?page=gr&GRid=$1',
 		qualifiers: [],
 	} );
 	this.definitions.P549 = new WEF_Definition( {
 		label: 'Q829984',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:genealogy.ams.org ' ) ),
-		check: /^\d{1,6}$/,
-		template: 'http://www.genealogy.ams.org/id.php?id=$1',
 		qualifiers: [],
 	} );
 	this.definitions.P650 = new WEF_Definition( {
 		flag: 'nl',
 		label: 'Q17299517',
 		check: /^\d{1,6}$/,
-		normalize: function( id ) {
-			return id.replace( /^https?:\/\/(www\.)?rkd\.nl\/rkddb\.aspx\?action\=search\&database\=ChoiceArtists\&search\=priref\=(\d{1,6})$/i, '$2' );
-		},
-		url: function( id ) {
-			return 'http://www.rkd.nl/rkddb/dispatcher.aspx?action=search&database=ChoiceArtists&search=priref=' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P651 = new WEF_Definition( {
@@ -627,7 +554,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q1868372',
 		labelPrefix: 'BPN — ',
 		viaf: 'bpn',
-		template: 'http://www.biografischportaal.nl/persoon/$1',
 		qualifiers: [],
 	} );
 	this.definitions.P691 = new WEF_Definition( {
@@ -635,37 +561,24 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q1967876',
 		labelPrefix: 'NKC — ',
 		viaf: 'nkc',
-		url: function( id ) {
-			return 'http://aut.nkp.cz/' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P839 = new WEF_Definition( {
 		label: 'Q523660',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:imslp.org/wiki/ ' ) ),
 		check: regexpPath,
-		url: function( id ) {
-			return 'http://imslp.org/wiki/' + id;
-		},
 	} );
 	this.definitions.P886 = new WEF_Definition( {
 		flag: 'ch',
 		label: 'Q642074',
 		labelQualifier: 'Q35127',
 		labelPrefix: 'LIR — ',
-		url: function( id ) {
-			return 'http://www.e-lir.ch/e-LIR___Lexicon.' + id + '.450.0.html';
-		},
 		qualifiers: [ d.P958 ],
 	} );
 	this.definitions.P902 = new WEF_Definition( {
 		flag: 'ch',
 		label: 'Q642074',
 		labelPrefix: 'HLS — ',
-		check: /^[1-9]\d*$/,
-		url: function( id ) {
-			return 'http://www.hls-dhs-dss.ch/textes/f/F' + id + '.php';
-		},
 		qualifiers: [ d.P958 ],
 	} );
 	this.definitions.P906 = new WEF_Definition( {
@@ -673,9 +586,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q953058',
 		labelPrefix: 'SELIBR / LIBRIS — ',
 		viaf: 'selibr',
-		url: function( id ) {
-			return 'http://libris.kb.se/auth/' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P947 = new WEF_Definition( {
@@ -683,9 +593,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q1048694',
 		labelPrefix: 'RSL — ',
 		viaf: 'rsl',
-		url: function( id ) {
-			return 'http://aleph.rsl.ru/F?func=find-b&find_code=SYS&adjacent=Y&local_base=RSL11&request=' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P950 = new WEF_Definition( {
@@ -695,10 +602,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		viaf: 'bne',
 		normalize: function( id ) {
 			return id.replace( /^(XX)?(\d{6,7})$/i, 'XX$2' );
-		},
-		check: /^XX\d{6,7}$/,
-		url: function( id ) {
-			return 'http://catalogo.bne.es/uhtbin/authoritybrowse.cgi?action=display&authority_id=' + id;
 		},
 		qualifiers: [],
 	} );
@@ -713,27 +616,18 @@ window.WEF_ExternalLinks = function( entityId ) {
 		qualifiers: [],
 	} );
 	/* section, verse, or paragraph; раздел, стих или параграф */
-	this.definitions.P958 = new WEF_Definition( {
-		datatype: 'string',
-	} );
+	this.definitions.P958 = new WEF_Definition( { } );
 	this.definitions.P998 = new WEF_Definition( {
 		label: 'Q41226',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:dmoz.org ' ) ),
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?dmoz\.org\/(.*)$/i, '$2' ).replace( /^(.*)\/$/i, '$1' ).replace( /^\/(.*)$/i, '$1' );
 		},
-		url: function( id ) {
-			return 'http://www.dmoz.org/' + id;
-		},
 	} );
 	this.definitions.P1003 = new WEF_Definition( {
 		flag: 'ro',
 		label: 'Q622012',
 		labelPrefix: 'BNR — ',
-		check: /^\d{9}$/,
-		url: function( id ) {
-			return 'http://alephnew.bibnat.ro:8991/F?func=find-b&request=' + id + '&find_code=SYS&adjacent=Y&local_base=NLR10';
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1005 = new WEF_Definition( {
@@ -741,9 +635,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q245966',
 		labelPrefix: 'PTBNP — ',
 		viaf: 'ptbnp',
-		url: function( id ) {
-			return 'http://viaf.org/processed/PTBNP%7C' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1006 = new WEF_Definition( {
@@ -751,9 +642,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q1526131',
 		labelPrefix: 'NTA — ',
 		viaf: 'nta',
-		url: function( id ) {
-			return 'http://opc4.kb.nl/PPN?PPN=' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1015 = new WEF_Definition( {
@@ -761,9 +649,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q4584301',
 		labelPrefix: 'BIBSYS — ',
 		viaf: 'bibsys',
-		url: function( id ) {
-			return 'http://ask.bibsys.no/ask/action/result?cmd=&kilde=biblio&cql=bs.autid+%3D+' + id + '&feltselect=bs.autid';
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1017 = new WEF_Definition( {
@@ -774,30 +659,21 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^(ADV)?(\d{8})$/i, 'ADV$2' );
 		},
-		check: /^ADV\d{8}$/,
-		url: function( id ) {
-			return 'http://viaf.org/processed/BAV%7C' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1053 = new WEF_Definition( {
 		label: 'Q7315186',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:researcherid.com/rid/ ' ) ),
-		check: /[A-Z]-\d{4}-(19|20)\d\d/,
-		template: 'http://www.researcherid.com/rid/$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1153 = new WEF_Definition( {
 		label: 'Q371467',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:scopus.com/authid/ ' ) ),
-		check: /^\d+$/,
-		template: 'http://www.scopus.com/authid/detail.url?authorId=$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1185 = new WEF_Definition( {
 		label: 'Q649227',
 		buttons: buttonsSearchF( [ 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:ru.rodovid.org ' ) ),
-		check: /^\d+$/,
 		url: function( id ) {
 			return 'http://ru.rodovid.org/wk/Person:' + id;
 		},
@@ -807,7 +683,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q11789729',
 		labelPrefix: 'NUKAT — ',
 		viaf: 'nukat',
-		check: /^n\d+$/,
 		url: function( id ) {
 			return 'http://viaf.org/processed/NUKAT%7C' + id;
 		},
@@ -817,10 +692,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		flag: 'cn',
 		label: 'Q732353',
 		labelPrefix: 'NLC — ',
-		check: /^\d{1,9}$/,
-		url: function( id ) {
-			return '';
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1217 = new WEF_Definition( {
@@ -828,16 +699,12 @@ window.WEF_ExternalLinks = function( entityId ) {
 		// Концертная площадка (Q8719053), <...> театр (Q24354)...
 		labelQualifier: [ 'Q8719053', 'Q24354' ],
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:ibdb.com ' ) ),
-		check: /^\d+$/,
-		template: 'http://www.ibdb.com/venue.asp?id=id$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1218 = new WEF_Definition( {
 		label: 'Q31964',
 		labelQualifier: 'Q7777570', // театральная постановка (Q7777570)
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:ibdb.com ' ) ),
-		check: /^\d+$/,
-		template: 'http://www.ibdb.com/production.asp?id=id$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1219 = new WEF_Definition( {
@@ -845,40 +712,30 @@ window.WEF_ExternalLinks = function( entityId ) {
 		// произведение (Q386724): пьеса (Q25379)
 		labelQualifier: [ 'Q386724', 'Q25379' ],
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:ibdb.com ' ) ),
-		check: /^\d+$/,
-		template: 'http://www.ibdb.com/show.asp?id=id$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1220 = new WEF_Definition( {
 		label: 'Q31964',
 		labelQualifier: 'Q215627', // person
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:isfdb.org ' ) ),
-		check: /^\d+$/,
-		template: 'http://www.ibdb.com/person.php?id=$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1233 = new WEF_Definition( {
 		label: 'Q2629164',
 		labelQualifier: 'Q215627', // person
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:isfdb.org ' ) ),
-		check: /^\d+$/,
-		template: 'http://www.isfdb.org/cgi-bin/ea.cgi?$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1234 = new WEF_Definition( {
 		label: 'Q2629164',
 		labelQualifier: 'Q732577', // publication
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:isfdb.org ' ) ),
-		check: /^\d+$/,
-		template: 'http://www.isfdb.org/cgi-bin/pl.cgi?$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1235 = new WEF_Definition( {
 		label: 'Q2629164',
 		labelQualifier: 'Q7725310', // series
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:isfdb.org ' ) ),
-		check: /^\d+$/,
-		template: 'http://www.isfdb.org/cgi-bin/pe.cgi?$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1237 = new WEF_Definition( {
@@ -887,20 +744,12 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?boxofficemojo\.com\/movies\/\?id\=(.*)\.htm$/i, '$2' );
 		},
-		check: /^[a-z0-9]+$/,
-		url: function( id ) {
-			return 'http://boxofficemojo.com/movies/?id=' + id + '.htm';
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1239 = new WEF_Definition( {
 		label: 'Q2629164',
 		labelQualifier: 'Q4198509', // publisher
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:isfdb.org ' ) ),
-		check: /^\d+$/,
-		url: function( id ) {
-			return 'http://www.isfdb.org/cgi-bin/publisher.cgi?' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1258 = new WEF_Definition( {
@@ -908,10 +757,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:rottentomatoes.com ' ) ),
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?rottentomatoes\.com\/(.*)$/i, '$2' );
-		},
-		check: /^(m|tv|celebrity)\/[-0-9a-z_\']+$/,
-		url: function( id ) {
-			return 'http://www.rottentomatoes.com/' + id;
 		},
 		qualifiers: [],
 	} );
@@ -922,10 +767,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?allocine\.fr\/film\/\fichefilm_gen_cfilm\=(.*)\.html.*$/i, '$2' );
 		},
-		check: /^\d+$/,
-		url: function( id ) {
-			return 'http://www.allocine.fr/film/fichefilm_gen_cfilm=' + id + '.html';
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1266 = new WEF_Definition( {
@@ -934,10 +775,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		buttons: buttonsSearchF( [ 'frwiki', 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:allocine.fr ' ) ),
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?allocine\.fr\/personne\/\fichepersonne_gen_cpersonne\=(.*)\.html.*$/i, '$2' );
-		},
-		check: /^\d+$/,
-		url: function( id ) {
-			return 'http://www.allocine.fr/personne/fichepersonne_gen_cpersonne=' + id + '.html';
 		},
 		qualifiers: [],
 	} );
@@ -948,18 +785,12 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?allocine\.fr\/series\/\ficheserie_gen_cserie\=(.*)\.html.*$/i, '$2' );
 		},
-		check: /^\d+$/,
-		url: function( id ) {
-			return 'http://www.allocine.fr/series/ficheserie_gen_cserie=' + id + '.html';
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1273 = new WEF_Definition( {
 		flag: 'ct',
 		label: 'Q1200925',
 		labelPrefix: 'BNC — ',
-		check: /^a[\dx]{8}$/,
-		template: 'http://cantic.bnc.cat/registres/CUCId/$1',
 		viaf: 'bnc',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], 'http://cantic.bnc.cat/index_nps/index?text=', '&index=1' ),
 		qualifiers: [],
@@ -968,18 +799,12 @@ window.WEF_ExternalLinks = function( entityId ) {
 		flag: 'si',
 		label: 'Q16744133',
 		labelPrefix: 'CONOR — ',
-		check: /^\d+$/,
-		url: function( id ) {
-			return 'http://www.cobiss.si/scripts/cobiss?command=DISPLAY&base=CONOR&rid=' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1296 = new WEF_Definition( {
-		datatype: 'external-id',
 		flag: 'ct',
 		label: 'Q2664168',
 		buttons: buttonsSearchF( [ 'cawiki', 'enwiki', 'ruwiki' ], 'http://www.enciclopedia.cat/search/work/445460/' ),
-		check: /^\d{7}$/,
 		template: [ 'http://www.enciclopedia.cat/enciclopèdies/gran-enciclopèdia-catalana/EC-GEC-$1.xml',
 				'http://www.enciclopedia.cat/enciclop%C3%A8dies/gran-enciclop%C3%A8dia-catalana/EC-GEC-$1.xml', ],
 		qualifiers: [ d.P958, ],
@@ -992,9 +817,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^vtls(\d+)$/, '$1' );
 		},
-		url: function( id ) {
-			return 'http://viaf.org/processed/EGAXA%7Cvtls' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1315 = new WEF_Definition( {
@@ -1004,10 +826,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^0*([1-9][0-9]{0,11})$/, '$1' );
 		},
-		check: /^\d{1,10}$/,
-		url: function( id ) {
-			return 'http://nla.gov.au/nla.party-' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1368 = new WEF_Definition( {
@@ -1015,10 +833,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q1133733',
 		labelPrefix: 'LNB — ',
 		viaf: 'lnb',
-		check: /^\d+$/,
-		url: function( id ) {
-			return 'http://viaf.org/processed/LNB%7CLNC10-' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1375 = new WEF_Definition( {
@@ -1026,10 +840,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		label: 'Q631375',
 		labelPrefix: 'NSK — ',
 		viaf: 'nsk',
-		check: /^\d+$/,
-		url: function( id ) {
-			return 'http://viaf.org/processed/NSK%7C' + id;
-		},
 		qualifiers: [],
 	} );
 	this.definitions.P1361 = new WEF_Definition( {
@@ -1044,7 +854,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 			result = result.replace( /^https?:\/\/(www\.)?animenewsnetwork\.com\/encyclopedia\/releases\.php\?id=(\d+)$/i, 'releases/$2' );
 			return result;
 		},
-		check: /^(anime|company|manga|people|releases)\/(1-9)\d*$/,
 		url: function( id ) {
 			if ( id.indexOf( 'anime/' ) === 0 )
 				return 'http://www.animenewsnetwork.com/encyclopedia/anime.php?id=' + id.substr( 'anime/'.length );
@@ -1061,30 +870,22 @@ window.WEF_ExternalLinks = function( entityId ) {
 		qualifiers: [],
 	} );
 	this.definitions.P1417 = new WEF_Definition( {
-		datatype: 'external-id',
 		flag: 'uk',
 		code: 'P1417',
 		label: 'Q5375741',
 		buttons: buttonsSearchF( [ 'enwiki' ], 'http://global.britannica.com/search?query=' ),
-		template: 'https://www.britannica.com/$1',
 		qualifiers: [ d.P50, d.P958, ],
 	} );
 	this.definitions.P1422 = new WEF_Definition( {
-		datatype: 'external-id',
 		flag: 'de',
 		label: 'Q17298559',
 		buttons: buttonsSearchF( [ 'dewiki', 'enwiki' ], 'http://ta.sandrart.net/en/persons/?query=' ),
-		check: /^([1-9]\d{0,2}|[1-5]\d{3})$/,
-		template: 'http://ta.sandrart.net/en/person/view/$1',
 		qualifiers: [],
 	} );
 	this.definitions.P1438 = new WEF_Definition( {
-		datatype: 'string',
 		flag: 'ru',
 		label: 'Q1967250',
 		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=site%3Awww.eleven.co.il%2Farticle%2F+' ),
-		check: /^\d+$/,
-		template: 'http://www.eleven.co.il/article/$1',
 		qualifiers: [ d.P304, d.P478, d.P958 ],
 	} );
 	this.definitions.P1556 = new WEF_Definition( {
@@ -1094,18 +895,11 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?zbmath\.org\/authors\/\?q\:ai\=([^\/]+)?$/i, '$2' );
 		},
-		check: regexpPath,
-		url: function( id ) {
-			return 'https://zbmath.org/authors/?q=ai:' + id;
-		},
 	} );
 	this.definitions.P1648 = new WEF_Definition( {
-		datatype: 'external-id',
 		flag: 'cy',
 		label: 'Q5273977',
 		buttons: buttonsSearchF( [ 'enwiki', 'cywiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:wbo.llgc.org.uk/en/ ' ) ),
-		check: /^s(|\\d|10)-[A-Z0]{4}-[A-Z0]{3}-[0-9]{4}$/,
-		template: 'http://wbo.llgc.org.uk/en/$1.html',
 		qualifiers: [ d.P50, d.P958 ],
 	} );
 	this.definitions.P1960 = new WEF_Definition( {
@@ -1115,9 +909,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/scholar\.google\.com\/citations\?user=([^&]*)(&.*)?$/i, '$2' );
 		},
-		url: function( id ) {
-			return 'https://scholar.google.com/citations?user=' + id;
-		}
 	} );
 	this.definitions.P2002 = new WEF_Definition( {
 		code: 'P2002',
@@ -1126,9 +917,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?twitter\.com\/(.*)$/i, '$2' );
 		},
-		url: function( id ) {
-			return 'https://twitter.com/' + id;
-		}
 	} );
 	this.definitions.P2003 = new WEF_Definition( {
 		code: 'P2003',
@@ -1136,10 +924,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:instagram.com ' ) ),
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?instagram\.com\/(.+)$/i, '$2' );
-		},
-		check: regexpPath,
-		url: function( id ) {
-			return 'http://instagram.com/' + id;
 		},
 	} );
 	this.definitions.P2013 = new WEF_Definition( {
@@ -1149,10 +933,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?facebook\.com\/(.+)$/i, '$2' );
 		},
-		check: regexpPath,
-		url: function( id ) {
-			return 'https://www.facebook.com/' + id;
-		},
 	} );
 	this.definitions.P2338 = new WEF_Definition( {
 		code: 'P2338',
@@ -1161,17 +941,12 @@ window.WEF_ExternalLinks = function( entityId ) {
 		normalize: function( id ) {
 			return id.replace( /^https?:\/\/(www\.)?musopen\.org\/composer\/([^\/]+)(\/)?$/i, '$2' );
 		},
-		check: regexpPath,
-		url: function( id ) {
-			return 'https://musopen.org/composer/' + id + '/';
-		},
 	} );
 	this.definitions.P2924 = new WEF_Definition( {
 		code: 'P2924',
 		flag: 'ru',
 		label: 'Q1768199',
 		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:bigenc.ru ' ) ),
-		template: 'http://bigenc.ru/text/$1',
 		qualifiers: [ d.P50, d.P958 ],
 	} );
 	this.definitions.P3217 = new WEF_Definition( {
@@ -1179,7 +954,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		flag: 'se',
 		label: 'Q379406',
 		buttons: buttonsSearchF( [ 'svwiki', 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:sok.riksarkivet.se/sbl/ ' ) ),
-		template: 'https://sok.riksarkivet.se/sbl/Presentation.aspx?id=$1',
 		qualifiers: [ d.P50, d.P958 ],
 	} );
 
@@ -1994,6 +1768,15 @@ window.WEF_ExternalLinks = function( entityId ) {
 		if ( !this.enabled )
 			return;
 
+		$( "#p-tb div ul" ).append( $( '<li class="plainlinks"><a href="javascript:externalLinksEdit.prepareEdit()">' + i18n.buttonMenuLabel + '</a></li>' ) );
+		$( "table.ruwikiArticleExternalLinksTable" ).find( ".navbox-list" ).first().prepend(
+				'<div style="float: right;"><a href="javascript:externalLinksEdit.prepareEdit()">' + i18n.buttonNavboxLabel + '</a></div>' );
+	}
+
+	this.prepareEdit = function() {
+		if ( !this.enabled )
+			return;
+
 		var definitions = this.definitions;
 
 		$.each( definitions, function( key, definition ) {
@@ -2009,6 +1792,58 @@ window.WEF_ExternalLinks = function( entityId ) {
 			WEF_Utils.processDefinition( definition );
 		} );
 
+		var propertyKeysSet = [];
+		var propertyKeysArray = [];
+		$.each( definitions, function( key, definition ) {
+			if ( /^[Pp][0-9]+$/.test( definition.code ) && !propertyKeysSet[definition.code] ) {
+				propertyKeysSet[ definition.code ] = true;
+				propertyKeysArray.push( definition.code );
+			}
+		});
+
+		var allPromises = [];
+		$.each( propertyKeysArray.chunk( 50 ), function( chunkIndex, chunk ) {
+			mw.notify( "Loading " + chunk.length + " properties starting from " + chunk[0] + "..." )
+			var getPromise = WEF_Utils.getWikidataApi().get( {
+				action: "query",
+				prop: "revisions",
+				titles: chunk.map( function( x ) {
+					return "Property:" + x
+				} ).join( "|" ),
+				rvprop: "content",
+				format: "json"
+			} );
+			getPromise.then( function( json ) {
+				$.each( json.query.pages, function( pageId, page ) {
+					if ( page && page.revisions && page.revisions[0] && page.revisions[0]["*"] ) {
+						var content = JSON.parse( page.revisions[0]["*"] );
+						var definition = definitions[content.id];
+						if ( definition ) {
+							definition.datatype = content.datatype;
+						}
+						if ( content.claims ) {
+							if ( !definition.template && content.claims.P1630 && content.claims.P1630[0] && content.claims.P1630[0].mainsnak
+									&& content.claims.P1630[0].mainsnak.datavalue && content.claims.P1630[0].mainsnak.datavalue.value ) {
+								definition.template = content.claims.P1630[0].mainsnak.datavalue.value;
+							}
+							if ( !definition.check && content.claims.P1793 && content.claims.P1793[0] && content.claims.P1793[0].mainsnak
+									&& content.claims.P1793[0].mainsnak.datavalue && content.claims.P1793[0].mainsnak.datavalue.value ) {
+								definition.check = '^' + content.claims.P1793[0].mainsnak.datavalue.value + '$';
+							}
+						}
+						WEF_Utils.processDefinition( definition );
+					}
+				} );
+			} );
+			allPromises.push( getPromise );
+		} );
+
+		$.when.apply($, allPromises ).done( function() {
+			externalLinksEdit.doEdit();
+		} );
+	}
+
+	this.doEdit = function() {
 		var dialogForm = $( '' + '<div class="wef_externalLinks_dialog" id="wefExternalLinksDialog" title="' + i18n.dialogTitle + '">' + '<div id="wefExternalLinksDialogTabs">'
 				+ '<ul id="wefExternalLinksDialogTabsList">' + '</ul>' + '</div>' + '<p class="validateTips"></p>' + '</div>' );
 		var statusAndTips = dialogForm.find( 'p.validateTips' );
@@ -2016,7 +1851,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 
 		$( "div#mw-content-text" ).after( dialogForm );
 		dialogForm.dialog( {
-			autoOpen: false,
+			autoOpen: true,
 			autoResize: true,
 			height: 'auto',
 			width: externalLinksEdit.dialogWidth,
@@ -2118,9 +1953,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 				}
 			} ]
 		} );
-		$( "#p-tb div ul" ).append( $( '<li class="plainlinks"><a href="javascript:externalLinksEdit.edit()">' + i18n.buttonMenuLabel + '</a></li>' ) );
-		$( "table.ruwikiArticleExternalLinksTable" ).find( ".navbox-list" ).first().prepend(
-				'<div style="float: right;"><a href="javascript:externalLinksEdit.edit()">' + i18n.buttonNavboxLabel + '</a></div>' );
 
 		{
 			var viafFillFieldset = $( '<fieldset></fieldset>' );
@@ -2224,10 +2056,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 				}
 			} );
 		}
-	};
-
-	this.edit = function() {
-		$( "#wefExternalLinksDialog" ).dialog( 'open' );
 	};
 
 	this.purge = function() {
@@ -2781,6 +2609,18 @@ options ) {
 };
 
 $( function() {
+	if ( !Array.chunk ) {
+		Object.defineProperty(Array.prototype, 'chunk', {
+			value: function(chunkSize) {
+				var result = [];
+				for (var i=0; i<this.length; i+=chunkSize) {
+					result.push( this.slice( i, i + chunkSize ) );
+				}
+				return result;
+			}
+		});
+	}
+	
 	if ( mw.config.get( 'wgArticleId' ) ) {
 		WEF_Utils.getEntityIdDeferred().done( function( entityId ) {
 			if ( !WEF_Utils.isEmpty( entityId ) ) {
