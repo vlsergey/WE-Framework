@@ -122,13 +122,13 @@ window.wef_ExternalLinks_i18n_ru = {
 		'P1361': 'Идентификатор Anime News Network должен начинаться с префикса «anime/», «company/», «manga/», «releases/» или «people/» и заканчиваться цифровым кодом',
 		'P2003': 'Идентификатор «Instagram» содержит недопустимые символы',
 		'P2013': 'Идентификатор «Facebook» содержит недопустимые символы',
+		'P3185': 'Идентификатор «ВКонтакте» должен иметь форму id+цифры (например «id123456789»), иначе его не пропустит спам-лист',
+		'P3192': 'Идентификатор Last FM содержит недопустимые символы',
 
 		'Q866': 'Идентификатор «YouTube» содержит недопустимые символы',
 		'Q103204': 'Идентификатор «Flickr» содержит недопустимые символы',
-		'Q116933': 'Идентификатор «ВКонтакте» должен иметь форму id+цифры (например «id123456789»), иначе его не пропустит спам-лист',
 		'Q156376': 'Идентификатор «Vimeo» содержит недопустимые символы',
 		'Q171186': 'Идентификатор «Blogger» содержит недопустимые символы',
-		'Q183718': 'Идентификатор Last FM содержит недопустимые символы',
 		'Q219523': 'Идентификатор «Живого журнала» содержит недопустимые символы',
 		'Q372827': 'Идентификатор «Rutube» содержит недопустимые символы',
 		'Q384060': 'Идентификатор «Tumblr» содержит недопустимые символы',
@@ -949,6 +949,19 @@ window.WEF_ExternalLinks = function( entityId ) {
 		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:bigenc.ru ' ) ),
 		qualifiers: [ d.P50, d.P958 ],
 	} );
+	this.definitions.P3185 = new WEF_Definition( {
+		code: 'P3185',
+		flag: 'ru',
+		label: 'Q116933',
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:vk.com/ ' ) ),
+		qualifiers: [],
+	} );
+	this.definitions.P3192 = new WEF_Definition( {
+		code: 'P3192',
+		label: 'Q183718',
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:last.fm/ ' ) ),
+		qualifiers: [],
+	} );
 	this.definitions.P3217 = new WEF_Definition( {
 		code: 'P3217',
 		flag: 'se',
@@ -998,20 +1011,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 			return 'https://www.flickr.com/' + id;
 		},
 	} );
-	this.definitions.Q116933 = new WEF_Definition( {
-		code: 'P553[Q116933]/P554',
-		label: 'Q116933',
-		normalize: function( id ) {
-			var result = id;
-			result = result.replace( /^https?:\/\/(www\.)?vkontakte\.ru\/(\w+)$/i, '$2' );
-			result = result.replace( /^https?:\/\/(www\.)?vk\.com\/(\w+)$/i, '$2' );
-			return result;
-		},
-		check: /^id\d+$/,
-		url: function( id ) {
-			return 'https://vk' + '.com/' + id;
-		},
-	} );
 	this.definitions.Q156376 = new WEF_Definition( {
 		code: 'P553[Q156376]/P554',
 		label: 'Q156376',
@@ -1033,21 +1032,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		url: function( id ) {
 			return 'http://' + id + '.blogspot.com/';
 		},
-	} );
-	this.definitions.Q183718 = new WEF_Definition( {
-		code: 'P553[Q183718]/P554',
-		label: 'Q183718',
-		normalize: function( id ) {
-			if ( /^https?:\/\/(www\.)?lastfm\.ru\/music\/(.*)$/i.exec( id ) ) {
-				return decodeURIComponent( id.replace( /^https?:\/\/(www\.)?lastfm\.ru\/music\/(.*)$/i, '$2' ) );
-			}
-			return id;
-		},
-		check: regexpPath,
-		url: function( id ) {
-			return 'http://www.lastfm.ru/music/' + id;
-		},
-		qualifiers: [],
 	} );
 	this.definitions.Q219523 = new WEF_Definition( {
 		code: 'P553[Q219523]/P554',
@@ -1233,6 +1217,22 @@ window.WEF_ExternalLinks = function( entityId ) {
 			pageTitlePrefix: 'ТСД',
 			pageTitleSplitChar: '/',
 			project: 'ruwikisource',
+		} ),
+	} );
+	// Ottův slovník naučný
+	this.definitions.Q2041543 = new WEF_Definition( {
+		code: 'P1343[Q2041543]/P248',
+		datatype: 'wikibase-item',
+		flag: 'cz',
+		label: 'Q2041543',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'cs',
+			dictionaryEntityId: 'Q2041543',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'Ottův slovník naučný',
+			pageTitleSplitChar: '/',
+			project: 'cswikisource',
+			wikidataTitlePrefix: 'Ottův slovník naučný',
 		} ),
 	} );
 	this.definitions.Q2152210 = new WEF_Definition( {
@@ -1484,6 +1484,21 @@ window.WEF_ExternalLinks = function( entityId ) {
 			return 'http://stihi.ru/avtor/' + id;
 		}
 	} );
+	// Энциклопедический лексикон, 1834—1841
+	this.definitions.Q4532135 = new WEF_Definition( {
+		code: 'P1343[Q4532135]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q4532135',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q4532135',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'ЭЛ',
+			pageTitleSplitChar: '/',
+			project: 'ruwikisource',
+		} ),
+	} );
 	this.definitions.Q6883832 = new WEF_Definition( {
 		code: 'P553[Q6883832]/P554',
 		label: 'Q6883832',
@@ -1512,6 +1527,23 @@ window.WEF_ExternalLinks = function( entityId ) {
 			pageTitleSplitChar: '/',
 			project: 'enwikisource',
 			wikidataTitlePrefix: 'ACAB-1',
+		} ),
+	} );
+	// Dictionary of National Biography (1885-1900)
+	this.definitions.Q15987216 = new WEF_Definition( {
+		code: 'P1343[Q15987216]/P248',
+		datatype: 'wikibase-item',
+		flag: 'uk',
+		label: 'Q15987216',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'en',
+			dictionaryEntityId: 'Q15987216',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: '',
+			pageTitleSplitChar: '',
+			project: 'enwikisource',
+			wikidataTitlePrefix: '',
+			wikidataTitlePostfix: '(DNB00)',
 		} ),
 	} );
 	this.definitions.Q17117201 = new WEF_Definition( {
@@ -2081,7 +2113,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 	this.groups.push( {
 		label: i18n.tabOfficialPages,
 		fields: [// 
-		d.Q116933, // vk.com
+		d.P3185, // vk.com
 		d.Q4101720, // vkrugudruzei.ru
 		d.Q219523, // livejournal.com
 		d.Q4299813, // moikrug.ru
@@ -2145,7 +2177,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		label: i18n.tabMusic,
 		fields: [ //
 		d.P839, // imslp.org
-		d.Q183718, // lastfm.ru
+		d.P3192, // lastfm.ru
 		d.P434, // musicbrainz.org
 		d.P435, // musicbrainz.org
 		d.P436, // musicbrainz.org
@@ -2213,6 +2245,8 @@ WEF_ExternalLinks.prototype.setup = function() {
 	this.groups.push( {
 		label: i18n.tabEncyclopediasOnWikisource,
 		fields: [//
+		// cs
+		d.Q2041543, // Ottův slovník naučný
 		// de
 		d.Q590208, // Allgemeine Deutsche Biographie
 		// ru
@@ -2230,7 +2264,9 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q20078551, // Техническая энциклопедия (1927—1936)
 		d.Q1970746, // Толковый словарь В. Даля
 		d.Q602358, // Энциклопедический словарь Брокгауза и Ефрона
+		d.Q4532135, // Энциклопедический лексикон, 1834—1841
 		// uk
+		d.Q15987216, // Dictionary of National Biography (1885-1900)
 		d.Q20096917, // Encyclopædia Britannica, Ninth Edition (1875–1889)
 		d.Q867541, // Encyclopædia Britannica, 11th edition (1911)
 		d.Q15987490, // Encyclopædia Britannica, 12th edition (1922)
@@ -2238,8 +2274,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		// us
 		d.Q19077875, // The American Cyclopædia (1879)
 		d.Q19037977, // American Medical Biographies (1920)
-		d.Q12912667, // Appletons' Cyclopædia of American Biography
-		// (1887—1901)
+		d.Q12912667, // Appletons' Cyclopædia of American Biography (1887—1901)
 		d.Q302556, // Catholic Encyclopedia (1913)
 		],
 	} );
@@ -2439,8 +2474,10 @@ window.WEF_ExternalLinks.getWikisourceApiPrefix = function( languageCode ) {
 };
 
 window.WEF_ExternalLinks.prefixes = {
+	cswikisource: window.WEF_ExternalLinks.getWikisourceApiPrefix( 'cs' ),
 	dewikisource: window.WEF_ExternalLinks.getWikisourceApiPrefix( 'de' ),
 	enwikisource: window.WEF_ExternalLinks.getWikisourceApiPrefix( 'en' ),
+	frwikisource: window.WEF_ExternalLinks.getWikisourceApiPrefix( 'fr' ),
 	ruwikisource: window.WEF_ExternalLinks.getWikisourceApiPrefix( 'ru' ),
 };
 

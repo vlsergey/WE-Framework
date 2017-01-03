@@ -3646,7 +3646,8 @@ window.WEF_filterClaims = function( definition, claims ) {
 		var result = [];
 		$.each( byPropertyId, function( index, claim ) {
 			var entityId = WEF_Utils.getEntityIdFromClaim( claim );
-			if ( typeof entityId !== 'undefined' && entityId === requiredPropertyValue && claim.qualifiers[requiredQualifier].length == 1 ) {
+			if ( typeof entityId !== 'undefined' && entityId === requiredPropertyValue && // 
+					typeof claim.qualifiers[requiredQualifier] !== 'undefined' && claim.qualifiers[requiredQualifier].length == 1 ) {
 				result.push( claim );
 			}
 		} );
