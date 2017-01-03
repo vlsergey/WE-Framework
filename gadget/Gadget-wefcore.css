@@ -126,8 +126,8 @@ button.wef_select_snak_type_button>span.ui-button-icon-primary {
 	padding: 0.25em;
 }
 
-/*Snak value level -- per types */
-.wef_commonsMedia, .wef_string, .wef_url {
+/* Snak value level -- per types */
+.wef_commonsMedia, .wef_external-id, .wef_string, .wef_url {
 	width: 99%;
 }
 
