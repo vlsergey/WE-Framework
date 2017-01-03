@@ -4,7 +4,6 @@
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
  */
-
 window.wef_ExternalLinks_i18n_en = {
 
 	buttonMenuLabel: 'WEF: Links',
@@ -1235,6 +1234,20 @@ window.WEF_ExternalLinks = function( entityId ) {
 			project: 'ruwikisource',
 		} ),
 	} );
+	this.definitions.Q2152210 = new WEF_Definition( {
+		code: 'P1343[Q2152210]/P248',
+		datatype: 'wikibase-item',
+		flag: 'ru',
+		label: 'Q2152210',
+		inputClass: WEF_ExternalLinks.createDictinaryArticleInputClass( {
+			contentLanguage: 'ru',
+			dictionaryEntityId: 'Q2152210',
+			mainTopicEntityId: entityId,
+			pageTitlePrefix: 'МСР',
+			pageTitleSplitChar: '/',
+			project: 'ruwikisource',
+		} ),
+	} );
 	this.definitions.Q2498180 = new WEF_Definition( {
 		datatype: 'url',
 		flag: 'ru',
@@ -2214,6 +2227,7 @@ WEF_ExternalLinks.prototype.setup = function() {
 		d.Q4114391, // Военная энциклопедия Сытина
 		d.Q4173137, // Еврейская энциклопедия Брокгауза и Ефрона
 		d.Q19180675, // Малый энциклопедический словарь Брокгауза и Ефрона
+		d.Q2152210, // Музыкальный словарь Римана
 		d.Q19190511, // Новый энциклопедический словарь
 		d.Q19211082, // Православная богословская энциклопедия
 		d.Q1960551, // Русский биографический словарь
