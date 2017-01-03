@@ -267,6 +267,13 @@ window.WEF_ExternalLinks = function( entityId ) {
 
 	/* author, автор */
 	this.definitions.P50 = new WEF_Definition( { } );
+	/* title; название */
+	this.definitions.P357 = new WEF_Definition( { } );
+	/* Volume, том */
+	this.definitions.P478 = new WEF_Definition( { } );
+	/* section, verse, or paragraph; раздел, стих или параграф */
+	this.definitions.P958 = new WEF_Definition( { } );
+
 	this.definitions.P213 = new WEF_Definition( {
 		label: 'Q423048',
 		labelPrefix: 'ISNI — ',
@@ -407,8 +414,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		},
 		qualifiers: [],
 	} );
-	/* title; название */
-	this.definitions.P357 = new WEF_Definition( { } );
 	this.definitions.P373 = new WEF_Definition( {
 		label: 'Q565',
 		autocomplete: {
@@ -494,8 +499,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:musicbrainz.org ' ) ),
 		qualifiers: [],
 	} );
-	/* Volume, том */
-	this.definitions.P478 = new WEF_Definition( { } );
 	this.definitions.P480 = new WEF_Definition( {
 		label: 'Q2638147',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:filmaffinity.com ' ) ),
@@ -614,8 +617,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 		},
 		qualifiers: [],
 	} );
-	/* section, verse, or paragraph; раздел, стих или параграф */
-	this.definitions.P958 = new WEF_Definition( { } );
 	this.definitions.P998 = new WEF_Definition( {
 		label: 'Q41226',
 		buttons: buttonsSearchF( [ 'enwiki', 'ruwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:dmoz.org ' ) ),
