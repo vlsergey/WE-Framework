@@ -2071,12 +2071,6 @@ window.WEF_ExternalLinks = function( entityId ) {
 			} );
 		}
 	};
-
-	this.purge = function() {
-		window.location.replace( mw.config.get( 'wgServer' ) + mw.config.get( 'wgScriptPath' ) + '/index.php?action=purge&title='
-				+ encodeURIComponent( mw.config.get( 'wgPageName' ) ) );
-		return;
-	};
 };
 
 WEF_ExternalLinks.prototype.setup = function() {

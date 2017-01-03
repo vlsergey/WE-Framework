@@ -715,7 +715,7 @@ WEF_Utils._mod = function( a, b ) {
 
 WEF_Utils.newWikibaseItemDataValue = function( /* ... */) {
 
-	if ( arguments.length == 0 ) {
+	if ( arguments.length === 0 ) {
 		return {
 			type: 'wikibase-entityid',
 		};
@@ -3614,17 +3614,19 @@ window.WEF_filterClaims = function( definition, claims ) {
 	/* Main property ID */
 	/** @type {string} */
 	var propertyId;
-	/* Required property value */
-	var propertyValue;
+	var requiredPropertyValue;
+	var requiredQualifier;
 
 	if ( isPropertyEditor ) {
 		var test = definition.code.match( /^P(\d+)$/i );
 		propertyId = 'P' + test[1];
-		propertyValue = undefined;
+		requiredPropertyValue = undefined;
+		requiredQualifier = undefined;
 	} else if ( isQualifierEditor ) {
 		var test = definition.code.match( /^P(\d+)\[Q(\d+)\]\/P(\d+)$/i );
 		propertyId = 'P' + test[1];
-		propertyValue = 'Q' + test[2];
+		requiredPropertyValue = 'Q' + test[2];
+		requiredQualifier = 'P' + test[3];
 	} else {
 		throw new Error( 'Unsupported code: ' + definition.code );
 	}
@@ -3644,7 +3646,7 @@ window.WEF_filterClaims = function( definition, claims ) {
 		var result = [];
 		$.each( byPropertyId, function( index, claim ) {
 			var entityId = WEF_Utils.getEntityIdFromClaim( claim );
-			if ( typeof entityId != 'undefined' && entityId === propertyValue ) {
+			if ( typeof entityId !== 'undefined' && entityId === requiredPropertyValue && claim.qualifiers[requiredQualifier].length == 1 ) {
 				result.push( claim );
 			}
 		} );
