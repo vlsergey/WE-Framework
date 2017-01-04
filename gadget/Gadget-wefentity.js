@@ -5,7 +5,7 @@
  * @see https://github.com/vlsergey/WE-Framework
  * @author vlsergey
  */
-var wef_EntityEditor_html = "<div class=\'wef_entityEditor_dialog\'>\r\n" + 
+var wef_EntityEditor_html = "<div class=\'wef_dialog\'>\r\n" + 
 		"	<div class=\'wef_tabs\'>\r\n" + 
 		"		<ul>\r\n" + 
 		"			<li><a href=\'#wef_entityEditor_tab_general\' class=\'wef_editor_tab_anchor wef_i18n_text\'>groupGeneral</a></li>\r\n" + 
@@ -13,15 +13,17 @@ var wef_EntityEditor_html = "<div class=\'wef_entityEditor_dialog\'>\r\n" +
 		"		</ul>\r\n" + 
 		"		<div id=\'wef_entityEditor_tab_general\' class=\'wef_editor_tab\'>\r\n" + 
 		"			<div class=\"wef_labels_editor\"></div>\r\n" + 
-		"			<fieldset class=\'wef_fieldset\'>\r\n" + 
+		"			<fieldset>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- instance of -->\r\n" + 
 		"					<tbody class=\'wef_claim_editors\' data-code=\'P31\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- subclass of -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P279\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"			</fieldset>\r\n" + 
 		"		</div>\r\n" + 
 		"		<div id=\'wef_entityEditor_tab_sources\' class=\'wef_editor_tab\'>\r\n" + 
-		"			<fieldset class=\'wef_fieldset wef_single_property_fieldset\'>\r\n" + 
+		"			<fieldset class=\'wef_single_property_fieldset\'>\r\n" + 
 		"				<legend class=\'wef_i18n_label\'>P1343</legend>\r\n" + 
 		"				<table class=\'wef_table\'>\r\n" + 
 		"					<!-- described by source -->\r\n" + 
