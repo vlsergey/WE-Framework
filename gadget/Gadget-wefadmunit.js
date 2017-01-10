@@ -67,8 +67,11 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"            </fieldset>\r\n" + 
 		"            <fieldset>\r\n" + 
 		"                <table class=\'wef_table\'>\r\n" + 
-		"                    <!-- song -->\r\n" + 
-		"                    <tbody class=\'wef_claim_editors\' data-code=\'P85\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					<!-- official website -->\r\n" + 
+		"					<tbody class=\'wef_claim_editors\' data-code=\'P856\' data-datatype=\'url\'>\r\n" + 
+		"						<!--  language -->\r\n" + 
+		"						<tr data-code=\'P407\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"					</tbody>\r\n" + 
 		"                </table>\r\n" + 
 		"            </fieldset>\r\n" + 
 		"        </div>\r\n" + 
@@ -83,6 +86,8 @@ var wef_AdmUnitEditor_html = "<div class=\'wef_admUnitEditor_dialog wef_dialog\'
 		"						<!-- media legend -->\r\n" + 
 		"						<tr data-code=\'P2096\' data-datatype=\'monolingualtext\' />\r\n" + 
 		"					</tbody>\r\n" + 
+		"                    <!-- song -->\r\n" + 
+		"                    <tbody class=\'wef_claim_editors\' data-code=\'P85\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				</table>\r\n" + 
 		"            </fieldset>\r\n" + 
 		"            <fieldset>\r\n" + 
