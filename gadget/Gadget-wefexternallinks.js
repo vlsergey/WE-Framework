@@ -197,14 +197,6 @@ window.wef_ExternalLinks_i18n = {
 window.WEF_ExternalLinks = function( entityId ) {
 	var externalLinksEdit = this;
 
-	var URI_PREFIX;
-
-	if ( WEF_Utils.isWikidata() ) {
-		URI_PREFIX = '//www.wikidata.org/w/api.php?format=json';
-	} else {
-		URI_PREFIX = '//www.wikidata.org/w/api.php?origin=' + encodeURIComponent( location.protocol + mw.config.get( 'wgServer' ) ) + '&format=json';
-	}
-
 	this.i18n = wef_ExternalLinks_i18n;
 	var i18n = this.i18n;
 
@@ -256,7 +248,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 			},
 			text: false,
 			label: 'Search...',
-			click: searchClickF( [ 'enwiki', 'cywiki', 'ruwiki' ], function( title ) {
+			click: searchClickF( titleSites, function( title ) {
 				return searchUrlPrefix + encodeURIComponent( title ) + ( WEF_Utils.isEmpty( searchUrlSuffix ) ? "" : searchUrlSuffix );
 			} ),
 		} ];
@@ -942,6 +934,18 @@ window.WEF_ExternalLinks = function( entityId ) {
 			return id.replace( /^https?:\/\/(www\.)?musopen\.org\/composer\/([^\/]+)(\/)?$/i, '$2' );
 		},
 	} );
+	this.definitions.P2529 = new WEF_Definition( {
+		code: 'P2529',
+		flag: 'cz',
+		buttons: buttonsSearchF( [ 'cswiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:csfd.cz ' ) ),
+		qualifiers: [ d.P958 ],
+	} );
+	this.definitions.P2605 = new WEF_Definition( {
+		code: 'P2605',
+		flag: 'cz',
+		buttons: buttonsSearchF( [ 'cswiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:csfd.cz ' ) ),
+		qualifiers: [ d.P958 ],
+	} );
 	this.definitions.P2924 = new WEF_Definition( {
 		code: 'P2924',
 		flag: 'ru',
@@ -1254,16 +1258,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		flag: 'ru',
 		code: 'P1343[Q2498180]/P854',
 		label: 'Q2498180',
-		buttons: [ {
-			icons: {
-				primary: 'ui-icon-search'
-			},
-			text: false,
-			label: 'Искать на сайте Православной энциклопедии',
-			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
-				return 'http://www.pravenc.ru/search/?ie=utf-8&oe=utf-8&text=' + encodeURIComponent( title );
-			} ),
-		} ],
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], 'http://www.pravenc.ru/search/?ie=utf-8&oe=utf-8&text=' ),
 		qualifiers: [ d.P50, d.P958, d.P478 ],
 	} );
 	this.definitions.Q2627728 = new WEF_Definition( {
@@ -1271,16 +1266,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		flag: 'ru',
 		code: 'P1343[Q2627728]/P854',
 		label: 'Q2627728',
-		buttons: [ {
-			icons: {
-				primary: 'ui-icon-search'
-			},
-			text: false,
-			label: 'Искать на сайте «Кругосвет»',
-			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
-				return 'https://www.google.ru/search?q=site:krugosvet.ru+' + encodeURIComponent( title );
-			} ),
-		} ],
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:krugosvet.ru ' ) ),
 		qualifiers: [ d.P50, d.P958 ],
 	} );
 	this.definitions.Q4037665 = new WEF_Definition( {
@@ -1329,16 +1315,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		code: 'P1343[Q4091875]/P854',
 		label: 'Q4091875',
 		check: /^https?:\/\/(www\.)?megabook\.ru\/article\//,
-		buttons: [ {
-			icons: {
-				primary: 'ui-icon-search'
-			},
-			text: false,
-			label: 'Искать в БЭКМ',
-			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
-				return '//www.google.com/search?q=site%3Amegabook.ru+' + encodeURIComponent( title );
-			} ),
-		} ],
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:megabook.ru ' ) ),
 		qualifiers: [ d.P958 ],
 	} );
 	// Большая энциклопедия Южакова
@@ -1402,16 +1379,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		flag: 'ru',
 		code: 'P1343[Q4239850]/P854',
 		label: 'Q4239850',
-		buttons: [ {
-			icons: {
-				primary: 'ui-icon-search'
-			},
-			text: false,
-			label: 'Искать на сайте ФЭБ',
-			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
-				return '//www.google.com/search?q=site%3Afeb-web.ru%2Ffeb%2Fkle+' + encodeURIComponent( title );
-			} ),
-		} ],
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:web.ru/feb/kle ' ) ),
 		qualifiers: [ d.P50, d.P958, d.P478 ],
 	} );
 	this.definitions.Q4263804 = new WEF_Definition( {
@@ -1419,16 +1387,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		flag: 'ru',
 		code: 'P1343[Q4263804]/P854',
 		label: 'Q4263804',
-		buttons: [ {
-			icons: {
-				primary: 'ui-icon-search'
-			},
-			text: false,
-			label: 'Искать на сайте ФЭБ',
-			click: searchClickF( [ 'ruwiki', 'enwiki' ], function( title ) {
-				return '//www.google.com/search?q=site%3Afeb-web.ru%2Ffeb%2Flitenc+' + encodeURIComponent( title );
-			} ),
-		} ],
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:web.ru/feb/litenc ' ) ),
 		qualifiers: [ d.P50, d.P958, d.P478 ],
 	} );
 	this.definitions.Q4299813 = new WEF_Definition( {
@@ -1636,16 +1595,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		code: 'P1343[Q17329836]/P854',
 		label: 'Q17329836',
 		check: /^https?:\/\/(www\.)?larousse\.fr\/encyclopedie\//,
-		buttons: [ {
-			icons: {
-				primary: 'ui-icon-search'
-			},
-			text: false,
-			label: 'Search on Encyclopédie Larousse en ligne',
-			click: searchClickF( [ 'frwiki', 'enwiki' ], function( title ) {
-				return 'http://www.larousse.fr/encyclopedie/rechercher?q=' + encodeURIComponent( title );
-			} ),
-		} ],
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], 'http://www.larousse.fr/encyclopedie/rechercher?q=' ),
 		qualifiers: [ d.P958 ],
 	} );
 	// American Medical Biographies 1920
@@ -1884,12 +1834,37 @@ window.WEF_ExternalLinks = function( entityId ) {
 			allPromises.push( getPromise );
 		} );
 
-		$.when.apply($, allPromises ).done( function() {
-			externalLinksEdit.doEdit();
+		var entity;
+		mw.notify( "Get Wikidata entity content..." );
+		var getEntityPromise = WEF_Utils.getWikidataApi().get( {
+			action: "wbgetentities",
+			ids: entityId,
+			format: "json"
+		} );
+		getEntityPromise.then( function( result ) {
+			if ( typeof result === 'undefined'// 
+					|| typeof result.entities === 'undefined'//
+					|| typeof result.entities[entityId] === 'undefined'// 
+					|| typeof result.entities[entityId].claims === 'undefined'// 
+			) {
+				mw.notify( "Wikidata answer format is not expected one" );
+				throw new Error( "Wikidata answer format is not expected one" );
+			}
+			entity = result.entities[entityId];
+		} );
+		allPromises.push( getEntityPromise );
+
+		$.when.apply( $, allPromises ).done( function() {
+			externalLinksEdit.doEdit( entity );
 		} );
 	}
 
-	this.doEdit = function() {
+	this.doEdit = function( entity ) {
+		if ( typeof entity == "undefined" ) {
+			alert( "Wikidata entity was not loaded" );
+			return;
+		}
+
 		var dialogForm = $( '' + '<div class="wef_externalLinks_dialog" id="wefExternalLinksDialog" title="' + i18n.dialogTitle + '">' + '<div id="wefExternalLinksDialogTabs">'
 				+ '<ul id="wefExternalLinksDialogTabsList">' + '</ul>' + '</div>' + '<p class="validateTips"></p>' + '</div>' );
 		var statusAndTips = dialogForm.find( 'p.validateTips' );
@@ -1907,72 +1882,48 @@ window.WEF_ExternalLinks = function( entityId ) {
 				var tabs = $( "#wefExternalLinksDialogTabs" );
 
 				var tabsHeaders = $( '#wefExternalLinksDialogTabsList' );
-				statusAndTips.text( 'Идёт загрузка данных с Викиданных...' );
 
-				var onWikidataResult = function( result ) {
-					statusAndTips.text( '' );
-					if ( typeof result === 'undefined'// 
-							|| typeof result.entities === 'undefined'//
-							|| typeof result.entities[entityId] === 'undefined'// 
-							|| typeof result.entities[entityId].claims === 'undefined'// 
-					) {
-						alert( 'Wikidata answer format is not expected one' );
-						dialogForm.dialog( 'close' );
-						return;
-					}
-					externalLinksEdit.entity = result.entities[entityId];
+				externalLinksEdit.entity = entity;
 
-					tabs.hide();
-					externalLinksEdit.editors = {};
-					$.each( externalLinksEdit.groups, function( index, group ) {
-						var link = 'wefExternalLinksDialogTabs-' + index;
-						var newTabHeader = $( '<li></li>' ).append( $( '<a href="#' + link + '"></a>' ).text( group.label ) );
-						var newTabTable = $( '<table border="0" style="white-space: nowrap;" width="100%" cellspacing="0"></table>' );
-						var newTabPage = $( '<div id="' + link + '"></div>' ).append( newTabTable );
+				tabs.hide();
+				externalLinksEdit.editors = {};
+				$.each( externalLinksEdit.groups, function( index, group ) {
+					var link = 'wefExternalLinksDialogTabs-' + index;
+					var newTabHeader = $( '<li></li>' ).append( $( '<a href="#' + link + '"></a>' ).text( group.label ) );
+					var newTabTable = $( '<table border="0" style="white-space: nowrap;" width="100%" cellspacing="0"></table>' );
+					var newTabPage = $( '<div id="' + link + '"></div>' ).append( newTabTable );
 
-						tabsHeaders.append( newTabHeader );
-						tabs.append( newTabPage );
+					tabsHeaders.append( newTabHeader );
+					tabs.append( newTabPage );
 
-						$.each( group.fields, function( i, definition ) {
-							var claimEditorsTable = new WEF_ClaimEditorsTable( definition );
-							externalLinksEdit.editors[definition.code] = claimEditorsTable;
-							claimEditorsTable.appendTo( newTabTable );
-						} );
+					$.each( group.fields, function( i, definition ) {
+						var claimEditorsTable = new WEF_ClaimEditorsTable( definition );
+						externalLinksEdit.editors[definition.code] = claimEditorsTable;
+						claimEditorsTable.appendTo( newTabTable );
 					} );
-
-					$.each( externalLinksEdit.editors, function( i, claimEditorsTable ) {
-						claimEditorsTable.init( externalLinksEdit.entity );
-					} );
-
-					// recenter
-					tabs.tabs();
-					tabs.tabs( "destroy" );
-					tabs.tabs( {
-						activate: function() {
-							dialogForm.dialog( {
-								height: "auto",
-								autoResize: true,
-							} );
-						}
-					} );
-					tabs.show();
-					dialogForm.dialog( {
-						height: "auto",
-						autoResize: true,
-					} );
-					dialogForm.dialog( "option", "position", "center" );
-				};
-
-				$.ajax( {
-					type: 'GET',
-					url: URI_PREFIX + '&action=wbgetentities&ids=' + entityId,
-					dataType: "json",
-					success: onWikidataResult,
-					fail: function() {
-						alert( 'Unable to load Wikidata entity' );
-						dialogForm.dialog( 'close' );
-					},
 				} );
+
+				$.each( externalLinksEdit.editors, function( i, claimEditorsTable ) {
+					claimEditorsTable.init( externalLinksEdit.entity );
+				} );
+
+				// recenter
+				tabs.tabs();
+				tabs.tabs( "destroy" );
+				tabs.tabs( {
+					activate: function() {
+						dialogForm.dialog( {
+							height: "auto",
+							autoResize: true,
+						} );
+					}
+				} );
+				tabs.show();
+				dialogForm.dialog( {
+					height: "auto",
+					autoResize: true,
+				} );
+				dialogForm.dialog( "option", "position", "center" );
 			},
 			buttons: [ {
 				text: i18n.dialogButtonUpdateLabelsText,
@@ -2160,6 +2111,8 @@ WEF_ExternalLinks.prototype.setup = function() {
 	this.groups.push( {
 		label: i18n.tabTheaterAndMovies,
 		fields: [//
+		d.P2529, // csfd.cz
+		d.P2605, // csfd.cz
 		d.P1265, // allocine.fr
 		d.P1266, // allocine.fr
 		d.P1267, // allocine.fr
