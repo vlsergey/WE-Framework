@@ -110,3 +110,4 @@ editor.addEditButtons( 'Q191067' );
 
 window.wef_editors_registry.registerEditor( 'Q191067', editor );
 window.wef_editors_registry.registerEditor( 'Q13442814', editor );
+window.wef_editors_registry.registerEditor( 'Q17329259', editor );
