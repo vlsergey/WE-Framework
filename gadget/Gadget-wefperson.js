@@ -215,10 +215,8 @@ window.wef_PersonEditor_html = "<div class=\'wef_dialog\'>\r\n" +
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P44\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- godparent -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P1290\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"				<!-- brother -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P7\' data-datatype=\'wikibase-item\' />\r\n" + 
-		"				<!-- sister -->\r\n" + 
-		"				<tbody class=\'wef_claim_editors\' data-code=\'P9\' data-datatype=\'wikibase-item\' />\r\n" + 
+		"				<!-- brother/sister -->\r\n" + 
+		"				<tbody class=\'wef_claim_editors\' data-code=\'P3373\' data-datatype=\'wikibase-item\' />\r\n" + 
 		"				<!-- spouse -->\r\n" + 
 		"				<tbody class=\'wef_claim_editors\' data-code=\'P26\' data-datatype=\'wikibase-item\'>\r\n" + 
 		"					<!-- start date -->\r\n" + 
