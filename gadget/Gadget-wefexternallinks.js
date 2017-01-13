@@ -1938,8 +1938,10 @@ window.WEF_ExternalLinks = function( entityId ) {
 				click: function() {
 					dialogForm.dialog( 'close' );
 					var d = wef_analyze_and_save( true, entityId, null, externalLinksEdit.editors );
-					d.always( function() {
-						WEF_Utils.purge();
+					d.done( function( entityId ) {
+						WEF_Utils.tagRevisions( entityId, true ).always( function() {
+							WEF_Utils.purge();
+						} );
 					} );
 				}
 			}, {
