@@ -865,7 +865,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		flag: 'uk',
 		code: 'P1417',
 		label: 'Q5375741',
-		buttons: buttonsSearchF( [ 'enwiki' ], 'http://global.britannica.com/search?query=' ),
+		buttons: buttonsSearchF( [ 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:global.britannica.com ' ) ),
 		qualifiers: [ d.P50, d.P958, ],
 	} );
 	this.definitions.P1422 = new WEF_Definition( {
@@ -877,7 +877,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 	this.definitions.P1438 = new WEF_Definition( {
 		flag: 'ru',
 		label: 'Q1967250',
-		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=site%3Awww.eleven.co.il%2Farticle%2F+' ),
+		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], '//google.com/search?q=' + encodeURIComponent( 'site:www.eleven.co.il/article ' ) ),
 		qualifiers: [ d.P304, d.P478, d.P958 ],
 	} );
 	this.definitions.P1556 = new WEF_Definition( {
@@ -1595,7 +1595,7 @@ window.WEF_ExternalLinks = function( entityId ) {
 		code: 'P1343[Q17329836]/P854',
 		label: 'Q17329836',
 		check: /^https?:\/\/(www\.)?larousse\.fr\/encyclopedie\//,
-		buttons: buttonsSearchF( [ 'ruwiki', 'enwiki' ], 'http://www.larousse.fr/encyclopedie/rechercher?q=' ),
+		buttons: buttonsSearchF( [ 'frwiki', 'enwiki' ], 'http://www.larousse.fr/encyclopedie/rechercher?q=' ),
 		qualifiers: [ d.P958 ],
 	} );
 	// American Medical Biographies 1920
