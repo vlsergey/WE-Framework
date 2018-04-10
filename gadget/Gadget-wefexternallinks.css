@@ -1,58 +1,12 @@
-.wef_externalLinks_dialog table, .wef_externalLinks_dialog tbody,
-	.wef_externalLinks_dialog tr {
-	padding: 0;
-	margin: 0;
-	border-collapse: collapse;
-}
- 
-.wef_externalLinks_dialog .wef_externalLinks_dialog th,
-	.wef_externalLinks_dialog  .wef_externalLinks_dialog td {
-	padding: 0 0.1em;
-	margin: 0;
-	border-collapse: collapse;
-}
- 
-.wef_externalLinks_dialog .wef_fieldset {
-	margin: 0.1em;
-	padding: 0.1em;
-	line-height: 0.75em;
-}
- 
-.wef_externalLinks_dialog .wef_property_editor_tbody:nth-child(odd) {
-	background-color: rgba(0, 0, 0, 0.10);
-}
- 
-.wef_external_links_before_url_cell {
-	min-width: 17em;
-	width: initial !important;
-}
- 
-.wef_external_links_url_cell {
-	padding-left: 0.5em !important;
-	width: 100%;
-}
- 
-.wef_external_links_url_div {
-	position: relative;
-}
- 
-.wef_external_links_url_a {
-	text-overflow: ellipsis;
-	left: 0;
-	right: 0;
-	overflow: hidden;
-	position: absolute;
-	white-space: nowrap;
-}
- 
+
 .wef_dialog_no_close .ui-dialog-titlebar-close {
 	display: none;
 }
- 
+
 .wef-lookup-found input {
 	background: #BBFFBB;
 }
- 
+
 .wef-lookup-found-new input {
 	background: #88FF88;
 }
