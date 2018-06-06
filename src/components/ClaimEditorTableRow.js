@@ -26,8 +26,8 @@ export default class ClaimEditorTableRow extends Component {
 }
 
 ClaimEditorTableRow.propTypes = {
-  claim: PropTypes.shape( Claim ),
+  claim: PropTypes.shape( Claim ).isRequired,
   flag:PropTypes.string,
   label: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ),
-  onAddClaim: PropTypes.func,
+  onAddClaim: PropTypes.func.isRequired,
 };

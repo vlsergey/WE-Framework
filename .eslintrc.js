@@ -6,7 +6,7 @@ module.exports = {
     "ecmaVersion": 999,
     "sourceType": "module",
     "ecmaFeatures": {
-      "jsx": false,
+      "jsx": true,
       "impliedStrict": true,
       "modules": true,
     },
@@ -17,6 +17,7 @@ module.exports = {
   },
   "extends": [
       "eslint:recommended",
+      "plugin:react/recommended",
       "plugin:import/errors",
       "plugin:import/warnings",
   ],

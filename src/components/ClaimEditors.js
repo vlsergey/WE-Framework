@@ -1,7 +1,7 @@
 import * as ModelUtils from '../model/ModelUtils';
+import { emptyStatementClaim, Entity } from '../model/Shapes';
 import React, { Component } from 'react';
 import ClaimEditorTableRow from './ClaimEditorTableRow';
-import { Entity } from '../model/Shapes';
 import PropTypes from 'prop-types';
 import styles from './core.css';
 
@@ -19,7 +19,7 @@ export default class ClaimEditors extends Component {
     const { code, claims } = this.state;
     return <tbody className={styles.wef_property_editor_tbody + ' ' + styles[ 'wef_property_editor_' + code ]}>
       { !claims || claims.length === 0 
-        ? <ClaimEditorTableRow claim={{}} />
+        ? <ClaimEditorTableRow claim={ emptyStatementClaim( code ) } />
         : claims.map( claim => <ClaimEditorTableRow key={claim.id} claim={claim} /> )
       }
     </tbody>;

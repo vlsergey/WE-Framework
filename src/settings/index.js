@@ -25,7 +25,8 @@ export function start() {
   const appDiv = document.createElement( 'div' );
   document.body.appendChild( appDiv );
 
-  ReactDOM.render( <DialogWrapper title={i18n.windowTitle} onClose={ () => console.log( 'Dialog was closed' ) }>
+  const element = <DialogWrapper title={i18n.windowTitle} onClose={ () => console.log( 'Dialog was closed' ) }>
     <p>Settings here</p>
-  </DialogWrapper>, appDiv );
+  </DialogWrapper>;
+  ReactDOM.render( element, appDiv );
 }

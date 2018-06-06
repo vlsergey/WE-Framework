@@ -34,12 +34,12 @@ export default class SnakEditorTableRowPart extends Component {
     }
 
     return [
-      <SelectSnakTypeButtonCell key="rank" rank={snak.rank} />,
+      <SelectSnakTypeButtonCell key="snaktype" rank={snak.snaktype} />,
       <SnakValueEditorFactory key="valueEditor" snak={snak} />,
     ];
   }
 }
 
 SnakEditorTableRowPart.propTypes = {
-  snak: PropTypes.shape( Shapes.Snak ),
+  snak: PropTypes.shape( Shapes.Snak ).isRequired,
 };
