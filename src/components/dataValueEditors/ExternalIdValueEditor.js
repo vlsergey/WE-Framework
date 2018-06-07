@@ -23,14 +23,16 @@ export default class ExternalIdValueEditor extends Component {
     }
 
     return <table className={styles.wef_external_id_table}>
-      <tr>
-        <td>
-          <input {...params} />
-        </td>
-        <td>
-          <span></span>
-        </td>
-      </tr>
+      <tbody>
+        <tr>
+          <td>
+            <input {...params} />
+          </td>
+          <td>
+            <span>{datavalue ? propertyDescription.formatUrl( datavalue.value ) : ''}</span>
+          </td>
+        </tr>
+      </tbody>
     </table>;
   }
 

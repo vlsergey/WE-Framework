@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import EditorPage from './EditorPage';
+import EntityLabel from './EntityLabel';
 import PropTypes from 'prop-types';
 import TabsWrapper from '../wrappers/TabsWrapper';
 
@@ -10,7 +11,9 @@ export default class EditorTabsBuilder extends PureComponent {
 
     return <TabsWrapper tabs={ tabs.map( ( tabDescription ) => ( {
       key: tabDescription.key,
-      label: tabDescription.label,
+      label: tabDescription.labelEntityId 
+        ? <EntityLabel entityId={tabDescription.labelEntityId} />
+        : tabDescription.label,
       content: <EditorPage fields={tabDescription.fields} />,
     } ) ) } />;
   }

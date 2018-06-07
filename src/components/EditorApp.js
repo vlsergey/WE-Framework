@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import DialogWrapper from '../wrappers/DialogWrapper';
 import EditorTabsBuilder from './EditorTabsBuilder';
+import LabelDescriptionCacheContainer from '../core/LabelDescriptionCacheContainer';
 import PropertiesCacheContainer from '../core/PropertiesCacheContainer';
 import PropTypes from 'prop-types';
 
@@ -10,9 +11,11 @@ export default class EditorApp extends Component {
     const { description } = this.props;
 
     return <DialogWrapper minWidth={800} onClose={ () => console.log( 'Dialog was closed' ) } title={description.title}>
-      <PropertiesCacheContainer>
-        <EditorTabsBuilder tabs={description.tabs} />
-      </PropertiesCacheContainer>
+      <LabelDescriptionCacheContainer>
+        <PropertiesCacheContainer>
+          <EditorTabsBuilder tabs={description.tabs} />
+        </PropertiesCacheContainer>
+      </LabelDescriptionCacheContainer>
     </DialogWrapper>;
   }
 

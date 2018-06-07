@@ -11,7 +11,7 @@ export default class StringDataValueEditor extends Component {
 
     const params = {
       type: 'text',
-      className: styles.wef_string,
+      className: styles[ 'wef_' + propertyDescription.datatype ],
     };
 
     if ( propertyDescription.regexp ) {

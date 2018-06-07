@@ -11,34 +11,36 @@ export default class EditorPage extends PureComponent {
     const { fields } = this.props;
 
     return <table className={styles.wef_table}>
-      <entityContext.Consumer>
-        { entity => <propertiesCacheContext.Consumer>
-          { propertiesCacheContext => 
-            fields.map( fieldDescription => {
+      <tbody>
+        <entityContext.Consumer>
+          { entity => <propertiesCacheContext.Consumer>
+            { propertiesCacheContext => 
+              fields.map( fieldDescription => {
 
-              const code = fieldDescription.code;
-              const isPropertyEditor = /^P\d+$/i.test( code );
+                const code = fieldDescription.code;
+                const isPropertyEditor = /^P\d+$/i.test( code );
 
-              let actualLabel;
-              if ( fieldDescription.label ) {
-                actualLabel = fieldDescription.label;
-              } else if ( isPropertyEditor ) {
-                const propertyDescription = propertiesCacheContext.getOrQueue( code );
-                if ( !propertyDescription || !propertyDescription.label )
-                  actualLabel = <span>{code}</span>;
-                else
-                  actualLabel = <span title={propertyDescription.description}>{propertyDescription.label}</span>;
-              } else {
+                let actualLabel;
+                if ( fieldDescription.label ) {
+                  actualLabel = fieldDescription.label;
+                } else if ( isPropertyEditor ) {
+                  const propertyDescription = propertiesCacheContext.getOrQueue( code );
+                  if ( !propertyDescription || !propertyDescription.label )
+                    actualLabel = <span>{code}</span>;
+                  else
+                    actualLabel = <span title={propertyDescription.description}>{propertyDescription.label}</span>;
+                } else {
                 // TODO: qualifier value label 
-                actualLabel = code;
-              }
+                  actualLabel = code;
+                }
 
-              return <ClaimEditors code={fieldDescription.code} entity={entity} key={fieldDescription.code} label={actualLabel} />;
+                return <ClaimEditors code={fieldDescription.code} entity={entity} key={fieldDescription.code} label={actualLabel} />;
 
-            } )
-          }
-        </propertiesCacheContext.Consumer> }
-      </entityContext.Consumer>
+              } )
+            }
+          </propertiesCacheContext.Consumer> }
+        </entityContext.Consumer>
+      </tbody>
     </table>;
   }
 

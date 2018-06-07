@@ -1,7 +1,5 @@
 import * as I18nUtils from '../utils/I18nUtils';
 
-
-// TODO: test this method
 function findSingleStatementByEntityIdValue( entity, property, entityId ) {
   if ( !entity.claims || !entity.claims[ property ] ) {
     return null;
@@ -38,6 +36,36 @@ function getStringRestriction( propertyEntity, restrictionId, valuePropertyId ) 
   return statement.qualifiers[ valuePropertyId ][ 0 ].datavalue.value;
 }
 
+class UrlFormatter {
+  
+  constructor( statement ) {
+    this._format = statement.mainsnak.datavalue.value;
+    
+    if ( statement.qualifiers 
+        && statement.qualifiers.P1793 
+        && statement.qualifiers.P1793.length === 0
+        && statement.qualifiers.P1793[ 0 ].datavalue
+        && statement.qualifiers.P1793[ 0 ].datavalue.value ) {
+      this._regexp = statement.qualifiers.P1793[ 0 ].datavalue.value; 
+    } else {
+      this._regexp = null;
+    }
+  }
+
+  hasRegexp() {
+    return !!this._regexp;
+  }
+
+  isCompliant( value ) {
+    return !this._regexp || new RegExp( '^' + this._regexp + '$' ).test( value );
+  }
+  
+  format( value ) {
+    return this._format.replace( '$1', value );
+  }
+  
+}
+
 export default class PropertyDescription {
 
   constructor( propertyEntity ) {
@@ -68,6 +96,30 @@ export default class PropertyDescription {
       this[ k ] = translated[ k ];
 
     this.regexp = getStringRestriction( propertyEntity, 'Q21502404', 'P1793' );
+
+    if ( propertyEntity.claims && propertyEntity.claims.P1630 ) {      
+      this.urlFormatters = propertyEntity.claims.P1630
+        .filter( statement => statement.rank !== 'deprecated' )
+        .filter( statement => 
+          statement.mainsnak 
+            && statement.mainsnak.datavalue 
+            && statement.mainsnak.datavalue.value )
+        .map( statement => new UrlFormatter( statement ) );
+    } else {
+      this.urlFormatters = [];
+    }
+  }
+  
+  formatUrl( value ) {
+    if ( value === null || value === '' )
+      return '';
+
+    if ( typeof value !== 'string' )
+      return;
+
+    const formatter = this.urlFormatters.find( formatter => formatter.isCompliant( value ) );
+    if ( formatter )
+      return formatter.format( value );
   }
   
 }
