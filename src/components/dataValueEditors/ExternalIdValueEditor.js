@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from '../core.css';
 
-export default class StringDataValueEditor extends Component {
+export default class ExternalIdValueEditor extends Component {
 
   render() {
     const { datavalue, pattern } = this.props;

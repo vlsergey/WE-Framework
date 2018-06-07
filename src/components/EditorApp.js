@@ -10,9 +10,9 @@ export default class EditorApp extends Component {
     const { description } = this.props;
 
     return <DialogWrapper title={description.title} onClose={ () => console.log( 'Dialog was closed' ) }>
-      <TypesCacheContainer>
+      <PropertiesCacheContainer>
         <EditorTabsBuilder tabs={description.tabs} />
-      </TypesCacheContainer>
+      </PropertiesCacheContainer>
     </DialogWrapper>;
   }
 

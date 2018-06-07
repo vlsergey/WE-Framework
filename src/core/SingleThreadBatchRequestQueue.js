@@ -6,9 +6,10 @@ export default class SingleThreadBatchRequestQueue {
     expect( buildPromice ).toBeA( 'function' );
 
     this.buildPromice = buildPromice;
-    this.validate = () => true;
-    this.state = 'WAITING';
     this.maxBatchSize = 50;
+    this._queue = [];
+    this.state = 'WAITING';
+    this.validate = () => true;
   }
 
   assertItemIsValid( item ) {
@@ -18,20 +19,20 @@ export default class SingleThreadBatchRequestQueue {
   queue( item ) {
     this.assertItemIsValid( item );
     if ( !this._queue.includes( item ) ) {
-      this.queue.push( item );
+      this._queue.push( item );
     }
     this.checkSchedule();
   }
 
   checkSchedule() {
-    if ( this.state === 'WAITING' && this.queue.length > 0 ) {
+    if ( this.state === 'WAITING' && this._queue.length > 0 ) {
       this.state = 'SCHEDULED';
 
       const buildPromice = this.buildPromice;
       if ( typeof buildPromice !== 'function' )
         throw new Error( 'Build promice (this.buildPromice) is not a function' );
 
-      setTimeout( 0, () => this.request() );
+      setTimeout( () => this.request(), 0 );
     }
   }
 
@@ -43,13 +44,11 @@ export default class SingleThreadBatchRequestQueue {
     if ( typeof buildPromice !== 'function' )
       throw new Error( 'Build promice (this.buildPromice) is not a function' );
 
-    const nextBatch = this.queue.slice( 0, Math.max( this.queue.length, this.maxBatchSize ) );
-    if ( nextBatch.length < this.queue.length ) {
-      this.queue = this.queue.slice( nextBatch.length );
-    }
+    const nextBatch = this._queue.slice( 0, Math.max( this._queue.length, this.maxBatchSize ) );
+    this._queue = this._queue.slice( nextBatch.length );
 
     return buildPromice( nextBatch ).then( () => {
-      mw.log.info( 'Successfully received ' + nextBatch.length + 'items: ' + nextBatch );
+      mw.log( 'Successfully received ' + nextBatch.length + 'items: ' + nextBatch );
       this.state = 'WAITING';
       this.checkSchedule();
     } ).catch( ( error ) => {

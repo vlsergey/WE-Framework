@@ -4,26 +4,32 @@ import PropTypes from 'prop-types';
 export default class JQueryButton extends Component {
 
   componentDidMount() {
-    jQuery( this.component ).button( {
+    this.jQueryComponent.button( {
       click: this.props.onClick,
       disabled: this.props.disabled,
-      icon: this.props.icon,
+      icons: { primary: this.props.icon },
       label: this.props.label,
-      showLabel: this.props.showLabel,
+      text: this.props.text,
     } );
   }
 
-  shouldComponentUpdate() {
-    return false;
+  componentDidUpdate() {
+    this.jQueryComponent.button( {
+      click: this.props.onClick,
+      disabled: this.props.disabled,
+      icons: { primary: this.props.icon },
+      label: this.props.label,
+      text: this.props.text,
+    } );
   }
 
   render() {
     const { className } = this.props;
-    return <div className={className} ref={ ( component ) => this.component = component } />;
+    return <div className={className} ref={ ( component ) => { this.jQueryComponent = jQuery( component ); } } />;
   }
 
   componentWillUnmount() {
-    jQuery( this.component ).button( 'destroy' );
+    this.jQueryComponent.button( 'destroy' );
   }
 
 }
@@ -34,5 +40,5 @@ JQueryButton.propTypes = {
   disabled: PropTypes.bool,
   icon: PropTypes.string,
   label: PropTypes.string,
-  showLabel: PropTypes.bool,
+  text: PropTypes.bool,
 };

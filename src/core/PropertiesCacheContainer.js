@@ -3,21 +3,23 @@ import React, { Component } from 'react';
 import expect from 'expect';
 import PropTypes from 'prop-types';
 import SingleThreadBatchRequestQueue from './SingleThreadBatchRequestQueue';
-import typesCacheContext from './typesCacheContext';
+import propertiesCacheContext from './propertiesCacheContext';
 
-export default class TypesCacheContainer extends Component {
+export default class PropertiesCacheContainer extends Component {
 
   constructor() {
     super( ...arguments );
     this.queue = new SingleThreadBatchRequestQueue( ( batch ) => this.buildRequestPromice( batch ) );
 
+    const getOrQueue = this.getOrQueue = this.getOrQueue.bind( this );
+    this.onReceive = this.onReceive.bind( this );
+
     this.state = {
       cache: {
         _cache: {},
-        getOrQueue: this.getOrQueue,
+        getOrQueue: getOrQueue,
       },
     };
-    this.getOrQueue = this.getOrQueue.bind( this );
   }
 
   getOrQueue( code ) {
@@ -26,10 +28,11 @@ export default class TypesCacheContainer extends Component {
     const test = code.match( /^P(\d+)$/i );
     if ( !test ) throw new Error( 'Passed code value is not a property code' );
 
-    const cachedValue = this.cache._cache[ code ];
+    const cachedValue = this.state.cache._cache[ code ];
     if ( cachedValue )
       return cachedValue;
 
+    console.log( 'Queueing property type: ' + code );
     this.queue.queue( code );
   }
 
@@ -37,10 +40,14 @@ export default class TypesCacheContainer extends Component {
     expect( propertyIds ).toBeAn( 'array' );
 
     mw.notify( 'Request property type of ' + propertyIds + ' from Wikidata' );
+
+    const onReceive = this.onReceive;
     return ApiUtils.getWikidataApi()
       .get( {
         action: 'wbgetentities',
-        props: 'datatype',
+        languages: 'ru|en',
+        languagefallback: true,
+        props: 'claims|datatype|labels',
         ids: propertyIds.join( '|' ),
       } )
       .then( ( result ) => {
@@ -50,32 +57,31 @@ export default class TypesCacheContainer extends Component {
         }
 
         const cacheUpdate = {};
-
         $.each( result.entities, ( entityIndex, entity ) => {
-          const dataType = entity.datatype;
-          if ( typeof dataType !== 'undefined' && dataType !== null ) {
-            cacheUpdate[ entity.id ] = dataType;
-          }
+          cacheUpdate[ entity.id ] = entity;
         } );
 
-        mw.notify( 'Received ' + Object.keys( cacheUpdate ).length + ' property types from Wikidata' );
-
-        this.setState( {
-          cache: {
-            ...this.state.cache,
-            _cache: { ...this.state.cache._cache, cacheUpdate },
-          }
-        } );
+        onReceive( cacheUpdate );
       } );
   }
 
+  onReceive( cacheUpdate ) {
+    mw.notify( 'Received ' + Object.keys( cacheUpdate ).length + ' property types from Wikidata' );
+    this.setState( {
+      cache: {
+        ...this.state.cache,
+        _cache: { ...this.state.cache._cache, ...cacheUpdate },
+      }
+    } );
+  }
+
   render() {
-    return <typesCacheContext.Provider value={this.state.cache}>
+    return <propertiesCacheContext.Provider value={this.state.cache}>
       {this.props.children}
-    </typesCacheContext.Provider>;
+    </propertiesCacheContext.Provider>;
   }
 }
 
-TypesCacheContainer.propTypes = {
+PropertiesCacheContainer.propTypes = {
   children: PropTypes.node,
 };

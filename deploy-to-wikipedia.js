@@ -11,7 +11,7 @@ const fetch = ( url, options ) => {
   const formatCookies = () => Object.keys( cookieStorage )
     .map( key => key + '=' + cookieStorage[ key ] )
     .reduce ( ( a, c ) => a ? a + '; ' + c : c );
-  
+
   const cookieHeader = formatCookies();
   // console.log( 'Add additional cookie header to URL \'' + url + '\':' + cookieHeader );
   const newOptions = {
@@ -21,7 +21,7 @@ const fetch = ( url, options ) => {
       'Cookie': cookieHeader,
     },
   };
-  
+
   const originalResult = fetchOriginal( url, newOptions );
   return originalResult.then( request => {
     const setCookieHeaders = request.headers.raw()[ 'set-cookie' ];
@@ -35,7 +35,7 @@ const fetch = ( url, options ) => {
       } );
     }
     return request;
-  } );  
+  } );
 };
 
 const toUrlencoded = ( data ) => Object.keys( data )
@@ -53,7 +53,13 @@ if ( !lgpassword )
 
 
 const content = fs.readFileSync( './dist/app.bundle.js' );
-
+const defaultFetchOptions = {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+};
+if ( httpsProxy ) {
+  defaultFetchOptions.agent = new HttpsProxyAgent( httpsProxy );
+}
 
 //ignore SSL problems
 if ( httpsProxy )
@@ -62,28 +68,25 @@ if ( httpsProxy )
 console.log( 'Fetching login token...' );
 
 const loginTokenPromise = fetch( 'https://ru.wikipedia.org/w/api.php?action=query&meta=tokens&type=login&format=json', {
-  method: 'POST',
-  agent: new HttpsProxyAgent( httpsProxy )
+  ...defaultFetchOptions,
 } ).then( res => res.json() )
   .then( json => json.query.tokens.logintoken );
 
-const loginPromise = loginTokenPromise.then( logintoken => { 
+const loginPromise = loginTokenPromise.then( logintoken => {
   expect( lgname ).toBeA( 'string' );
   expect( lgpassword ).toBeA( 'string' );
   expect( logintoken ).toBeA( 'string' );
-  
+
   console.log( 'Login ' + lgname + ' with token ' + logintoken + '...' );
 
   return fetch( 'https://ru.wikipedia.org/w/api.php', {
-    agent: new HttpsProxyAgent( httpsProxy ),
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    ...defaultFetchOptions,
     body: toUrlencoded( {
       'action': 'login',
       'lgname': lgname,
       'lgpassword': lgpassword,
       'lgtoken': logintoken,
-      'format': 'json',    
+      'format': 'json',
     } ),
   } ).then( res => res.json() )
     .then( json => { const login = json.login;
@@ -93,27 +96,24 @@ const loginPromise = loginTokenPromise.then( logintoken => {
         throw new Error( 'Unable to login as ' + lgname );
       }
       return;
-    } ); 
+    } );
 } );
 
 const csrfTokenPromise = loginPromise.then( () => {
   console.log( 'Obtaining CSRF token...' );
 
   return fetch( 'https://ru.wikipedia.org/w/api.php?action=query&meta=tokens&type=csrf&format=json', {
-    method: 'POST',
-    agent: new HttpsProxyAgent( httpsProxy )
+    ...defaultFetchOptions,
   } ).then( res => res.json() )
     .then( json => json.query.tokens.csrftoken );
 } );
 
-const editPromise = csrfTokenPromise.then( csrftoken => { 
-  const articleName = 'User:' + lgname + '/app.js';
+const editPromise = csrfTokenPromise.then( csrftoken => {
+  const articleName = 'User:' + lgname + '/app.bundle.js';
   console.log( 'Uploading app.bundle.js as ' + articleName + '...' );
-  
+
   return fetch( 'https://ru.wikipedia.org/w/api.php', {
-    agent: new HttpsProxyAgent( httpsProxy ),
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    ...defaultFetchOptions,
     body: toUrlencoded( {
       'action': 'edit',
       'title': articleName,
@@ -122,8 +122,8 @@ const editPromise = csrfTokenPromise.then( csrftoken => {
       'minor': '1',
       'bot': '1',
       'token': csrftoken,
-      'format': 'json',    
+      'format': 'json',
     } ),
   } ).then( res => res.json() )
-    .then( json => console.log( json ) ); 
+    .then( json => console.log( json ) );
 } );

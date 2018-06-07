@@ -14,8 +14,8 @@ export default class SelectSnakTypeButtonCell extends Component {
         className="wef_select_snak_type_button"
         icon="ui-icon-triangle-1-e"
         onClick={onClick}
-        label={i18n.buttonAddClaim}
-        showLabel={false}
+        label={i18n.buttonSelectSnakType}
+        text={false}
         disabled={disabled} />
     </ButtonCell>;
   }

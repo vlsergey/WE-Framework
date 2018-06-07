@@ -17,7 +17,7 @@ export default class ClaimEditorTableRow extends Component {
       <th className={styles.wef_property_editor_label}>{label}</th>
       {/* add quialifier button cell */}
       {/* next component renders multiple cells */}
-      <SnakEditorTableRowPart claim={claim} />
+      <SnakEditorTableRowPart snak={claim.mainsnak} />
       {/* references editor button cell */}
       {/* delete claim button cell */}
     </tr>;
