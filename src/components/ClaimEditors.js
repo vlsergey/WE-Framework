@@ -12,15 +12,16 @@ export default class ClaimEditors extends Component {
     this.state = {
       code: null,
       claims: null,
+      label: null,
     };
   }
 
   render() {
-    const { code, claims } = this.state;
+    const { code, claims, label } = this.state;
     return <tbody className={styles.wef_property_editor_tbody + ' ' + styles[ 'wef_property_editor_' + code ]}>
       { !claims || claims.length === 0 
-        ? <ClaimEditorTableRow claim={ emptyStatementClaim( code ) } />
-        : claims.map( claim => <ClaimEditorTableRow key={claim.id} claim={claim} /> )
+        ? <ClaimEditorTableRow claim={ emptyStatementClaim( code ) } label={label} />
+        : claims.map( claim => <ClaimEditorTableRow claim={claim} key={claim.id} label={label} /> )
       }
     </tbody>;
   }
@@ -28,11 +29,13 @@ export default class ClaimEditors extends Component {
 }
 
 ClaimEditors.propTypes = {
+  code: PropTypes.string.isRequired,
   entity: PropTypes.shape( Entity ),
-  code: PropTypes.string,
+  label: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ).isRequired,
 };
 
 ClaimEditors.getDerivedStateFromProps = ( nextProps ) => ( {
+  claims: ModelUtils.filterClaims( nextProps.entity, nextProps.code ),
   code: nextProps.code,
-  claims: ModelUtils.filterClaims( nextProps.entity, nextProps.code )
+  label: nextProps.label,
 } );

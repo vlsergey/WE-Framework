@@ -8,6 +8,7 @@ export default class DialogWrapper extends Component {
       autoOpen: true,
       autoResize: true,
       close: ( event, ui ) => { if ( this.props.onClose ) return this.props.onClose( event, ui ); },
+      minWidth: this.props.minWidth,
     } );
   }
 
@@ -16,7 +17,7 @@ export default class DialogWrapper extends Component {
   }
 
   render() {
-    return <div title={ this.props.title } ref={ ( component ) => this.component = component }>
+    return <div ref={ ( component ) => this.component = component } title={ this.props.title }>
       {this.props.children}
     </div>;
   }
@@ -29,6 +30,7 @@ export default class DialogWrapper extends Component {
 
 DialogWrapper.propTypes = {
   children: PropTypes.node,
+  minWidth: PropTypes.number,
   onClose: PropTypes.func,
   title: PropTypes.string,
 };

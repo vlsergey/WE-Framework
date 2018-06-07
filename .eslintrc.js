@@ -41,6 +41,7 @@ module.exports = {
     "indent": [1, 2, { "ignoreComments": false }],
 
     "keyword-spacing": 1,
+    "key-spacing": 1,
 
     "newline-per-chained-call": 0,
     "no-console": 0,
@@ -55,6 +56,10 @@ module.exports = {
     "prefer-const": 1,
 
     "quotes": [1, "single"],
+
+    "react/jsx-props-no-multi-spaces": 1,
+    "react/jsx-sort-props": 1,
+    "react/jsx-tag-spacing": 1,
 
     "semi": [1, "always"],
     "sort-imports": [1, {"ignoreCase" : true}],

@@ -12,11 +12,12 @@ export default class SelectSnakTypeButtonCell extends Component {
     return <ButtonCell>
       <JQueryButton
         className="wef_select_snak_type_button"
+        disabled={disabled}
         icon="ui-icon-triangle-1-e"
-        onClick={onClick}
         label={i18n.buttonSelectSnakType}
+        onClick={onClick}
         text={false}
-        disabled={disabled} />
+      />
     </ButtonCell>;
   }
 

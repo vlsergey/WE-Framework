@@ -1,0 +1,52 @@
+var webpack = require('webpack')
+
+module.exports = function (config) {
+  config.set({
+    browsers: [ 'jsdom' ],
+    browserNoActivityTimeout: 60000,
+    frameworks: [ 'mocha' ], 
+
+    plugins: [
+      'karma-jsdom-launcher',
+      'karma-mocha',
+      'karma-mocha-reporter',
+      'karma-sourcemap-loader',
+      'karma-webpack',
+    ],
+
+    files: [
+      'test/globals.js',
+      'test/**/*Test.js',
+    ],
+
+    preprocessors: {
+      'src/**/*.js': ['webpack', 'sourcemap'],
+      'test/**/*.js': ['webpack', 'sourcemap'], 
+    },
+
+    reporters: [ 'mocha', 'progress'],
+
+    mochaReporter: {
+      output: 'autowatch'
+    },
+
+    webpack: {
+      mode: "development",
+      module: {
+        rules: [
+          {
+            test: /\.css$/,
+            include: /src/,
+            exclude: /node_modules/,
+            loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
+          },
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: "babel-loader",
+          },
+         ]
+      },
+    },
+  });
+};

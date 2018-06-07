@@ -11,11 +11,11 @@ export default class AddClaimButtonCell extends Component {
 
     return <ButtonCell>
       <JQueryButton
+        disabled={disabled}
         icon="ui-icon-plus"
-        onClick={onClick}
         label={i18n.buttonAddClaim}
-        text={false}
-        disabled={disabled} />
+        onClick={onClick}
+        text={false} />
     </ButtonCell>;
   }
 

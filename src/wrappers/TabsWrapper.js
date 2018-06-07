@@ -27,7 +27,7 @@ export default class TabsWrapper extends Component {
         {tabs.map( ( tab, index ) => <li key={prefix + index}><a href={'#' + prefix + index}>{tab.label}</a></li> ) }
       </ul>
       <ul>
-        {tabs.map( ( tab, index ) => <div key={prefix + index} id={prefix + index}>{tab.content}</div> ) }
+        {tabs.map( ( tab, index ) => <div id={prefix + index} key={prefix + index}>{tab.content}</div> ) }
       </ul>
     </div>;
   }

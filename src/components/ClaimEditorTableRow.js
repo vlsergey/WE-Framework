@@ -12,7 +12,7 @@ export default class ClaimEditorTableRow extends Component {
     const { claim, flag, label, onAddClaim, ...other } = this.props;
 
     return <tr>
-      <AddClaimButtonCell onClick={onAddClaim} {...other}/>
+      <AddClaimButtonCell onClick={onAddClaim} {...other} />
       <FlagCell country={flag} />
       <th className={styles.wef_property_editor_label}>{label}</th>
       {/* add quialifier button cell */}
@@ -27,7 +27,7 @@ export default class ClaimEditorTableRow extends Component {
 
 ClaimEditorTableRow.propTypes = {
   claim: PropTypes.shape( Claim ).isRequired,
-  flag:PropTypes.string,
-  label: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ),
+  flag: PropTypes.string,
+  label: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ).isRequired,
   onAddClaim: PropTypes.func.isRequired,
 };

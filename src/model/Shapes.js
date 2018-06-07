@@ -29,7 +29,7 @@ export const Entity = {
 export const Snak = {
   snaktype: PropTypes.oneOf( [ 'value' ] ),
   property: PropTypes.string.isRequired,
-  hash : PropTypes.string,
+  hash: PropTypes.string,
   datavalue: PropTypes.shape( DataValue ),
   type: PropTypes.string,
   id: PropTypes.string,

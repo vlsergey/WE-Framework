@@ -9,5 +9,5 @@ export function onEditorLinkClick( editorDescription ) {
   const appDiv = document.createElement( 'div' );
   document.body.appendChild( appDiv );
 
-  ReactDOM.render( <EditorApp description={editorDescription}/>, appDiv );
+  ReactDOM.render( <EditorApp description={editorDescription} />, appDiv );
 }

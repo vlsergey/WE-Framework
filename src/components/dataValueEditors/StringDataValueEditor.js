@@ -1,28 +1,28 @@
 import * as Shapes from '../../model/Shapes';
-import * as Utils from '../Utils';
 import React, { Component } from 'react';
+import PropertyDescription from '../../core/PropertyDescription';
 import PropTypes from 'prop-types';
 import styles from '../core.css';
 
 export default class StringDataValueEditor extends Component {
 
   render() {
-    const { datavalue, pattern } = this.props;
+    const { datavalue, propertyDescription } = this.props;
 
     const params = {
       type: 'text',
       className: styles.wef_string,
     };
 
-    if ( pattern ) {
-      params.pattern = Utils.regexpGetHtmlPattern( pattern );
+    if ( propertyDescription.regexp ) {
+      params.pattern = propertyDescription.regexp;
     }
 
     if ( datavalue ) {
       params.value = datavalue.value;
     }
 
-    return <input {...params}/>;
+    return <input {...params} />;
   }
 
 }
@@ -30,5 +30,5 @@ export default class StringDataValueEditor extends Component {
 StringDataValueEditor.propTypes = {
   datavalue: PropTypes.shape( Shapes.DataValue ),
   onChange: PropTypes.func.isRequired,
-  property: PropTypes.shape( Shapes.Entity ),
+  propertyDescription: PropTypes.instanceOf( PropertyDescription ),
 };

@@ -1,4 +1,3 @@
-
 export function localize( prototypeDictionaty, translations ) {
   let result = { ...prototypeDictionaty };
   const languageCodes = [ 'ru', 'en', mw.config.get( 'wgContentLanguage' ), mw.config.get( 'wgUserLanguage' ) ];

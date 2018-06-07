@@ -1,9 +1,10 @@
 import * as ApiUtils from './ApiUtils';
 import React, { Component } from 'react';
 import expect from 'expect';
+import propertiesCacheContext from './propertiesCacheContext';
+import PropertyDescription from './PropertyDescription';
 import PropTypes from 'prop-types';
 import SingleThreadBatchRequestQueue from './SingleThreadBatchRequestQueue';
-import propertiesCacheContext from './propertiesCacheContext';
 
 export default class PropertiesCacheContainer extends Component {
 
@@ -58,7 +59,8 @@ export default class PropertiesCacheContainer extends Component {
 
         const cacheUpdate = {};
         $.each( result.entities, ( entityIndex, entity ) => {
-          cacheUpdate[ entity.id ] = entity;
+          const propertyDescription = new PropertyDescription( entity );
+          cacheUpdate[ entity.id ] = propertyDescription;
         } );
 
         onReceive( cacheUpdate );
