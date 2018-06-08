@@ -23,7 +23,7 @@ export function filterClaims( entity, code ) {
     throw new Error( 'Unsupported code: ' + code );
   }
 
-  if ( typeof claims === 'undefined' || typeof entity.claims[ propertyId ] === 'undefined' ) {
+  if ( typeof entity.claims === 'undefined' || typeof entity.claims[ propertyId ] === 'undefined' ) {
     return [];
   }
 

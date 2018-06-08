@@ -1,5 +1,6 @@
 import * as settings from './settings/index';
 import expect from 'expect';
+import { getEntityIdDeferred } from './core/ApiUtils';
 import MovieEditorTemplate from './editors/MovieEditorTemplate';
 import { onEditorLinkClick } from './core/edit';
 
@@ -13,19 +14,24 @@ mw.loader.using( [ //
 
   settings.registerEditor( MovieEditorTemplate );
 
-  settings.getEnabledEditors().forEach( editorDescription => {
-    expect( editorDescription ).toBeAn( 'object' );
-    expect( editorDescription.linkTitle ).toBeA( 'string' );
+  if ( mw.config.get( 'wgArticleId' ) ) {
+    getEntityIdDeferred().then( entityId => {
 
-    const editorLeftMenuLink = $( document.createElement( 'a' ) )
-      .text( editorDescription.linkTitle )
-      .click( () => {
-        onEditorLinkClick( editorDescription );
+      settings.getEnabledEditors().forEach( editorDescription => {
+        expect( editorDescription ).toBeAn( 'object' );
+        expect( editorDescription.linkTitle ).toBeA( 'string' );
+
+        const editorLeftMenuLink = $( document.createElement( 'a' ) )
+          .text( editorDescription.linkTitle )
+          .click( () => {
+            onEditorLinkClick( editorDescription, entityId );
+          } );
+
+        jQuery( '#p-tb div ul' ).append( jQuery( '<li class="plainlinks"></li>' ).append( editorLeftMenuLink ) );
       } );
 
-    jQuery( '#p-tb div ul' ).append( jQuery( '<li class="plainlinks"></li>' ).append( editorLeftMenuLink ) );
-  } );
-
+    } );   
+  }
 
   const leftMenuLink = $( document.createElement( 'a' ) )
     .text( settings.linkTitle )

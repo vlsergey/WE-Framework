@@ -18,10 +18,7 @@ export default class StringDataValueEditor extends Component {
       params.pattern = propertyDescription.regexp;
     }
 
-    if ( datavalue ) {
-      params.value = datavalue.value;
-    }
-
+    params.value = datavalue && datavalue.value ? datavalue.value : null;
     return <input {...params} />;
   }
 
