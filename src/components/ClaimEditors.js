@@ -1,41 +1,60 @@
-import * as ModelUtils from '../model/ModelUtils';
-import { emptyStatementClaim, Entity } from '../model/Shapes';
+import { Claim, newStatementClaim } from '../model/Shapes';
 import React, { Component } from 'react';
+import AddClaimButtonCell from './AddClaimButtonCell';
 import ClaimEditorTableRow from './ClaimEditorTableRow';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styles from './core.css';
 
-export default class ClaimEditors extends Component {
-
-  constructor() {
-    super( ...arguments );
-    this.state = {
-      code: null,
-      claims: null,
-      label: null,
-    };
-  }
+class ClaimEditors extends Component {
 
   render() {
-    const { code, claims, label } = this.state;
-    return <tbody className={styles.wef_property_editor_tbody + ' ' + styles[ 'wef_property_editor_' + code ]}>
-      { !claims || claims.length === 0 
-        ? <ClaimEditorTableRow claim={ emptyStatementClaim( code ) } label={label} />
-        : claims.map( claim => <ClaimEditorTableRow claim={claim} key={claim.id} label={label} /> )
-      }
-    </tbody>;
+    const { claims, label, onAddClaim, onChangeClaim, propertyId } = this.props;
+
+    const firstFirstCell = <AddClaimButtonCell onClick={onAddClaim} />;
+    
+    let children;
+    if ( !claims || claims.length === 0 ) {
+      const newClaim = newStatementClaim( propertyId );
+      children = [ <ClaimEditorTableRow 
+        claim={ newClaim } 
+        firstCell={firstFirstCell} 
+        key={newClaim.id} 
+        label={label} 
+        onAddClaim={onAddClaim}
+        onChange={ onChangeClaim } /> ];
+    } else {
+      children = claims.map( ( claim, i ) => <ClaimEditorTableRow 
+        claim={claim}
+        firstCell={i == 0 ? firstFirstCell : <td /> }
+        key={claim.id}
+        label={label}
+        onAddClaim={onAddClaim}
+        onChange={ onChangeClaim } /> );
+    }
+    
+    return <tbody className={styles.wef_property_editor_tbody + ' ' + styles[ 'wef_property_editor_' + propertyId ]}>{children}</tbody>;
   }
 
 }
 
 ClaimEditors.propTypes = {
-  code: PropTypes.string.isRequired,
-  entity: PropTypes.shape( Entity ),
+  claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
   label: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ).isRequired,
+  onAddClaim: PropTypes.func.isRequired,
+  onChangeClaim: PropTypes.func.isRequired,
+  propertyId: PropTypes.string.isRequired,
 };
 
-ClaimEditors.getDerivedStateFromProps = ( nextProps ) => ( {
-  claims: ModelUtils.filterClaims( nextProps.entity, nextProps.code ),
-  code: nextProps.code,
-  label: nextProps.label,
+const mapStateToProps = ( state, ownProps ) => ( {
+  claims: state.entity.claims[ ownProps.propertyId ] || [],
 } );
+
+const mapDispatchToProps = ( dispatch, ownProps ) => ( {
+  onAddClaim: () => dispatch( { type: 'CLAIM_ADD', propertyId: ownProps.propertyId } ),
+  onChangeClaim: ( claim ) => dispatch( { type: 'CLAIM_UPDATE', claim } ),
+} );
+
+const ClaimEditorsConnected = connect( mapStateToProps, mapDispatchToProps )( ClaimEditors );
+export default ClaimEditorsConnected;
+

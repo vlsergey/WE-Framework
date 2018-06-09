@@ -7,33 +7,33 @@ import styles from '../core.css';
 export default class ExternalIdValueEditor extends Component {
 
   render() {
-    const { datavalue, propertyDescription } = this.props;
+    const { onChange, datavalue, propertyDescription } = this.props;
 
     const params = {
       type: 'text',
-      className: styles.wef_string,
+      className: styles[ 'wef_' + propertyDescription.datatype ],
     };
 
     if ( propertyDescription.regexp ) {
       params.pattern = propertyDescription.regexp;
     }
 
-    if ( datavalue ) {
-      params.value = datavalue.value;
-    }
+    params.value = datavalue ? datavalue.value : '';
+    params.onChange = ( event ) => {
+      onChange( {
+        type: datavalue ? datavalue.type : 'string',
+        value: event.target.value
+      } );
+    };
 
-    return <table className={styles.wef_external_id_table}>
-      <tbody>
-        <tr>
-          <td>
-            <input {...params} />
-          </td>
-          <td>
-            <span>{datavalue ? propertyDescription.formatUrl( datavalue.value ) : ''}</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>;
+    const url = datavalue && datavalue.value ? propertyDescription.formatUrl( datavalue.value ) : null;
+    
+    return [
+      <td colSpan={5} key="input"><input {...params} /></td>,
+      <td className={styles.wef_external_links_url_cell} colSpan={7} key="url">
+        <div className={styles.wef_external_links_url_div}>{url ? <a className={styles.wef_external_links_url_a} href={url} rel="noopener noreferrer" target="_blank">{url}</a> : ''}</div>
+      </td>, 
+    ];
   }
 
 }

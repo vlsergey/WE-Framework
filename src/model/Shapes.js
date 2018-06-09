@@ -4,9 +4,13 @@ export const Claim = {
   mainsnak: PropTypes.shape( Snak ),
 };
 
-export function emptyStatementClaim( propertyId ) {
+let claimIdCounters = 0;
+
+export function newStatementClaim( propertyId ) {
   return {
-    id: null,
+    dirty: false,
+    [ 'new' ]: true,
+    id: 'new#' + claimIdCounters++,
     mainsnak: {
       ...emptySnak(),
       property: propertyId,

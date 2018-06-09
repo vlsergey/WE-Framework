@@ -7,7 +7,7 @@ import styles from '../core.css';
 export default class StringDataValueEditor extends Component {
 
   render() {
-    const { datavalue, propertyDescription } = this.props;
+    const { onChange, datavalue, propertyDescription } = this.props;
 
     const params = {
       type: 'text',
@@ -18,8 +18,19 @@ export default class StringDataValueEditor extends Component {
       params.pattern = propertyDescription.regexp;
     }
 
-    params.value = datavalue && datavalue.value ? datavalue.value : null;
-    return <input {...params} />;
+    if ( propertyDescription.regexp ) {
+      params.pattern = propertyDescription.regexp;
+    }
+
+    params.value = datavalue ? datavalue.value : '';
+    params.onChange = ( event ) => {
+      onChange( {
+        type: datavalue ? datavalue.type : 'string',
+        value: event.target.value
+      } );
+    };
+
+    return <td colSpan={12}><input {...params} /></td>;
   }
 
 }

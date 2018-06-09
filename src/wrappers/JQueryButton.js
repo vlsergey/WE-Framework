@@ -5,7 +5,6 @@ export default class JQueryButton extends Component {
 
   componentDidMount() {
     this.jQueryComponent.button( {
-      click: this.props.onClick,
       disabled: this.props.disabled,
       icons: { primary: this.props.icon },
       label: this.props.label,
@@ -15,7 +14,6 @@ export default class JQueryButton extends Component {
 
   componentDidUpdate() {
     this.jQueryComponent.button( {
-      click: this.props.onClick,
       disabled: this.props.disabled,
       icons: { primary: this.props.icon },
       label: this.props.label,
@@ -24,8 +22,8 @@ export default class JQueryButton extends Component {
   }
 
   render() {
-    const { className } = this.props;
-    return <div className={className} ref={ ( component ) => { this.jQueryComponent = jQuery( component ); } } />;
+    const { className, onClick } = this.props;
+    return <div className={className} onClick={ onClick } ref={ ( component ) => { this.jQueryComponent = jQuery( component ); } } />;
   }
 
   componentWillUnmount() {

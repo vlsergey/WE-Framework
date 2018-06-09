@@ -130,7 +130,7 @@ button.wef_select_snak_type_button :global .ui-button-icon-primary {
 }
 
 /* Snak value level -- per types */
-.wef_commonsMedia, .wef_external-id, .wef_string, .wef_url {
+.wef_commonsMedia, .wef_string, .wef_url {
 	width: 99%;
 }
 
@@ -139,6 +139,10 @@ button.wef_select_snak_type_button :global .ui-button-icon-primary {
 	.wef_snak_replacement_label_time_years {
 	white-space: nowrap;
 	cursor: pointer;
+}
+
+.wef_external-id {
+	min-width: 19em;
 }
 
 .wef_external_links_before_url_cell {

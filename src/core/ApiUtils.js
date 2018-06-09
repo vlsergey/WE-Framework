@@ -1,5 +1,5 @@
-import * as WEF_Utils from './utils';
-
+//import * as WEF_Utils from './utils';
+//
 const MW_SCRIPT_PATH = mw.config.get( 'wgScriptPath' );
 
 const WG_ARTICLE_ID = mw.config.get( 'wgArticleId' );
@@ -92,27 +92,27 @@ export function purgeAsync() {
   } );
 }
 
-export function wbGetEntities( params ) {
-  params.action = 'wbgetentities';
-  params.uselang = WEF_Utils.getDefaultLanguageCode();
-
-  return new Promise( ( resolve, reject ) => {
-    getWikidataApi()
-      .post( params )
-      .then( function( response ) {
-        if ( response.error ) {
-          console.log( 'Unable to call \'wbgetentities\': ' + response.error.info );
-          reject( response.error );
-          return;
-        }
-        resolve( response.entities );
-      } ).fail( function( jqXHR, textStatus, errorThrown ) {
-        // too bad :-(
-        console.log( 'Unable to call \'wbgetentities\'' );
-        console.log( textStatus );
-        console.log( errorThrown );
-        reject( errorThrown );
-        return;
-      } );
-  } );
-}
+//export function wbGetEntities( params ) {
+//  params.action = 'wbgetentities';
+//  params.uselang = WEF_Utils.getDefaultLanguageCode();
+//
+//  return new Promise( ( resolve, reject ) => {
+//    getWikidataApi()
+//      .post( params )
+//      .then( function( response ) {
+//        if ( response.error ) {
+//          console.log( 'Unable to call \'wbgetentities\': ' + response.error.info );
+//          reject( response.error );
+//          return;
+//        }
+//        resolve( response.entities );
+//      } ).fail( function( jqXHR, textStatus, errorThrown ) {
+//        // too bad :-(
+//        console.log( 'Unable to call \'wbgetentities\'' );
+//        console.log( textStatus );
+//        console.log( errorThrown );
+//        reject( errorThrown );
+//        return;
+//      } );
+//  } );
+//}

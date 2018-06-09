@@ -7,23 +7,23 @@ const editorDescription = {
       key: 'general',
       fields: [
         /* instance of */
-        { code: 'P31' },
+        { property: 'P31' },
         /* image */
-        { code: 'P18', qualifiers: [ /* moment in time */ 'P585', /* media legend */ 'P2096' ] },
+        { property: 'P18', qualifiers: [ /* moment in time */ 'P585', /* media legend */ 'P2096' ] },
       ]
     },
     {
       labelEntityId: 'Q36524',
       key: 'authoritycontrol',
       fields: [
-        { code: 'P1237', flag: 'us' },
-        { code: 'P480', flag: 'us' },
-        { code: 'P345', flag: 'us' },
+        { property: 'P1237', flag: 'us' },
+        { property: 'P480', flag: 'us' },
+        { property: 'P345', flag: 'us' },
 
-        { code: 'P4276', flag: 'ca' },
-        { code: 'P4529', flag: 'cn' },
-        { code: 'P2529', flag: 'cz' },
-        { code: 'P1265', flag: 'fr' },
+        { property: 'P4276', flag: 'ca' },
+        { property: 'P4529', flag: 'cn' },
+        { property: 'P2529', flag: 'cz' },
+        { property: 'P1265', flag: 'fr' },
       ]
     },
   ],
