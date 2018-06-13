@@ -1,0 +1,79 @@
+body {
+  font-family: Helvetica, sans-serif;
+}
+
+.container {
+  position: relative;
+}
+
+.suggestionsContainer {
+  display: none;
+}
+
+.containerOpen .suggestionsContainer {
+  display: block;
+  position: absolute;
+  width: 23em;
+  border: 1px solid #aaa;
+  background-color: #fff;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  z-index: 2;
+}
+
+.suggestionsList {
+  margin: 0;
+  padding: 0;
+  list-style-image: none;
+  list-style-type: none;
+}
+
+.suggestion {
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.suggestion:not(:first-child) {
+  border-top: 1px solid #ddd;
+}
+
+.suggestionHighlighted {
+  background-color: #0C7EAF;
+  color: #fff;
+}
+
+.suggestionContent {
+  display: flex;
+  align-items: center;
+  background-repeat: no-repeat;
+}
+
+.suggestionContentPreviewOuter {
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.suggestionContentPreviewInner {
+}
+
+.suggestionContentPreviewInner p {
+  padding: 0;
+  margin: 0;
+}
+
+.suggestionContentText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.highlight {
+  color: #ee0000;
+  font-weight: bold;
+}

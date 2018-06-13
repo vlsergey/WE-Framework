@@ -23,6 +23,14 @@ NotAValueSnakReplacementCell.defautPropTypes = {
 
 export default class SnakEditorTableRowPart extends Component {
 
+  static TABLE_COLUMNS = SnakValueEditorFactory.TABLE_COLUMNS + 1;
+
+  static propTypes = {
+    onSnakChange: PropTypes.func.isRequired,
+    propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
+    snak: PropTypes.shape( Shapes.Snak ).isRequired,
+  };
+
   constructor() {
     super( ...arguments );
     this.state = {
@@ -33,9 +41,9 @@ export default class SnakEditorTableRowPart extends Component {
   }
 
   handleSnakTypeChange( snaktype ) {
-    const { onChange } = this.props;
-    if ( onChange ) {
-      onChange( {
+    const { onSnakChange } = this.props;
+    if ( onSnakChange ) {
+      onSnakChange( {
         ...this.props.snak,
         snaktype: snaktype
       } );
@@ -50,27 +58,19 @@ export default class SnakEditorTableRowPart extends Component {
 
   render() {
     const { hiddenBehindLabel } = this.state;
-    const { onChange, propertyDescription, snak } = this.props;
+    const { onSnakChange, propertyDescription, snak } = this.props;
 
     if ( hiddenBehindLabel ) {
       return snak.snaktype === 'value'
-        ? [ <td key="snaktype" />, <SnakValueEditorFactory className={styles.wef_snak_replacement_label} key="valueEditor" mode="label" onChange={onChange} onClick={this.showFromBehindLabel} snak={snak} /> ]
+        ? [ <td key="snaktype" />, <SnakValueEditorFactory className={styles.wef_snak_replacement_label} key="valueEditor" mode="label" onChange={onSnakChange} onClick={this.showFromBehindLabel} snak={snak} /> ]
         : <NotAValueSnakReplacementCell onClick={this.showFromBehindLabel} snaktype={snak.snaktype} />;
     }
 
     return [
       <SelectSnakTypeButtonCell key="snaktype" onChange={this.handleSnakTypeChange} value={snak.snaktype} />,
       snak.snaktype === 'value'
-        ? <SnakValueEditorFactory key="valueEditor" onChange={onChange} propertyDescription={propertyDescription} snak={snak} />
+        ? <SnakValueEditorFactory key="valueEditor" onSnakChange={onSnakChange} propertyDescription={propertyDescription} snak={snak} />
         : <NotAValueSnakReplacementCell key="valueEditor" snaktype={snak.snaktype} />,
     ];
   }
 }
-
-SnakEditorTableRowPart.TABLE_COLUMNS = SnakValueEditorFactory.TABLE_COLUMNS + 1;
-
-SnakEditorTableRowPart.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-  snak: PropTypes.shape( Shapes.Snak ).isRequired,
-};

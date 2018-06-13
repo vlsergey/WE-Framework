@@ -4,10 +4,16 @@ import PropertyDescription from '../../core/PropertyDescription';
 import PropTypes from 'prop-types';
 import styles from '../core.css';
 
-export default class ExternalIdValueEditor extends Component {
+export default class ExternalIdDataValueEditor extends Component {
 
+  static propTypes = {
+    datavalue: PropTypes.shape( Shapes.DataValue ),
+    onDataValueChange: PropTypes.func.isRequired,
+    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
+  }
+  
   render() {
-    const { onChange, datavalue, propertyDescription } = this.props;
+    const { onDataValueChange, datavalue, propertyDescription } = this.props;
 
     const params = {
       type: 'text',
@@ -20,7 +26,7 @@ export default class ExternalIdValueEditor extends Component {
 
     params.value = datavalue ? datavalue.value : '';
     params.onChange = ( event ) => {
-      onChange( {
+      onDataValueChange( {
         type: datavalue ? datavalue.type : 'string',
         value: event.target.value
       } );
@@ -37,9 +43,3 @@ export default class ExternalIdValueEditor extends Component {
   }
 
 }
-
-ExternalIdValueEditor.propTypes = {
-  datavalue: PropTypes.shape( Shapes.DataValue ),
-  onChange: PropTypes.func.isRequired,
-  propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-};

@@ -1,20 +1,30 @@
 import * as Shapes from '../model/Shapes';
 import React, { PureComponent } from 'react';
+import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
 import expect from 'expect';
-import ExternalIdValueEditor from './dataValueEditors/ExternalIdValueEditor';
+import ExternalIdDataValueEditor from './dataValueEditors/ExternalIdDataValueEditor';
 import PropertyDescription from '../core/PropertyDescription';
 import PropTypes from 'prop-types';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 
 export default class SnakValueEditorFactory extends PureComponent {
 
+  static TABLE_COLUMNS = 12;
+  
+  static propTypes = {
+    mode: PropTypes.string,
+    onSnakChange: PropTypes.func.isRequired,
+    propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
+    snak: PropTypes.shape( Shapes.Snak ),
+  }
+  
   constructor() {
     super( ...arguments );
-    this.handleChange = this.handleChange.bind( this );
+    this.handleDataValueChange = this.handleDataValueChange.bind( this );
   }
 
-  handleChange( datavalue ) {
-    this.props.onChange( {
+  handleDataValueChange( datavalue ) {
+    this.props.onSnakChange( {
       ...this.props.snak,
       datavalue: datavalue,
     } );
@@ -27,11 +37,12 @@ export default class SnakValueEditorFactory extends PureComponent {
 
     switch ( dataType ) {
     case 'external-id':
-      return <ExternalIdValueEditor datavalue={snak.datavalue} onChange={this.handleChange} propertyDescription={propertyDescription} />;
+      return <ExternalIdDataValueEditor datavalue={snak.datavalue} onDataValueChange={this.handleDataValueChange} propertyDescription={propertyDescription} />;
     case 'commonsMedia':
+      return <CommonsMediaDataValueEditor datavalue={snak.datavalue} onDataValueChange={this.handleDataValueChange} propertyDescription={propertyDescription} />;
     case 'string':
     case 'url':
-      return <StringDataValueEditor datavalue={snak.datavalue} onChange={this.handleChange} propertyDescription={propertyDescription} />;
+      return <StringDataValueEditor datavalue={snak.datavalue} onDataValueChange={this.handleDataValueChange} propertyDescription={propertyDescription} />;
       // case "wikibase-item":
     default:
       return <td colSpan={SnakValueEditorFactory.TABLE_COLUMNS}><span>Data type {dataType} is not supported yet</span></td>;
@@ -39,12 +50,3 @@ export default class SnakValueEditorFactory extends PureComponent {
   }
 
 }
-
-SnakValueEditorFactory.TABLE_COLUMNS = 12;
-
-SnakValueEditorFactory.propTypes = {
-  mode: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-  snak: PropTypes.shape( Shapes.Snak ),
-};

@@ -9,6 +9,17 @@ import styles from './core.css';
 
 export default class ClaimEditorTableRow extends PureComponent {
 
+  static TABLE_COLUMNS = 3 + SnakEditorTableRowPart.TABLE_COLUMNS;
+
+  static propTypes = {
+    firstCell: PropTypes.node.isRequired,
+    claim: PropTypes.shape( Claim ).isRequired,
+    flag: PropTypes.string,
+    label: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ).isRequired,
+    onClaimChange: PropTypes.func.isRequired,
+    propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
+  };
+
   constructor() {
     super( ...arguments );
 
@@ -21,14 +32,15 @@ export default class ClaimEditorTableRow extends PureComponent {
     expect( snak.snaktype ).toBeAn( 'string' );
     expect( snak.datatype ).toBeAn( 'string' );
 
-    this.props.onChange( {
+    this.props.onClaimChange( {
       ...this.props.claim,
       mainsnak: snak,
     } );
   }
 
   render() {
-    const { claim, firstCell, flag, label, propertyDescription, ...other } = this.props;
+    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onClaimChange" }] */
+    const { claim, firstCell, flag, label, onClaimChange, propertyDescription, ...other } = this.props;
 
     return <tr {...other}>
       {firstCell}
@@ -36,21 +48,10 @@ export default class ClaimEditorTableRow extends PureComponent {
       <th className={styles.wef_property_editor_label}>{label}</th>
       {/* add quialifier button cell */}
       {/* next component renders multiple cells */}
-      <SnakEditorTableRowPart onChange={this.handleSnakChange} propertyDescription={propertyDescription} snak={claim.mainsnak} />
+      <SnakEditorTableRowPart onSnakChange={this.handleSnakChange} propertyDescription={propertyDescription} snak={claim.mainsnak} />
       {/* references editor button cell */}
       {/* delete claim button cell */}
     </tr>;
   }
 
 }
-
-ClaimEditorTableRow.TABLE_COLUMNS = 3 + SnakEditorTableRowPart.TABLE_COLUMNS;
-
-ClaimEditorTableRow.propTypes = {
-  firstCell: PropTypes.node.isRequired,
-  claim: PropTypes.shape( Claim ).isRequired,
-  flag: PropTypes.string,
-  label: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ).isRequired,
-  onChange: PropTypes.func.isRequired,
-  propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-};

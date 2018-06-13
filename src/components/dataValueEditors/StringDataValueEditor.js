@@ -6,8 +6,14 @@ import styles from '../core.css';
 
 export default class StringDataValueEditor extends Component {
 
+  static propTypes = {
+    datavalue: PropTypes.shape( Shapes.DataValue ),
+    onDataValueChange: PropTypes.func.isRequired,
+    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
+  };
+
   render() {
-    const { onChange, datavalue, propertyDescription } = this.props;
+    const { onDataValueChange, datavalue, propertyDescription } = this.props;
 
     const params = {
       type: 'text',
@@ -18,13 +24,9 @@ export default class StringDataValueEditor extends Component {
       params.pattern = propertyDescription.regexp;
     }
 
-    if ( propertyDescription.regexp ) {
-      params.pattern = propertyDescription.regexp;
-    }
-
     params.value = datavalue ? datavalue.value : '';
     params.onChange = ( event ) => {
-      onChange( {
+      onDataValueChange( {
         type: datavalue ? datavalue.type : 'string',
         value: event.target.value
       } );
@@ -34,9 +36,3 @@ export default class StringDataValueEditor extends Component {
   }
 
 }
-
-StringDataValueEditor.propTypes = {
-  datavalue: PropTypes.shape( Shapes.DataValue ),
-  onChange: PropTypes.func.isRequired,
-  propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-};

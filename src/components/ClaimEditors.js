@@ -23,7 +23,7 @@ class ClaimEditors extends Component {
         firstCell={firstFirstCell}
         key={newClaim.id}
         label={label}
-        onChange={ onChangeClaim }
+        onClaimChange={ onChangeClaim }
         propertyDescription={propertyDescription}
       /> ];
     } else {
@@ -32,7 +32,7 @@ class ClaimEditors extends Component {
         firstCell={i == 0 ? firstFirstCell : <td /> }
         key={claim.id}
         label={label}
-        onChange={ onChangeClaim }
+        onClaimChange={ onChangeClaim }
         propertyDescription={propertyDescription}
       /> );
     }
