@@ -36,16 +36,16 @@ export default class AbstractCacheContainer extends Component {
   isKeyValid( ) {
     return true;
   }
-  
+
   buildRequestPromice( entityIds ) {
     expect( entityIds ).toBeAn( 'array' );
 
-    mw.notify( 'Request entities ' + entityIds + ' from Wikidata' );
+    mw.log( 'Request entities ' + entityIds + ' from Wikidata' );
+    mw.notify( 'Request ' + entityIds.length + ' entries from Wikidata' );
 
-    
     const convertResultToEntities = this.convertResultToEntities;
     const onReceive = this.onReceive;
-    
+
     return this.buildApiRequest( entityIds )
       .then( ( result ) => {
         if ( typeof result.error !== 'undefined' ) {
@@ -63,7 +63,7 @@ export default class AbstractCacheContainer extends Component {
   buildApiRequest( ) {
     throw new Error( 'Need to be implemented by ' + this );
   }
-  
+
   convertResultToEntities( ) {
     throw new Error( 'Need to be implemented by ' + this );
   }
@@ -77,5 +77,5 @@ export default class AbstractCacheContainer extends Component {
       }
     } );
   }
-  
+
 }

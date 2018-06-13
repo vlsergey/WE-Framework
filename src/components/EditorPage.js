@@ -11,24 +11,22 @@ export default class EditorPage extends PureComponent {
 
     return <table className={styles.wef_table}>
       <propertiesCacheContext.Consumer>
-        { propertiesCacheContext => 
+        { propertiesCacheContext =>
           fields.map( fieldDescription => {
 
             const propertyId = fieldDescription.property;
-
-            let actualLabel;
-            if ( fieldDescription.label ) {
-              actualLabel = fieldDescription.label;
-            } else {
-              const propertyDescription = propertiesCacheContext.getOrQueue( propertyId );
-              if ( !propertyDescription || !propertyDescription.label )
-                actualLabel = <span>{propertyId}</span>;
-              else
-                actualLabel = <span title={propertyDescription.description}>{propertyDescription.label}</span>;
+            const propertyDescription = propertiesCacheContext.getOrQueue( propertyId );
+            if ( !propertyDescription || !propertyDescription.label ) {
+              return <tbody key={fieldDescription.property}><tr><td colSpan={ClaimEditors.TABLE_COLUMNS}>
+                <span>Loading property description of {propertyId}...</span>
+              </td></tr></tbody>;
             }
 
-            return <ClaimEditors key={fieldDescription.property} label={actualLabel} propertyId={propertyId} />;
+            const actualLabel = fieldDescription.label
+              ? fieldDescription.label
+              : <span title={propertyDescription.description}>{propertyDescription.label}</span>;
 
+            return <ClaimEditors key={fieldDescription.property} label={actualLabel} propertyDescription={propertyDescription} />;
           } )
         }
       </propertiesCacheContext.Consumer>

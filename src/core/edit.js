@@ -1,18 +1,19 @@
 import * as ApiUtils from './ApiUtils';
-import { applyMiddleware, createStore } from 'redux';
+// import { applyMiddleware, createStore } from 'redux';
 import buildReducers from './reducers';
+import { createStore } from 'redux';
 import EditorApp from '../components/EditorApp';
 import expect from 'expect';
 import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const actionLogger = store => next => action => {
-  console.log( 'dispatching', action );
-  const result = next( action );
-  console.log( 'next state', store.getState() );
-  return result;
-};
+// const actionLogger = store => next => action => {
+//   console.log( 'dispatching', action );
+//   const result = next( action );
+//   console.log( 'next state', store.getState() );
+//   return result;
+// };
 
 function onClose( appDiv ) {
   ReactDOM.unmountComponentAtNode( appDiv );
@@ -23,16 +24,17 @@ export function openEditor( editorDescription, entity ) {
   expect( editorDescription ).toBeAn( 'object' );
   expect( entity ).toBeAn( 'object' );
   expect( entity.id ).toBeA( 'string' );
-  
+
   const appDiv = document.createElement( 'div' );
   document.body.appendChild( appDiv );
 
   const reducers = buildReducers( entity );
-  const store = createStore( reducers, applyMiddleware( actionLogger ) );
+  // const store = createStore( reducers, applyMiddleware( actionLogger ) );
+  const store = createStore( reducers );
 
   ReactDOM.render( <Provider store={store}>
     <EditorApp description={editorDescription} entity={entity} onClose={ () => onClose( appDiv ) } />
-  </Provider>, appDiv );    
+  </Provider>, appDiv );
 }
 
 export function onEditorLinkClick( editorDescription, entityId ) {

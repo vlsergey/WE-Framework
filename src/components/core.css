@@ -120,9 +120,7 @@ button.wef_select_snak_type_button :global .ui-button-icon-primary {
 }
 
 .wef-snaktypeselector-menu {
-	border: 1px solid #CCC;
-	position: absolute;
-	z-index: +1;
+	width: 100%;
 }
 
 .wef-snaktypeselector-menu option {

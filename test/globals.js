@@ -3,6 +3,8 @@ var mw = {};
 mw.config = new Map();
 mw.config.set("wgContentLanguage", "en");
 mw.config.set("wgUserLanguage", "en");
+
+mw.log = () => console.log(...arguments);
 mw.notify = function() { console.log(...arguments) };
 
 var jQuery = () => ({

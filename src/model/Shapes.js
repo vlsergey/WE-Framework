@@ -1,3 +1,5 @@
+import expect from 'expect';
+import PropertyDescription from '../core/PropertyDescription';
 import PropTypes from 'prop-types';
 
 export const Claim = {
@@ -6,15 +8,18 @@ export const Claim = {
 
 let claimIdCounters = 0;
 
-export function newStatementClaim( propertyId ) {
+export function newStatementClaim( propertyDescription ) {
+  expect( propertyDescription ).toBeA( PropertyDescription );
+
   return {
     dirty: false,
     [ 'new' ]: true,
     id: 'new#' + claimIdCounters++,
     mainsnak: {
       ...emptySnak(),
-      property: propertyId,
       snaktype: 'value',
+      property: propertyDescription.id,
+      datatype: propertyDescription.datatype,
     },
     rank: 'normal',
     type: 'statement',
@@ -31,7 +36,7 @@ export const Entity = {
 };
 
 export const Snak = {
-  snaktype: PropTypes.oneOf( [ 'value' ] ),
+  snaktype: PropTypes.oneOf( [ 'value', 'novalue', 'somevalue' ] ),
   property: PropTypes.string.isRequired,
   hash: PropTypes.string,
   datavalue: PropTypes.shape( DataValue ),
@@ -42,6 +47,6 @@ export const Snak = {
 
 export function emptySnak( ) {
   return {
-    
+
   };
 }

@@ -45,7 +45,7 @@
     "build": "webpack",
     "watch": "webpack --watch",
     "deploy": "eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js && node ./dist/deploy-to-wikipedia.out.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test:watch": "karma start karma.conf.js --no-single-run"
   },
   "repository": {
     "type": "git",
@@ -64,6 +64,7 @@
   "dependencies": {
     "node-fetch": "^2.1.2",
     "react-redux": "^5.0.7",
+    "reactjs-popup": "^1.1.1",
     "redux": "^4.0.0"
   }
 }

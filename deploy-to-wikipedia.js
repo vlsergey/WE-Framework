@@ -57,13 +57,12 @@ const defaultFetchOptions = {
   method: 'POST',
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 };
+
 if ( httpsProxy ) {
   defaultFetchOptions.agent = new HttpsProxyAgent( httpsProxy );
-}
-
-//ignore SSL problems
-if ( httpsProxy )
+  //ignore SSL problems
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
 
 console.log( 'Fetching login token...' );
 

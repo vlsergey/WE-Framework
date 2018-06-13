@@ -1,4 +1,5 @@
 import * as I18nUtils from '../utils/I18nUtils';
+import expect from 'expect';
 
 function findSingleStatementByEntityIdValue( entity, property, entityId ) {
   if ( !entity.claims || !entity.claims[ property ] ) {
@@ -8,16 +9,16 @@ function findSingleStatementByEntityIdValue( entity, property, entityId ) {
 
   // TODO: make use of rank
   const candidates = claims
-    .filter( statement => 
-      statement.mainsnak 
-        && statement.mainsnak.datavalue 
-        && statement.mainsnak.datavalue.value 
+    .filter( statement =>
+      statement.mainsnak
+        && statement.mainsnak.datavalue
+        && statement.mainsnak.datavalue.value
         && statement.mainsnak.datavalue.value.id === entityId );
-  
+
   if ( candidates.length == 1 ) {
     return candidates[ 0 ];
   }
-  
+
   return null;
 }
 
@@ -25,9 +26,9 @@ function getStringRestriction( propertyEntity, restrictionId, valuePropertyId ) 
   const statement = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', restrictionId );
   if ( !statement )
     return null;
-  
-  if ( !statement.qualifiers 
-      || !statement.qualifiers[ valuePropertyId ] 
+
+  if ( !statement.qualifiers
+      || !statement.qualifiers[ valuePropertyId ]
       || statement.qualifiers[ valuePropertyId ].length !== 1
       || !statement.qualifiers[ valuePropertyId ][ 0 ].datavalue
       || !statement.qualifiers[ valuePropertyId ][ 0 ].datavalue.value )
@@ -37,16 +38,16 @@ function getStringRestriction( propertyEntity, restrictionId, valuePropertyId ) 
 }
 
 class UrlFormatter {
-  
+
   constructor( statement ) {
     this._format = statement.mainsnak.datavalue.value;
-    
-    if ( statement.qualifiers 
-        && statement.qualifiers.P1793 
+
+    if ( statement.qualifiers
+        && statement.qualifiers.P1793
         && statement.qualifiers.P1793.length === 0
         && statement.qualifiers.P1793[ 0 ].datavalue
         && statement.qualifiers.P1793[ 0 ].datavalue.value ) {
-      this._regexp = statement.qualifiers.P1793[ 0 ].datavalue.value; 
+      this._regexp = statement.qualifiers.P1793[ 0 ].datavalue.value;
     } else {
       this._regexp = null;
     }
@@ -59,16 +60,21 @@ class UrlFormatter {
   isCompliant( value ) {
     return !this._regexp || new RegExp( '^' + this._regexp + '$' ).test( value );
   }
-  
+
   format( value ) {
     return this._format.replace( '$1', value );
   }
-  
+
 }
 
 export default class PropertyDescription {
 
   constructor( propertyEntity ) {
+    expect( propertyEntity ).toBeAn( 'object' );
+    expect( propertyEntity.id ).toBeA( 'string', 'Missing ID in property entity object' );
+    expect( propertyEntity.datatype ).toBeA( 'string', 'Missing datatype in property entity object' );
+
+    this.id = propertyEntity.id;
     this.datatype = propertyEntity.datatype;
 
     const translations = {};
@@ -78,7 +84,7 @@ export default class PropertyDescription {
         translations[ label.language ] = {
           ...translations[ label.language ],
           label: label.value,
-        }; 
+        };
       } );
     }
 
@@ -87,7 +93,7 @@ export default class PropertyDescription {
         translations[ description.language ] = {
           ...translations[ description.language ],
           description: description.value,
-        }; 
+        };
       } );
     }
 
@@ -97,19 +103,19 @@ export default class PropertyDescription {
 
     this.regexp = getStringRestriction( propertyEntity, 'Q21502404', 'P1793' );
 
-    if ( propertyEntity.claims && propertyEntity.claims.P1630 ) {      
+    if ( propertyEntity.claims && propertyEntity.claims.P1630 ) {
       this.urlFormatters = propertyEntity.claims.P1630
         .filter( statement => statement.rank !== 'deprecated' )
-        .filter( statement => 
-          statement.mainsnak 
-            && statement.mainsnak.datavalue 
+        .filter( statement =>
+          statement.mainsnak
+            && statement.mainsnak.datavalue
             && statement.mainsnak.datavalue.value )
         .map( statement => new UrlFormatter( statement ) );
     } else {
       this.urlFormatters = [];
     }
   }
-  
+
   formatUrl( value ) {
     if ( value === null || value === '' )
       return '';
@@ -121,5 +127,5 @@ export default class PropertyDescription {
     if ( formatter )
       return formatter.format( value );
   }
-  
+
 }

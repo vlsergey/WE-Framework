@@ -26,12 +26,12 @@ export default class LabelDescriptionCacheContainer extends AbstractCacheContain
         ids: keys.join( '|' ),
       } );
   }
-  
+
   convertResultToEntities( result ) {
     const cacheUpdate = {};
     $.each( result.entities, ( entityIndex, entity ) => {
       const labelDescription = new LabelDescription( entity );
-      cacheUpdate[ entity.id ] = labelDescription;
+      cacheUpdate[ entity.id ] = Object.freeze( labelDescription );
     } );
     return cacheUpdate;
   }

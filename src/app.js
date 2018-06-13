@@ -8,6 +8,7 @@ mw.loader.using( [ //
   'jquery.ui.autocomplete', //
   'jquery.ui.dialog', //
   'jquery.ui.tabs', //
+  'jquery.ui.tooltip', //
   'jquery.uls.data', //
   'mediawiki.ForeignApi'
 ], function() {
@@ -30,7 +31,7 @@ mw.loader.using( [ //
         jQuery( '#p-tb div ul' ).append( jQuery( '<li class="plainlinks"></li>' ).append( editorLeftMenuLink ) );
       } );
 
-    } );   
+    } );
   }
 
   const leftMenuLink = $( document.createElement( 'a' ) )

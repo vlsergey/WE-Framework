@@ -26,12 +26,12 @@ export default class PropertiesCacheContainer extends AbstractCacheContainer {
         ids: propertyIds.join( '|' ),
       } );
   }
-  
+
   convertResultToEntities( result ) {
     const cacheUpdate = {};
     $.each( result.entities, ( entityIndex, entity ) => {
       const propertyDescription = new PropertyDescription( entity );
-      cacheUpdate[ entity.id ] = propertyDescription;
+      cacheUpdate[ entity.id ] = Object.freeze( propertyDescription );
     } );
     return cacheUpdate;
   }

@@ -1,24 +1,27 @@
 import expect from 'expect';
 import { newStatementClaim } from '../model/Shapes';
+import PropertyDescription from './PropertyDescription';
 
 export default function buildReducers( originalEntity ) {
   expect( originalEntity ).toBeAn( 'object' );
-  
+
   const initialState = {
     originalEntity: originalEntity,
     entity: originalEntity,
   };
-  
+
   return ( state = initialState, action ) => {
-    
+
     switch ( action.type ) {
 
     case 'CLAIM_ADD': {
-      const { propertyId } = action;
-      expect( propertyId ).toBeA( 'string' );
+      const { propertyDescription } = action;
+      expect( propertyDescription ).toBeA( PropertyDescription );
+      const propertyId = propertyDescription.id;
 
-      const existingClaims = state.entity.claims[ propertyId ];
-      
+      const existingClaims = state.entity.claims[ propertyDescription.id ];
+      const newClaim = newStatementClaim( propertyDescription );
+
       if ( existingClaims ) {
         return {
           ...state,
@@ -26,7 +29,7 @@ export default function buildReducers( originalEntity ) {
             ...state.entity,
             claims: {
               ...state.entity.claims,
-              [ propertyId ]: [ ...existingClaims, newStatementClaim( propertyId ) ],
+              [ propertyId ]: [ ...existingClaims, newClaim ],
             }
           }
         };
@@ -37,7 +40,7 @@ export default function buildReducers( originalEntity ) {
             ...state.entity,
             claims: {
               ...state.entity.claims,
-              [ propertyId ]: [ newStatementClaim( propertyId ) ],
+              [ propertyId ]: [ newClaim ],
             }
           }
         };
@@ -47,16 +50,16 @@ export default function buildReducers( originalEntity ) {
     case 'CLAIM_UPDATE': {
       const { claim } = action;
       const propertyId = claim.mainsnak.property;
-      
+
       let claimToSave = claim;
-      if ( !claim.dirty ) 
+      if ( !claim.dirty )
         claimToSave = { ...claimToSave, dirty: true };
-      
+
       const existingClaims = state.entity.claims[ propertyId ];
       const claimsToSave = existingClaims
         ? existingClaims.map( original => original.id === claim.id ? claimToSave : original )
         : [ claimToSave ];
-      
+
       return {
         ...state,
         entity: {
@@ -68,9 +71,9 @@ export default function buildReducers( originalEntity ) {
         }
       };
     }
-    
+
     }
-    
+
     return state;
   };
 }
