@@ -14,23 +14,23 @@ export default class CommonsMediaDataValueEditor extends Component {
     onDataValueChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   };
-  
+
   constructor() {
     super( ...arguments );
-    
+
     this.commonsApi = new mw.ForeignApi( '//commons.wikimedia.org/w/api.php' );
     this.state = {
       suggestions: [],
     };
-    
+
     this.handleSuggestionsClearRequested = this.handleSuggestionsClearRequested.bind( this );
     this.handleSuggestionsFetchRequested = this.handleSuggestionsFetchRequested.bind( this );
   }
-  
+
   handleSuggestionsClearRequested() {
     this.setState( { suggestions: [] } );
   }
-  
+
   handleSuggestionsFetchRequested( { value } ) {
     this.commonsApi.post( {
       action: 'query',
@@ -50,8 +50,8 @@ export default class CommonsMediaDataValueEditor extends Component {
       this.setState( { suggestions } );
     } );
   }
-  
-  
+
+
   render() {
     const { onDataValueChange, datavalue, propertyDescription } = this.props;
 
@@ -65,16 +65,16 @@ export default class CommonsMediaDataValueEditor extends Component {
     }
 
     params.value = datavalue ? datavalue.value : '';
-    params.onChange = ( event ) => {
+    params.onChange = ( event, { newValue } ) => {
       onDataValueChange( {
         type: datavalue ? datavalue.type : 'string',
-        value: event.target.value ? event.target.value : '',
+        value: newValue ? newValue : '',
       } );
     };
 
     return <td colSpan={12}>
-      <Autosuggest 
-        getSuggestionValue={ ( data ) => data ? data : ''} 
+      <Autosuggest
+        getSuggestionValue={ ( data ) => data ? data : ''}
         inputProps={params}
         onSuggestionsClearRequested={ this.handleSuggestionsClearRequested }
         onSuggestionsFetchRequested ={ this.handleSuggestionsFetchRequested }
@@ -83,7 +83,7 @@ export default class CommonsMediaDataValueEditor extends Component {
         theme={dataTypeStyles} />
     </td>;
   }
-  
+
   renderSuggestion( data ) {
     return <div className={ dataTypeStyles.suggestionContent}>
       <div className={dataTypeStyles.suggestionContentPreviewOuter}>
