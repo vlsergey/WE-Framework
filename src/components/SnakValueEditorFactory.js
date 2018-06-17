@@ -10,14 +10,14 @@ import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 export default class SnakValueEditorFactory extends PureComponent {
 
   static TABLE_COLUMNS = 12;
-  
+
   static propTypes = {
     mode: PropTypes.string,
     onSnakChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     snak: PropTypes.shape( Shapes.Snak ),
   }
-  
+
   constructor() {
     super( ...arguments );
     this.handleDataValueChange = this.handleDataValueChange.bind( this );
@@ -26,7 +26,7 @@ export default class SnakValueEditorFactory extends PureComponent {
   handleDataValueChange( datavalue ) {
     this.props.onSnakChange( {
       ...this.props.snak,
-      datavalue: datavalue,
+      datavalue,
     } );
   }
 

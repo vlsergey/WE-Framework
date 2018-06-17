@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import ClaimEditors from './ClaimEditors';
+import LanguageSelectContainer from './labelalike/LanguageSelectContainer';
 import propertiesCacheContext from '../core/propertiesCacheContext';
 import PropTypes from 'prop-types';
 import styles from './core.css';
@@ -13,6 +14,12 @@ export default class EditorPage extends PureComponent {
       <propertiesCacheContext.Consumer>
         { propertiesCacheContext =>
           fields.map( fieldDescription => {
+
+            if ( fieldDescription.type === 'LabelsAndDescriptionArea' ) {
+              return <tbody key="_LabelalikesContainer"><tr><td colSpan={ClaimEditors.TABLE_COLUMNS}>
+                <LanguageSelectContainer />
+              </td></tr></tbody>;
+            }
 
             const propertyId = fieldDescription.property;
             const propertyDescription = propertiesCacheContext.getOrQueue( propertyId );

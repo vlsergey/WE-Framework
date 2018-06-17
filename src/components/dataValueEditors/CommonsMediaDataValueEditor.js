@@ -51,6 +51,9 @@ export default class CommonsMediaDataValueEditor extends Component {
     } );
   }
 
+  getSuggestionValue( data ) {
+    return data ? data : '';
+  }
 
   render() {
     const { onDataValueChange, datavalue, propertyDescription } = this.props;
@@ -74,10 +77,10 @@ export default class CommonsMediaDataValueEditor extends Component {
 
     return <td colSpan={12}>
       <Autosuggest
-        getSuggestionValue={ ( data ) => data ? data : ''}
+        getSuggestionValue={ this.getSuggestionValue }
         inputProps={params}
         onSuggestionsClearRequested={ this.handleSuggestionsClearRequested }
-        onSuggestionsFetchRequested ={ this.handleSuggestionsFetchRequested }
+        onSuggestionsFetchRequested={ this.handleSuggestionsFetchRequested }
         renderSuggestion={ this.renderSuggestion }
         suggestions={this.state.suggestions}
         theme={dataTypeStyles} />

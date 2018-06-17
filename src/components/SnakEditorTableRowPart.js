@@ -16,7 +16,7 @@ NotAValueSnakReplacementCell.propTypes = {
   onClick: PropTypes.func,
   snaktype: PropTypes.string,
 };
-  
+
 NotAValueSnakReplacementCell.defautPropTypes = {
   snaktype: 'value',
 };
@@ -45,7 +45,7 @@ export default class SnakEditorTableRowPart extends Component {
     if ( onSnakChange ) {
       onSnakChange( {
         ...this.props.snak,
-        snaktype: snaktype
+        snaktype,
       } );
     }
   }

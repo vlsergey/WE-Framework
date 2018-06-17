@@ -28,7 +28,7 @@ export default class StringDataValueEditor extends Component {
     params.onChange = ( event ) => {
       onDataValueChange( {
         type: datavalue ? datavalue.type : 'string',
-        value: event.target.value
+        value: event.target.value,
       } );
     };
 

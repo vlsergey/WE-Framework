@@ -3,8 +3,13 @@ import PropTypes from 'prop-types';
 
 export default class JQueryButton extends Component {
 
+  constructor() {
+    super( ...arguments );
+    this.ref = React.createRef();
+  }
+
   componentDidMount() {
-    this.jQueryComponent.button( {
+    jQuery( this.ref.current ).button( {
       disabled: this.props.disabled,
       icons: { primary: this.props.icon },
       label: this.props.label,
@@ -13,7 +18,7 @@ export default class JQueryButton extends Component {
   }
 
   componentDidUpdate() {
-    this.jQueryComponent.button( {
+    jQuery( this.ref.current ).button( {
       disabled: this.props.disabled,
       icons: { primary: this.props.icon },
       label: this.props.label,
@@ -23,7 +28,7 @@ export default class JQueryButton extends Component {
 
   render() {
     const { className, onClick } = this.props;
-    return <div className={className} onClick={ onClick } ref={ ( component ) => { this.jQueryComponent = jQuery( component ); } } />;
+    return <div className={className} onClick={ onClick } ref={ this.ref } />;
   }
 
   componentWillUnmount() {

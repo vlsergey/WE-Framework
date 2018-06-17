@@ -82,8 +82,8 @@ const loginPromise = loginTokenPromise.then( logintoken => {
     ...defaultFetchOptions,
     body: toUrlencoded( {
       'action': 'login',
-      'lgname': lgname,
-      'lgpassword': lgpassword,
+      lgname,
+      lgpassword,
       'lgtoken': logintoken,
       'format': 'json',
     } ),

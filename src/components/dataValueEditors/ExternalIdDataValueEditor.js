@@ -11,7 +11,7 @@ export default class ExternalIdDataValueEditor extends Component {
     onDataValueChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   }
-  
+
   render() {
     const { onDataValueChange, datavalue, propertyDescription } = this.props;
 
@@ -28,17 +28,17 @@ export default class ExternalIdDataValueEditor extends Component {
     params.onChange = ( event ) => {
       onDataValueChange( {
         type: datavalue ? datavalue.type : 'string',
-        value: event.target.value
+        value: event.target.value,
       } );
     };
 
     const url = datavalue && datavalue.value ? propertyDescription.formatUrl( datavalue.value ) : null;
-    
+
     return [
       <td colSpan={5} key="input"><input {...params} /></td>,
       <td className={styles.wef_external_links_url_cell} colSpan={7} key="url">
         <div className={styles.wef_external_links_url_div}>{url ? <a className={styles.wef_external_links_url_a} href={url} rel="noopener noreferrer" target="_blank">{url}</a> : ''}</div>
-      </td>, 
+      </td>,
     ];
   }
 

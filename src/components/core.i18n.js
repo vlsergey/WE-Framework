@@ -72,6 +72,7 @@ const en = {
   labelLabel: 'Label',
   labelDescription: 'Description',
   labelAliases: 'Aliases',
+  placeholderAliases: 'Add “also known as”',
 
   rankDeprecatedValue: 'deprecated',
   rankDeprecatedTitle: 'used for a statement that contains information that may not be considered reliable or that is known to include errors. (For example, a statement that documents a wrong population figure that was published in some historic document. In this case the statement is not wrong – the historic document that is given as a reference really made the erroneous claim – but the statement should not be used in most cases.)',
@@ -194,6 +195,7 @@ const ru = {
   labelLabel: 'Метка',
   labelDescription: 'Описание',
   labelAliases: 'Также известен как',
+  placeholderAliases: 'Добавить «также известен как»',
 
   rankDeprecatedValue: 'нерекомендуемый',
   rankDeprecatedTitle: 'используется для утверждений, содержащих информацию, которую нельзя считать надёжной или которая содержит известные ошибки. (Например, утверждение сообщает о неверной численности населения, опубликованной в некоем историческом документе. В этом случае утверждение не является ложным — в историческом документе, указанном в качестве источника, действительно было сделано ошибочное заявление — но такое утверждение в большинстве случаев не стоит использовать.)',
@@ -235,6 +237,6 @@ const ru = {
   sourcesLabelAddUsedReferences: 'Быстрое добавление недавно использованных источников: ',
 };
 
-const translations = { en: en, ru: ru };
+const translations = { en, ru };
 const result = I18nUtils.localize( {}, translations );
 export default result;

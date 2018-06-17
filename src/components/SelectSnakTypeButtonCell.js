@@ -49,7 +49,7 @@ class SelectSnakType extends Component {
 
 SelectSnakType.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
 };
 
 SelectSnakType.defaultProps = {
@@ -93,8 +93,6 @@ export default class SelectSnakTypeButtonCell extends Component {
       <Popup
         arrow={false}
         contentStyle={{ padding: 0 }}
-        onClose={() => console.log( ...arguments )}
-        onOpen={() => console.log( ...arguments )}
         open={this.state.open}
         position="bottom right"
         trigger={
@@ -105,12 +103,10 @@ export default class SelectSnakTypeButtonCell extends Component {
             label={i18n.buttonSelectSnakType}
             onClick={ this.handleClick }
             ref={this.ref}
-            text={false}
-          />
+            text={false} />
         }>
         <SelectSnakType
           onChange={this.handleChange}
-          onClick={() => this.setState( { open: false } )}
           value={this.props.value} />
       </Popup>
     </ButtonCell>;
@@ -121,7 +117,7 @@ export default class SelectSnakTypeButtonCell extends Component {
 SelectSnakTypeButtonCell.propTypes = {
   disabled: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
 };
 
 SelectSnakTypeButtonCell.defaultProps = {

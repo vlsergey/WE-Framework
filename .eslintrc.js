@@ -35,6 +35,7 @@ module.exports = {
     "array-bracket-spacing": [1, "always"],
     "arrow-spacing": 1,
 
+    "comma-dangle": [1, "always-multiline"],
     "comma-spacing": 1,
     "computed-property-spacing": [1, "always"],
 
@@ -49,6 +50,7 @@ module.exports = {
     "no-invalid-this": 2,
     "no-multi-spaces": 1,
     "no-multiple-empty-lines": 1,
+    "no-trailing-spaces": 1,
     "no-var": 1,
 
     "object-curly-spacing": [1, "always"],
@@ -57,11 +59,22 @@ module.exports = {
 
     "quotes": [1, "single"],
 
+    /* Validate closing bracket location in JSX */
+    /* Better to place after props due to Atom/react plugin problem */
+    "react/jsx-closing-bracket-location": [1, 'after-props'],
+    /* Enforce all defaultProps have a corresponding non-required PropType */
+    "react/default-props-match-prop-types": 1,
+    /* Enforce boolean attributes notation in JSX */
+    "react/jsx-boolean-value": 1,
+    /* Enforce or disallow spaces around equal signs in JSX attributes */
+    "react/jsx-equals-spacing": [1, "newer"],
+    "react/jsx-no-bind": 1,
     "react/jsx-props-no-multi-spaces": 1,
     "react/jsx-sort-props": 1,
     "react/jsx-tag-spacing": 1,
 
     "semi": [1, "always"],
+    "object-shorthand": 1,
     "sort-imports": [1, {"ignoreCase" : true}],
     "space-before-function-paren": [1, "never"],
     "space-in-parens": [1, "always"],

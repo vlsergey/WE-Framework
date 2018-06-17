@@ -3,7 +3,7 @@ import labelDescriptionCacheContext from '../core/labelDescriptionCacheContext';
 import PropTypes from 'prop-types';
 
 export default class EntityLabel extends Component {
-  
+
   render() {
     const { entityId } = this.props;
     return <labelDescriptionCacheContext.Consumer>
@@ -17,9 +17,9 @@ export default class EntityLabel extends Component {
       } }
     </labelDescriptionCacheContext.Consumer>;
   }
-  
+
 }
 
 EntityLabel.propTypes = {
-  entityId: PropTypes.string.isRequired, 
+  entityId: PropTypes.string.isRequired,
 };

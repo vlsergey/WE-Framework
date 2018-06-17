@@ -10,7 +10,7 @@ export default class LabelDescription {
         translations[ label.language ] = {
           ...translations[ label.language ],
           label: label.value,
-        }; 
+        };
       } );
     }
 
@@ -19,7 +19,7 @@ export default class LabelDescription {
         translations[ description.language ] = {
           ...translations[ description.language ],
           description: description.value,
-        }; 
+        };
       } );
     }
 

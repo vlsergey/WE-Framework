@@ -1,0 +1,39 @@
+import React, { Component } from 'react';
+import Controller from './Controller';
+import i18n from '../core.i18n';
+import LanguageSelect from './LanguageSelect';
+import styles from '../core.css';
+
+export default class LanguageSelectContainer extends Component {
+
+  constructor() {
+    super( ...arguments );
+    this.state = {
+      language: mw.config.get( 'wgContentLanguage' ),
+    };
+
+    this.handleLanguageChange = this.handleLanguageChange.bind( this );
+  }
+
+  handleLanguageChange( langCode ) {
+    this.setState( {
+      language: langCode,
+    } );
+  }
+
+  render() {
+    const { language } = this.state;
+
+    return (
+      <fieldset className={styles.wef_fieldset + ' ' + styles.wef_labels_description_area} >
+        <legend>
+          {i18n.labelLabels}
+          {':\u00A0\u00A0\u00A0'}
+          <LanguageSelect onChange={this.handleLanguageChange} value={language} />
+        </legend>
+        <Controller language={language} />
+      </fieldset>
+    );
+  }
+
+}

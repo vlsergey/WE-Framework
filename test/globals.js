@@ -13,5 +13,14 @@ var jQuery = () => ({
   tabs: () => ({}),
 })
 
+jQuery.uls = {
+  data : {
+    languages :{
+      en: ["Latn",["EU","AM","AF","ME","AS","PA","WW"],"English"],
+      ru: ["Cyrl",["EU","AS","ME"],"русский"],
+    }
+  }
+};
+
 window.jQuery = jQuery;
 window.mw = mw;

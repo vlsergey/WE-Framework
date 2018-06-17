@@ -27,5 +27,5 @@ AddClaimButtonCell.propTypes = {
 };
 
 AddClaimButtonCell.defaultProps = {
-  disabled: false
+  disabled: false,
 };

@@ -14,7 +14,7 @@ export default class AbstractCacheContainer extends Component {
     this.state = {
       cache: {
         _cache: {},
-        getOrQueue: getOrQueue,
+        getOrQueue,
       },
     };
   }
@@ -74,7 +74,7 @@ export default class AbstractCacheContainer extends Component {
       cache: {
         ...this.state.cache,
         _cache: { ...this.state.cache._cache, ...cacheUpdate },
-      }
+      },
     } );
   }
 

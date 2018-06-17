@@ -1,0 +1,31 @@
+.react-tagsinput {
+}
+
+.react-tagsinput--focused {
+}
+
+.react-tagsinput-tag::before {
+  content: "\A0";
+}
+
+.react-tagsinput-tag {
+  background: white;
+  border: 1px solid lightgray;
+  display: inline-block;
+  margin-bottom: 1px;
+  margin-right: 1px;
+  padding: 1px;
+}
+
+.react-tagsinput-remove {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.react-tagsinput-tag a::before {
+  content: "\A0\D7\A0";
+}
+
+.react-tagsinput-input {
+  margin-top: 1px;
+}

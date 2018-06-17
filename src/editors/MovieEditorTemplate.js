@@ -6,11 +6,12 @@ const editorDescription = {
       label: 'General',
       key: 'general',
       fields: [
+        { type: 'LabelsAndDescriptionArea' },
         /* instance of */
         { property: 'P31' },
         /* image */
         { property: 'P18', qualifiers: [ /* moment in time */ 'P585', /* media legend */ 'P2096' ] },
-      ]
+      ],
     },
     {
       labelEntityId: 'Q36524',
@@ -24,7 +25,7 @@ const editorDescription = {
         { property: 'P4529', flag: 'cn' },
         { property: 'P2529', flag: 'cz' },
         { property: 'P1265', flag: 'fr' },
-      ]
+      ],
     },
   ],
 };

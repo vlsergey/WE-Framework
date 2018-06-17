@@ -34,8 +34,7 @@ class ClaimEditors extends PureComponent {
         key={newClaim.id}
         label={label}
         onClaimChange={ onChangeClaim }
-        propertyDescription={propertyDescription}
-      /> ];
+        propertyDescription={propertyDescription} /> ];
     } else {
       children = claims.map( ( claim, i ) => <ClaimEditorTableRow
         claim={claim}
@@ -43,8 +42,7 @@ class ClaimEditors extends PureComponent {
         key={claim.id}
         label={label}
         onClaimChange={ onChangeClaim }
-        propertyDescription={propertyDescription}
-      /> );
+        propertyDescription={propertyDescription} /> );
     }
 
     return <tbody className={styles.wef_property_editor_tbody + ' ' + styles[ 'wef_property_editor_' + propertyDescription.id ]}>{children}</tbody>;

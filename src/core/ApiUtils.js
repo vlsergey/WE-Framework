@@ -35,7 +35,7 @@ export function getEntityIdDeferred() {
     new mw.Api().get( {
       action: 'query',
       prop: 'pageprops',
-      pageids: WG_ARTICLE_ID
+      pageids: WG_ARTICLE_ID,
     } ).then( ( data ) => {
       try {
         let resolved = false;
@@ -88,7 +88,7 @@ export function purge() {
 export function purgeAsync() {
   return new mw.Api().post( {
     action: 'purge',
-    titles: WG_PAGE_NAME
+    titles: WG_PAGE_NAME,
   } );
 }
 

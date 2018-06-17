@@ -10,7 +10,7 @@ mw.loader.using( [ //
   'jquery.ui.tabs', //
   'jquery.ui.tooltip', //
   'jquery.uls.data', //
-  'mediawiki.ForeignApi'
+  'mediawiki.ForeignApi',
 ], function() {
 
   settings.registerEditor( MovieEditorTemplate );

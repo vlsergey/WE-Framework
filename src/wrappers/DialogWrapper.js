@@ -3,8 +3,13 @@ import PropTypes from 'prop-types';
 
 export default class DialogWrapper extends Component {
 
+  constructor() {
+    super( ...arguments );
+    this.ref = React.createRef();
+  }
+
   componentDidMount() {
-    jQuery( this.component ).dialog( {
+    jQuery( this.ref.current ).dialog( {
       autoOpen: true,
       autoResize: true,
       close: ( event, ui ) => { if ( this.props.onClose ) return this.props.onClose( event, ui ); },
@@ -17,7 +22,7 @@ export default class DialogWrapper extends Component {
   }
 
   render() {
-    return <div ref={ ( component ) => this.component = component } title={ this.props.title }>
+    return <div ref={ this.ref } title={ this.props.title }>
       {this.props.children}
     </div>;
   }

@@ -11,7 +11,7 @@ export default class EditorTabsBuilder extends PureComponent {
 
     return <TabsWrapper tabs={ tabs.map( ( tabDescription ) => ( {
       key: tabDescription.key,
-      label: tabDescription.labelEntityId 
+      label: tabDescription.labelEntityId
         ? <EntityLabel entityId={tabDescription.labelEntityId} />
         : tabDescription.label,
       content: <EditorPage fields={tabDescription.fields} />,

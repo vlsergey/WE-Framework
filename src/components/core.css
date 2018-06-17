@@ -54,20 +54,21 @@
 }
 
 /* Labels editor */
-.wef-labels-editor {
+.wef_labels_description_area {
 	padding: 0 1em !important;
 }
 
-.wef-labels-editor legend select {
+.wef_labels_description_area legend select {
 	vertical-align: middle;
 }
 
-.wef-labels-editor-th {
+.wef_labels_description_area th {
 	text-align: left;
+	vertical-align: middle;
+	white-space: nowrap;
 }
 
-.wef-labels-editor-label-td, .wef-labels-editor-label-input,
-	.wef-labels-editor-description-input {
+.wef_labels_description_area td, .wef_labels_description_area input {
 	width: 100%;
 }
 

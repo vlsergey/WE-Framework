@@ -7,11 +7,12 @@ export default class TabsWrapper extends Component {
 
   constructor() {
     super( ...arguments );
+    this.ref = React.createRef();
     this.renderCounter = counter++;
   }
 
   componentDidMount() {
-    jQuery( this.component ).tabs();
+    jQuery( this.ref.current ).tabs();
   }
 
   shouldComponentUpdate() {
@@ -22,7 +23,7 @@ export default class TabsWrapper extends Component {
     const { tabs } = this.props;
 
     const prefix = 'tab-' + this.renderCounter + '-';
-    return <div ref={ ( component ) => this.component = component }>
+    return <div ref={ this.ref }>
       <ul>
         {tabs.map( ( tab, index ) => <li key={prefix + index}><a href={'#' + prefix + index}>{tab.label}</a></li> ) }
       </ul>
@@ -33,7 +34,7 @@ export default class TabsWrapper extends Component {
   }
 
   componentWillUnmount() {
-    jQuery( this.component ).tabs( 'destroy' );
+    jQuery( this.ref.current ).tabs( 'destroy' );
   }
 
 }

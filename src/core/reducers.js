@@ -6,13 +6,38 @@ export default function buildReducers( originalEntity ) {
   expect( originalEntity ).toBeAn( 'object' );
 
   const initialState = {
-    originalEntity: originalEntity,
+    originalEntity,
     entity: originalEntity,
   };
 
   return ( state = initialState, action ) => {
 
     switch ( action.type ) {
+
+    case 'LABELS_CHANGE':
+    case 'DESCRIPTION_CHANGE':
+    case 'ALIASES_CHANGE':
+    {
+      const { language, newValue } = action;
+      expect ( language ).toBeA( 'string' );
+
+      const elementToChange = {
+        'LABELS_CHANGE': 'labels',
+        'DESCRIPTION_CHANGE': 'descriptions',
+        'ALIASES_CHANGE': 'aliases',
+      }[ action.type ];
+
+      return {
+        ...state,
+        entity: {
+          ...state.entity,
+          [ elementToChange ]: {
+            ...state.entity.labels,
+            [ language ]: newValue,
+          },
+        },
+      };
+    }
 
     case 'CLAIM_ADD': {
       const { propertyDescription } = action;
@@ -30,8 +55,8 @@ export default function buildReducers( originalEntity ) {
             claims: {
               ...state.entity.claims,
               [ propertyId ]: [ ...existingClaims, newClaim ],
-            }
-          }
+            },
+          },
         };
       } else {
         return {
@@ -41,8 +66,8 @@ export default function buildReducers( originalEntity ) {
             claims: {
               ...state.entity.claims,
               [ propertyId ]: [ newClaim ],
-            }
-          }
+            },
+          },
         };
       }
     }
@@ -67,8 +92,8 @@ export default function buildReducers( originalEntity ) {
           claims: {
             ...state.entity.claims,
             [ propertyId ]: claimsToSave,
-          }
-        }
+          },
+        },
       };
     }
 

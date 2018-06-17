@@ -45,7 +45,7 @@ export function onEditorLinkClick( editorDescription, entityId ) {
   ApiUtils.getWikidataApi().get( {
     action: 'wbgetentities',
     ids: entityId,
-    format: 'json'
+    format: 'json',
   } ).then( ( result ) => {
     if ( typeof result === 'undefined'
       || typeof result.entities === 'undefined'
