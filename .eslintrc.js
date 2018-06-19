@@ -54,9 +54,12 @@ module.exports = {
     "no-var": 1,
 
     "object-curly-spacing": [1, "always"],
+    "object-shorthand": 1,
 
     "prefer-const": 1,
 
+    /* require quotes around object literal property names */
+    "quote-props": [1, "consistent-as-needed"],
     "quotes": [1, "single"],
 
     /* Validate closing bracket location in JSX */
@@ -74,7 +77,6 @@ module.exports = {
     "react/jsx-tag-spacing": 1,
 
     "semi": [1, "always"],
-    "object-shorthand": 1,
     "sort-imports": [1, {"ignoreCase" : true}],
     "space-before-function-paren": [1, "never"],
     "space-in-parens": [1, "always"],

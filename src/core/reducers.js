@@ -22,9 +22,9 @@ export default function buildReducers( originalEntity ) {
       expect ( language ).toBeA( 'string' );
 
       const elementToChange = {
-        'LABELS_CHANGE': 'labels',
-        'DESCRIPTION_CHANGE': 'descriptions',
-        'ALIASES_CHANGE': 'aliases',
+        LABELS_CHANGE: 'labels',
+        DESCRIPTION_CHANGE: 'descriptions',
+        ALIASES_CHANGE: 'aliases',
       }[ action.type ];
 
       return {
