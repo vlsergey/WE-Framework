@@ -5,7 +5,7 @@ import HttpsProxyAgent from 'https-proxy-agent';
 //const fetch = require( 'fetch-cookie/node-fetch' )( require( 'node-fetch' ) );
 const fetchOriginal = require( 'node-fetch' ) ;
 
-const cookieStorage = { 'fake': 'fake' };
+const cookieStorage = { fake: 'fake' };
 
 const fetch = ( url, options ) => {
   const formatCookies = () => Object.keys( cookieStorage )
@@ -18,7 +18,7 @@ const fetch = ( url, options ) => {
     ...options,
     headers: {
       ...options.headers,
-      'Cookie': cookieHeader,
+      Cookie: cookieHeader,
     },
   };
 
@@ -81,11 +81,11 @@ const loginPromise = loginTokenPromise.then( logintoken => {
   return fetch( 'https://ru.wikipedia.org/w/api.php', {
     ...defaultFetchOptions,
     body: toUrlencoded( {
-      'action': 'login',
+      action: 'login',
       lgname,
       lgpassword,
-      'lgtoken': logintoken,
-      'format': 'json',
+      lgtoken: logintoken,
+      format: 'json',
     } ),
   } ).then( res => res.json() )
     .then( json => { const login = json.login;
@@ -114,14 +114,14 @@ const editPromise = csrfTokenPromise.then( csrftoken => {
   return fetch( 'https://ru.wikipedia.org/w/api.php', {
     ...defaultFetchOptions,
     body: toUrlencoded( {
-      'action': 'edit',
-      'title': articleName,
-      'text': content,
-      'summary': 'Automatically upload by deploy script',
-      'minor': '1',
-      'bot': '1',
-      'token': csrftoken,
-      'format': 'json',
+      action: 'edit',
+      title: articleName,
+      text: content,
+      summary: 'Automatically upload by deploy script',
+      minor: '1',
+      bot: '1',
+      token: csrftoken,
+      format: 'json',
     } ),
   } ).then( res => res.json() )
     .then( json => console.log( json ) );

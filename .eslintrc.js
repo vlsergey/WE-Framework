@@ -25,6 +25,10 @@ module.exports = {
     "$": true,
     "jQuery": true,
     "mw": true,
+    
+    // for test:
+    "describe": true,
+    "it": true,
   },
   "plugins": [ "promise" ],
 

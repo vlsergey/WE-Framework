@@ -6,6 +6,14 @@ const UL_TABS_CONTENT_STYLE = { margin: 0, padding: 0 };
 
 export default class TabsWrapper extends Component {
 
+  static propTypes = {
+    tabs: PropTypes.arrayOf( PropTypes.shape( {
+      key: PropTypes.string.isRequired,
+      label: PropTypes.oneOfType( [ PropTypes.node, PropTypes.string ] ),
+      content: PropTypes.node,
+    } ) ),
+  };
+
   constructor() {
     super( ...arguments );
     this.ref = React.createRef();
@@ -14,6 +22,10 @@ export default class TabsWrapper extends Component {
 
   componentDidMount() {
     jQuery( this.ref.current ).tabs();
+  }
+
+  componentWillUnmount() {
+    jQuery( this.ref.current ).tabs( 'destroy' );
   }
 
   shouldComponentUpdate() {
@@ -44,16 +56,4 @@ export default class TabsWrapper extends Component {
     </div>;
   }
 
-  componentWillUnmount() {
-    jQuery( this.ref.current ).tabs( 'destroy' );
-  }
-
 }
-
-TabsWrapper.propTypes = {
-  tabs: PropTypes.arrayOf( PropTypes.shape( {
-    key: PropTypes.string.isRequired,
-    label: PropTypes.oneOfType( [ PropTypes.node, PropTypes.string ] ),
-    content: PropTypes.node,
-  } ) ),
-};

@@ -12,8 +12,6 @@ export function newStatementClaim( propertyDescription ) {
   expect( propertyDescription ).toBeA( PropertyDescription );
 
   return {
-    dirty: false,
-    [ 'new' ]: true,
     id: 'new#' + claimIdCounters++,
     mainsnak: {
       ...emptySnak(),

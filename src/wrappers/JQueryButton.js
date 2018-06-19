@@ -3,6 +3,15 @@ import PropTypes from 'prop-types';
 
 export default class JQueryButton extends Component {
 
+  static propTypes = {
+    className: PropTypes.string,
+    onClick: PropTypes.func.isRequired,
+    disabled: PropTypes.bool,
+    icon: PropTypes.string,
+    label: PropTypes.string,
+    text: PropTypes.bool,
+  };
+
   constructor() {
     super( ...arguments );
     this.ref = React.createRef();
@@ -26,22 +35,13 @@ export default class JQueryButton extends Component {
     } );
   }
 
+  componentWillUnmount() {
+    jQuery( this.ref.current ).button( 'destroy' );
+  }
+
   render() {
     const { className, onClick } = this.props;
     return <div className={className} onClick={ onClick } ref={ this.ref } />;
   }
 
-  componentWillUnmount() {
-    this.jQueryComponent.button( 'destroy' );
-  }
-
 }
-
-JQueryButton.propTypes = {
-  className: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
-  disabled: PropTypes.bool,
-  icon: PropTypes.string,
-  label: PropTypes.string,
-  text: PropTypes.bool,
-};

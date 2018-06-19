@@ -3,18 +3,33 @@ import PropTypes from 'prop-types';
 
 export default class DialogWrapper extends Component {
 
+  static propTypes = {
+    buttons: PropTypes.arrayOf( PropTypes.object ),
+    children: PropTypes.node,
+    minWidth: PropTypes.number,
+    onClose: PropTypes.func,
+    title: PropTypes.string,
+  };
+
   constructor() {
     super( ...arguments );
     this.ref = React.createRef();
   }
 
   componentDidMount() {
+    const { buttons, minWidth, onClose } = this.props;
+
     jQuery( this.ref.current ).dialog( {
       autoOpen: true,
       autoResize: true,
-      close: ( event, ui ) => { if ( this.props.onClose ) return this.props.onClose( event, ui ); },
-      minWidth: this.props.minWidth,
+      buttons,
+      close: onClose,
+      minWidth,
     } );
+  }
+
+  componentWillUnmount() {
+    jQuery( this.ref.current ).dialog( 'destroy' );
   }
 
   shouldComponentUpdate() {
@@ -22,20 +37,12 @@ export default class DialogWrapper extends Component {
   }
 
   render() {
-    return <div ref={ this.ref } title={ this.props.title }>
-      {this.props.children}
-    </div>;
-  }
+    const { children, title } = this.props;
 
-  componentWillUnmount() {
-    jQuery( this.component ).dialog( 'destroy' );
+    return <div ref={ this.ref } title={ title }>
+      {children}
+    </div>;
   }
 
 }
 
-DialogWrapper.propTypes = {
-  children: PropTypes.node,
-  minWidth: PropTypes.number,
-  onClose: PropTypes.func,
-  title: PropTypes.string,
-};

@@ -7,6 +7,7 @@ module.exports = function (config) {
     frameworks: [ 'mocha' ], 
 
     plugins: [
+      'karma-chrome-launcher',
       'karma-jsdom-launcher',
       'karma-mocha',
       'karma-mocha-reporter',
@@ -24,7 +25,9 @@ module.exports = function (config) {
       'test/**/*.js': ['webpack', 'sourcemap'], 
     },
 
-    reporters: [ 'mocha', 'progress'],
+    reporters: [ 
+      'mocha', 
+    ],
 
     mochaReporter: {
       output: 'autowatch'
@@ -44,6 +47,16 @@ module.exports = function (config) {
             test: /\.js$/,
             exclude: /node_modules/,
             loader: "babel-loader",
+          },
+          {
+            // enforce: "pre",
+            test: /\.js$/,
+            include: /test/,
+            exclude: /node_modules/,
+            loader: "eslint-loader",
+            options: {
+              fix: true,
+            }
           },
          ]
       },

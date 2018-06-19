@@ -27,6 +27,13 @@ const en = {
 
   confirmDeleteClaim: 'Remove the value of property «{label}»?',
 
+  dialogButtonUpdateLabelsText: 'Update labels',
+  dialogButtonUpdateLabelsLabel: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
+  dialogButtonSaveText: 'Save',
+  dialogButtonSaveLabel: 'Close the dialog and save all changes to Wikidata',
+  dialogButtonCancelText: 'Cancel',
+  dialogButtonCancelLabel: 'Close the dialog and discard all changes (do not save)',
+
   dialogAnalyzeChangesTitle: 'Analyze changes...',
   dialogSaveChangesTitle: 'Saving changes to Wikidata...',
 
@@ -123,6 +130,15 @@ const en = {
   sourcesLabelAddUsedReferences: 'Quick add recently used sources: ',
 };
 
+const fr = {
+  dialogButtonUpdateLabelsText: 'Mettre à jour les libellés',
+  dialogButtonUpdateLabelsLabel: 'Recharger les labels et descriptions des propriétés, qualificatifs et objets',
+  dialogButtonSaveText: 'Enregistrer',
+  dialogButtonSaveLabel: 'Fermer la fenêtre en enregistrant les modifications sur Wikidata',
+  dialogButtonCancelText: 'Annuler',
+  dialogButtonCancelLabel: 'Fermer la fenêtre sans enregistrer',
+};
+
 const ru = {
 
   actionAnalyzeChanges: 'Сбор и анализ изменений в элементе',
@@ -149,6 +165,13 @@ const ru = {
   checkboxShowJulianTitle: 'при отображении даты включать режим отображения по Юлианскому календарю. Данная опция не влияет на формат ввода или хранения.',
 
   confirmDeleteClaim: 'Удалить значение свойства «{label}»?',
+
+  dialogButtonUpdateLabelsText: 'Обновить названия',
+  dialogButtonUpdateLabelsLabel: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
+  dialogButtonSaveText: 'Сохранить',
+  dialogButtonSaveLabel: 'Закрыть окно и сохранить все изменения в Викиданных',
+  dialogButtonCancelText: 'Отмена',
+  dialogButtonCancelLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
 
   dialogAnalyzeChangesTitle: 'Анализ изменений...',
   dialogSaveChangesTitle: 'Сохранение изменений на Викиданных',
@@ -237,6 +260,6 @@ const ru = {
   sourcesLabelAddUsedReferences: 'Быстрое добавление недавно использованных источников: ',
 };
 
-const translations = { en, ru };
+const translations = { en, fr, ru };
 const result = I18nUtils.localize( {}, translations );
 export default result;

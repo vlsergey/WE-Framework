@@ -1,21 +1,14 @@
 import * as ApiUtils from './ApiUtils';
-// import { applyMiddleware, createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
 import buildReducers from './reducers';
-import { createStore } from 'redux';
 import EditorApp from '../components/EditorApp';
 import expect from 'expect';
 import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import thunk from 'redux-thunk';
 
-// const actionLogger = store => next => action => {
-//   console.log( 'dispatching', action );
-//   const result = next( action );
-//   console.log( 'next state', store.getState() );
-//   return result;
-// };
-
-function onClose( appDiv ) {
+export function destroyEditor( appDiv ) {
   ReactDOM.unmountComponentAtNode( appDiv );
   document.body.removeChild( appDiv );
 }
@@ -29,12 +22,14 @@ export function openEditor( editorDescription, entity ) {
   document.body.appendChild( appDiv );
 
   const reducers = buildReducers( entity );
-  // const store = createStore( reducers, applyMiddleware( actionLogger ) );
-  const store = createStore( reducers );
+  const store = createStore( reducers, applyMiddleware( thunk ) );
 
+  /* eslint react/jsx-no-bind: 0 */
   ReactDOM.render( <Provider store={store}>
-    <EditorApp description={editorDescription} entity={entity} onClose={ () => onClose( appDiv ) } />
+    <EditorApp description={editorDescription} entity={entity} onExit={ () => destroyEditor( appDiv ) } />
   </Provider>, appDiv );
+
+  return appDiv;
 }
 
 export function onEditorLinkClick( editorDescription, entityId ) {

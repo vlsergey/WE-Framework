@@ -12,7 +12,29 @@ export default class StringDataValueEditor extends Component {
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   };
 
+  constructor() {
+    super( ...arguments );
+
+    this.handleChange = this.handleChange.bind( this );
+  }
+
+  handleChange( event ) {
+    const { datavalue, onDataValueChange, propertyDescription } = this.props;
+
+    const newValue = event.target.value;
+    if ( !typeof newValue !== 'string' && !newValue.length != !0 ) {
+      onDataValueChange( {
+        ...datavalue,
+        type: propertyDescription.datatype,
+        value: event.target.value,
+      } );
+    } else {
+      onDataValueChange( null );
+    }
+  }
+
   render() {
+    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*" }] */
     const { onDataValueChange, datavalue, propertyDescription } = this.props;
 
     const params = {
@@ -25,12 +47,7 @@ export default class StringDataValueEditor extends Component {
     }
 
     params.value = datavalue ? datavalue.value : '';
-    params.onChange = ( event ) => {
-      onDataValueChange( {
-        type: datavalue ? datavalue.type : 'string',
-        value: event.target.value,
-      } );
-    };
+    params.onChange = this.handleChange;
 
     return <td colSpan={12}><input {...params} /></td>;
   }

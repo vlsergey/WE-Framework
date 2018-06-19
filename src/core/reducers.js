@@ -32,7 +32,7 @@ export default function buildReducers( originalEntity ) {
         entity: {
           ...state.entity,
           [ elementToChange ]: {
-            ...state.entity.labels,
+            ...state.entity[ elementToChange ],
             [ language ]: newValue,
           },
         },
@@ -76,14 +76,10 @@ export default function buildReducers( originalEntity ) {
       const { claim } = action;
       const propertyId = claim.mainsnak.property;
 
-      let claimToSave = claim;
-      if ( !claim.dirty )
-        claimToSave = { ...claimToSave, dirty: true };
-
       const existingClaims = state.entity.claims[ propertyId ];
       const claimsToSave = existingClaims
-        ? existingClaims.map( original => original.id === claim.id ? claimToSave : original )
-        : [ claimToSave ];
+        ? existingClaims.map( original => original.id === claim.id ? claim : original )
+        : [ claim ];
 
       return {
         ...state,
