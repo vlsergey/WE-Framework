@@ -4,59 +4,21 @@ import i18n from './core.i18n';
 import JQueryButton from '../wrappers/JQueryButton';
 import Popup from 'reactjs-popup';
 import PropTypes from 'prop-types';
+import SnakTypeSelect from './SnakTypeSelect';
 import styles from './core.css';
 
-class SelectSnakType extends Component {
+export default class SnakTypeSelectButtonCell extends Component {
 
-  constructor() {
-    super( ...arguments );
-    this.ref = React.createRef();
-    this.handleChange = this.handleChange.bind( this );
-  }
+  static propTypes = {
+    disabled: PropTypes.bool,
+    onChange: PropTypes.func.isRequired,
+    value: PropTypes.string,
+  };
 
-  componentDidMount() {
-    this.ref.current.focus();
-  }
-
-  handleChange( event ) {
-    this.props.onChange( this.ref.current.value );
-    event.stopPropagation();
-  }
-
-  render() {
-    /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
-    const { onChange, value, ...other } = this.props;
-
-    return <select
-      className={ styles[ 'wef-snaktypeselector-menu' ]}
-      onChange={this.handleChange}
-      ref={this.ref}
-      size={3}
-      value={value}
-      {...other}>
-      <option
-        title={i18n.snakTypeValueTitle}
-        value='value'>{i18n.snakTypeValue}</option>
-      <option
-        title={i18n.snakTypeNoValueTitle}
-        value='novalue'>{i18n.snakTypeNoValue}</option>
-      <option
-        title={i18n.snakTypeSomeValueTitle}
-        value='somevalue'>{i18n.snakTypeSomeValue}</option>
-    </select>;
-  }
-}
-
-SelectSnakType.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string,
-};
-
-SelectSnakType.defaultProps = {
-  value: 'value',
-};
-
-export default class SelectSnakTypeButtonCell extends Component {
+  static defaultProps = {
+    disabled: false,
+    value: 'value',
+  };
 
   constructor() {
     super( ...arguments );
@@ -105,7 +67,7 @@ export default class SelectSnakTypeButtonCell extends Component {
             ref={this.ref}
             text={false} />
         }>
-        <SelectSnakType
+        <SnakTypeSelect
           onChange={this.handleChange}
           value={this.props.value} />
       </Popup>
@@ -113,14 +75,3 @@ export default class SelectSnakTypeButtonCell extends Component {
   }
 
 }
-
-SelectSnakTypeButtonCell.propTypes = {
-  disabled: PropTypes.bool,
-  onChange: PropTypes.func.isRequired,
-  value: PropTypes.string,
-};
-
-SelectSnakTypeButtonCell.defaultProps = {
-  disabled: false,
-  value: 'value',
-};
