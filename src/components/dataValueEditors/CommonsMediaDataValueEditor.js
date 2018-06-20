@@ -1,9 +1,9 @@
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
 import Autosuggest from 'react-autosuggest';
 import dataTypeStyles from './CommonsMedia.css';
-import MediawikiPreview from '../MediawikiPreview';
+import MediawikiPreview from 'components/MediawikiPreview';
 import React from 'react';
-import styles from '../core.css';
+import styles from 'components/core.css';
 
 export default class CommonsMediaDataValueEditor extends AbstractStringBasedDataValueEditor {
 

@@ -1,9 +1,9 @@
-import * as Shapes from '../model/Shapes';
+import * as Shapes from 'model/Shapes';
 import React, { PureComponent } from 'react';
 import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
 import expect from 'expect';
 import ExternalIdDataValueEditor from './dataValueEditors/ExternalIdDataValueEditor';
-import PropertyDescription from '../core/PropertyDescription';
+import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 

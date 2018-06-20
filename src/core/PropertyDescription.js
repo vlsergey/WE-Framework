@@ -1,4 +1,4 @@
-import * as I18nUtils from '../utils/I18nUtils';
+import * as I18nUtils from 'utils/I18nUtils';
 import expect from 'expect';
 
 function findSingleStatementByEntityIdValue( entity, property, entityId ) {

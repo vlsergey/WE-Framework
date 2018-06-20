@@ -1,6 +1,6 @@
-import * as Shapes from '../../model/Shapes';
+import * as Shapes from 'model/Shapes';
 import { Component } from 'react';
-import PropertyDescription from '../../core/PropertyDescription';
+import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 
 export default class AbstractStringBasedDataValueEditor extends Component {

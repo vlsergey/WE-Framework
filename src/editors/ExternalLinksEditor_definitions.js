@@ -1,7 +1,7 @@
-import * as WEF_Utils from '../core/utils.js';
+import * as WEF_Utils from 'core/utils.js';
 import createDictinaryArticleInputClass from './DictionaryArticleInputClass';
 import i18n from './ExternalLinksEditor_i18n';
-import WEF_Definition from '../core/FieldDefinition';
+import WEF_Definition from 'core/FieldDefinition';
 
 export default function createDefinitions( externalLinksEdit, entityId ) {
 

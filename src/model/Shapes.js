@@ -1,5 +1,5 @@
 import expect from 'expect';
-import PropertyDescription from '../core/PropertyDescription';
+import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 
 export const Claim = {

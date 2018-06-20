@@ -1,7 +1,7 @@
 import * as ApiUtils from './ApiUtils';
 import { applyMiddleware, createStore } from 'redux';
 import buildReducers from './reducers';
-import EditorApp from '../components/EditorApp';
+import EditorApp from 'components/EditorApp';
 import expect from 'expect';
 import { Provider } from 'react-redux';
 import React from 'react';

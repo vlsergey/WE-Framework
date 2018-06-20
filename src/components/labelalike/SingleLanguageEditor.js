@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import i18n from '../core.i18n';
+import i18n from 'components/core.i18n';
 import labelalikeStyles from './labelalike.css';
 import PropTypes from 'prop-types';
-import styles from '../core.css';
+import styles from 'components/core.css';
 import TagsInput from 'react-tagsinput';
 
 const INPUT_PROPS = {

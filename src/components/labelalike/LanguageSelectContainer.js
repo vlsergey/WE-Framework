@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Controller from './Controller';
-import i18n from '../core.i18n';
+import i18n from 'components/core.i18n';
 import LanguageSelect from './LanguageSelect';
-import styles from '../core.css';
+import styles from 'components/core.css';
 
 export default class LanguageSelectContainer extends Component {
 

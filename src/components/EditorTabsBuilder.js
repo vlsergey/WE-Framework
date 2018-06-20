@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import EditorPage from './EditorPage';
 import EntityLabel from './EntityLabel';
 import PropTypes from 'prop-types';
-import TabsWrapper from '../wrappers/TabsWrapper';
+import TabsWrapper from 'wrappers/TabsWrapper';
 
 export default class EditorTabsBuilder extends PureComponent {
 

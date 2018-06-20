@@ -1,6 +1,6 @@
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
 import React from 'react';
-import styles from '../core.css';
+import styles from 'components/core.css';
 
 export default class StringDataValueEditor extends AbstractStringBasedDataValueEditor {
 

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import DialogWrapper from '../wrappers/DialogWrapper';
+import DialogWrapper from 'wrappers/DialogWrapper';
 import EditorTabsBuilder from './EditorTabsBuilder';
 import i18n from './core.i18n';
-import LabelDescriptionCacheContainer from '../core/LabelDescriptionCacheContainer';
-import PropertiesCacheContainer from '../core/PropertiesCacheContainer';
+import LabelDescriptionCacheContainer from 'core/LabelDescriptionCacheContainer';
+import PropertiesCacheContainer from 'core/PropertiesCacheContainer';
 import PropTypes from 'prop-types';
-import save from '../core/save';
+import save from 'core/save';
 
 class EditorApp extends Component {
 

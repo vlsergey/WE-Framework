@@ -1,7 +1,7 @@
-import * as Shapes from '../model/Shapes';
+import * as Shapes from 'model/Shapes';
 import React, { Component } from 'react';
 import i18n from './core.i18n';
-import PropertyDescription from '../core/PropertyDescription';
+import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import SelectSnakTypeButtonCell from './SelectSnakTypeButtonCell';
 import SnakValueEditorFactory from './SnakValueEditorFactory';

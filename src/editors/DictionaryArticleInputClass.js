@@ -1,7 +1,7 @@
-import * as ApiUtils from '../core/ApiUtils.js';
-import * as WEF_Utils from '../core/utils.js';
-import coreStyles from '../core/core.css';
-import wef_LabelsCache from '../core/labelsCache';
+import * as ApiUtils from 'core/ApiUtils.js';
+import * as WEF_Utils from 'core/utils.js';
+import coreStyles from 'core/core.css';
+import wef_LabelsCache from 'core/labelsCache';
 
 const wgDBname = mw.config.get( 'wgDBname' );
 const wgServer = mw.config.get( 'wgServer' );

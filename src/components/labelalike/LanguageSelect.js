@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { LANGUAGE_TITLES } from '../../utils/I18nUtils';
-import { listLabelalikeLanguages } from '../../core/selectors.js';
+import { LANGUAGE_TITLES } from 'utils/I18nUtils';
+import { listLabelalikeLanguages } from 'core/selectors.js';
 import PropTypes from 'prop-types';
 
 class LanguageSelect extends Component {

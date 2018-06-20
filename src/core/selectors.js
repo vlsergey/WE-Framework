@@ -1,5 +1,5 @@
 import { createSelector, defaultMemoize } from 'reselect';
-import { DEFAULT_LANGUAGES } from '../utils/I18nUtils';
+import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 
 const EMPTY_ARRAY = [];
 const EMPTY_OBJECT = {};

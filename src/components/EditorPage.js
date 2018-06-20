@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import ClaimEditors from './ClaimEditors';
 import LanguageSelectContainer from './labelalike/LanguageSelectContainer';
-import propertiesCacheContext from '../core/propertiesCacheContext';
+import propertiesCacheContext from 'core/propertiesCacheContext';
 import PropTypes from 'prop-types';
 import styles from './core.css';
 

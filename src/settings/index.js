@@ -1,4 +1,4 @@
-import DialogWrapper from '../wrappers/DialogWrapper';
+import DialogWrapper from 'wrappers/DialogWrapper';
 import expect from 'expect';
 import i18n from './i18n';
 import React from 'react';

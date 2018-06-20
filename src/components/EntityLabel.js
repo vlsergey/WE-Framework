@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import labelDescriptionCacheContext from '../core/labelDescriptionCacheContext';
+import labelDescriptionCacheContext from 'core/labelDescriptionCacheContext';
 import PropTypes from 'prop-types';
 
 export default class EntityLabel extends Component {

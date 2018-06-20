@@ -1,5 +1,5 @@
-import * as utils from '../core/utils.js';
-import anyEditor_i18n_translations from '../core/AnyEditor_i18n_translations';
+import * as utils from 'core/utils.js';
+import anyEditor_i18n_translations from 'core/AnyEditor_i18n_translations';
 
 const en = {
 

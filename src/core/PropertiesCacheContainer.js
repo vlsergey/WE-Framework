@@ -1,6 +1,6 @@
 import * as ApiUtils from './ApiUtils';
 import AbstractCacheContainer from './AbstractCacheContainer';
-import { API_PARAMETER_LANGUAGES } from '../utils/I18nUtils';
+import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
 import propertiesCacheContext from './propertiesCacheContext';
 import PropertyDescription from './PropertyDescription';
 import PropTypes from 'prop-types';

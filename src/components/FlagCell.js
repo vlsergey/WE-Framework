@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import flags from '../utils/flags';
+import flags from 'utils/flags';
 import PropTypes from 'prop-types';
 import styles from './core.css';
 

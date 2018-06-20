@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import ButtonCell from './ButtonCell';
 import i18n from './core.i18n';
-import JQueryButton from '../wrappers/JQueryButton';
+import JQueryButton from 'wrappers/JQueryButton';
 import Popup from 'reactjs-popup';
 import PropTypes from 'prop-types';
 import SnakTypeSelect from './SnakTypeSelect';

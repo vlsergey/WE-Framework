@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Claim } from '../model/Shapes';
+import { Claim } from 'model/Shapes';
 import expect from 'expect';
 import FlagCell from './FlagCell';
-import PropertyDescription from '../core/PropertyDescription';
+import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import SnakEditorTableRowPart from './SnakEditorTableRowPart';
 import styles from './core.css';

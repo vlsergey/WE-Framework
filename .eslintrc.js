@@ -86,5 +86,12 @@ module.exports = {
     "space-in-parens": [1, "always"],
     "space-infix-ops": [1, {"int32Hint": false} ],
     "strict": [1, "never"],
+  },
+  settings: {
+    "import/resolver": {
+      node: {
+        moduleDirectory: ["node_modules", "src"],
+      }
+    }
   }
 }

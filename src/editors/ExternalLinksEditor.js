@@ -1,12 +1,12 @@
-import * as ApiUtils from '../core/ApiUtils';
-import * as WEF_Utils from '../core/utils';
+import * as ApiUtils from 'core/ApiUtils';
+import * as WEF_Utils from 'core/utils';
 import buildDefinitions from './ExternalLinksEditor_definitions';
-import coreStyles from '../core/core.css';
-import Editor from '../core/Editor';
+import coreStyles from 'core/core.css';
+import Editor from 'core/Editor';
 import i18n from './ExternalLinksEditor_i18n';
-import wef_analyze_and_save from '../core/analyze_and_save';
-import WEF_ClaimEditorsTable from '../core/ClaimEditorsTable';
-import wef_LabelsCache from '../core/labelsCache';
+import wef_analyze_and_save from 'core/analyze_and_save';
+import WEF_ClaimEditorsTable from 'core/ClaimEditorsTable';
+import wef_LabelsCache from 'core/labelsCache';
 
 export default class ExternalLinksEditor extends Editor {
 

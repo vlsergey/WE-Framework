@@ -1,4 +1,5 @@
-var webpack = require('webpack')
+const path = require('path');
+const webpack = require('webpack')
 
 module.exports = function (config) {
   config.set({
@@ -59,6 +60,12 @@ module.exports = function (config) {
             }
           },
          ]
+      },
+      resolve: {
+        modules: [
+          path.resolve(__dirname, "src"),
+          "node_modules"
+        ],
       },
     },
   });

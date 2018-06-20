@@ -3,7 +3,7 @@ import { aliasesFromEntityByLanguage,
   descriptionFromEntityByLanguage,
   descriptionValue,
   labelFromEntityByLanguage,
-  labelValue } from '../../core/selectors.js';
+  labelValue } from 'core/selectors.js';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';

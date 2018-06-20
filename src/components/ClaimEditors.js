@@ -1,10 +1,10 @@
-import { Claim, newStatementClaim } from '../model/Shapes';
+import { Claim, newStatementClaim } from 'model/Shapes';
 import React, { PureComponent } from 'react';
 import AddClaimButtonCell from './AddClaimButtonCell';
 import ClaimEditorTableRow from './ClaimEditorTableRow';
 import { connect } from 'react-redux';
 import expect from 'expect';
-import PropertyDescription from '../core/PropertyDescription';
+import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import styles from './core.css';
 

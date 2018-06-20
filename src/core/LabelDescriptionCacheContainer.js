@@ -1,6 +1,6 @@
 import * as ApiUtils from './ApiUtils';
 import AbstractCacheContainer from './AbstractCacheContainer';
-import { API_PARAMETER_LANGUAGES } from '../utils/I18nUtils';
+import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
 import LabelDescription from './LabelDescription';
 import labelDescriptionCacheContext from './labelDescriptionCacheContext';
 import PropTypes from 'prop-types';

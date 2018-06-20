@@ -1,5 +1,5 @@
 import expect from 'expect';
-import { newStatementClaim } from '../model/Shapes';
+import { newStatementClaim } from 'model/Shapes';
 import PropertyDescription from './PropertyDescription';
 
 export default function buildReducers( originalEntity ) {
