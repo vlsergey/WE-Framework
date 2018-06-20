@@ -1,19 +1,23 @@
-import * as Shapes from '../../model/Shapes';
-import React, { Component } from 'react';
-import PropertyDescription from '../../core/PropertyDescription';
-import PropTypes from 'prop-types';
+import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
+import React from 'react';
 import styles from '../core.css';
 
-export default class ExternalIdDataValueEditor extends Component {
+export default class ExternalIdDataValueEditor extends AbstractStringBasedDataValueEditor {
 
-  static propTypes = {
-    datavalue: PropTypes.shape( Shapes.DataValue ),
-    onDataValueChange: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
+  static propTypes = AbstractStringBasedDataValueEditor.propTypes;
+
+  constructor() {
+    super( ...arguments );
+
+    this.handleChange = this.handleChange.bind( this );
+  }
+
+  handleChange( event ) {
+    this.handleValueChange( event.target.value );
   }
 
   render() {
-    const { onDataValueChange, datavalue, propertyDescription } = this.props;
+    const { datavalue, propertyDescription } = this.props;
 
     const params = {
       type: 'text',
@@ -25,12 +29,7 @@ export default class ExternalIdDataValueEditor extends Component {
     }
 
     params.value = datavalue ? datavalue.value : '';
-    params.onChange = ( event ) => {
-      onDataValueChange( {
-        type: datavalue ? datavalue.type : 'string',
-        value: event.target.value,
-      } );
-    };
+    params.onChange = this.handleChange;
 
     const url = datavalue && datavalue.value ? propertyDescription.formatUrl( datavalue.value ) : null;
 

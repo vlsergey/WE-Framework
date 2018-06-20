@@ -1,16 +1,10 @@
-import * as Shapes from '../../model/Shapes';
-import React, { Component } from 'react';
-import PropertyDescription from '../../core/PropertyDescription';
-import PropTypes from 'prop-types';
+import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
+import React from 'react';
 import styles from '../core.css';
 
-export default class StringDataValueEditor extends Component {
+export default class StringDataValueEditor extends AbstractStringBasedDataValueEditor {
 
-  static propTypes = {
-    datavalue: PropTypes.shape( Shapes.DataValue ),
-    onDataValueChange: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-  };
+  static propTypes = AbstractStringBasedDataValueEditor.propTypes;
 
   constructor() {
     super( ...arguments );
@@ -19,18 +13,7 @@ export default class StringDataValueEditor extends Component {
   }
 
   handleChange( event ) {
-    const { datavalue, onDataValueChange, propertyDescription } = this.props;
-
-    const newValue = event.target.value;
-    if ( !typeof newValue !== 'string' && !newValue.length != !0 ) {
-      onDataValueChange( {
-        ...datavalue,
-        type: propertyDescription.datatype,
-        value: event.target.value,
-      } );
-    } else {
-      onDataValueChange( null );
-    }
+    this.handleValueChange( event.target.value );
   }
 
   render() {

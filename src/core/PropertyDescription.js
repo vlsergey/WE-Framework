@@ -67,6 +67,12 @@ class UrlFormatter {
 
 }
 
+const claimIsNotDeprecated = statement => statement.rank !== 'deprecated';
+
+const claimHasMainsnakValue = statement => statement.mainsnak
+    && statement.mainsnak.datavalue
+    && statement.mainsnak.datavalue.value;
+
 export default class PropertyDescription {
 
   constructor( propertyEntity ) {
@@ -105,15 +111,19 @@ export default class PropertyDescription {
 
     if ( propertyEntity.claims && propertyEntity.claims.P1630 ) {
       this.urlFormatters = propertyEntity.claims.P1630
-        .filter( statement => statement.rank !== 'deprecated' )
-        .filter( statement =>
-          statement.mainsnak
-            && statement.mainsnak.datavalue
-            && statement.mainsnak.datavalue.value )
+        .filter( claimIsNotDeprecated )
+        .filter( claimHasMainsnakValue )
         .map( statement => new UrlFormatter( statement ) );
     } else {
       this.urlFormatters = [];
     }
+
+    this.sourceWebsites = ( ( propertyEntity.claims || {} ).P1896 || [] )
+      .filter( claimIsNotDeprecated )
+      .filter( claimHasMainsnakValue )
+      .map( statement => {
+        const websiteUrl = statement.mainsnak.datavalue.value;
+      } );
   }
 
   formatUrl( value ) {
@@ -126,6 +136,19 @@ export default class PropertyDescription {
     const formatter = this.urlFormatters.find( formatter => formatter.isCompliant( value ) );
     if ( formatter )
       return formatter.format( value );
+  }
+
+  hasLookupUrl() {
+    I18nUtils.DEFAULT_LANGUAGES.findFirst( code => !!entity.labels[ code ] ) != null;
+
+    return !!this.websiteUrl;
+  }
+
+  getLookupUrl( entity ) {
+    const langCode = I18nUtils.DEFAULT_LANGUAGES.findFirst( code => entity.labels && entity.labels[ code ] );
+    const label = entity.labels[ langCode ].value;
+
+    return 'https://www.google.ru/search?q=site%3A' + this.websiteUrl + ' ' + label;
   }
 
 }
