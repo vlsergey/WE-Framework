@@ -121,9 +121,7 @@ export default class PropertyDescription {
     this.sourceWebsites = ( ( propertyEntity.claims || {} ).P1896 || [] )
       .filter( claimIsNotDeprecated )
       .filter( claimHasMainsnakValue )
-      .map( statement => {
-        const websiteUrl = statement.mainsnak.datavalue.value;
-      } );
+      .map( statement => statement.mainsnak.datavalue.value );
   }
 
   formatUrl( value ) {
@@ -138,17 +136,15 @@ export default class PropertyDescription {
       return formatter.format( value );
   }
 
-  hasLookupUrl() {
-    I18nUtils.DEFAULT_LANGUAGES.findFirst( code => !!entity.labels[ code ] ) != null;
-
-    return !!this.websiteUrl;
+  hasLookupUrl( entity ) {
+    return I18nUtils.DEFAULT_LANGUAGES.findFirst( code => !!entity.labels[ code ] ) != null && this.sourceWebsites.length > 0;
   }
 
   getLookupUrl( entity ) {
     const langCode = I18nUtils.DEFAULT_LANGUAGES.findFirst( code => entity.labels && entity.labels[ code ] );
     const label = entity.labels[ langCode ].value;
 
-    return 'https://www.google.ru/search?q=site%3A' + this.websiteUrl + ' ' + label;
+    return 'https://www.google.ru/search?q=site%3A' + this.sourceWebsites[ 0 ] + ' ' + label;
   }
 
 }
