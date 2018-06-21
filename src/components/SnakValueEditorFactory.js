@@ -6,6 +6,7 @@ import ExternalIdDataValueEditor from './dataValueEditors/ExternalIdDataValueEdi
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
+import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueEditor';
 
 export default class SnakValueEditorFactory extends PureComponent {
 
@@ -45,7 +46,7 @@ export default class SnakValueEditorFactory extends PureComponent {
       return <StringDataValueEditor datavalue={snak.datavalue} onDataValueChange={this.handleDataValueChange} propertyDescription={propertyDescription} />;
       // case "wikibase-item":
     default:
-      return <td colSpan={SnakValueEditorFactory.TABLE_COLUMNS}><span>Data type {dataType} is not supported yet</span></td>;
+      return <UnsupportedDataValueEditor datavalue={snak.datavalue} propertyDescription={propertyDescription} />;
     }
   }
 
