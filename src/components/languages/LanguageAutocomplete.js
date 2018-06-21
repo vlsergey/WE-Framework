@@ -34,7 +34,7 @@ export default class LanguageAutocomplete extends Component {
 
     this.handleChange = this.handleChange.bind( this );
     this.paramsF = defaultMemoize( value => ( {
-      autocomplete: false,
+      autoComplete: 'false',
       className: styles[ 'wef_languageSelect' ],
       onChange: this.handleChange,
       type: 'text',
