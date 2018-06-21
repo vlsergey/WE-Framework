@@ -79,7 +79,7 @@ class EditorApp extends Component {
 
 }
 
-const mapDispatchToProps = ( dispatch ) => ( {
+const mapDispatchToProps = dispatch => ( {
   save: () => dispatch( save() ),
 } );
 

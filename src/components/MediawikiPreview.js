@@ -39,7 +39,7 @@ export default class MediawikiPreview extends Component {
       format: 'json',
       prop: 'text',
       text: this.props.wikitext,
-    } ).done( ( result ) => {
+    } ).done( result => {
       if ( result.error ) {
         console.log( result );
         mw.notify( 'Unable to expand templates: ' + result.error.info );

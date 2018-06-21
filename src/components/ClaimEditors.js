@@ -57,7 +57,7 @@ const mapStateToProps = ( state, ownProps ) => ( {
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {
   onAddClaim: () => dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription } ),
-  onChangeClaim: ( claim ) => {
+  onChangeClaim: claim => {
     expect( claim ).toBeAn( 'object' );
     expect( claim.id ).toBeAn( 'string' );
     return dispatch( { type: 'CLAIM_UPDATE', claim } );

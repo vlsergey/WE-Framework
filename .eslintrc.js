@@ -36,7 +36,12 @@ module.exports = {
     // TODO: temporary!
     "no-useless-escape": 0,
 
+    /* Require braces in arrow function body */
+    "arrow-body-style": [1, "as-needed"],
     "array-bracket-spacing": [1, "always"],
+    /* Require parens in arrow function arguments */
+    "arrow-parens": [1, "as-needed" ],
+    /* Require space before/after arrow function’s arrow */
     "arrow-spacing": 1,
 
     "comma-dangle": [1, "always-multiline"],
@@ -50,18 +55,30 @@ module.exports = {
 
     "newline-per-chained-call": 0,
     "no-console": 0,
+    /* Disallow duplicate imports */
+    "no-duplicate-imports": 1,
     "no-extra-parens": 1,
     "no-invalid-this": 2,
     "no-multi-spaces": 1,
     "no-multiple-empty-lines": 1,
     "no-trailing-spaces": 1,
+    /* Disallow unnecessary computed property keys on objects */
+    "no-useless-computed-key": 1,
+    /* Disallow renaming import, export, and destructured assignments to the same name */
+    "no-useless-rename": 1,
+    /* require let or const instead of var */
     "no-var": 1,
 
     "object-curly-spacing": [1, "always"],
+    /* require or disallow method and property shorthand syntax for object literals */
     "object-shorthand": 1,
 
+    /* Require using arrow functions for callbacks */
+    "prefer-arrow-callback": 1,
     "prefer-const": 1,
-
+    /* Suggest using the spread operator instead of .apply() */
+    "prefer-spread": 1,
+    
     /* require quotes around object literal property names */
     "quote-props": [1, "consistent-as-needed"],
     "quotes": [1, "single"],
@@ -80,7 +97,11 @@ module.exports = {
     "react/jsx-sort-props": 1,
     "react/jsx-tag-spacing": 1,
 
+    /* Enforce spacing between rest and spread operators and their expressions */
+    "rest-spread-spacing": 1,
+    
     "semi": [1, "always"],
+    /* Import Sorting */
     "sort-imports": [1, {"ignoreCase" : true}],
     "space-before-function-paren": [1, "never"],
     "space-in-parens": [1, "always"],

@@ -140,12 +140,12 @@ export function collectEntityUpdates( originalEntity, entity ) {
   let data = {};
 
   const updatedLabels = collectlLabelalikeUpdates( originalEntity, entity, 'labels',
-    ( key ) => ( { language: key, remove: '' } ) );
+    key => ( { language: key, remove: '' } ) );
   if ( updatedLabels )
     data = { ...data, labels: updatedLabels };
 
   const updatedDescriptions = collectlLabelalikeUpdates( originalEntity, entity, 'descriptions',
-    ( key ) => ( { language: key, remove: '' } ) );
+    key => ( { language: key, remove: '' } ) );
   if ( updatedDescriptions )
     data = { ...data, descriptions: updatedDescriptions };
 
@@ -158,7 +158,7 @@ export function collectEntityUpdates( originalEntity, entity ) {
     data = { ...data, claims: updatedClaims };
 
   const updatedSitelinks = collectlLabelalikeUpdates( originalEntity, entity, 'sitelinks',
-    ( key ) => ( { site: key, remove: '' } ) );
+    key => ( { site: key, remove: '' } ) );
   if ( updatedSitelinks )
     data = { ...data, sitelinks: updatedSitelinks };
 
@@ -192,7 +192,7 @@ function save() {
 
     ApiUtils.getWikidataApi()
       .postWithEditToken( params )
-      .then( ( result ) => {
+      .then( result => {
         if ( result.error ) {
           mw.log.error( i18n.errorUpdateEntity );
           mw.log.error( result.error );

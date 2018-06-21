@@ -51,7 +51,7 @@ export default class SingleThreadBatchRequestQueue {
       mw.log( 'Successfully received ' + nextBatch.length + 'items: ' + nextBatch );
       this.state = 'WAITING';
       this.checkSchedule();
-    } ).catch( ( error ) => {
+    } ).catch( error => {
       mw.log.error( 'Unable to batch request following items: ' + nextBatch );
       mw.log.error( error );
       this.state = 'WAITING';

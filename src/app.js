@@ -12,7 +12,7 @@ mw.loader.using( [ //
   'jquery.ui.tooltip', //
   'jquery.uls.data', //
   'mediawiki.ForeignApi',
-], function() {
+], () => {
 
   settings.registerEditor( AdmEntityEditorTemplate );
   settings.registerEditor( MovieEditorTemplate );

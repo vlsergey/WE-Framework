@@ -35,7 +35,7 @@ class LanguageSelect extends Component {
   }
 }
 
-const mapStateToProps = ( state ) => ( {
+const mapStateToProps = state => ( {
   languages: listLabelalikeLanguages( state.entity ),
 } );
 

@@ -41,7 +41,7 @@ export function onEditorLinkClick( editorDescription, entityId ) {
     action: 'wbgetentities',
     ids: entityId,
     format: 'json',
-  } ).then( ( result ) => {
+  } ).then( result => {
     if ( typeof result === 'undefined'
       || typeof result.entities === 'undefined'
       || typeof result.entities[ entityId ] === 'undefined'

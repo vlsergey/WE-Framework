@@ -34,7 +34,7 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
       pslimit: '10',
       pssearch: value,
       format: 'json',
-    } ).done( ( result ) => {
+    } ).done( result => {
       if ( result.error ) {
         console.log( result );
         mw.notify( 'Unable to expand templates: ' + result.error.info );

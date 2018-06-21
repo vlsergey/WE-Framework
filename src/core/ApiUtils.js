@@ -36,11 +36,11 @@ export function getEntityIdDeferred() {
       action: 'query',
       prop: 'pageprops',
       pageids: WG_ARTICLE_ID,
-    } ).then( ( data ) => {
+    } ).then( data => {
       try {
         let resolved = false;
         if ( data.query && data.query.pages ) {
-          jQuery.each( data.query.pages, function( pageId, page ) {
+          jQuery.each( data.query.pages, ( pageId, page ) => {
             if ( page.pageid && page.pageprops && page.pageprops.wikibase_item && page.pageid == WG_ARTICLE_ID ) {
               resolve( page.pageprops.wikibase_item );
               resolved = true;
@@ -79,7 +79,7 @@ export function isWikidata() {
 }
 
 export function purge() {
-  purgeAsync().then( function() {
+  purgeAsync().then( () => {
     const url = WG_SERVER + MW_SCRIPT_PATH + '/index.php?title=' + encodeURIComponent( WG_PAGE_NAME ) + '&r=' + Math.random();
     window.location.replace( url );
   } );

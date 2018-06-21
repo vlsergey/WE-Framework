@@ -72,9 +72,9 @@ const mapStateToProps = ( state, ownProps ) => ( {
 } );
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {
-  onLabelChange: ( newValue ) => dispatch( { type: 'LABELS_CHANGE', language: ownProps.language, newValue } ),
-  onDescriptionChange: ( newValue ) => dispatch( { type: 'DESCRIPTION_CHANGE', language: ownProps.language, newValue } ),
-  onAliasesChange: ( newValue ) => dispatch( { type: 'ALIASES_CHANGE', language: ownProps.language, newValue } ),
+  onLabelChange: newValue => dispatch( { type: 'LABELS_CHANGE', language: ownProps.language, newValue } ),
+  onDescriptionChange: newValue => dispatch( { type: 'DESCRIPTION_CHANGE', language: ownProps.language, newValue } ),
+  onAliasesChange: newValue => dispatch( { type: 'ALIASES_CHANGE', language: ownProps.language, newValue } ),
 } );
 
 const ControllerConnected = connect( mapStateToProps, mapDispatchToProps )( Controller );

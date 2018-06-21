@@ -5,7 +5,7 @@ const EMPTY_ARRAY = [];
 const EMPTY_OBJECT = {};
 const EMPTY_STRING = '';
 
-const labelalikesFromEntity = ( entityElementName ) => ( entity ) => entity[ entityElementName ] || EMPTY_OBJECT;
+const labelalikesFromEntity = entityElementName => entity => entity[ entityElementName ] || EMPTY_OBJECT;
 const labelsFromEntity = labelalikesFromEntity( 'labels' );
 const descriptionsFromEntity = labelalikesFromEntity( 'descriptions' );
 const aliasesFromEntity = labelalikesFromEntity( 'aliases' );
@@ -40,13 +40,13 @@ export const labelFromEntityByLanguage = defaultMemoize( ( entity, language ) =>
   const allLanguages = labelsFromEntity( entity ) || EMPTY_OBJECT;
   return allLanguages[ language ] || EMPTY_OBJECT;
 } );
-export const labelValue = ( labelObject ) => ( labelObject || EMPTY_OBJECT ).value || EMPTY_STRING;
+export const labelValue = labelObject => ( labelObject || EMPTY_OBJECT ).value || EMPTY_STRING;
 
 export const descriptionFromEntityByLanguage = defaultMemoize( ( entity, language ) => {
   const allLanguages = descriptionsFromEntity( entity ) || EMPTY_OBJECT;
   return allLanguages[ language ] || EMPTY_OBJECT;
 } );
-export const descriptionValue = ( labelObject ) => ( labelObject || EMPTY_OBJECT ).value || EMPTY_STRING;
+export const descriptionValue = labelObject => ( labelObject || EMPTY_OBJECT ).value || EMPTY_STRING;
 
 export const aliasesFromEntityByLanguage = defaultMemoize( ( entity, language ) => {
   const allLanguages = aliasesFromEntity( entity ) || EMPTY_OBJECT;
@@ -54,5 +54,5 @@ export const aliasesFromEntityByLanguage = defaultMemoize( ( entity, language ) 
 } );
 export const aliasValues = createSelector(
   aliasObjects => aliasObjects || EMPTY_ARRAY,
-  ( aliasObjects ) => aliasObjects.map( alias => alias.value )
+  aliasObjects => aliasObjects.map( alias => alias.value )
 );

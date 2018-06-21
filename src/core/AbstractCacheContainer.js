@@ -6,7 +6,7 @@ export default class AbstractCacheContainer extends Component {
 
   constructor() {
     super( ...arguments );
-    this.queue = new SingleThreadBatchRequestQueue( ( batch ) => this.buildRequestPromice( batch ) );
+    this.queue = new SingleThreadBatchRequestQueue( batch => this.buildRequestPromice( batch ) );
 
     const getOrQueue = this.getOrQueue = this.getOrQueue.bind( this );
     this.onReceive = this.onReceive.bind( this );
@@ -47,7 +47,7 @@ export default class AbstractCacheContainer extends Component {
     const onReceive = this.onReceive;
 
     return this.buildApiRequest( entityIds )
-      .then( ( result ) => {
+      .then( result => {
         if ( typeof result.error !== 'undefined' ) {
           mw.log.warn( result.error );
           throw new Error( result.error );
