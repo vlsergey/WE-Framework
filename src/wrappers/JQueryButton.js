@@ -41,7 +41,7 @@ export default class JQueryButton extends Component {
 
   render() {
     const { className, onClick } = this.props;
-    return <div className={className} onClick={ onClick } ref={ this.ref } />;
+    return <div className={className} onClick={onClick} ref={this.ref} />;
   }
 
 }

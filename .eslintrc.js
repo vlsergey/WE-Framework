@@ -83,11 +83,13 @@ module.exports = {
     "quote-props": [1, "consistent-as-needed"],
     "quotes": [1, "single"],
 
+    /* Enforce all defaultProps have a corresponding non-required PropType */
+    "react/default-props-match-prop-types": 1,
     /* Validate closing bracket location in JSX */
     /* Better to place after props due to Atom/react plugin problem */
     "react/jsx-closing-bracket-location": [1, 'after-props'],
-    /* Enforce all defaultProps have a corresponding non-required PropType */
-    "react/default-props-match-prop-types": 1,
+    /* <...> disallow spaces inside of curly braces in JSX attributes and expressions.*/
+    "react/jsx-curly-spacing": [1, {"when": "never"}],
     /* Enforce boolean attributes notation in JSX */
     "react/jsx-boolean-value": 1,
     /* Enforce or disallow spaces around equal signs in JSX attributes */

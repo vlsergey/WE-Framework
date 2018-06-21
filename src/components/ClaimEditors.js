@@ -29,19 +29,19 @@ class ClaimEditors extends PureComponent {
     if ( !claims || claims.length === 0 ) {
       const newClaim = newStatementClaim( propertyDescription );
       children = [ <ClaimEditorTableRow
-        claim={ newClaim }
+        claim={newClaim}
         firstCell={firstFirstCell}
         key={newClaim.id}
         label={label}
-        onClaimChange={ onChangeClaim }
+        onClaimChange={onChangeClaim}
         propertyDescription={propertyDescription} /> ];
     } else {
       children = claims.map( ( claim, i ) => <ClaimEditorTableRow
         claim={claim}
-        firstCell={i == 0 ? firstFirstCell : <td /> }
+        firstCell={i == 0 ? firstFirstCell : <td />}
         key={claim.id}
         label={label}
-        onClaimChange={ onChangeClaim }
+        onClaimChange={onChangeClaim}
         propertyDescription={propertyDescription} /> );
     }
 

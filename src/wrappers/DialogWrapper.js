@@ -39,7 +39,7 @@ export default class DialogWrapper extends Component {
   render() {
     const { children, title } = this.props;
 
-    return <div ref={ this.ref } title={ title }>
+    return <div ref={this.ref} title={title}>
       {children}
     </div>;
   }

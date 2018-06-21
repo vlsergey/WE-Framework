@@ -59,11 +59,11 @@ export default class SnakTypeSelectButtonCell extends Component {
         position="bottom right"
         trigger={
           <JQueryButton
-            className={ styles.wef_select_snak_type_button }
+            className={styles.wef_select_snak_type_button}
             disabled={disabled}
             icon="ui-icon-triangle-1-e"
             label={i18n.buttonSelectSnakType}
-            onClick={ this.handleClick }
+            onClick={this.handleClick}
             ref={this.ref}
             text={false} />
         }>

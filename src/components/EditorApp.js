@@ -68,7 +68,7 @@ class EditorApp extends Component {
       },
     } );
 
-    return this.state.visible && <DialogWrapper buttons={buttons} minWidth={800} onClose={ onExit } title={description.title}>
+    return this.state.visible && <DialogWrapper buttons={buttons} minWidth={800} onClose={onExit} title={description.title}>
       <LabelDescriptionCacheContainer>
         <PropertiesCacheContainer>
           <EditorTabsBuilder tabs={description.tabs} />

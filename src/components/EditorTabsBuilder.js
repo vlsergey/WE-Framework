@@ -9,13 +9,13 @@ export default class EditorTabsBuilder extends PureComponent {
   render() {
     const { tabs } = this.props;
 
-    return <TabsWrapper tabs={ tabs.map( tabDescription => ( {
+    return <TabsWrapper tabs={tabs.map( tabDescription => ( {
       key: tabDescription.key,
       label: tabDescription.labelEntityId
         ? <EntityLabel entityId={tabDescription.labelEntityId} />
         : tabDescription.label,
       content: <EditorPage fields={tabDescription.fields} />,
-    } ) ) } />;
+    } ) )} />;
   }
 
 }

@@ -26,7 +26,7 @@ export function openEditor( editorDescription, entity ) {
 
   /* eslint react/jsx-no-bind: 0 */
   ReactDOM.render( <Provider store={store}>
-    <EditorApp description={editorDescription} entity={entity} onExit={ () => destroyEditor( appDiv ) } />
+    <EditorApp description={editorDescription} entity={entity} onExit={() => destroyEditor( appDiv )} />
   </Provider>, appDiv );
 
   return appDiv;

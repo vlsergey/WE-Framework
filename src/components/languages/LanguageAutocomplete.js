@@ -102,11 +102,11 @@ export default class LanguageAutocomplete extends Component {
     const params = this.paramsF( this.state.value );
 
     return <Autosuggest
-      getSuggestionValue={ this.getSuggestionValue }
+      getSuggestionValue={this.getSuggestionValue}
       inputProps={params}
-      onSuggestionsClearRequested={ this.handleSuggestionsClearRequested }
-      onSuggestionsFetchRequested={ this.handleSuggestionsFetchRequested }
-      renderSuggestion={ this.renderSuggestion }
+      onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+      onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+      renderSuggestion={this.renderSuggestion}
       suggestions={this.state.suggestions}
       theme={styles} />;
   }
@@ -123,7 +123,7 @@ export default class LanguageAutocomplete extends Component {
       }
     } );
 
-    return <div className={ styles.suggestionContent}>
+    return <div className={styles.suggestionContent}>
       <span className={styles.suggestionContentText + ( this.props.provided.indexOf( data ) !== -1 ? ' ' + styles.provided : '' )}>
         { spans }
       </span>

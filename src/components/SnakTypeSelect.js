@@ -34,7 +34,7 @@ export default class SnakTypeSelect extends Component {
     const { onChange, value, ...other } = this.props;
 
     return <select
-      className={ styles[ 'wef-snaktypeselector-menu' ]}
+      className={styles[ 'wef-snaktypeselector-menu' ]}
       onChange={this.handleChange}
       ref={this.ref}
       size={3}

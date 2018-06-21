@@ -71,18 +71,18 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
 
     return <td colSpan={12}>
       <Autosuggest
-        getSuggestionValue={ this.getSuggestionValue }
+        getSuggestionValue={this.getSuggestionValue}
         inputProps={params}
-        onSuggestionsClearRequested={ this.handleSuggestionsClearRequested }
-        onSuggestionsFetchRequested={ this.handleSuggestionsFetchRequested }
-        renderSuggestion={ this.renderSuggestion }
+        onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+        onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+        renderSuggestion={this.renderSuggestion}
         suggestions={this.state.suggestions}
         theme={dataTypeStyles} />
     </td>;
   }
 
   renderSuggestion( data ) {
-    return <div className={ dataTypeStyles.suggestionContent}>
+    return <div className={dataTypeStyles.suggestionContent}>
       <div className={dataTypeStyles.suggestionContentPreviewOuter}>
         <div className={dataTypeStyles.suggestionContentPreviewInner}>
           <MediawikiPreview spinnerSize={45} wikitext={'[[File:' + data + '|50x50px]]'} />

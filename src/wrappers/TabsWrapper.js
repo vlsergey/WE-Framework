@@ -36,7 +36,7 @@ export default class TabsWrapper extends Component {
     const { tabs } = this.props;
 
     const prefix = 'tab-' + this.renderCounter + '-';
-    return <div ref={ this.ref }>
+    return <div ref={this.ref}>
       <ul>
         {tabs.map( ( tab, index ) =>
           <li key={prefix + index}>
