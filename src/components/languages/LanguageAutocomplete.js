@@ -70,6 +70,7 @@ export default class LanguageAutocomplete extends Component {
 
     // iterate over codes first
     Object.keys( LANGUAGE_TITLES )
+      .filter( code => codeNotYetIncluded( code ) )
       .filter( code => code.startsWith( value ) )
       .forEach( add );
     Object.keys( LANGUAGE_TITLES )
