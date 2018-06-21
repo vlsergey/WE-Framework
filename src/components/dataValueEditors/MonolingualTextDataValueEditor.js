@@ -1,9 +1,9 @@
 import * as Shapes from 'model/Shapes';
 import React, { Component } from 'react';
-import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import LanguageAutocomplete from 'components/languages/LanguageAutocomplete';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
+import styles from './MonolingualText.css';
 
 export default class MonolingualTextDataValueEditor extends Component {
 
@@ -52,14 +52,18 @@ export default class MonolingualTextDataValueEditor extends Component {
     const language = datavalue && datavalue.value && datavalue.value.language ? datavalue.value.language : '';
     const text = datavalue && datavalue.value && datavalue.value.text ? datavalue.value.text : '';
 
-    return [
-      <td colSpan={2} key="language">
-        <LanguageAutocomplete onChange={this.handleLanguageChange} provided={[]} value={language} />
-      </td>,
-      <td colSpan={10} key="input">
-        <input onChange={this.handleTextChange} value={text} />
-      </td>,
-    ];
+    return <td className={styles.wef_monolingualtext} colSpan={12}>
+      <table>
+        <tr>
+          <td className={styles.wef_monolingualtext_language}>
+            <LanguageAutocomplete onChange={this.handleLanguageChange} provided={[]} value={language} />
+          </td>
+          <td className={styles.wef_monolingualtext_text}>
+            <input nChange={this.handleTextChange} value={text} />
+          </td>
+        </tr>
+      </table>
+    </td>;
   }
 
 }

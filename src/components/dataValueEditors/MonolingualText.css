@@ -1,0 +1,13 @@
+
+/*Snak value level -- per types: MONOLINGUALTEXT */
+.wef_monolingualtext table {
+	width: 100%;
+}
+
+.wef_monolingualtext .wef_monolingualtext_language {
+	width: 3em;
+}
+
+.wef_monolingualtext_text input {
+	width: 99%;
+}

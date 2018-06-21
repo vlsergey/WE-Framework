@@ -182,19 +182,6 @@ button.wef_select_snak_type_button :global .ui-button-icon-primary {
 	width: 14em;
 }
 
-/*Snak value level -- per types: MONOLINGUALTEXT */
-.wef_monolingualtext_table {
-	width: 100%;
-}
-
-.wef_monolingualtext_table .wef_monolingualtext_td_language {
-	width: 3em;
-}
-
-.wef_monolingualtext_table input {
-	width: 99%;
-}
-
 /*Snak value level -- per types: QUANTITY */
 .wef_quantity_table th {
 	text-align: left;
