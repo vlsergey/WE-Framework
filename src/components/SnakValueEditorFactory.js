@@ -7,6 +7,7 @@ import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueEditor';
+import UrlDataValueEditor from './dataValueEditors/UrlDataValueEditor';
 
 export default class SnakValueEditorFactory extends PureComponent {
 
@@ -36,14 +37,21 @@ export default class SnakValueEditorFactory extends PureComponent {
     const dataType = propertyDescription.datatype;
     expect( propertyDescription.datatype ).toBeA( 'string' );
 
+    const dataValueEditorProps = {
+      datavalue: snak.datavalue,
+      onDataValueChange: this.handleDataValueChange,
+      propertyDescription,
+    };
+
     switch ( dataType ) {
     case 'external-id':
-      return <ExternalIdDataValueEditor datavalue={snak.datavalue} onDataValueChange={this.handleDataValueChange} propertyDescription={propertyDescription} />;
+      return <ExternalIdDataValueEditor {...dataValueEditorProps} />;
     case 'commonsMedia':
-      return <CommonsMediaDataValueEditor datavalue={snak.datavalue} onDataValueChange={this.handleDataValueChange} propertyDescription={propertyDescription} />;
+      return <CommonsMediaDataValueEditor {...dataValueEditorProps} />;
     case 'string':
+      return <StringDataValueEditor {...dataValueEditorProps} />;
     case 'url':
-      return <StringDataValueEditor datavalue={snak.datavalue} onDataValueChange={this.handleDataValueChange} propertyDescription={propertyDescription} />;
+      return <UrlDataValueEditor {...dataValueEditorProps} />;
       // case "wikibase-item":
     default:
       return <UnsupportedDataValueEditor datavalue={snak.datavalue} propertyDescription={propertyDescription} />;

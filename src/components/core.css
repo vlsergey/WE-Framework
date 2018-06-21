@@ -21,8 +21,12 @@
 	width: 1px;
 }
 
-.wef_table td, .wef_table th {
-	vertical-align: top;
+.wef_button_cell td {
+	vertical-align: middle;
+}
+
+.wef_button_cell .ui-button {
+	vertical-align: middle;
 }
 
 .wef_button_cell :global .ui-button {

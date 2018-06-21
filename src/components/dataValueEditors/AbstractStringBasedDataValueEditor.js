@@ -25,7 +25,7 @@ export default class AbstractStringBasedDataValueEditor extends Component {
       onDataValueChange( {
         ...datavalue,
         type: AbstractStringBasedDataValueEditor.DATAVALUE_TYPE,
-        value: event.target.value,
+        value,
       } );
     } else {
       onDataValueChange( null );
