@@ -11,8 +11,8 @@ class ForeignApi {
 }
 mw.ForeignApi = ForeignApi;
 
-mw.log = ( text ) => console.log( text );
-mw.notify = ( text ) => console.log( text ) ;
+mw.log = text => console.log( text );
+mw.notify = text => console.log( text ) ;
 
 const jQuery = () => ( {
   button: () => ( {} ),

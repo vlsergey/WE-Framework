@@ -1,5 +1,5 @@
-import assert from 'assert';
 import { collectClaimUpdates, collectEntityUpdates } from '../../src/core/save';
+import assert from 'assert';
 import Q2262932 from '../entities/Q2262932';
 
 describe( 'save.js', () => {
