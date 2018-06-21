@@ -1,4 +1,5 @@
 import * as settings from './settings/index';
+import AdmEntityEditorTemplate from './editors/AdmEntityEditorTemplate';
 import expect from 'expect';
 import { getEntityIdDeferred } from './core/ApiUtils';
 import MovieEditorTemplate from './editors/MovieEditorTemplate';
@@ -13,6 +14,7 @@ mw.loader.using( [ //
   'mediawiki.ForeignApi',
 ], function() {
 
+  settings.registerEditor( AdmEntityEditorTemplate );
   settings.registerEditor( MovieEditorTemplate );
 
   if ( mw.config.get( 'wgArticleId' ) ) {
