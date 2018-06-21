@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
 import expect from 'expect';
 import ExternalIdDataValueEditor from './dataValueEditors/ExternalIdDataValueEditor';
+import MonolingualTextDataValueEditor from './dataValueEditors/MonolingualTextDataValueEditor';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
@@ -48,6 +49,8 @@ export default class SnakValueEditorFactory extends PureComponent {
       return <ExternalIdDataValueEditor {...dataValueEditorProps} />;
     case 'commonsMedia':
       return <CommonsMediaDataValueEditor {...dataValueEditorProps} />;
+    case 'monolingualtext':
+      return <MonolingualTextDataValueEditor {...dataValueEditorProps} />;
     case 'string':
       return <StringDataValueEditor {...dataValueEditorProps} />;
     case 'url':
