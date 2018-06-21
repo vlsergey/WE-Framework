@@ -38,7 +38,7 @@ const fetch = ( url, options ) => {
   } );
 };
 
-const toUrlencoded = ( data ) => Object.keys( data )
+const toUrlencoded = data => Object.keys( data )
   .map( key => encodeURIComponent( key ) + '=' + encodeURIComponent( data[ key ] ) )
   .reduce( ( a, c ) => a ? a + '&' + c : c );
 
