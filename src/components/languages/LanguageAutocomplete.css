@@ -1,6 +1,10 @@
 .container {
-  position: relative;
   display: inline-block;
+  width: 3em;
+}
+
+.container input {
+  width: 2.8em;
 }
 
 .suggestionsContainer {
