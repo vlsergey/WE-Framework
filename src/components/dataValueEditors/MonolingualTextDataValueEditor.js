@@ -54,14 +54,16 @@ export default class MonolingualTextDataValueEditor extends Component {
 
     return <td className={styles.wef_monolingualtext} colSpan={12}>
       <table>
-        <tr>
-          <td className={styles.wef_monolingualtext_language}>
-            <LanguageAutocomplete onChange={this.handleLanguageChange} provided={[]} value={language} />
-          </td>
-          <td className={styles.wef_monolingualtext_text}>
-            <input nChange={this.handleTextChange} value={text} />
-          </td>
-        </tr>
+        <tbody>
+          <tr>
+            <td className={styles.wef_monolingualtext_language}>
+              <LanguageAutocomplete onChange={this.handleLanguageChange} provided={[]} value={language} />
+            </td>
+            <td className={styles.wef_monolingualtext_text}>
+              <input nChange={this.handleTextChange} value={text} />
+            </td>
+          </tr>
+        <tbody>
       </table>
     </td>;
   }
