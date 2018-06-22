@@ -5,9 +5,8 @@ mw.config.set( 'wgContentLanguage', 'en' );
 mw.config.set( 'wgUserLanguage', 'en' );
 
 class ForeignApi {
-  get() {
-    return new Promise( () => {} );
-  }
+  get() { return new Promise( () => {} ); }
+  post() { return new Promise( () => {} ); }
 }
 mw.ForeignApi = ForeignApi;
 

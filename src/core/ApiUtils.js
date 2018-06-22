@@ -59,6 +59,25 @@ export function getEntityIdDeferred() {
   return deferredEntityIdPromise;
 }
 
+export function getCommonsApi() {
+  let api;
+  if ( !isCommons() ) {
+    api = new mw.ForeignApi( '//commons.wikimedia.org/w/api.php' );
+  } else {
+    api = new mw.Api();
+  }
+  if ( typeof api.postWithEditToken === 'undefined' ) {
+    api.postWithEditToken = function( params, ajaxOptions ) {
+      return this.postWithToken( 'edit', params, ajaxOptions );
+    };
+  }
+  return api;
+}
+
+export function isCommons() {
+  return WG_SITE_NAME === 'Wikimedia Commons';
+}
+
 export function getWikidataApi() {
   let api;
   if ( !isWikidata() ) {

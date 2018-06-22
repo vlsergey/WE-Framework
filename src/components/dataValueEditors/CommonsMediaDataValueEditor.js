@@ -1,3 +1,4 @@
+import * as ApiUtils from 'core/ApiUtils';
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
 import Autosuggest from 'react-autosuggest';
 import dataTypeStyles from './CommonsMedia.css';
@@ -7,12 +8,14 @@ import styles from 'components/core.css';
 
 export default class CommonsMediaDataValueEditor extends AbstractStringBasedDataValueEditor {
 
+  static DATATYPE = 'commonsMedia';
+
   static propTypes = AbstractStringBasedDataValueEditor.propTypes;
 
   constructor() {
     super( ...arguments );
 
-    this.commonsApi = new mw.ForeignApi( '//commons.wikimedia.org/w/api.php' );
+    this.commonsApi = ApiUtils.getCommonsApi();
     this.state = {
       suggestions: [],
     };
@@ -34,7 +37,7 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
       pslimit: '10',
       pssearch: value,
       format: 'json',
-    } ).done( result => {
+    } ).then( result => {
       if ( result.error ) {
         console.log( result );
         mw.notify( 'Unable to expand templates: ' + result.error.info );
@@ -50,8 +53,8 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
     return data ? data : '';
   }
 
-  handleChange( event, value ) {
-    this.handleValueChange( value );
+  handleChange( event, { newValue } ) {
+    this.handleValueChange( newValue );
   }
 
   render() {
@@ -59,7 +62,7 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
 
     const params = {
       type: 'text',
-      className: styles[ 'wef_' + propertyDescription.datatype ],
+      className: styles[ 'wef_' + CommonsMediaDataValueEditor.DATATYPE ],
     };
 
     if ( propertyDescription.regexp ) {

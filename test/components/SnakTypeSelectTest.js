@@ -9,7 +9,7 @@ describe( 'SnakTypeSelect', () => {
 
   it( 'can be rendered', () => {
     const rendered = ReactTestUtils.renderIntoDocument( <SnakTypeSelect onChange={NOOP} /> );
-    assert.ok( SnakTypeSelect );
+    assert.ok( rendered );
 
     const selectDomComponent = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'select' );
     assert.ok( selectDomComponent );

@@ -1,11 +1,11 @@
 import assert from 'assert';
-import p345 from '../entities/P345';
-import PropertyDescription from '../../src/core/PropertyDescription';
+import P345 from '../entities/P345';
+import PropertyDescription from 'core/PropertyDescription';
 
 describe( 'PropertyDescription', () => {
   describe( 'Should parse p345', () => {
 
-    const propertyDescription = new PropertyDescription( p345 );
+    const propertyDescription = new PropertyDescription( P345 );
 
     it( 'Label shall be parsed', () => {
       assert.equal( propertyDescription.label, 'IMDb ID' );
