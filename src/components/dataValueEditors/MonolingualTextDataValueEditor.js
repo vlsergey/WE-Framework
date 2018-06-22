@@ -63,7 +63,7 @@ export default class MonolingualTextDataValueEditor extends Component {
               <input nChange={this.handleTextChange} value={text} />
             </td>
           </tr>
-        <tbody>
+        </tbody>
       </table>
     </td>;
   }
