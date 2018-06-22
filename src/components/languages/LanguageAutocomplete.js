@@ -62,19 +62,19 @@ export default class LanguageAutocomplete extends Component {
   }
 
   handleSuggestionsFetchRequested( { value } ) {
-    const added = new Set();
     const result = [ ...DEFAULT_LANGUAGES ];
+    const added = new Set( result );
 
     const codeNotYetIncluded = code => !added.has( code );
     const add = code => { added.add( code ); result.push( code ); };
 
     // iterate over codes first
     Object.keys( LANGUAGE_TITLES )
-      .filter( code => codeNotYetIncluded( code ) )
+      .filter( codeNotYetIncluded )
       .filter( code => code.startsWith( value ) )
       .forEach( add );
     Object.keys( LANGUAGE_TITLES )
-      .filter( code => codeNotYetIncluded( code ) )
+      .filter( codeNotYetIncluded )
       .filter( code => code.includes( value ) )
       .forEach( add );
     Object.entries( LANGUAGE_TITLES )
