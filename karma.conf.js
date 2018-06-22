@@ -5,7 +5,7 @@ module.exports = function (config) {
   config.set({
     browsers: [ 'jsdom' ],
     browserNoActivityTimeout: 60000,
-    frameworks: [ 'mocha' ], 
+    frameworks: [ 'mocha' ],
 
     plugins: [
       'karma-chrome-launcher',
@@ -23,11 +23,11 @@ module.exports = function (config) {
 
     preprocessors: {
       'src/**/*.js': ['webpack', 'sourcemap'],
-      'test/**/*.js': ['webpack', 'sourcemap'], 
+      'test/**/*.js': ['webpack', 'sourcemap'],
     },
 
-    reporters: [ 
-      'mocha', 
+    reporters: [
+      'mocha',
     ],
 
     mochaReporter: {

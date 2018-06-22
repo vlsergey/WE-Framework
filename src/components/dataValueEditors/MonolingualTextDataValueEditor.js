@@ -48,7 +48,6 @@ export default class MonolingualTextDataValueEditor extends Component {
 
   render() {
     const { datavalue } = this.props;
-
     const language = datavalue && datavalue.value && datavalue.value.language ? datavalue.value.language : '';
     const text = datavalue && datavalue.value && datavalue.value.text ? datavalue.value.text : '';
 
@@ -60,7 +59,7 @@ export default class MonolingualTextDataValueEditor extends Component {
               <LanguageAutocomplete onChange={this.handleLanguageChange} provided={[]} value={language} />
             </td>
             <td className={styles.wef_monolingualtext_text}>
-              <input nChange={this.handleTextChange} value={text} />
+              <input onChange={this.handleTextChange} value={text} />
             </td>
           </tr>
         </tbody>
