@@ -20,6 +20,7 @@
   border: 1px solid #aaa;
   background-color: #fff;
   z-index: 2;
+  resize: both;
 }
 
 .suggestionsList {
