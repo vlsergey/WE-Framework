@@ -10,7 +10,15 @@ const editorDescription = {
         /* instance of */
         { property: 'P31' },
         /* image */
-        { property: 'P18', qualifiers: [ /* moment in time */ 'P585', /* media legend */ 'P2096' ] },
+        { property: 'P18' },
+        /* name */
+        { property: 'P1476' },
+        /* country */
+        { property: 'P495' },
+        /* language */
+        { property: 'P364' },
+        /* time */
+        { property: 'P577' },
       ],
     },
     {
