@@ -5,34 +5,53 @@ const editorDescription = {
     {
       label: 'General',
       key: 'general',
-      fields: [
+      specials: [
         { type: 'LabelsAndDescriptionArea' },
-        /* instance of */
-        { property: 'P31' },
-        /* image */
-        { property: 'P18' },
-        /* name */
-        { property: 'P1476' },
-        /* country */
-        { property: 'P495' },
-        /* language */
-        { property: 'P364' },
-        /* time */
-        { property: 'P577' },
+      ],
+      fieldsets: [
+        { fields: [
+          /* instance of */
+          { property: 'P31' },
+          /* image */
+          { property: 'P18' },
+          /* name */
+          { property: 'P1476' },
+          /* country */
+          { property: 'P495' },
+          /* language */
+          { property: 'P364' },
+          /* time */
+          { property: 'P577' },
+        ] },
+        { labelEntityId: 'Q3297652',
+          fields: [
+            /* director */
+            { property: 'P57' },
+            /* director of photography */
+            { property: 'P344' },
+            /* screenwriter */
+            { property: 'P58' },
+            /* producer */
+            { property: 'P162' },
+            /* production company */
+            { property: 'P272' },
+            /* composer */
+            { property: 'P86' },
+          ] },
       ],
     },
     {
       labelEntityId: 'Q36524',
       key: 'authoritycontrol',
       fields: [
-        { property: 'P1237', flag: 'us' },
-        { property: 'P480', flag: 'us' },
-        { property: 'P345', flag: 'us' },
+        { property: 'P1237' },
+        { property: 'P480' },
+        { property: 'P345' },
 
-        { property: 'P4276', flag: 'ca' },
-        { property: 'P4529', flag: 'cn' },
-        { property: 'P2529', flag: 'cz' },
-        { property: 'P1265', flag: 'fr' },
+        { property: 'P4276' },
+        { property: 'P4529' },
+        { property: 'P2529' },
+        { property: 'P1265' },
       ],
     },
   ],

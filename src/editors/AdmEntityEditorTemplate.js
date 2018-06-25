@@ -5,8 +5,10 @@ const editorDescription = {
     {
       label: 'General',
       key: 'general',
-      fields: [
+      specials: [
         { type: 'LabelsAndDescriptionArea' },
+      ],
+      fields: [
         /* official name */
         { property: 'P1448' },
 

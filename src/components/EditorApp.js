@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import DialogWrapper from 'wrappers/DialogWrapper';
-import EditorTabsBuilder from './EditorTabsBuilder';
+import { EditorShape } from 'components/formbuilders/FormShapes';
+import EditorTabsBuilder from 'components/formbuilders/EditorTabsBuilder';
 import i18n from './core.i18n';
 import LabelDescriptionCacheContainer from 'core/LabelDescriptionCacheContainer';
 import PropertiesCacheContainer from 'core/PropertiesCacheContainer';
@@ -11,7 +12,7 @@ import save from 'core/save';
 class EditorApp extends Component {
 
   static propTypes = {
-    description: PropTypes.object.isRequired,
+    description: PropTypes.shape( EditorShape ),
     onExit: PropTypes.func.isRequired,
     save: PropTypes.func.isRequired,
   };
