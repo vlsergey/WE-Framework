@@ -133,7 +133,7 @@ button.wef_select_snak_type_button :global .ui-button-icon-primary {
 }
 
 /* Snak value level -- per types */
-.wef_commonsMedia, .wef_string, .wef_url {
+.wef_commonsMedia, .wef_string, .wef_url, .wef_wikibase-item {
 	width: 99%;
 }
 

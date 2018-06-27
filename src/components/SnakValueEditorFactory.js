@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueEditor';
 import UrlDataValueEditor from './dataValueEditors/UrlDataValueEditor';
+import WikibaseItemDataValueEditor from './dataValueEditors/WikibaseItemDataValueEditor';
 
 export default class SnakValueEditorFactory extends PureComponent {
 
@@ -55,6 +56,8 @@ export default class SnakValueEditorFactory extends PureComponent {
       return <StringDataValueEditor {...dataValueEditorProps} />;
     case 'url':
       return <UrlDataValueEditor {...dataValueEditorProps} />;
+    case 'wikibase-item':
+      return <WikibaseItemDataValueEditor {...dataValueEditorProps} />;
       // case "wikibase-item":
     default:
       return <UnsupportedDataValueEditor datavalue={snak.datavalue} propertyDescription={propertyDescription} />;
