@@ -41,6 +41,7 @@
     "react-autosuggest": "^9.3.4",
     "react-dom": "^16.4.0",
     "react-spinners": "^0.3.2",
+    "react-spring": "^5.3.18",
     "react-tagsinput": "^3.19.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^3.0.1",

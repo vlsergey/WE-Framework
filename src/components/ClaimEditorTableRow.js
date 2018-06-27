@@ -1,3 +1,4 @@
+import { animated, Spring } from 'react-spring';
 import React, { PureComponent } from 'react';
 import { Claim } from 'model/Shapes';
 import expect from 'expect';
@@ -6,6 +7,18 @@ import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import SnakEditorTableRowPart from './SnakEditorTableRowPart';
 import styles from './core.css';
+
+const AnimatedTr = ( { children } ) => <Spring from={{ opacity: 0 }} native to={{ opacity: 1 }}>
+  {props =>
+    <animated.tr style={props}>
+      {children}
+    </animated.tr>
+  }
+</Spring>;
+
+AnimatedTr.propTypes = {
+  children: PropTypes.node,
+};
 
 export default class ClaimEditorTableRow extends PureComponent {
 
@@ -42,7 +55,7 @@ export default class ClaimEditorTableRow extends PureComponent {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onClaimChange" }] */
     const { claim, firstCell, flag, label, onClaimChange, propertyDescription, ...other } = this.props;
 
-    return <tr {...other}>
+    return <AnimatedTr {...other}>
       {firstCell}
       <FlagCell country={flag} />
       <th className={styles.wef_property_editor_label}>{label}</th>
@@ -51,7 +64,7 @@ export default class ClaimEditorTableRow extends PureComponent {
       <SnakEditorTableRowPart onSnakChange={this.handleSnakChange} propertyDescription={propertyDescription} snak={claim.mainsnak} />
       {/* references editor button cell */}
       {/* delete claim button cell */}
-    </tr>;
+    </AnimatedTr>;
   }
 
 }
