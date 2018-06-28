@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { ChildrenContainer } from './FormShapes';
 import ClaimEditors from 'components/ClaimEditors';
-import EntityLabel from 'components/EntityLabel';
+import EntityLabel from 'caches/EntityLabel';
 import ErrorBoundary from './ErrorBoundary';
 import expect from 'expect';
 import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';

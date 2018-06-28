@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import ChildrenBuilder from './ChildrenBuilder';
-import EntityLabel from 'components/EntityLabel';
+import EntityLabel from 'caches/EntityLabel';
 import PropTypes from 'prop-types';
 import TabsWrapper from 'wrappers/TabsWrapper';
 

@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueEditor';
 import UrlDataValueEditor from './dataValueEditors/UrlDataValueEditor';
-import WikibaseItemDataValueEditor from './dataValueEditors/WikibaseItemDataValueEditor';
+import WikibaseItemDataValueEditor from './dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
 export default class SnakValueEditorFactory extends PureComponent {
 

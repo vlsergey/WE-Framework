@@ -1,6 +1,5 @@
 import assert from 'assert';
 import ChildrenBuilder from 'components/formbuilders/ChildrenBuilder';
-import LabelDescriptionCacheContainer from 'core/LabelDescriptionCacheContainer';
 import PropertiesCacheContainer from 'core/PropertiesCacheContainer';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
@@ -9,13 +8,11 @@ describe( 'ChildrenBuilder', () => {
 
   it( 'renders fields', () => {
     const rendered = ReactTestUtils.renderIntoDocument(
-      <LabelDescriptionCacheContainer>
-        <PropertiesCacheContainer>
-          <ChildrenBuilder fields={[
-            { property: 'P31' },
-          ]} />
-        </PropertiesCacheContainer>
-      </LabelDescriptionCacheContainer>
+      <PropertiesCacheContainer>
+        <ChildrenBuilder fields={[
+          { property: 'P31' },
+        ]} />
+      </PropertiesCacheContainer>
     );
     assert.ok( rendered );
 
@@ -30,21 +27,19 @@ describe( 'ChildrenBuilder', () => {
 
   it( 'renders fieldsets', () => {
     const rendered = ReactTestUtils.renderIntoDocument(
-      <LabelDescriptionCacheContainer>
-        <PropertiesCacheContainer>
-          <ChildrenBuilder fieldsets={[
-            { fields: [
-              /* instance of */
-              { property: 'P31' },
+      <PropertiesCacheContainer>
+        <ChildrenBuilder fieldsets={[
+          { fields: [
+            /* instance of */
+            { property: 'P31' },
+          ] },
+          { label: 'TestLabel',
+            fields: [
+              /* director */
+              { property: 'P57' },
             ] },
-            { label: 'TestLabel',
-              fields: [
-                /* director */
-                { property: 'P57' },
-              ] },
-          ]} />
-        </PropertiesCacheContainer>
-      </LabelDescriptionCacheContainer>
+        ]} />
+      </PropertiesCacheContainer>
     );
     assert.ok( rendered );
 

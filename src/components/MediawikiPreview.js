@@ -33,20 +33,23 @@ export default class MediawikiPreview extends Component {
     if ( !this.props.wikitext )
       return;
 
+    const wikitext = this.props.wikitext;
     new mw.Api().post( {
       action: 'parse',
       contentmodel: 'wikitext',
       format: 'json',
       prop: 'text',
-      text: this.props.wikitext,
-    } ).done( result => {
+      text: wikitext,
+    } ).then( result => {
       if ( result.error ) {
         console.log( result );
         mw.notify( 'Unable to expand templates: ' + result.error.info );
         return;
       }
 
-      this.setState( { html: result.parse.text[ '*' ] } );
+      if ( this.props.wikitext === wikitext ) {
+        this.setState( { html: result.parse.text[ '*' ] } );
+      }
     } );
   }
 

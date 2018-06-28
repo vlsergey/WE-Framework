@@ -44,7 +44,7 @@ export default class SingleThreadBatchRequestQueue {
     if ( typeof buildPromice !== 'function' )
       throw new Error( 'Build promice (this.buildPromice) is not a function' );
 
-    const nextBatch = this._queue.slice( 0, Math.max( this._queue.length, this.maxBatchSize ) );
+    const nextBatch = this._queue.slice( 0, Math.min( this._queue.length, this.maxBatchSize ) );
     this._queue = this._queue.slice( nextBatch.length );
 
     return buildPromice( nextBatch ).then( () => {
