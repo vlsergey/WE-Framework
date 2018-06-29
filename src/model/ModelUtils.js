@@ -1,3 +1,14 @@
+import expect from 'expect';
+
+export function filterClaimsByRank( claims ) {
+  if ( !claims ) return [];
+  expect( claims ).toBeAn( 'array' );
+
+  const preferred = claims.filter( claim => claim.rank === 'preferred' );
+  if ( preferred.length > 0 ) return preferred;
+
+  return claims.filter( claim => claim.rank === 'normal' );
+}
 
 export function getEntityIdFromClaim( claim ) {
   if ( typeof claim == 'undefined' )

@@ -1,6 +1,7 @@
 import * as ApiUtils from 'core/ApiUtils';
 import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
 import expect from 'expect';
+import { filterClaimsByRank } from 'model/ModelUtils';
 import LabelDescription from './LabelDescription';
 import PropertyDescription from 'core/PropertyDescription';
 
@@ -137,6 +138,46 @@ export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS'
     Object.values( result.entities ).forEach( entity => {
       const propertyDescription = new PropertyDescription( entity );
       cacheUpdate[ entity.id ] = Object.freeze( propertyDescription );
+    } );
+    return cacheUpdate;
+  }
+);
+
+const PROPERTIES_TO_CACHE = [ 'P17', 'P41' ];
+
+export const stringPropertyValuesQueueF = buildQueueAction( 'STRINGPROPERTYVALUES', 10,
+  cacheKey => cacheKey.match( /^[PQ](\d+)$/i ),
+  cacheKeys => ApiUtils.getWikidataApi()
+    .get( {
+      action: 'wbgetentities',
+      props: 'claims',
+      ids: cacheKeys.join( '|' ),
+    } ),
+  result => {
+    const cacheUpdate = {};
+    Object.values( result.entities ).forEach( entity => {
+      if ( !entity.claims )
+        return {};
+
+      const entityResult = {};
+      PROPERTIES_TO_CACHE.forEach( propertyId => {
+        const values = filterClaimsByRank( entity.claims[ propertyId ] )
+          .filter( claim => claim && claim.mainsnak && claim.mainsnak.datavalue && claim.mainsnak.datavalue.value )
+          .map( claim => claim.mainsnak.datavalue )
+          .map( datavalue => {
+            switch ( datavalue.type ) {
+            case 'string':
+              return datavalue.value;
+            case 'wikibase-item':
+              return datavalue.value.id;
+            default: null;
+            }
+          } );
+
+        entityResult[ propertyId ] = values;
+      } );
+
+      cacheUpdate[ entity.id ] = Object.freeze( entityResult );
     } );
     return cacheUpdate;
   }

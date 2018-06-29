@@ -11,6 +11,10 @@ describe( 'PropertyDescription', () => {
       assert.equal( propertyDescription.label, 'IMDb ID' );
     } );
 
+    it( 'Countries shall be parsed', () => {
+      assert.deepEqual( propertyDescription.countries, [ 'Q30' ] );
+    } );
+
     it( 'Regexp shall be parsed', () => {
       assert.equal( propertyDescription.regexp, '|ev\\d{7}\\/(19|20)\\d{2}(-\\d)?|(ch|co|ev|nm|tt)\\d{7}|ni\\d{8}' );
     } );

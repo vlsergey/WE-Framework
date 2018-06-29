@@ -27,7 +27,6 @@ export default class ClaimEditorTableRow extends PureComponent {
   static propTypes = {
     firstCell: PropTypes.node.isRequired,
     claim: PropTypes.shape( Claim ).isRequired,
-    flag: PropTypes.string,
     label: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ).isRequired,
     onClaimChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
@@ -53,11 +52,14 @@ export default class ClaimEditorTableRow extends PureComponent {
 
   render() {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onClaimChange" }] */
-    const { claim, firstCell, flag, label, onClaimChange, propertyDescription, ...other } = this.props;
+    const { claim, firstCell, label, onClaimChange, propertyDescription, ...other } = this.props;
+    const flagImage = propertyDescription.countryFlags && propertyDescription.countryFlags.length > 0
+      ? propertyDescription.countryFlags[ 0 ]
+      : null;
 
     return <AnimatedTr {...other}>
       {firstCell}
-      <FlagCell country={flag} />
+      <FlagCell flagImage={flagImage} />
       <th className={styles.wef_property_editor_label}>{label}</th>
       {/* add quialifier button cell */}
       {/* next component renders multiple cells */}

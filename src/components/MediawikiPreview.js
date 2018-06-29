@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FadeLoader } from 'react-spinners';
+import { ClipLoader } from 'react-spinners';
 import PropTypes from 'prop-types';
 
 export default class MediawikiPreview extends Component {
@@ -37,6 +37,8 @@ export default class MediawikiPreview extends Component {
     new mw.Api().post( {
       action: 'parse',
       contentmodel: 'wikitext',
+      disablelimitreport: true,
+      disableeditsection: true,
       format: 'json',
       prop: 'text',
       text: wikitext,
@@ -61,7 +63,7 @@ export default class MediawikiPreview extends Component {
       return <div dangerouslySetInnerHTML={{ __html: this.state.html }} {...other} />;
     }
 
-    return <FadeLoader size={spinnerSize} {...other} />;
+    return <ClipLoader size={spinnerSize / 1.4} {...other} />;
   }
 
 }

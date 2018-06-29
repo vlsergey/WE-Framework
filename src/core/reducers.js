@@ -1,4 +1,4 @@
-import { LABELDESCRIPTIONS, PROPERTYDESCRIPTIONS } from 'caches/reducers';
+import { LABELDESCRIPTIONS, PROPERTYDESCRIPTIONS, STRINGPROPERTYVALUES } from 'caches/reducers';
 import { combineReducers } from 'redux';
 import expect from 'expect';
 import { newStatementClaim } from 'model/Shapes';
@@ -88,5 +88,6 @@ export default function buildReducers( originalEntity ) {
     entity: entityReducerF( originalEntity ),
     LABELDESCRIPTIONS,
     PROPERTYDESCRIPTIONS,
+    STRINGPROPERTYVALUES,
   } );
 }

@@ -1,5 +1,6 @@
 import * as I18nUtils from 'utils/I18nUtils';
 import expect from 'expect';
+import { filterClaimsByRank } from 'model/ModelUtils';
 
 function findSingleStatementByEntityIdValue( entity, property, entityId ) {
   if ( !entity.claims || !entity.claims[ property ] ) {
@@ -67,8 +68,6 @@ class UrlFormatter {
 
 }
 
-const claimIsNotDeprecated = statement => statement.rank !== 'deprecated';
-
 const claimHasMainsnakValue = statement => statement.mainsnak
     && statement.mainsnak.datavalue
     && statement.mainsnak.datavalue.value;
@@ -107,19 +106,21 @@ export default class PropertyDescription {
     for ( const k in translated )
       this[ k ] = translated[ k ];
 
+    this.countries = filterClaimsByRank( propertyEntity.claims.P17 )
+      .filter( claimHasMainsnakValue )
+      .map( claim => claim.mainsnak.datavalue.value.id );
+
     this.regexp = getStringRestriction( propertyEntity, 'Q21502404', 'P1793' );
 
     if ( propertyEntity.claims && propertyEntity.claims.P1630 ) {
-      this.urlFormatters = propertyEntity.claims.P1630
-        .filter( claimIsNotDeprecated )
+      this.urlFormatters = filterClaimsByRank( propertyEntity.claims.P1630 )
         .filter( claimHasMainsnakValue )
         .map( statement => new UrlFormatter( statement ) );
     } else {
       this.urlFormatters = [];
     }
 
-    this.sourceWebsites = ( ( propertyEntity.claims || {} ).P1896 || [] )
-      .filter( claimIsNotDeprecated )
+    this.sourceWebsites = filterClaimsByRank( ( propertyEntity.claims || {} ).P1896 )
       .filter( claimHasMainsnakValue )
       .map( statement => statement.mainsnak.datavalue.value );
   }

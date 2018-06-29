@@ -1,34 +1,1205 @@
 const data = {
+  pageid: 8107058,
+  ns: 120,
+  title: 'Property:P345',
+  lastrevid: 698776070,
+  modified: '2018-06-19T21:57:17Z',
   type: 'property',
   datatype: 'external-id',
   id: 'P345',
   labels: {
-    en: {
+    'en': {
       language: 'en',
       value: 'IMDb ID',
     },
-    fr: {
+    'ja': {
+      language: 'ja',
+      value: 'IMDb\u8b58\u5225\u5b50',
+    },
+    'it': {
+      language: 'it',
+      value: 'identificativo IMDb',
+    },
+    'de': {
+      language: 'de',
+      value: 'IMDb-ID',
+    },
+    'fr': {
       language: 'fr',
       value: 'identifiant IMDb',
     },
-    ru: {
+    'da': {
+      language: 'da',
+      value: 'IMDb-identifikationsnummer',
+    },
+    'es': {
+      language: 'es',
+      value: 'identificador IMDb',
+    },
+    'ru': {
       language: 'ru',
       value: '\u043a\u043e\u0434 IMDb',
     },
+    'pt-br': {
+      language: 'pt-br',
+      value: 'identificador IMDb',
+    },
+    'pt': {
+      language: 'pt',
+      value: 'identificador IMDb',
+    },
+    'hu': {
+      language: 'hu',
+      value: 'IMDb-azonos\u00edt\u00f3',
+    },
+    'ca': {
+      language: 'ca',
+      value: 'identificador IMDb',
+    },
+    'ko': {
+      language: 'ko',
+      value: 'IMDb ID',
+    },
+    'vi': {
+      language: 'vi',
+      value: '\u0111\u1ecbnh danh IMDb',
+    },
+    'fi': {
+      language: 'fi',
+      value: 'IMDb-tunniste',
+    },
+    'nl': {
+      language: 'nl',
+      value: 'IMDb-identificatie',
+    },
+    'be-tarask': {
+      language: 'be-tarask',
+      value: '\u0456\u0434\u044d\u043d\u0442\u044b\u0444\u0456\u043a\u0430\u0442\u0430\u0440 IMDb',
+    },
+    'pl': {
+      language: 'pl',
+      value: 'identyfikator w IMDb',
+    },
+    'lv': {
+      language: 'lv',
+      value: 'IMDb identifikators',
+    },
+    'cs': {
+      language: 'cs',
+      value: 'identifik\u00e1tor v IMDb',
+    },
+    'sr': {
+      language: 'sr',
+      value: '\u0418\u041c\u0414\u0431',
+    },
+    'fa': {
+      language: 'fa',
+      value: '\u0634\u0646\u0627\u0633\u0647 \u062f\u0631 \u0628\u0627\u0646\u06a9 \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc \u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0641\u06cc\u0644\u0645\u200c\u0647\u0627',
+    },
+    'sv': {
+      language: 'sv',
+      value: 'IMDb-identifikationskod',
+    },
+    'ro': {
+      language: 'ro',
+      value: 'identificator IMDb',
+    },
+    'uk': {
+      language: 'uk',
+      value: 'IMDb-\u0456\u0434\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0442\u043e\u0440',
+    },
+    'he': {
+      language: 'he',
+      value: '\u05de\u05d6\u05d4\u05d4 IMDb',
+    },
+    'id': {
+      language: 'id',
+      value: 'identifikasi IMDb',
+    },
+    'min': {
+      language: 'min',
+      value: 'identifikasi IMDb',
+    },
+    'bs': {
+      language: 'bs',
+      value: 'IMDb oznaka',
+    },
+    'tr': {
+      language: 'tr',
+      value: 'IMDb tan\u0131mlay\u0131c\u0131s\u0131',
+    },
+    'ka': {
+      language: 'ka',
+      value: 'IMDb \u10d8\u10d3\u10d4\u10dc\u10e2\u10d8\u10e4\u10d8\u10d9\u10d0\u10e2\u10dd\u10e0\u10d8',
+    },
+    'nds': {
+      language: 'nds',
+      value: 'IMDb-ID',
+    },
+    'zh': {
+      language: 'zh',
+      value: 'IMDb\u7de8\u865f',
+    },
+    'zh-hant': {
+      language: 'zh-hant',
+      value: 'IMDb\u7de8\u865f',
+    },
+    'sk': {
+      language: 'sk',
+      value: 'identifika\u010dn\u00e9 \u010d\u00edslo IMDb',
+    },
+    'eo': {
+      language: 'eo',
+      value: 'identigilo de IMDb',
+    },
+    'el': {
+      language: 'el',
+      value: '\u03b1\u03bd\u03b1\u03b3\u03bd\u03c9\u03c1\u03b9\u03c3\u03c4\u03b9\u03ba\u03cc IMDb',
+    },
+    'be': {
+      language: 'be',
+      value: 'IMDb',
+    },
+    'bg': {
+      language: 'bg',
+      value: 'IMDb \u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440',
+    },
+    'sl': {
+      language: 'sl',
+      value: 'IMDb',
+    },
+    'en-gb': {
+      language: 'en-gb',
+      value: 'IMDb identifier',
+    },
+    'zh-hans': {
+      language: 'zh-hans',
+      value: 'IMDb\u7f16\u53f7',
+    },
+    'nn': {
+      language: 'nn',
+      value: 'IMDb-nummer',
+    },
+    'sr-ec': {
+      language: 'sr-ec',
+      value: 'IMDb \u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440',
+    },
+    'sr-el': {
+      language: 'sr-el',
+      value: 'IMDb identifikator',
+    },
+    'mr': {
+      language: 'mr',
+      value: '\u0906\u092f.\u090f\u092e.\u0921\u0940.\u092c\u0940. \u0926\u0941\u0935\u093e',
+    },
+    'gl': {
+      language: 'gl',
+      value: 'identificador de IMDb',
+    },
+    'zh-tw': {
+      language: 'zh-tw',
+      value: 'IMDb\u7de8\u865f',
+    },
+    'mk': {
+      language: 'mk',
+      value: 'IMDb-\u043d\u0430\u0437\u043d\u0430\u043a\u0430',
+    },
+    'oc': {
+      language: 'oc',
+      value: 'identificant IMDb',
+    },
+    'hi': {
+      language: 'hi',
+      value: 'IMDb \u0905\u092d\u093f\u091c\u094d\u091e\u093e\u092a\u0915',
+    },
+    'nb': {
+      language: 'nb',
+      value: 'IMDb-nummer',
+    },
+    'rm': {
+      language: 'rm',
+      value: 'IMDb',
+    },
+    'yi': {
+      language: 'yi',
+      value: 'IMDb',
+    },
+    'bn': {
+      language: 'bn',
+      value: '\u0986\u0987\u098f\u09ae\u09a1\u09bf\u09ac\u09bf \u09b6\u09a8\u09be\u0995\u09cd\u09a4\u0995\u09be\u09b0\u09c0',
+    },
+    'ckb': {
+      language: 'ckb',
+      value: '\u06a9\u06c6\u062f\u06cc \u0646\u0627\u0633\u06cc\u0646\u06d5\u0648\u06d5\u06cc IMDb',
+    },
+    'nds-nl': {
+      language: 'nds-nl',
+      value: 'IMDb ID',
+    },
+    'ms': {
+      language: 'ms',
+      value: 'ID IMDb',
+    },
+    'ar': {
+      language: 'ar',
+      value: '\u0645\u0639\u0631\u0641 \u0642\u0627\u0639\u062f\u0629 \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0623\u0641\u0644\u0627\u0645 \u0639\u0644\u0649 \u0627\u0644\u0625\u0646\u062a\u0631\u0646\u062a',
+    },
+    'gu': {
+      language: 'gu',
+      value: '\u0a86\u0a88. \u0a8f\u0aae. \u0aa1\u0ac0. \u0aac\u0ac0. \u0a93\u0ab3\u0a96',
+    },
+    'rmy': {
+      language: 'rmy',
+      value: 'Elysium,',
+    },
+    'is': {
+      language: 'is',
+      value: 'IMDb au\u00f0kenni',
+    },
+    'mzn': {
+      language: 'mzn',
+      value: '\u06a9\u062f \u0634\u0646\u0627\u0633\u0627\u06cc\u06cc \u0641\u06cc\u0644\u0645\u0648\u0646\u0650 \u0627\u0637\u0644\u0627\u0639\u0627\u062a\u0650 \u0627\u06cc\u0646\u062a\u0631\u0646\u062a\u06cc \u0628\u0627\u0646\u06a9 \u062f\u0644\u0647',
+    },
+    'hr': {
+      language: 'hr',
+      value: 'IMDb broj',
+    },
+    'af': {
+      language: 'af',
+      value: 'IMDb-identifikasiekode',
+    },
+    'lb': {
+      language: 'lb',
+      value: 'IMDb-ID',
+    },
+    'gsw': {
+      language: 'gsw',
+      value: 'IMDb-Identifikationsnummere',
+    },
+    'sco': {
+      language: 'sco',
+      value: 'IMDb identifier',
+    },
+    'zh-hk': {
+      language: 'zh-hk',
+      value: 'IMDb\u7de8\u865f',
+    },
+    'or': {
+      language: 'or',
+      value: 'IMDb \u0b38\u0b42\u0b1a\u0b15',
+    },
+    'glk': {
+      language: 'glk',
+      value: 'masag',
+    },
+    'ia': {
+      language: 'ia',
+      value: 'identificator IMDb',
+    },
+    'et': {
+      language: 'et',
+      value: 'IMDb id',
+    },
+    'ksh': {
+      language: 'ksh',
+      value: 'IMDb-K\u00e4nnong',
+    },
+    'ur': {
+      language: 'ur',
+      value: '\u0622\u0626\u06cc \u0627\u06cc\u0645 \u0688\u06cc  \u0628\u06cc - \u0622\u0626\u06cc \u0688\u06cc',
+    },
+    'eu': {
+      language: 'eu',
+      value: 'IMDb identifikadorea',
+    },
+    'fy': {
+      language: 'fy',
+      value: 'IMDb identifikaasje koade',
+    },
+    'te': {
+      language: 'te',
+      value: 'IMDb \u0c17\u0c41\u0c30\u0c4d\u0c24\u0c3f\u0c02\u0c2a\u0c41',
+    },
+    'la': {
+      language: 'la',
+      value: 'siglum apud IMDb',
+    },
+    'th': {
+      language: 'th',
+      value: '\u0e15\u0e31\u0e27\u0e23\u0e2b\u0e31\u0e2a\u0e23\u0e30\u0e1a\u0e38 IMDB',
+    },
+    'zh-mo': {
+      language: 'zh-mo',
+      value: 'IMDb\u7de8\u865f',
+    },
+    'zh-sg': {
+      language: 'zh-sg',
+      value: 'IMDb\u7f16\u53f7',
+    },
+    'sh': {
+      language: 'sh',
+      value: 'IMDb identifikacijski broj',
+    },
+    'scn': {
+      language: 'scn',
+      value: 'c\u00f2dici idintificativu IMDb',
+    },
+    'ml': {
+      language: 'ml',
+      value: '\u0d10.\u0d0e\u0d02.\u0d21\u0d3f.\u0d2c\u0d3f. \u0d24\u0d3f\u0d30\u0d3f\u0d1a\u0d4d\u0d1a\u0d31\u0d3f\u0d2f\u0d32\u0d41\u0d2a\u0d3e\u0d27\u0d3f',
+    },
+    'hy': {
+      language: 'hy',
+      value: 'IMDb identifier',
+    },
+    'ilo': {
+      language: 'ilo',
+      value: 'panangilasin ti IMDb',
+    },
+    'ast': {
+      language: 'ast',
+      value: 'identificador IMDb',
+    },
+    'cy': {
+      language: 'cy',
+      value: 'dynodwr IMDb',
+    },
+    'lt': {
+      language: 'lt',
+      value: 'IMDb identifikatorius',
+    },
+    'ht': {
+      language: 'ht',
+      value: 'idantifyan sou IMDb',
+    },
+    'fo': {
+      language: 'fo',
+      value: 'IMDb-nummar',
+    },
+    'kn': {
+      language: 'kn',
+      value: 'IMDb \u0c90\u0ca1\u0cbf',
+    },
+    'sq': {
+      language: 'sq',
+      value: 'IMDb ID',
+    },
+    'se': {
+      language: 'se',
+      value: 'IMDb-nummir',
+    },
+    'tg': {
+      language: 'tg',
+      value: '\u043a\u043e\u0434\u0438 IMDb',
+    },
+    'tg-cyrl': {
+      language: 'tg-cyrl',
+      value: '\u0440\u0430\u043c\u0437\u0438 IMDb',
+    },
+    'ba': {
+      language: 'ba',
+      value: 'IMDb \u043a\u043e\u0434\u044b',
+    },
+    'zh-cn': {
+      language: 'zh-cn',
+      value: '\u4e92\u806f\u7db2\u96fb\u5f71\u6578\u64da\u5eab\u7de8\u865f',
+    },
+    'tt': {
+      language: 'tt',
+      value: 'IMDb ID',
+    },
+    'tt-cyrl': {
+      language: 'tt-cyrl',
+      value: 'IMDb ID',
+    },
+    'wuu': {
+      language: 'wuu',
+      value: '\u4e92\u806f\u7db2\u96fb\u5f71\u6578\u64da\u5eab\u7de8\u865f',
+    },
   },
   descriptions: {
-    en: {
+    'en': {
       language: 'en',
-      value: 'identifier for the Internet Movie Database (IMDb) [with prefix \'tt\', \'nm\', \'ch\', \'co\', \'ev\', or \'ni\']',
+      value: 'identifier for the Internet Movie Database  [with prefix \'tt\', \'nm\', \'ch\', \'co\', \'ev\', or \'ni\']',
     },
-    ru: {
+    'ja': {
+      language: 'ja',
+      value: '\u30a4\u30f3\u30bf\u30fc\u30cd\u30c3\u30c8\u30fb\u30e0\u30fc\u30d3\u30fc\u30fb\u30c7\u30fc\u30bf\u30d9\u30fc\u30b9\uff08IMDb\uff09\u306ett\u3001nm\u3001ch\u3001co\u3067\u59cb\u307e\u308b\u8b58\u5225\u5b50',
+    },
+    'it': {
+      language: 'it',
+      value: 'identificativo per Internet Movie Database (IMDb) con prefisso (tt- nm- ch- co- ev-)',
+    },
+    'de': {
+      language: 'de',
+      value: 'Identifikationsnummer in der Internet Movie Database (IMDb) inklusive Pr\u00e4fix (tt-, nm-, ch-, ev-, co-, ni-)',
+    },
+    'da': {
+      language: 'da',
+      value: 'Identifikationsnummer i Internet Movie Database (IMDb) inklusive pr\u00e6fiks (tt-, nm-, ch-, co-, ev-)',
+    },
+    'es': {
+      language: 'es',
+      value: 'identificador para la Internet Movie Database (IMDb) con prefijo (tt- nm- ch- co-)',
+    },
+    'ru': {
       language: 'ru',
       value: '\u043a\u043e\u0434 \u0432 Internet Movie Database (IMDb) \u0441 \u043f\u0440\u0435\u0444\u0438\u043a\u0441\u043e\u043c (tt-, nm-, ch-, co-, ev-)',
     },
-    fr: {
+    'pt-br': {
+      language: 'pt-br',
+      value: 'identificador do Internet Movie Database (IMDb) com o prefixo (tt- nm- ch- co-)',
+    },
+    'pt': {
+      language: 'pt',
+      value: 'identificador do Internet Movie Database (IMDb) com o prefixo (tt- nm- ch- co-)',
+    },
+    'hu': {
+      language: 'hu',
+      value: 'az elem Internet Movie Database (IMDb) azonos\u00edt\u00f3ja el\u0151taggal (tt-, nm-, ch-, co-)',
+    },
+    'ca': {
+      language: 'ca',
+      value: 'identificador de l\'Internet Movie Database (IMDb) amb prefix (tt-, nm-, ch- o co-)',
+    },
+    'vi': {
+      language: 'vi',
+      value: '\u0111\u1ecbnh danh C\u01a1 s\u1edf d\u1eef li\u1ec7u \u0110i\u1ec7n \u1ea3nh tr\u00ean Internet (IMDb) c\u00f3 ti\u1ec1n t\u1ed1 (tt-, nm-, ch-, co-)',
+    },
+    'fi': {
+      language: 'fi',
+      value: 'Internet Movie Database (IMDb) -tunniste etuliitteineen (tt-, nm-, ch-, co-)',
+    },
+    'be-tarask': {
+      language: 'be-tarask',
+      value: '\u0437 \u043f\u0440\u044d\u0444\u0456\u043a\u0441\u0430\u043c\u0456 (tt-, nm-, ch-, co-)',
+    },
+    'pl': {
+      language: 'pl',
+      value: 'identyfikator w Internet Movie Database (w\u0142\u0105cznie z  dwuliterowym prefiksem: tt-, nm-, ch-, co-)',
+    },
+    'lv': {
+      language: 'lv',
+      value: 'Internet Movie Database (IMDb) identifikators ar prefiksu (\'tt\', \'nm\', \'ch\', \'co\' vai \'ev\')',
+    },
+    'fa': {
+      language: 'fa',
+      value: '\u06a9\u062f \u0634\u0646\u0627\u0633\u0627\u06cc\u06cc \u0641\u06cc\u0644\u0645 \u0645\u0648\u0631\u062f\u0646\u0638\u0631 \u06a9\u0647 \u0628\u0627 \u067e\u06cc\u0634\u0648\u0646\u062f \u062d\u0631\u0648\u0641\u06cc (tt\u060c nm\u060c ch\u060c co) \u0645\u0634\u062e\u0635 \u0645\u06cc \u0634\u0648\u062f',
+    },
+    'ro': {
+      language: 'ro',
+      value: 'identificator IMDb (Internet Movie Database), inclusiv prefixul (tt, nm, ch, co)',
+    },
+    'tr': {
+      language: 'tr',
+      value: 'tt-, nm-, ch-, co- gibi \u00f6n ekleri olan Internet Movie Database (IMDb) tan\u0131mlay\u0131c\u0131s\u0131',
+    },
+    'zh': {
+      language: 'zh',
+      value: '\u4e92\u806f\u7db2\u96fb\u5f71\u6578\u64da\u5eab\u7684\u7de8\u865f\uff0c\u524d\u7db4\u70ba (tt-, nm-, ch-, co-)',
+    },
+    'zh-hant': {
+      language: 'zh-hant',
+      value: '\u4e92\u806f\u7db2\u96fb\u5f71\u6578\u64da\u5eab\uff08IMDB\uff09\u7de8\u865f\uff0c\u524d\u7db4\u70ba\uff08tt-, nm-, ch-, co-\uff09',
+    },
+    'be': {
+      language: 'be',
+      value: '\u0456\u0434\u044d\u043d\u0442\u044b\u0444\u0456\u043a\u0430\u0442\u0430\u0440',
+    },
+    'bg': {
+      language: 'bg',
+      value: '\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0432 Internet Movie Database (IMDb) \u0441 \u043f\u0440\u0435\u0444\u0438\u043a\u0441 (tt-, nm-, ch-, co-)',
+    },
+    'zh-hans': {
+      language: 'zh-hans',
+      value: '\u4e92\u8054\u7f51\u7535\u5f71\u6570\u636e\u5e93\uff08IMDB\uff09\u7f16\u53f7\uff0c\u524d\u7f00\u4e3a\uff08tt-, nm-, ch-, co-\uff09',
+    },
+    'fr': {
       language: 'fr',
       value: 'identifiant Internet Movie Database (IMDb) avec un pr\u00e9fixe (tt-, nm-, ch-, co-, ni-)',
     },
+    'el': {
+      language: 'el',
+      value: '\u03ba\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2 \u03b1\u03bd\u03b1\u03c6\u03bf\u03c1\u03ac\u03c2 \u03c3\u03c4\u03bf Internet Movie Database (IMDb)',
+    },
+    'zh-tw': {
+      language: 'zh-tw',
+      value: '\u7db2\u8def\u96fb\u5f71\u8cc7\u6599\u5eab\uff08IMDB\uff09\u7de8\u865f\uff0c\u524d\u7db4\u70ba\uff08tt-, nm-, ch-, co-\uff09',
+    },
+    'oc': {
+      language: 'oc',
+      value: 'identification code from the Internet Movie Database (IMDb) with prefix (tt-, nm-, ch-, co-)',
+    },
+    'en-gb': {
+      language: 'en-gb',
+      value: 'identification code from the Internet Movie Database (IMDb) with prefix (tt-, nm-, ch-, co-)',
+    },
+    'hi': {
+      language: 'hi',
+      value: '\u0909\u092a\u0938\u0930\u094d\u0917 (tt-, nm-, ch-, co-) \u0915\u0947 \u0938\u093e\u0925 \u0907\u0902\u091f\u0930\u0928\u0947\u0936\u0928\u0932 \u092e\u0942\u0935\u0940 \u0921\u0947\u091f\u093e\u092c\u0947\u0938 (\u0906\u0908\u090f\u092e\u0921\u0940\u092c\u0940 \u092f\u093e IMDb) \u092a\u0939\u091a\u093e\u0928 \u0915\u094b\u0921',
+    },
+    'gl': {
+      language: 'gl',
+      value: 'identificador da Internet Movie Database (IMDb) con prefixo (tt-, nm-, ch-, co-)',
+    },
+    'he': {
+      language: 'he',
+      value: '\u05e7\u05d5\u05d3 \u05d6\u05d9\u05d4\u05d5\u05d9 \u05d1\u05de\u05d0\u05d2\u05e8  Internet Movie Database (IMDb)  \u05d1\u05ea\u05d5\u05e1\u05e4\u05ea \u05e7\u05d9\u05d3\u05d5\u05de\u05ea  (tt-, nm-, ch-, co-)',
+    },
+    'zh-cn': {
+      language: 'zh-cn',
+      value: '\u4e92\u8054\u7f51\u7535\u5f71\u6570\u636e\u5e93\u7684\u7f16\u53f7\uff0c\u524d\u7f00\u4e3a\uff08tt-, nm-, ch-, co-\uff09',
+    },
+    'ar': {
+      language: 'ar',
+      value: '\u0623\u0643\u0648\u0627\u062f \u0627\u0644\u062a\u0639\u0631\u064a\u0641 \u0645\u0646 IMDb \u0627\u0644\u062a\u064a \u062a\u0628\u062f\u0623 \u0628-(tt-, nm-, ch-, co-)',
+    },
+    'uk': {
+      language: 'uk',
+      value: '\u043a\u043e\u0434-\u0456\u0434\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0442\u043e\u0440 \u0437 Internet Movie Database (IMDb) \u0456\u0437 \u043f\u0440\u0435\u0444\u0456\u043a\u0441\u043e\u043c (tt-, nm-, ch-, co-, ev-)',
+    },
+    'gu': {
+      language: 'gu',
+      value: '\u0aaa\u0ac2\u0ab0\u0acd\u0ab5\u0a97 (tt-, nm-, ch-, co-)  \u0ab8\u0abe\u0aa5\u0ac7 \u0a86\u0a88. \u0a8f\u0aae. \u0aa1\u0ac0. \u0aac\u0ac0. \u0a93\u0ab3\u0a96 \u0a95\u0acd\u0ab0\u0aae\u0abe\u0a82\u0a95',
+    },
+    'rmy': {
+      language: 'rmy',
+      value: 'Elysium,',
+    },
+    'cs': {
+      language: 'cs',
+      value: 'v\u010detn\u011b prefixu (tt-, nm-, ch-, co-)',
+    },
+    'af': {
+      language: 'af',
+      value: 'Identifikasiekode op die Internet Movie Database (IMDb)',
+    },
+    'zh-hk': {
+      language: 'zh-hk',
+      value: '\u4e92\u806f\u7db2\u96fb\u5f71\u6578\u64da\u5eab\uff08IMDb\uff09\u7de8\u865f\uff0c\u524d\u7db4\u70ba (tt-, nm-, ch-, co-)',
+    },
+    'eo': {
+      language: 'eo',
+      value: 'identiga kodo de Internet Movie Database kun prefikso (tt-, nm-, ch-, co-)',
+    },
+    'sk': {
+      language: 'sk',
+      value: 's predponou (tt-, nm-, ch-, co-)',
+    },
+    'sr': {
+      language: 'sr',
+      value: '\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0441\u0430 \u0444\u0438\u043b\u043c\u0441\u043a\u0435 \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442 \u0431\u0430\u0437\u0435 \u043f\u043e\u0434\u0430\u0442\u0430\u043a\u0430 (IMDb) [\u0441\u0430 \u043f\u0440\u0435\u0444\u0438\u043a\u0441\u043e\u043c \u2019tt-\u2019, \u2019nm-\u2019, \u2019ch-\u2019, \u2019co-\u2019]',
+    },
+    'sr-ec': {
+      language: 'sr-ec',
+      value: '\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0446\u0438\u043e\u043d\u0438 \u0431\u0440\u043e\u0458 \u0441\u0430 \u0424\u0438\u043b\u043c\u0441\u043a\u0435 \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442 \u0431\u0430\u0437\u0435 \u043f\u043e\u0434\u0430\u0442\u0430\u043a\u0430 (IMDb) \u0441\u0430 \u043f\u0440\u0435\u0444\u0438\u043a\u0441\u043e\u043c (tt-, nm-, ch-, co-)',
+    },
+    'sr-el': {
+      language: 'sr-el',
+      value: 'identifikacioni broj sa Filmske internet baze podataka (IMDb) sa prefiksom (tt-, nm-, ch-, co-)',
+    },
+    'ia': {
+      language: 'ia',
+      value: 'codice de identification del Internet Movie Database (IMDb) con prefixo (tt-, nm-, ch-, co-)',
+    },
+    'nl': {
+      language: 'nl',
+      value: 'Identificatiecode van de Internet Movie Database (IMDb) met prefix (tt-, nm-, ch-, co-, ev-)',
+    },
+    'ksh': {
+      language: 'ksh',
+      value: 'de K\u00e4nnong en de Felmdahtebangk em Intern\u00e4t, de Internet Movie Database (met de aanf\u00e4nglejje Bohchschtahbe)',
+    },
+    'eu': {
+      language: 'eu',
+      value: 'Internet Movie Database (IMDb) datu-baserako identifikadorea (tt-, nm-, ch-, co-) aurrizkiekin',
+    },
+    'th': {
+      language: 'th',
+      value: '\u0e15\u0e31\u0e27\u0e23\u0e2b\u0e31\u0e2a\u0e23\u0e30\u0e1a\u0e38\u0e02\u0e2d\u0e07 \u0e2d\u0e34\u0e19\u0e40\u0e17\u0e2d\u0e23\u0e4c\u0e40\u0e19\u0e47\u0e15\u0e21\u0e39\u0e27\u0e35\u0e40\u0e14\u0e15\u0e32\u0e40\u0e1a\u0e2a (IMDB) \u0e1e\u0e23\u0e49\u0e2d\u0e21\u0e04\u0e48\u0e32\u0e23\u0e30\u0e1a\u0e38 (tt-, nm-, ch-, co-, ev-)',
+    },
+    'zh-mo': {
+      language: 'zh-mo',
+      value: '\u4e92\u806f\u7db2\u96fb\u5f71\u6578\u64da\u5eab\uff08IMDB\uff09\u7de8\u865f\uff0c\u524d\u7db4\u70ba\uff08tt-, nm-, ch-, co-\uff09',
+    },
+    'zh-sg': {
+      language: 'zh-sg',
+      value: '\u4e92\u8054\u7f51\u7535\u5f71\u6570\u636e\u5e93\uff08IMDB\uff09\u7f16\u53f7\uff0c\u524d\u7f00\u4e3a\uff08tt-, nm-, ch-, co-\uff09',
+    },
+    'scn': {
+      language: 'scn',
+      value: 'c\u00f2dici idintificativu assignatu \u00f4 suggettu nt\u00e2 basi di dati d\u00fb situ internet Internet Movie Database (IMDb), cu prifissu (tt-, nm-, ch-, co-, ev-)',
+    },
+    'ilo': {
+      language: 'ilo',
+      value: 'panangilasin manipud iti Internet Movie Database (IMDb) nga addaan iti pasakbay iti (tt-, nm-, ch-, co-, ev-)',
+    },
+    'ast': {
+      language: 'ast',
+      value: 'identificador pa la Internet Movie Database (IMDb) con prefixu (tt-, nm-, ch-. co-, ev-)',
+    },
+    'ko': {
+      language: 'ko',
+      value: '\ud56d\ubaa9 \uc8fc\uc81c\uc5d0 \ub300\ud574 \uc778\ud130\ub137 \uc601\ud654 \ub370\uc774\ud130\ubca0\uc774\uc2a4(IMDb)\uc5d0\uc11c \uc0ac\uc6a9\ud558\ub294 \uc2dd\ubcc4\uc790 (tt, nm, ch, co, ev\uc758 \uc811\ub450\uc0ac\ub97c \uac00\uc9d0)',
+    },
+    'bs': {
+      language: 'bs',
+      value: 'Identifikator sa filmske internet baze podataka (IMDb), sa prefiksom (tt-, nm-, ch-, co-, ev-)',
+    },
+    'fo': {
+      language: 'fo',
+      value: 'Ey\u00f0merkingartal \u00ed Internet Movie Database (IMDb)',
+    },
+    'sv': {
+      language: 'sv',
+      value: 'idenfitikation fr\u00e5n Internet Movie Database',
+    },
+    'nb': {
+      language: 'nb',
+      value: 'Identifikasjonsnummer i Internet Movie Database (IMDb) inklusiv prefiks (tt-, nm-, ch-, co-, ev-)',
+    },
+    'ta': {
+      language: 'ta',
+      value: '\u0ba4\u0bbf\u0bb0\u0bc8\u0baa\u0bcd\u0baa\u0b9f \u0ba4\u0bb0\u0bb5\u0b95\u0ba4\u0bcd\u0ba4\u0bbf\u0bb2\u0bcd \u0baa\u0bbf\u0ba9\u0bcd\u0bb5\u0bb0\u0bc1\u0bae\u0bcd \u0bae\u0bc1\u0ba9\u0bcd\u0ba9\u0bca\u0b9f\u0bcd\u0b9f\u0bc1\u0b95\u0bb3\u0bc1\u0b9f\u0ba9\u0bcd \u0b85\u0bb1\u0bbf\u0baf\u0baa\u0bcd\u0baa\u0b9f\u0bcd\u0b9f\u0ba4\u0bc1 (IMDb) with prefix (\'tt\', \'nm\', \'ch\', \'co\', \'ev\' or \'ni\')',
+    },
+    'ms': {
+      language: 'ms',
+      value: 'pengenal pasti untuk Pangkalan Data Filem Internet (IMDb) [dengan awalan \'tt\', \'nm\', \'ch\', \'co\', \'ev\', atau \'ni\']',
+    },
+  },
+  aliases: {
+    'ja': [
+      {
+        language: 'ja',
+        value: 'IMDb\u756a\u53f7',
+      },
+    ],
+    'en': [
+      {
+        language: 'en',
+        value: 'Internet Movie Database identifier',
+      },
+      {
+        language: 'en',
+        value: 'Internet Movie Database',
+      },
+      {
+        language: 'en',
+        value: 'IMDb identifier',
+      },
+      {
+        language: 'en',
+        value: 'IMDb',
+      },
+      {
+        language: 'en',
+        value: 'imdb',
+      },
+    ],
+    'pt-br': [
+      {
+        language: 'pt-br',
+        value: 'c\u00f3digo IMDb',
+      },
+      {
+        language: 'pt-br',
+        value: 'IMDb id',
+      },
+    ],
+    'pt': [
+      {
+        language: 'pt',
+        value: 'c\u00f3digo IMDb',
+      },
+      {
+        language: 'pt',
+        value: 'IMDb id',
+      },
+    ],
+    'it': [
+      {
+        language: 'it',
+        value: 'IMDb',
+      },
+      {
+        language: 'it',
+        value: 'Internet Movie Database ID',
+      },
+      {
+        language: 'it',
+        value: 'imdb',
+      },
+      {
+        language: 'it',
+        value: 'IMDb ID',
+      },
+    ],
+    'vi': [
+      {
+        language: 'vi',
+        value: 's\u1ed1 IMDb',
+      },
+      {
+        language: 'vi',
+        value: 'm\u00e3 s\u1ed1 IMDb',
+      },
+    ],
+    'fa': [
+      {
+        language: 'fa',
+        value: '\u06a9\u062f IMDb',
+      },
+      {
+        language: 'fa',
+        value: '\u06a9\u062f IMBD',
+      },
+    ],
+    'zh': [
+      {
+        language: 'zh',
+        value: '\u4e92\u806f\u7db2\u96fb\u5f71\u6578\u64da\u5eab\u7de8\u865f',
+      },
+      {
+        language: 'zh',
+        value: 'IMDb\u7f16\u53f7',
+      },
+    ],
+    'zh-hant': [
+      {
+        language: 'zh-hant',
+        value: '\u4e92\u806f\u7db2\u96fb\u5f71\u6578\u64da\u5eab\u7de8\u865f',
+      },
+      {
+        language: 'zh-hant',
+        value: 'IMDb ID',
+      },
+    ],
+    'ru': [
+      {
+        language: 'ru',
+        value: 'IMDb',
+      },
+      {
+        language: 'ru',
+        value: '\u043a\u043e\u0434 IMDb',
+      },
+      {
+        language: 'ru',
+        value: '\u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 IMDb',
+      },
+      {
+        language: 'ru',
+        value: '\u0438\u043c\u0434\u0431',
+      },
+      {
+        language: 'ru',
+        value: '\u043a\u043e\u0434 \u0438\u043c\u0434\u0431',
+      },
+    ],
+    'es': [
+      {
+        language: 'es',
+        value: 'IMDb',
+      },
+      {
+        language: 'es',
+        value: 'Internet Movie Database',
+      },
+    ],
+    'gl': [
+      {
+        language: 'gl',
+        value: 'IMDb',
+      },
+      {
+        language: 'gl',
+        value: 'Internet Movie Database',
+      },
+    ],
+    'fr': [
+      {
+        language: 'fr',
+        value: 'IMDb #',
+      },
+    ],
+    'ar': [
+      {
+        language: 'ar',
+        value: '\u0645\u0639\u0631\u0650\u0651\u0641 \u0642\u0627\u0639\u062f\u0629 \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0623\u0641\u0644\u0627\u0645 \u0639\u0644\u0649 \u0627\u0644\u0625\u0646\u062a\u0631\u0646\u062a',
+      },
+      {
+        language: 'ar',
+        value: '\u0642\u0627\u0639\u062f\u0629 \u0628\u064a\u0627\u0646\u0627\u062a \u0627\u0644\u0623\u0641\u0644\u0627\u0645 \u0639\u0644\u0649 \u0627\u0644\u0625\u0646\u062a\u0631\u0646\u062a',
+      },
+    ],
+    'rmy': [
+      {
+        language: 'rmy',
+        value: 'nu',
+      },
+    ],
+    'cs': [
+      {
+        language: 'cs',
+        value: 'IMDb identifik\u00e1tor',
+      },
+      {
+        language: 'cs',
+        value: 'IMDb ID',
+      },
+      {
+        language: 'cs',
+        value: 'identifika\u010dn\u00ed \u010d\u00edslo IMDb',
+      },
+    ],
+    'de': [
+      {
+        language: 'de',
+        value: 'Internet Movie Database',
+      },
+      {
+        language: 'de',
+        value: 'IMDb',
+      },
+      {
+        language: 'de',
+        value: 'imdb',
+      },
+    ],
+    'el': [
+      {
+        language: 'el',
+        value: 'IMDB',
+      },
+      {
+        language: 'el',
+        value: '\u03ba\u03c9\u03b4\u03b9\u03ba\u03cc\u03c2 IMDB',
+      },
+      {
+        language: 'el',
+        value: '\u03b1\u03bd\u03b1\u03b3\u03bd\u03c9\u03c1\u03b9\u03c3\u03c4\u03b9\u03ba\u03cc IMDB',
+      },
+    ],
+    'nb': [
+      {
+        language: 'nb',
+        value: 'IMDb',
+      },
+      {
+        language: 'nb',
+        value: 'IMDB',
+      },
+      {
+        language: 'nb',
+        value: 'imdb',
+      },
+    ],
+    'eo': [
+      {
+        language: 'eo',
+        value: 'IMDb',
+      },
+      {
+        language: 'eo',
+        value: 'Internet Movie Database',
+      },
+    ],
+    'nl': [
+      {
+        language: 'nl',
+        value: 'IMDb',
+      },
+      {
+        language: 'nl',
+        value: 'Internet Movie Database',
+      },
+      {
+        language: 'nl',
+        value: 'imdb',
+      },
+    ],
+    'zh-hans': [
+      {
+        language: 'zh-hans',
+        value: '\u4e92\u8054\u7f51\u7535\u5f71\u6570\u636e\u5e93',
+      },
+    ],
+    'ca': [
+      {
+        language: 'ca',
+        value: 'IMDb',
+      },
+      {
+        language: 'ca',
+        value: 'imdb',
+      },
+    ],
+    'sh': [
+      {
+        language: 'sh',
+        value: 'IMDb',
+      },
+    ],
+    'scn': [
+      {
+        language: 'scn',
+        value: 'IMDb',
+      },
+    ],
+    'ilo': [
+      {
+        language: 'ilo',
+        value: 'IMDb',
+      },
+    ],
+    'ast': [
+      {
+        language: 'ast',
+        value: 'IMDb',
+      },
+      {
+        language: 'ast',
+        value: 'imdb',
+      },
+      {
+        language: 'ast',
+        value: 'Internet Movie Database',
+      },
+    ],
+    'ko': [
+      {
+        language: 'ko',
+        value: 'IMDb',
+      },
+      {
+        language: 'ko',
+        value: '\uc778\ud130\ub137 \uc601\ud654 DB \uc2dd\ubcc4\uc790',
+      },
+      {
+        language: 'ko',
+        value: '\uc778\ud130\ub137 \uc601\ud654 DB ID',
+      },
+      {
+        language: 'ko',
+        value: '\uc778\ud130\ub137\uc601\ud654\ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc2dd\ubcc4\uc790',
+      },
+      {
+        language: 'ko',
+        value: '\uc778\ud130\ub137 \uc601\ud654\ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc2dd\ubcc4\uc790',
+      },
+      {
+        language: 'ko',
+        value: '\uc778\ud130\ub137 \uc601\ud654\ub370\uc774\ud130\ubca0\uc774\uc2a4 ID',
+      },
+      {
+        language: 'ko',
+        value: '\uc778\ud130\ub137 \uc601\ud654 \ub370\uc774\ud130\ubca0\uc774\uc2a4 \uc2dd\ubcc4\uc790',
+      },
+      {
+        language: 'ko',
+        value: 'IMDb \uc2dd\ubcc4\uc790',
+      },
+      {
+        language: 'ko',
+        value: '\uc778\ud130\ub137\uc601\ud654\ub370\uc774\ud130\ubca0\uc774\uc2a4 ID',
+      },
+      {
+        language: 'ko',
+        value: '\uc778\ud130\ub137 \uc601\ud654 \ub370\uc774\ud130\ubca0\uc774\uc2a4 ID',
+      },
+    ],
+    'bs': [
+      {
+        language: 'bs',
+        value: 'IMDb',
+      },
+      {
+        language: 'bs',
+        value: 'imdb',
+      },
+      {
+        language: 'bs',
+        value: 'Internet Movie Database',
+      },
+    ],
+    'hu': [
+      {
+        language: 'hu',
+        value: 'Internet Movie Database',
+      },
+      {
+        language: 'hu',
+        value: 'IMDb',
+      },
+      {
+        language: 'hu',
+        value: 'imdb',
+      },
+    ],
+    'or': [
+      {
+        language: 'or',
+        value: 'IMDB \u0b2a\u0b30\u0b3f\u0b1a\u0b5f',
+      },
+      {
+        language: 'or',
+        value: '\u0b06\u0b07\u0b0f\u0b2e\u0b21\u0b3f\u0b2c\u0b3f \u0b06\u0b07\u0b21\u0b3f',
+      },
+      {
+        language: 'or',
+        value: '\u0b06\u0b07\u0b0f\u0b2e\u0b21\u0b3f\u0b2c\u0b3f \u0b2a\u0b30\u0b3f\u0b1a\u0b5f',
+      },
+    ],
+    'fo': [
+      {
+        language: 'fo',
+        value: 'IMDb',
+      },
+    ],
+    'lv': [
+      {
+        language: 'lv',
+        value: 'IMDb ID',
+      },
+      {
+        language: 'lv',
+        value: 'IMDb',
+      },
+      {
+        language: 'lv',
+        value: 'Internet Movie Database',
+      },
+    ],
+    'sr': [
+      {
+        language: 'sr',
+        value: 'IMDb',
+      },
+      {
+        language: 'sr',
+        value: '\u0438\u043c\u0434\u0431',
+      },
+      {
+        language: 'sr',
+        value: 'imdb',
+      },
+      {
+        language: 'sr',
+        value: '\u0424\u0438\u043b\u043c\u0441\u043a\u0430 \u0438\u043d\u0442\u0435\u0440\u043d\u0435\u0442 \u0431\u0430\u0437\u0430 \u043f\u043e\u0434\u0430\u0442\u0430\u043a\u0430',
+      },
+      {
+        language: 'sr',
+        value: 'Internet Movie Database',
+      },
+      {
+        language: 'sr',
+        value: '\u0418\u041c\u0414\u0431 \u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440',
+      },
+      {
+        language: 'sr',
+        value: 'IMDb identifier',
+      },
+    ],
+    'eu': [
+      {
+        language: 'eu',
+        value: 'IMDb',
+      },
+      {
+        language: 'eu',
+        value: 'Internet Movie Database',
+      },
+    ],
+    'se': [
+      {
+        language: 'se',
+        value: 'IMDb-nummar',
+      },
+      {
+        language: 'se',
+        value: 'IMDb-numm\u00e1r',
+      },
+    ],
+    'ba': [
+      {
+        language: 'ba',
+        value: 'IMDb',
+      },
+      {
+        language: 'ba',
+        value: 'IMDb \u0438\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440\u044b',
+      },
+      {
+        language: 'ba',
+        value: '\u0438\u043c\u0434\u0431 \u043a\u043e\u0434\u044b',
+      },
+      {
+        language: 'ba',
+        value: '\u0438\u043c\u0434\u0431',
+      },
+    ],
+    'lb': [
+      {
+        language: 'lb',
+        value: 'IMDb-Identifikatiounsnummer',
+      },
+    ],
+    'uk': [
+      {
+        language: 'uk',
+        value: '\u0456\u0434\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0442\u043e\u0440 \u0443 \u0431\u0430\u0437\u0456 IMDb',
+      },
+      {
+        language: 'uk',
+        value: '\u043a\u043e\u0434 IMDb',
+      },
+      {
+        language: 'uk',
+        value: 'Internet Movie Database',
+      },
+      {
+        language: 'uk',
+        value: '\u0456\u043c\u0434\u0431',
+      },
+    ],
+    'tt': [
+      {
+        language: 'tt',
+        value: 'IMDb \u043a\u043e\u0434\u044b',
+      },
+    ],
+    'tt-cyrl': [
+      {
+        language: 'tt-cyrl',
+        value: 'IMDb \u043a\u043e\u0434\u044b',
+      },
+    ],
+    'ms': [
+      {
+        language: 'ms',
+        value: 'IMDb',
+      },
+      {
+        language: 'ms',
+        value: 'Pangkalan Data Filem Internet',
+      },
+      {
+        language: 'ms',
+        value: 'Internet Movie Database',
+      },
+      {
+        language: 'ms',
+        value: 'imdb',
+      },
+      {
+        language: 'ms',
+        value: 'pengenal pasti IMDb',
+      },
+      {
+        language: 'ms',
+        value: 'pengecam IMDb',
+      },
+    ],
   },
   claims: {
     P1630: [
@@ -3987,7 +5158,7 @@ const data = {
     ],
     P1896: [
       {
-        mainsnak: {
+        'mainsnak': {
           snaktype: 'value',
           property: 'P1896',
           hash: '1d91f3129a74575a3f417a20958c89e397eaccbb',
@@ -3997,9 +5168,30 @@ const data = {
           },
           datatype: 'url',
         },
-        type: 'statement',
-        id: 'P345$fbf86c01-4831-1c48-6f69-2bd72dd9e6b7',
-        rank: 'normal',
+        'type': 'statement',
+        'qualifiers': {
+          P407: [
+            {
+              snaktype: 'value',
+              property: 'P407',
+              hash: 'daf1c4fcb58181b02dff9cc89deb084004ddae4b',
+              datavalue: {
+                value: {
+                  'entity-type': 'item',
+                  'numeric-id': 1860,
+                  'id': 'Q1860',
+                },
+                type: 'wikibase-entityid',
+              },
+              datatype: 'wikibase-item',
+            },
+          ],
+        },
+        'qualifiers-order': [
+          'P407',
+        ],
+        'id': 'P345$fbf86c01-4831-1c48-6f69-2bd72dd9e6b7',
+        'rank': 'normal',
       },
     ],
     P2875: [
@@ -4117,6 +5309,27 @@ const data = {
         },
         type: 'statement',
         id: 'P345$8e258556-4a6f-30c4-05f3-941e3d986a50',
+        rank: 'normal',
+      },
+    ],
+    P17: [
+      {
+        mainsnak: {
+          snaktype: 'value',
+          property: 'P17',
+          hash: 'be4c6eafa2984964f04be85667263f5642ba1a72',
+          datavalue: {
+            value: {
+              'entity-type': 'item',
+              'numeric-id': 30,
+              'id': 'Q30',
+            },
+            type: 'wikibase-entityid',
+          },
+          datatype: 'wikibase-item',
+        },
+        type: 'statement',
+        id: 'P345$1b24bc96-4af1-3dfa-e8a1-0bc95f048ffc',
         rank: 'normal',
       },
     ],

@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import flags from 'utils/flags';
+import MediawikiPreview from 'components/MediawikiPreview';
 import PropTypes from 'prop-types';
-import styles from './core.css';
+import styles from './FlagCell.css';
 
 export default class FlagCell extends Component {
 
-  render() {
-    const { code } = this.props;
-    const flagHtml = flags[ code ];
-    if ( !flagHtml )
-      return <td className={styles.wef_property_editor_flag}></td>;
+  static propTypes = {
+    flagImage: PropTypes.string,
+  };
 
-    return <td className={styles.wef_property_editor_flag} dangerouslySetInnerHTML={{ ___html: flagHtml }}></td>;
+  render() {
+    const { flagImage } = this.props;
+    if ( !flagImage )
+      return <td className={styles.wef_flag_cell}></td>;
+
+    return <td className={styles.wef_flag_cell}>
+      <MediawikiPreview spinnerSize={22} wikitext={'[[File:' + flagImage + '|22x22px|frameless]]'} />
+    </td>;
   }
 }
-
-FlagCell.propTypes = {
-  code: PropTypes.string,
-};

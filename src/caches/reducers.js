@@ -59,3 +59,4 @@ function cacheReducerBuilder( type ) {
 
 export const LABELDESCRIPTIONS = cacheReducerBuilder( 'LABELDESCRIPTIONS' );
 export const PROPERTYDESCRIPTIONS = cacheReducerBuilder( 'PROPERTYDESCRIPTIONS' );
+export const STRINGPROPERTYVALUES = cacheReducerBuilder( 'STRINGPROPERTYVALUES' );
