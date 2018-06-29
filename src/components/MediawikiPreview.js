@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
+import { FadeLoader } from 'react-spinners';
 import PropTypes from 'prop-types';
-import { RingLoader } from 'react-spinners';
 
 export default class MediawikiPreview extends Component {
 
@@ -61,7 +61,7 @@ export default class MediawikiPreview extends Component {
       return <div dangerouslySetInnerHTML={{ __html: this.state.html }} {...other} />;
     }
 
-    return <RingLoader size={spinnerSize} {...other} />;
+    return <FadeLoader size={spinnerSize} {...other} />;
   }
 
 }

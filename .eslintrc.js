@@ -25,7 +25,8 @@ module.exports = {
     "$": true,
     "jQuery": true,
     "mw": true,
-    
+    "require": true,
+
     // for test:
     "describe": true,
     "it": true,
@@ -78,7 +79,7 @@ module.exports = {
     "prefer-const": 1,
     /* Suggest using the spread operator instead of .apply() */
     "prefer-spread": 1,
-    
+
     /* require quotes around object literal property names */
     "quote-props": [1, "consistent-as-needed"],
     "quotes": [1, "single"],
@@ -101,7 +102,7 @@ module.exports = {
 
     /* Enforce spacing between rest and spread operators and their expressions */
     "rest-spread-spacing": 1,
-    
+
     "semi": [1, "always"],
     /* Import Sorting */
     "sort-imports": [1, {"ignoreCase" : true}],

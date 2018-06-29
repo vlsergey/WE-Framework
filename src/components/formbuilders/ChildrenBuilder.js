@@ -6,6 +6,7 @@ import ErrorBoundary from './ErrorBoundary';
 import expect from 'expect';
 import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';
 import propertiesCacheContext from 'core/propertiesCacheContext';
+import SparqlPropertyGroup from './SparqlPropertyGroup';
 import styles from 'components/core.css';
 
 export default class ChildrenBuilder extends PureComponent {
@@ -88,9 +89,13 @@ export default class ChildrenBuilder extends PureComponent {
     if ( !specials || specials.length == 0 )
       return null;
 
-    return specials.map( ( { key, type } ) => {
+    return specials.map( special => {
+      const { key, type } = special;
       if ( type === 'LabelsAndDescriptionArea' ) {
         return <LanguageSelectContainer key={key || type} />;
+      }
+      if ( type === 'SparqlPropertyGroup' ) {
+        return <SparqlPropertyGroup {...special} key={key || type} />;
       }
       return <span key={key || type}>unsupported special type: {type}</span>;
     } );

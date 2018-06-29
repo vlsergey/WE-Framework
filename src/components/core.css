@@ -145,7 +145,7 @@ button.wef_select_snak_type_button :global .ui-button-icon-primary {
 }
 
 .wef_external-id {
-	min-width: 19em;
+	min-width: 10em;
 }
 
 .wef_external_links_before_url_cell {

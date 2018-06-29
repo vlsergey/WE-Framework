@@ -70,22 +70,13 @@ const editorDescription = {
     {
       labelEntityId: 'Q36524',
       key: 'authoritycontrol',
-      fields: [
-        /* boxofficemojo.com */
-        { property: 'P1237' },
-        /* filmaffinity.com */
-        { property: 'P480' },
-        /* imdb.com */
-        { property: 'P345' },
-        /* rottentomatoes.com */
-        { property: 'P1258' },
-        /* allocine.fr */
-        { property: 'P1265' },
-        /* ČSFD film ID */
-        { property: 'P2529' },
-
-        { property: 'P4276' },
-        { property: 'P4529' },
+      specials: [
+        { type: 'SparqlPropertyGroup',
+          sparql: 'SELECT ?property '
+                    + 'WHERE { '
+                    + '?property wdt:P31 wd:Q29542094 . '
+                    + '?property wikibase:propertyType wikibase:ExternalId . '
+                    + '}' },
       ],
     },
   ],
