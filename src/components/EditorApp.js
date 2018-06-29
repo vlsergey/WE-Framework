@@ -4,7 +4,6 @@ import DialogWrapper from 'wrappers/DialogWrapper';
 import { EditorShape } from 'components/formbuilders/FormShapes';
 import EditorTabsBuilder from 'components/formbuilders/EditorTabsBuilder';
 import i18n from './core.i18n';
-import PropertiesCacheContainer from 'core/PropertiesCacheContainer';
 import PropTypes from 'prop-types';
 import save from 'core/save';
 
@@ -69,9 +68,7 @@ class EditorApp extends Component {
     } );
 
     return this.state.visible && <DialogWrapper buttons={buttons} minWidth={800} onClose={onExit} title={description.title}>
-      <PropertiesCacheContainer>
-        <EditorTabsBuilder tabs={description.tabs} />
-      </PropertiesCacheContainer>
+      <EditorTabsBuilder tabs={description.tabs} />
     </DialogWrapper>;
   }
 

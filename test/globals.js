@@ -1,3 +1,5 @@
+import expect from 'expect';
+
 const mw = {};
 
 mw.config = new Map();
@@ -29,6 +31,9 @@ jQuery.uls = {
     },
   },
 };
+
+require( 'fetch-polyfill' );
+expect( window.fetch ).toBeAn( 'function' );
 
 window.jQuery = jQuery;
 window.mw = mw;

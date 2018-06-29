@@ -2,7 +2,7 @@ import * as ApiUtils from 'core/ApiUtils';
 import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
 import expect from 'expect';
 import LabelDescription from './LabelDescription';
-import PropertyDescription from './PropertyDescription';
+import PropertyDescription from 'core/PropertyDescription';
 
 function buildQueueAction( type, maxBatch,
   isKeyValidF, buildPromiceF, convertResultToEntitiesF ) {

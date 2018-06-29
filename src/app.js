@@ -14,7 +14,7 @@ mw.loader.using( [ //
   'mediawiki.ForeignApi',
 ], () => {
 
-  require( 'fetch-ponyfill' )();
+  require( 'fetch-polyfill' );
 
   settings.registerEditor( AdmEntityEditorTemplate );
   settings.registerEditor( MovieEditorTemplate );

@@ -1,18 +1,25 @@
+import { applyMiddleware, createStore } from 'redux';
 import assert from 'assert';
+import buildReducers from 'core/reducers';
 import ChildrenBuilder from 'components/formbuilders/ChildrenBuilder';
-import PropertiesCacheContainer from 'core/PropertiesCacheContainer';
+import { Provider } from 'react-redux';
+import Q1367759 from '../../entities/Q1367759';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
+import thunk from 'redux-thunk';
 
 describe( 'ChildrenBuilder', () => {
 
+  const reducers = buildReducers( Q1367759 );
+  const store = createStore( reducers, applyMiddleware( thunk ) );
+
   it( 'renders fields', () => {
     const rendered = ReactTestUtils.renderIntoDocument(
-      <PropertiesCacheContainer>
+      <Provider store={store}>
         <ChildrenBuilder fields={[
           { property: 'P31' },
         ]} />
-      </PropertiesCacheContainer>
+      </Provider>
     );
     assert.ok( rendered );
 
@@ -27,19 +34,19 @@ describe( 'ChildrenBuilder', () => {
 
   it( 'renders fieldsets', () => {
     const rendered = ReactTestUtils.renderIntoDocument(
-      <PropertiesCacheContainer>
+      <Provider store={store}>
         <ChildrenBuilder fieldsets={[
           { fields: [
-            /* instance of */
+          /* instance of */
             { property: 'P31' },
           ] },
           { label: 'TestLabel',
             fields: [
-              /* director */
+            /* director */
               { property: 'P57' },
             ] },
         ]} />
-      </PropertiesCacheContainer>
+      </Provider>
     );
     assert.ok( rendered );
 
