@@ -30,7 +30,7 @@ function buildQueueAction( type, maxBatch,
 
         dispatch( {
           type: 'CACHE_' + type + '_REMOVE_FROM_QUEUE',
-          keys: nextBatch,
+          cacheKeys: nextBatch,
         } );
 
         return buildPromiceF( nextBatch ).then( result => {
@@ -38,7 +38,7 @@ function buildQueueAction( type, maxBatch,
             mw.log.warn( result.error );
             throw new Error( result.error );
           }
-          mw.log( 'Successfully received ' + nextBatch.length + 'items: ' + nextBatch );
+          mw.log( 'Successfully received ' + nextBatch.length + ' cache ' + type + ' items: ' + nextBatch );
 
           const cacheUpdate = convertResultToEntitiesF( result );
           expect( cacheUpdate ).toBeAn( 'object' );
@@ -67,8 +67,8 @@ function buildQueueAction( type, maxBatch,
     };
   }
 
-  return key => {
-    expect( key ).toBeAn( 'string' );
+  return cacheKey => {
+    expect( cacheKey ).toBeAn( 'string' );
 
     return ( dispatch, getState ) => {
 
@@ -78,21 +78,21 @@ function buildQueueAction( type, maxBatch,
       const cache = data.cache;
       expect( cache ).toBeAn( 'object', 'Cache not found: ' + type );
 
-      const test = isKeyValidF( key );
-      if ( !test ) throw new Error( 'Provided cache key is not valid: ' + key );
+      const test = isKeyValidF( cacheKey );
+      if ( !test ) throw new Error( 'Provided cacheKey is not valid: ' + cacheKey );
 
-      const cachedValue = cache[ key ];
+      const cachedValue = cache[ cacheKey ];
       if ( cachedValue )
         return;
 
       const queue = data.queue;
       expect( queue ).toBeA( Set );
 
-      if ( !queue.has( key ) ) {
-        console.log( 'Queueing for cache population: ' + key );
+      if ( !queue.has( cacheKey ) ) {
+        mw.log( 'Queueing for cache ' + type + ' population: ' + cacheKey );
         dispatch( {
           type: 'CACHE_' + type + '_QUEUE',
-          key,
+          cacheKey,
         } );
       }
 
@@ -103,14 +103,14 @@ function buildQueueAction( type, maxBatch,
 }
 
 export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
-  key => key.match( /^[PQ](\d+)$/i ),
-  keys => ApiUtils.getWikidataApi()
+  cacheKey => cacheKey.match( /^[PQ](\d+)$/i ),
+  cacheKeys => ApiUtils.getWikidataApi()
     .get( {
       action: 'wbgetentities',
       languages: API_PARAMETER_LANGUAGES,
       languagefallback: true,
       props: 'labels|descriptions',
-      ids: keys.join( '|' ),
+      ids: cacheKeys.join( '|' ),
     } ),
   result => {
     const cacheUpdate = {};
@@ -123,14 +123,14 @@ export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
 );
 
 export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS', 50,
-  key => key.match( /^P(\d+)$/i ),
-  keys => ApiUtils.getWikidataApi()
+  cacheKey => cacheKey.match( /^P(\d+)$/i ),
+  cacheKeys => ApiUtils.getWikidataApi()
     .get( {
       action: 'wbgetentities',
       languages: API_PARAMETER_LANGUAGES,
       languagefallback: true,
       props: 'claims|datatype|labels',
-      ids: keys.join( '|' ),
+      ids: cacheKeys.join( '|' ),
     } ),
   result => {
     const cacheUpdate = {};

@@ -6,15 +6,15 @@ const initialState = {
   state: 'WAITING',
 };
 
-function add( set, key ) {
+function add( set, cacheKeys ) {
   const result = new Set( set );
-  result.add( key );
+  result.add( cacheKeys );
   return result;
 }
 
-function remove( set, keys ) {
+function remove( set, cacheKeys ) {
   const result = new Set( set );
-  keys.forEach( key => result.delete( key ) );
+  cacheKeys.forEach( cacheKey => result.delete( cacheKey ) );
   return result;
 }
 
@@ -33,16 +33,16 @@ function cacheReducerBuilder( type ) {
         },
       };
     case 'CACHE_' + type + '_QUEUE':
-      expect( action.key ).toBeA( 'string' );
+      expect( action.cacheKey ).toBeA( 'string' );
       return {
         ...state,
-        queue: add( state.queue, action.key ),
+        queue: add( state.queue, action.cacheKey ),
       };
     case 'CACHE_' + type + '_REMOVE_FROM_QUEUE':
-      expect( action.keys ).toBeAn( 'array' );
+      expect( action.cacheKeys ).toBeAn( 'array' );
       return {
         ...state,
-        queue: remove( state.queue, action.keys ),
+        queue: remove( state.queue, action.cacheKeys ),
       };
     case 'CACHE_' + type + '_SET_STATE':
       expect( action.state ).toBeA( 'string' );
