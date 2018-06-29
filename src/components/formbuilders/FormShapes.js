@@ -31,5 +31,6 @@ export const SpecialShape = {
 export const TabShape = {
   label: PropTypes.string,
   labelEntityId: PropTypes.string,
+  key: PropTypes.string,
   ...ChildrenContainer,
 };

@@ -103,7 +103,7 @@ function buildQueueAction( type, maxBatch,
 }
 
 export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
-  key => key.match( /^Q(\d+)$/i ),
+  key => key.match( /^[PQ](\d+)$/i ),
   keys => ApiUtils.getWikidataApi()
     .get( {
       action: 'wbgetentities',
@@ -123,7 +123,7 @@ export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
 );
 
 export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS', 50,
-  key => key.match( /^Q(\d+)$/i ),
+  key => key.match( /^P(\d+)$/i ),
   keys => ApiUtils.getWikidataApi()
     .get( {
       action: 'wbgetentities',

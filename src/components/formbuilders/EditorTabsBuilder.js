@@ -2,17 +2,13 @@ import React, { PureComponent } from 'react';
 import ChildrenBuilder from './ChildrenBuilder';
 import EntityLabel from 'caches/EntityLabel';
 import PropTypes from 'prop-types';
+import { TabShape } from './FormShapes';
 import TabsWrapper from 'wrappers/TabsWrapper';
 
 export default class EditorTabsBuilder extends PureComponent {
 
   static propTypes = {
-    tabs: PropTypes.arrayOf( PropTypes.shape( {
-      label: PropTypes.string,
-      labelEntityId: PropTypes.string,
-      key: PropTypes.string.isRequired,
-      fields: PropTypes.array,
-    } ) ),
+    tabs: PropTypes.arrayOf( PropTypes.shape( TabShape ) ).isRequired,
   };
 
   render() {
