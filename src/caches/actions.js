@@ -143,7 +143,16 @@ export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS'
   }
 );
 
-const PROPERTIES_TO_CACHE = [ 'P17', 'P41' ];
+const PROPERTIES_TO_CACHE = [
+  // country
+  'P17',
+  // official language
+  'P37',
+  // flag image
+  'P41',
+  // Wikimedia language code
+  'P424',
+];
 
 export const stringPropertyValuesQueueF = buildQueueAction( 'STRINGPROPERTYVALUES', 10,
   cacheKey => cacheKey.match( /^[PQ](\d+)$/i ),

@@ -8,6 +8,11 @@ export default class SparqlPropertyGroup extends Component {
 
   static propTypes = {
     sparql: PropTypes.string.isRequired,
+    sortBy: PropTypes.string,
+  }
+
+  static defaultProps = {
+    sortBy: 'language, label',
   }
 
   constructor() {
@@ -57,7 +62,8 @@ export default class SparqlPropertyGroup extends Component {
   }
 
   render() {
-    const { properties, sparql, state } = this.state;
+    const { sortBy, sparql } = this.props;
+    const { properties, state } = this.state;
 
     if ( state === 'LOADING' ) {
       return <FadeLoader />;
@@ -68,7 +74,7 @@ export default class SparqlPropertyGroup extends Component {
     }
 
     return <div className={styles.sparql_property_group}>
-      <ChildrenBuilder fields={properties} />
+      <ChildrenBuilder fields={properties} sortBy={sortBy.split( /[ ;,\t]/ )} />
     </div>;
   }
 

@@ -123,6 +123,17 @@ export default class PropertyDescription {
     this.sourceWebsites = filterClaimsByRank( ( propertyEntity.claims || {} ).P1896 )
       .filter( claimHasMainsnakValue )
       .map( statement => statement.mainsnak.datavalue.value );
+
+    this.sourceWebsitesLanguages = filterClaimsByRank( ( propertyEntity.claims || {} ).P1896 )
+      .filter( claimHasMainsnakValue )
+      .filter( claim => claim.qualifiers && claim.qualifiers.P407 )
+      .map( claim => claim.qualifiers.P407 )
+      .map( qualifiers => qualifiers
+        .filter( qualifier => qualifier && qualifier.datavalue && qualifier.datavalue.value && qualifier.datavalue.value.id )
+        .map( qualifier => qualifier.datavalue.value.id ) )
+      .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] );
+
+    this.languageCodes = [];
   }
 
   formatUrl( value ) {
