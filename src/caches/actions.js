@@ -41,7 +41,7 @@ function buildQueueAction( type, maxBatch,
           }
           mw.log( 'Successfully received ' + nextBatch.length + ' cache ' + type + ' items: ' + nextBatch );
 
-          const cacheUpdate = convertResultToEntitiesF( result );
+          const cacheUpdate = convertResultToEntitiesF( result, nextBatch );
           expect( cacheUpdate ).toBeAn( 'object' );
 
           dispatch( {
@@ -102,6 +102,54 @@ function buildQueueAction( type, maxBatch,
   };
 
 }
+
+const openTagF = fileName => '<div data-filename=\"' + fileName + '\">';
+const closeTagF = () => '</div>';
+
+export const flagImageHtmlsQueue = buildQueueAction( 'FLAGIMAGEHTMLS', 50,
+  () => true,
+  fileNames => new mw.Api().post( {
+    action: 'parse',
+    contentmodel: 'wikitext',
+    disablelimitreport: true,
+    disableeditsection: true,
+    format: 'json',
+    prop: 'text',
+    text: fileNames
+      .map( fileName => openTagF( fileName )
+          + '[[File:' + fileName + '|22x22px|frameless|link=]]'
+        + closeTagF( fileName ) )
+      .join( '\r\n' ),
+  } ),
+  ( result, fileNames ) => {
+    if ( result.error ) {
+      console.log( result );
+      mw.notify( 'Unable to expand templates: ' + result.error.info );
+      return;
+    }
+
+    const cacheUpdate = {};
+    const html = result.parse.text[ '*' ];
+    fileNames.forEach( fileName => {
+      const openTag = openTagF( fileName );
+      const closeTag = closeTagF( fileName );
+      const start = html.indexOf( openTag );
+      if ( start === -1 ) {
+        mw.log( 'Not found HTML for fileName "' + fileName + '"' );
+        return;
+      }
+      const end = html.indexOf( closeTag, start );
+      if ( end === -1 ) {
+        mw.log( 'Incorrect HTML for fileName "' + fileName + '"' );
+        return;
+      }
+      const imageHtml = html.substring( start + openTag.length, end );
+      cacheUpdate[ fileName ] = imageHtml;
+    } );
+
+    return cacheUpdate;
+  }
+);
 
 export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
   cacheKey => cacheKey.match( /^[PQ](\d+)$/i ),

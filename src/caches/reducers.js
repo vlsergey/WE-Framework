@@ -57,6 +57,16 @@ function cacheReducerBuilder( type ) {
 
 }
 
+export const FLAGIMAGEHTMLS = cacheReducerBuilder( 'FLAGIMAGEHTMLS' );
 export const LABELDESCRIPTIONS = cacheReducerBuilder( 'LABELDESCRIPTIONS' );
 export const PROPERTYDESCRIPTIONS = cacheReducerBuilder( 'PROPERTYDESCRIPTIONS' );
 export const STRINGPROPERTYVALUES = cacheReducerBuilder( 'STRINGPROPERTYVALUES' );
+
+const reducers = {
+  FLAGIMAGEHTMLS,
+  LABELDESCRIPTIONS,
+  PROPERTYDESCRIPTIONS,
+  STRINGPROPERTYVALUES,
+};
+
+export default reducers;
