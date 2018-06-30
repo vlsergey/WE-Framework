@@ -82,7 +82,7 @@ export default class ChildrenBuilder extends PureComponent {
       ...field,
       ...cache[ field.property ],
     } ) );
-    for ( let sortByIndex = sortBy.length; sortByIndex >= 0; sortByIndex-- ) {
+    for ( let sortByIndex = sortBy.length - 1; sortByIndex >= 0; sortByIndex-- ) {
       switch ( sortBy[ sortByIndex ] ) {
       case 'language': stableSort( result, compareByLanguageCodes ); break;
       case 'label': stableSort( result, compareByLabel ); break;
