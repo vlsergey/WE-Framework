@@ -60,7 +60,12 @@ export default class ClaimEditorTableRow extends PureComponent {
     return <AnimatedTr {...other}>
       {firstCell}
       <FlagCell flagImage={flagImage} />
-      <th className={styles.wef_property_editor_label}>{label}</th>
+      <th className={styles.wef_property_editor_label}>
+        <a
+          href={'//www.wikidata.org/wiki/Property:' + propertyDescription.id}
+          rel="noopener noreferrer"
+          target="_blank">{label}</a>
+      </th>
       {/* add quialifier button cell */}
       {/* next component renders multiple cells */}
       <SnakEditorTableRowPart onSnakChange={this.handleSnakChange} propertyDescription={propertyDescription} snak={claim.mainsnak} />

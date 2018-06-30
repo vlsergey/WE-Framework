@@ -42,6 +42,10 @@
 	display: none;
 }
 
+.wef_property_editor_label a {
+	color: black;
+}
+
 .wef_progress_item {
 	white-space: nowrap;
 }
