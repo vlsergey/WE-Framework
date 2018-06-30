@@ -13,6 +13,26 @@ import PropTypes from 'prop-types';
 import SparqlPropertyGroup from './SparqlPropertyGroup';
 import styles from 'components/core.css';
 
+// https://medium.com/@fsufitch/is-javascript-array-sort-stable-46b90822543f
+function stableSort( arr, cmp ) {
+  cmp = cmp ? cmp : ( a, b ) => {
+    if ( a < b ) return -1;
+    if ( a > b ) return 1;
+    return 0;
+  };
+  const stabilizedThis = arr.map( ( el, index ) => [ el, index ] );
+  const stableCmp = ( a, b ) => {
+    const order = cmp( a[ 0 ], b[ 0 ] );
+    if ( order != 0 ) return order;
+    return a[ 1 ] - b[ 1 ];
+  };
+  stabilizedThis.sort( stableCmp );
+  for ( let i = 0; i < arr.length; i++ ) {
+    arr[ i ] = stabilizedThis[ i ][ 0 ];
+  }
+  return arr;
+}
+
 function compare( a, b ) {
   if ( typeof a === 'undefined' && typeof b === 'undefined' )
     return 0;
@@ -34,19 +54,18 @@ const compareByLabel = ( a, b ) => compare( a.label, b.label );
 
 function compareLanguageCodes( a, b ) {
   const empty = x => typeof x === 'undefined' || x === null || x.length == 0;
+  const has = ( arr, item ) => !empty( arr ) && arr.indexOf( item ) !== -1;
+
   if ( empty( a ) && empty( b ) ) return 0;
-  if ( empty( a ) && !empty( b ) ) return +1;
-  if ( !empty( a ) && empty( b ) ) return -1;
 
   for ( let i = 0; i < DEFAULT_LANGUAGES.length; i++ ) {
     const lc = DEFAULT_LANGUAGES[ i ];
-    if ( a.indexOf( lc ) === -1 && b.indexOf( lc ) !== -1 ) return +1;
-    if ( a.indexOf( lc ) !== -1 && b.indexOf( lc ) === -1 ) return -1;
+    if ( has( a, lc ) && !has( b, lc ) ) return -1;
+    if ( !has( a, lc ) && has( b, lc ) ) return +1;
   }
 
-  const aFirst = [ ...a ].sort()[ 0 ];
-  const bFirst = [ ...a ].sort()[ 0 ];
-  return compare( aFirst, bFirst );
+  // other items by labels
+  return 0;
 }
 
 const compareByLanguageCodes = ( a, b ) => compareLanguageCodes( a.languageCodes, b.languageCodes );
@@ -65,8 +84,8 @@ export default class ChildrenBuilder extends PureComponent {
     } ) );
     for ( let sortByIndex = sortBy.length; sortByIndex >= 0; sortByIndex-- ) {
       switch ( sortBy[ sortByIndex ] ) {
-      case 'language': result.sort( compareByLanguageCodes ); break;
-      case 'label': result.sort( compareByLabel ); break;
+      case 'language': stableSort( result, compareByLanguageCodes ); break;
+      case 'label': stableSort( result, compareByLabel ); break;
       default: mw.log( 'Unknown sort method: ' + sortBy[ sortByIndex ] ); break;
       }
     }
