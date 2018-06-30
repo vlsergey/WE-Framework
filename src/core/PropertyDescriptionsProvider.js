@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import CacheValuesProvider from 'caches/CacheValuesProvider';
+import deepEqual from 'deep-equal';
 import { defaultMemoize } from 'reselect';
 import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
@@ -27,6 +28,8 @@ export default class PropertyDescriptionsProvider extends PureComponent {
     children: PropTypes.func.isRequired,
     propertyIds: PropTypes.arrayOf( PropTypes.string ).isRequired,
   }
+
+  propertyDescriptionMemoizeCache = {};
 
   memoize = defaultMemoize(
     ( propertyIds, propertyDescriptionCache, countriesCache, languagesCache ) => {
@@ -62,7 +65,14 @@ export default class PropertyDescriptionsProvider extends PureComponent {
         };
         Object.setPrototypeOf( result, PropertyDescription.prototype );
 
-        echancedCache[ propertyId ] = result;
+        const perPropertyCache = this.propertyDescriptionMemoizeCache;
+        const previous = perPropertyCache[ propertyId ];
+        if ( !!previous && deepEqual( previous, result ) ) {
+          echancedCache[ propertyId ] = previous;
+        } else {
+          echancedCache[ propertyId ] = result;
+          perPropertyCache[ propertyId ] = result;
+        }
       } );
       return echancedCache;
     }
