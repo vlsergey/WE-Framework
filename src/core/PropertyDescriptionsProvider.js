@@ -7,6 +7,20 @@ import { propertyDescriptionQueue } from 'caches/actions';
 import PropTypes from 'prop-types';
 import StringPropertyValuesProvider from 'caches/StringPropertyValuesProvider';
 
+const calcCountryFlags = ( countriesCache, countries ) => countries
+  .map( country => countriesCache[ country ] )
+  .filter( cacheItem => !!cacheItem )
+  .map( cacheItem => cacheItem.P41 || [] )
+  //TODO: replace with flatMap as soon as awailable
+  .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] ) ;
+
+const calcCountryLanguageIds = ( countriesCache, countries ) => countries
+  .map( country => countriesCache[ country ] )
+  .filter( cacheItem => !!cacheItem )
+  .map( cacheItem => cacheItem.P37 || [] )
+  //TODO: replace with flatMap as soon as awailable
+  .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] ) ;
+
 export default class PropertyDescriptionsProvider extends PureComponent {
 
   static propTypes = {
@@ -16,6 +30,8 @@ export default class PropertyDescriptionsProvider extends PureComponent {
 
   memoize = defaultMemoize(
     ( propertyIds, propertyDescriptionCache, countriesCache, languagesCache ) => {
+      // TODO: report bug in eslint!
+      /* eslint no-invalid-this: 0 */
       const echancedCache = {};
 
       propertyIds.forEach( propertyId => {
@@ -24,27 +40,24 @@ export default class PropertyDescriptionsProvider extends PureComponent {
           return null;
         expect( propertyDescription ).toBeA( PropertyDescription );
 
-        //TODO: replace with flatMap as soon as awailable
-        const countries = propertyDescription.countries;
-        const countryFlags = [];
-        countries.map( country => {
-          const entity = countriesCache[ country ];
-          if ( !entity || !entity.P41 ) return [];
-          entity.P41.forEach( value => countryFlags.push( value ) );
-        } );
+        const countryFlags = calcCountryFlags( countriesCache, propertyDescription.countries );
+        const countryLanguageIds = calcCountryLanguageIds( countriesCache, propertyDescription.countries );
 
-        let languageCodes = [];
-        if ( propertyDescription.sourceWebsitesLanguages.length > 0 ) {
-          languageCodes = propertyDescription.sourceWebsitesLanguages
-            .filter( entityId => !!languagesCache[ entityId ] )
-            .filter( entityId => !!languagesCache[ entityId ].P424 )
-            .map( entityId => languagesCache[ entityId ].P424 )
-            .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] );
+        let languageIds = propertyDescription.sourceWebsitesLanguages;
+        if ( !languageIds || languageIds.length === 0 ) {
+          languageIds = countryLanguageIds;
         }
+
+        const languageCodes = languageIds
+          .filter( entityId => !!languagesCache[ entityId ] )
+          .filter( entityId => !!languagesCache[ entityId ].P424 )
+          .map( entityId => languagesCache[ entityId ].P424 )
+          .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] );
 
         const result = {
           ...propertyDescription,
           countryFlags,
+          languageIds,
           languageCodes,
         };
         Object.setPrototypeOf( result, PropertyDescription.prototype );
@@ -53,6 +66,14 @@ export default class PropertyDescriptionsProvider extends PureComponent {
       } );
       return echancedCache;
     }
+  );
+
+  memoizeAllLanguageIds = defaultMemoize( ( ids1, ids2 ) =>
+    [ ...new Set( [ ...ids1, ...ids2 ] ) ]
+  );
+
+  memoizeAllCountriesLanguageIds = defaultMemoize( ( countriesCache, countries ) =>
+    calcCountryLanguageIds( countriesCache, countries )
   );
 
   memoizeCountries = defaultMemoize ( ( propertyIds, cache ) =>
@@ -85,8 +106,16 @@ export default class PropertyDescriptionsProvider extends PureComponent {
         const countries = this.memoizeCountries( propertyIds, propertyDescriptionCache );
         return <StringPropertyValuesProvider entityIds={countries}>
           { countriesCache => {
-            const sourceWebsitesLanguages = this.memoizeSourceWebsitesLanguages( propertyIds, propertyDescriptionCache );
-            return <StringPropertyValuesProvider entityIds={sourceWebsitesLanguages}>
+            const countriesOfficialLanguagesIds = this.memoizeAllCountriesLanguageIds( countriesCache, countries );
+            expect( countriesOfficialLanguagesIds ).toBeAn( 'array' );
+
+            const sourceWebsitesLanguagesIds = this.memoizeSourceWebsitesLanguages( propertyIds, propertyDescriptionCache );
+            expect( countriesOfficialLanguagesIds ).toBeAn( 'array' );
+
+            const allLanguageIds = this.memoizeAllLanguageIds( countriesOfficialLanguagesIds, sourceWebsitesLanguagesIds );
+            expect( countriesOfficialLanguagesIds ).toBeAn( 'array' );
+
+            return <StringPropertyValuesProvider entityIds={allLanguageIds}>
               { languagesCache =>
                 children( this.memoize( propertyIds, propertyDescriptionCache, countriesCache, languagesCache ) )
               }

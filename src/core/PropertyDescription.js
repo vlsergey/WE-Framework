@@ -133,6 +133,7 @@ export default class PropertyDescription {
         .map( qualifier => qualifier.datavalue.value.id ) )
       .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] );
 
+    this.languageIds = [];
     this.languageCodes = [];
   }
 

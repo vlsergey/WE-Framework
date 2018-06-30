@@ -154,6 +154,38 @@ const PROPERTIES_TO_CACHE = [
   'P424',
 ];
 
+const ok = variable => !!variable;
+const EMPTY_ARRAY = [];
+
+export const buildStringCacheValuesFromEntity = entity => {
+
+  const entityResult = {};
+  PROPERTIES_TO_CACHE.forEach( propertyId => {
+    if ( !entity.claims ){
+      entityResult[ propertyId ] = EMPTY_ARRAY;
+      return;
+    }
+
+    const values = filterClaimsByRank( entity.claims[ propertyId ] )
+      .filter( ok )
+      .map( claim => claim.mainsnak ).filter( ok )
+      .map( mainsnak => mainsnak.datavalue ).filter( ok )
+      .filter( datavalue => datavalue.value )
+      .map( datavalue => {
+        switch ( datavalue.type ) {
+        case 'string':
+          return datavalue.value;
+        case 'wikibase-entityid':
+          return datavalue.value.id;
+        default: null;
+        }
+      } );
+
+    entityResult[ propertyId ] = values;
+  } );
+  return entityResult;
+};
+
 export const stringPropertyValuesQueueF = buildQueueAction( 'STRINGPROPERTYVALUES', 10,
   cacheKey => cacheKey.match( /^[PQ](\d+)$/i ),
   cacheKeys => ApiUtils.getWikidataApi()
@@ -165,27 +197,7 @@ export const stringPropertyValuesQueueF = buildQueueAction( 'STRINGPROPERTYVALUE
   result => {
     const cacheUpdate = {};
     Object.values( result.entities ).forEach( entity => {
-      if ( !entity.claims )
-        return {};
-
-      const entityResult = {};
-      PROPERTIES_TO_CACHE.forEach( propertyId => {
-        const values = filterClaimsByRank( entity.claims[ propertyId ] )
-          .filter( claim => claim && claim.mainsnak && claim.mainsnak.datavalue && claim.mainsnak.datavalue.value )
-          .map( claim => claim.mainsnak.datavalue )
-          .map( datavalue => {
-            switch ( datavalue.type ) {
-            case 'string':
-              return datavalue.value;
-            case 'wikibase-item':
-              return datavalue.value.id;
-            default: null;
-            }
-          } );
-
-        entityResult[ propertyId ] = values;
-      } );
-
+      const entityResult = buildStringCacheValuesFromEntity( entity );
       cacheUpdate[ entity.id ] = Object.freeze( entityResult );
     } );
     return cacheUpdate;
