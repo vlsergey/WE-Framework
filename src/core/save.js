@@ -1,6 +1,7 @@
 import * as ApiUtils from './ApiUtils';
 import deepEqual from 'deep-equal';
 import expect from 'expect';
+import filterEmptyEntityStructures from './filterEmptyEntityStructures';
 import i18n from 'components/core.i18n.js';
 
 //const TAG = 'WE-Framework gadget';
@@ -169,7 +170,8 @@ function save() {
   return ( dispatch, getState ) => {
     notify( 'Analyzing changes...' );
     const state = getState();
-    const data = collectEntityUpdates( state.originalEntity, state.entity );
+    const data = collectEntityUpdates( state.originalEntity,
+      filterEmptyEntityStructures( state.entity ) );
 
     if ( Object.keys( data ).length === 0 ) {
       notify( 'No changes' );
