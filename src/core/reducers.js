@@ -79,7 +79,7 @@ const entityReducerF = originalEntity => ( entity = originalEntity, action ) => 
     const propertyId = claim.mainsnak.property;
 
     const existingClaims = entity.claims[ propertyId ];
-    const claimsToSave = existingClaims
+    const claimsToSave = !!existingClaims && existingClaims.length > 0
       ? existingClaims.map( original => original.id === claim.id ? claim : original )
       : [ claim ];
 
