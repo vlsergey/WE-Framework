@@ -17,7 +17,27 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
   }
 
   render() {
-    const { datavalue, propertyDescription } = this.props;
+    const { datavalue, propertyDescription, readOnly } = this.props;
+    const url = datavalue && datavalue.value ? propertyDescription.formatUrl( datavalue.value ) : null;
+
+    if ( readOnly ) {
+      if ( datavalue && datavalue.value ) {
+        if ( url ) {
+          return <td colSpan={12}>
+            <a
+              href={url}
+              rel="noopener noreferrer"
+              target="_blank">
+              {datavalue.value}
+            </a>
+          </td>;
+        } else {
+          return <td colSpan={12}>{datavalue.value}</td>;
+        }
+      } else {
+        return null;
+      }
+    }
 
     const params = {
       type: 'text',
@@ -30,8 +50,6 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
 
     params.value = datavalue ? datavalue.value : '';
     params.onChange = this.handleChange;
-
-    const url = datavalue && datavalue.value ? propertyDescription.formatUrl( datavalue.value ) : null;
 
     return [
       <td colSpan={5} key="input"><input {...params} /></td>,

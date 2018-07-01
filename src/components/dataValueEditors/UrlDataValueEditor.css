@@ -1,0 +1,9 @@
+.wef_url {
+
+}
+
+.wef_url_readonly td {
+  min-width: 99%;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+}

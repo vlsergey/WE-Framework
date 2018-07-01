@@ -11,6 +11,7 @@ export default class MonolingualTextDataValueEditor extends Component {
     datavalue: PropTypes.shape( Shapes.DataValue ),
     onDataValueChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
+    readOnly: PropTypes.bool,
   }
 
   constructor() {
@@ -47,9 +48,19 @@ export default class MonolingualTextDataValueEditor extends Component {
   }
 
   render() {
-    const { datavalue } = this.props;
+    const { datavalue, readOnly } = this.props;
     const language = datavalue && datavalue.value && datavalue.value.language ? datavalue.value.language : '';
     const text = datavalue && datavalue.value && datavalue.value.text ? datavalue.value.text : '';
+
+    if ( readOnly ) {
+      if ( language ) {
+        return <td colSpan={12}>
+          <span>{language}: {text}</span>
+        </td>;
+      } else {
+        return null;
+      }
+    }
 
     return <td className={styles.wef_monolingualtext} colSpan={12}>
       <table>

@@ -108,7 +108,7 @@ export default class ChildrenBuilder extends PureComponent {
 
     if ( !propertyDescription || !propertyDescription.label ) {
       return <tbody><tr><td colSpan={ClaimEditors.TABLE_COLUMNS}>
-        <span>Loading property description of {propertyId}...</span>
+        <i>Loading property description of {propertyId}...</i>
       </td></tr></tbody>;
     }
     expect ( propertyDescription ).toBeA( PropertyDescription );

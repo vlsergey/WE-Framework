@@ -58,7 +58,22 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
   }
 
   render() {
-    const { datavalue, propertyDescription } = this.props;
+    const { datavalue, propertyDescription, readOnly } = this.props;
+
+    if ( readOnly ) {
+      if ( datavalue && datavalue.value ) {
+        return <td colSpan={12}>
+          <a
+            href={'https://commons.wikimedia.org/wiki/File:' + datavalue.value}
+            rel="noopener noreferrer"
+            target="_blank">
+            {datavalue.value}
+          </a>
+        </td>;
+      } else {
+        return null;
+      }
+    }
 
     const params = {
       type: 'text',

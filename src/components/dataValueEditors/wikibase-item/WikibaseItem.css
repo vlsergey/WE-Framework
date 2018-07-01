@@ -1,3 +1,14 @@
+.wef_wikibase-item {
+	width: 99%;
+}
+
+.wef_wikibase-item_readonly {
+  min-width: 99%;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  width: 99%;
+}
+
 .container {
   position: relative;
 }

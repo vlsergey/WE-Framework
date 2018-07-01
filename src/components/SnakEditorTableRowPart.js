@@ -28,16 +28,17 @@ export default class SnakEditorTableRowPart extends Component {
   static propTypes = {
     onSnakChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
+    readOnly: PropTypes.bool,
     snak: PropTypes.shape( Shapes.Snak ).isRequired,
   };
 
+  static defaultProps = {
+    readOnly: false,
+  }
+
   constructor() {
     super( ...arguments );
-    this.state = {
-      hiddenBehindLabel: false,
-    };
     this.handleSnakTypeChange = this.handleSnakTypeChange.bind( this );
-    this.showFromBehindLabel = this.showFromBehindLabel.bind( this );
   }
 
   handleSnakTypeChange( snaktype ) {
@@ -50,27 +51,38 @@ export default class SnakEditorTableRowPart extends Component {
     }
   }
 
-  showFromBehindLabel() {
-    this.setState( {
-      hiddenBehindLabel: false,
-    } );
-  }
-
   render() {
-    const { hiddenBehindLabel } = this.state;
-    const { onSnakChange, propertyDescription, snak } = this.props;
+    const { onSnakChange, propertyDescription, readOnly, snak } = this.props;
 
-    if ( hiddenBehindLabel ) {
+    if ( readOnly ) {
       return snak.snaktype === 'value'
-        ? [ <td key="snaktype" />, <SnakValueEditorFactory className={styles.wef_snak_replacement_label} key="valueEditor" mode="label" onChange={onSnakChange} onClick={this.showFromBehindLabel} snak={snak} /> ]
-        : <NotAValueSnakReplacementCell onClick={this.showFromBehindLabel} snaktype={snak.snaktype} />;
+        ? <React.Fragment>
+          <td />
+          <SnakValueEditorFactory
+            className={styles.wef_snak_replacement_label}
+            onChange={onSnakChange}
+            propertyDescription={propertyDescription}
+            readOnly
+            snak={snak} />
+        </React.Fragment>
+        : <NotAValueSnakReplacementCell
+          snaktype={snak.snaktype} />;
     }
 
     return [
-      <SelectSnakTypeButtonCell key="snaktype" onChange={this.handleSnakTypeChange} value={snak.snaktype} />,
+      <SelectSnakTypeButtonCell
+        key="snaktype"
+        onChange={this.handleSnakTypeChange}
+        value={snak.snaktype} />,
       snak.snaktype === 'value'
-        ? <SnakValueEditorFactory key="valueEditor" onSnakChange={onSnakChange} propertyDescription={propertyDescription} snak={snak} />
-        : <NotAValueSnakReplacementCell key="valueEditor" snaktype={snak.snaktype} />,
+        ? <SnakValueEditorFactory
+          key="valueEditor"
+          onSnakChange={onSnakChange}
+          propertyDescription={propertyDescription}
+          snak={snak} />
+        : <NotAValueSnakReplacementCell
+          key="valueEditor"
+          snaktype={snak.snaktype} />,
     ];
   }
 }

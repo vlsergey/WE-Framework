@@ -16,10 +16,14 @@ export default class SnakValueEditorFactory extends PureComponent {
   static TABLE_COLUMNS = 12;
 
   static propTypes = {
-    mode: PropTypes.string,
+    readOnly: PropTypes.bool,
     onSnakChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     snak: PropTypes.shape( Shapes.Snak ),
+  }
+
+  static defaultProps = {
+    readOnly: false,
   }
 
   constructor() {
@@ -35,12 +39,13 @@ export default class SnakValueEditorFactory extends PureComponent {
   }
 
   render() {
-    const { propertyDescription, snak } = this.props;
+    const { propertyDescription, readOnly, snak } = this.props;
     const dataType = propertyDescription.datatype;
     expect( propertyDescription.datatype ).toBeA( 'string' );
 
     const dataValueEditorProps = {
       datavalue: snak.datavalue,
+      readOnly,
       onDataValueChange: this.handleDataValueChange,
       propertyDescription,
     };

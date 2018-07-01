@@ -11,6 +11,11 @@ export default class AbstractStringBasedDataValueEditor extends Component {
     datavalue: PropTypes.shape( Shapes.DataValue ),
     onDataValueChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
+    readOnly: PropTypes.bool,
+  };
+
+  static defaultProps = {
+    readOnly: false,
   };
 
   constructor() {

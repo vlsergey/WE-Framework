@@ -3,14 +3,14 @@ import * as Shapes from 'model/Shapes';
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { connect } from 'react-redux';
-import dataTypeStyles from './WikibaseItem.css';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
+import EntityLabel from 'caches/EntityLabel';
 import expect from 'expect';
 import GoToWikidataButtonCell from './GoToWikidataButtonCell';
 import LocalizedWikibaseItemInput from './LocalizedWikibaseItemInput';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
-import styles from 'components/core.css';
+import styles from './WikibaseItem.css';
 import Suggestion from './Suggestion';
 
 const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
@@ -24,7 +24,12 @@ class WikibaseItemDataValueEditor extends Component {
     datavalue: PropTypes.shape( Shapes.DataValue ),
     onDataValueChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
+    readOnly: PropTypes.bool,
     testSuggestionsProvider: PropTypes.func,
+  }
+
+  static defaultProps = {
+    readOnly: false,
   }
 
   constructor() {
@@ -120,12 +125,21 @@ class WikibaseItemDataValueEditor extends Component {
   }
 
   render() {
-    const { datavalue, propertyDescription } = this.props;
+    const { datavalue, propertyDescription, readOnly } = this.props;
 
+    const entityId = datavalue && datavalue.value && datavalue.value.id ? datavalue.value.id : null;
     const params = {
       type: 'text',
       className: styles[ 'wef_' + WikibaseItemDataValueEditor.DATATYPE ],
     };
+
+    if ( readOnly ) {
+      return <td className={styles[ 'wef_' + WikibaseItemDataValueEditor.DATATYPE + '_readonly' ]} colSpan={12}>
+        { entityId && <a href={'https://www.wikidata.org/wiki/' + entityId}>
+          <EntityLabel entityId={entityId} />
+        </a> }
+      </td>;
+    }
 
     if ( propertyDescription.regexp ) {
       params.pattern = propertyDescription.regexp;
@@ -147,9 +161,9 @@ class WikibaseItemDataValueEditor extends Component {
           renderInputComponent={this.renderInput}
           renderSuggestion={this.renderSuggestion}
           suggestions={this.state.suggestions}
-          theme={dataTypeStyles} />
+          theme={styles} />
       </td>
-      <GoToWikidataButtonCell entityId={datavalue && datavalue.value && datavalue.value.id ? datavalue.value.id : null} />
+      <GoToWikidataButtonCell entityId={entityId} />
     </React.Fragment>;
   }
 

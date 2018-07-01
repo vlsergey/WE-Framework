@@ -18,7 +18,17 @@ export default class StringDataValueEditor extends AbstractStringBasedDataValueE
 
   render() {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*" }] */
-    const { onDataValueChange, datavalue, propertyDescription } = this.props;
+    const { datavalue, onDataValueChange, propertyDescription, readOnly } = this.props;
+
+    if ( readOnly ) {
+      if ( datavalue && datavalue.value ) {
+        return <td colSpan={12}>
+          <span>{datavalue.value}</span>
+        </td>;
+      } else {
+        return null;
+      }
+    }
 
     const params = {
       type: 'text',

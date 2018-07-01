@@ -37,15 +37,6 @@
 	padding: 0 0.5em !important;
 }
 
-.wef_single_property_fieldset .wef_property_editor_label,
-	.wef_columns_table .wef_property_editor_label {
-	display: none;
-}
-
-.wef_property_editor_label a {
-	color: black;
-}
-
 .wef_progress_item {
 	white-space: nowrap;
 }
@@ -107,11 +98,6 @@
     height: 16px;
 }
 
-.wef_property_editor_label {
-	text-align: left;
-	white-space: nowrap;
-}
-
 .wef_property_editor_column_cell {
 	min-width: 150px;
 }
@@ -147,7 +133,7 @@
 }
 
 /* Snak value level -- per types */
-.wef_commonsMedia, .wef_string, .wef_url, .wef_wikibase-item {
+.wef_commonsMedia, .wef_string, .wef_url {
 	width: 99%;
 }
 
@@ -244,15 +230,6 @@
 
 .wef_snak_value_editor_time-years input {
 	width: 6em;
-}
-
-/*Snak value level -- per types: WIKIBASE-ITEM */
-.wef_wikibase-item_table {
-	width: 100%;
-}
-
-.wef_wikibase-item_table .wef_item_input {
-	width: 99%;
 }
 
 .wef_editor_menu {

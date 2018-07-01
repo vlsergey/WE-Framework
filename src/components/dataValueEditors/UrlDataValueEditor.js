@@ -1,7 +1,7 @@
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
 import GoToUrlButtonCell from './GoToUrlButtonCell';
 import React from 'react';
-import styles from 'components/core.css';
+import styles from './UrlDataValueEditor.css';
 
 export default class UrlDataValueEditor extends AbstractStringBasedDataValueEditor {
 
@@ -18,7 +18,20 @@ export default class UrlDataValueEditor extends AbstractStringBasedDataValueEdit
   }
 
   render() {
-    const { datavalue } = this.props;
+    const { datavalue, readOnly } = this.props;
+    const href = datavalue && datavalue.value ? datavalue.value : null;
+
+    if ( readOnly ) {
+      if ( datavalue && datavalue.value ) {
+        return <td className={styles.wef_url + ' ' + styles.wef_url_readonly} colSpan={12}>
+          { href && <a href={href} rel="noopener noreferrer" target="_blank">
+            {href}
+          </a> }
+        </td>;
+      } else {
+        return null;
+      }
+    }
 
     const params = {
       className: styles.wef_url,
@@ -27,14 +40,12 @@ export default class UrlDataValueEditor extends AbstractStringBasedDataValueEdit
       value: datavalue && datavalue.value ? datavalue.value : '',
     };
 
-    const href = datavalue && datavalue.value ? datavalue.value : null;
-
-    return [
-      <td colSpan={11} key="input">
+    return <React.Fragment>
+      <td className={styles.wef_url} colSpan={11}>
         <input {...params} />
-      </td>,
-      <GoToUrlButtonCell href={href} key="button" />,
-    ];
+      </td>
+      <GoToUrlButtonCell href={href} />
+    </React.Fragment>;
   }
 
 }
