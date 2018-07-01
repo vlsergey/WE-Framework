@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import dataTypeStyles from './WikibaseItem.css';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import expect from 'expect';
+import GoToWikidataButtonCell from './GoToWikidataButtonCell';
 import LocalizedWikibaseItemInput from './LocalizedWikibaseItemInput';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
@@ -119,7 +120,7 @@ class WikibaseItemDataValueEditor extends Component {
   }
 
   render() {
-    const { propertyDescription } = this.props;
+    const { datavalue, propertyDescription } = this.props;
 
     const params = {
       type: 'text',
@@ -135,18 +136,21 @@ class WikibaseItemDataValueEditor extends Component {
     params.onChange = this.handleChange;
 
     console.log( 'render with value "' + params.value + '" and suggestions: ' + JSON.stringify( this.state.suggestions ) );
-    return <td colSpan={12}>
-      <Autosuggest
-        alwaysRenderSuggestions={this.state.componentFocused}
-        getSuggestionValue={this.getSuggestionValue}
-        inputProps={params}
-        onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-        onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-        renderInputComponent={this.renderInput}
-        renderSuggestion={this.renderSuggestion}
-        suggestions={this.state.suggestions}
-        theme={dataTypeStyles} />
-    </td>;
+    return <React.Fragment>
+      <td colSpan={11}>
+        <Autosuggest
+          alwaysRenderSuggestions={this.state.componentFocused}
+          getSuggestionValue={this.getSuggestionValue}
+          inputProps={params}
+          onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+          onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
+          renderInputComponent={this.renderInput}
+          renderSuggestion={this.renderSuggestion}
+          suggestions={this.state.suggestions}
+          theme={dataTypeStyles} />
+      </td>
+      <GoToWikidataButtonCell entityId={datavalue && datavalue.value && datavalue.value.id ? datavalue.value.id : null} />
+    </React.Fragment>;
   }
 
   renderInput( inputProps ) {
