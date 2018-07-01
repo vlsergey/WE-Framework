@@ -9,6 +9,11 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.(png|jpg)$/,
+        loader: 'url-loader',
+        include: /src/,
+      },
+      {
         test: /\.css$/,
         include: /src/,
         exclude: /node_modules/,

@@ -49,7 +49,7 @@ export default class SnakTypeSelectButtonCell extends Component {
   }
 
   render() {
-    const { disabled } = this.props;
+    const { disabled, value } = this.props;
 
     return <ButtonCell>
       <Popup
@@ -61,7 +61,7 @@ export default class SnakTypeSelectButtonCell extends Component {
           <JQueryButton
             className={styles.wef_select_snak_type_button}
             disabled={disabled}
-            icon="ui-icon-triangle-1-e"
+            icon={styles[ 'ui-icon-wef-snaktype-' + value ]}
             label={i18n.buttonSelectSnakType}
             onClick={this.handleClick}
             ref={this.ref}
@@ -69,7 +69,7 @@ export default class SnakTypeSelectButtonCell extends Component {
         }>
         <SnakTypeSelect
           onChange={this.handleChange}
-          value={this.props.value} />
+          value={value} />
       </Popup>
     </ButtonCell>;
   }
