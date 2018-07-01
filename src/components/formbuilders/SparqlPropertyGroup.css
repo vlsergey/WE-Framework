@@ -1,4 +1,5 @@
 .sparql_property_group {
   height: 350px;
   overflow-y: auto;
+  resize: both;
 }
