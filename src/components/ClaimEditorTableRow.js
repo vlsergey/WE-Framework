@@ -5,6 +5,7 @@ import expect from 'expect';
 import FlagCell from './FlagCell';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
+import SelectRankButtonCell from './SelectRankButtonCell';
 import SnakEditorTableRowPart from './SnakEditorTableRowPart';
 import styles from './core.css';
 
@@ -35,7 +36,15 @@ export default class ClaimEditorTableRow extends PureComponent {
   constructor() {
     super( ...arguments );
 
+    this.handleRankChange = this.handleRankChange.bind( this );
     this.handleSnakChange = this.handleSnakChange.bind( this );
+  }
+
+  handleRankChange( rank ) {
+    this.props.onClaimChange( {
+      ...this.props.claim,
+      rank,
+    } );
   }
 
   handleSnakChange( snak ) {
@@ -59,6 +68,7 @@ export default class ClaimEditorTableRow extends PureComponent {
 
     return <AnimatedTr {...other}>
       {firstCell}
+      <SelectRankButtonCell onChange={this.handleRankChange} value={claim.rank} />
       <FlagCell flagImage={flagImage} />
       <th className={styles.wef_property_editor_label}>
         <a

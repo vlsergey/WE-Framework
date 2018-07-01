@@ -4,15 +4,21 @@ import i18n from './core.i18n';
 import JQueryButton from 'wrappers/JQueryButton';
 import Popup from 'reactjs-popup';
 import PropTypes from 'prop-types';
-import SnakTypeSelect from './SnakTypeSelect';
+import RankSelect from './RankSelect';
 import styles from './core.css';
 
-export default class SnakTypeSelectButtonCell extends Component {
+const icons = {
+  preferred: 'ui-icon-arrowthickstop-1-n',
+  normal: 'ui-icon-arrowthick-2-n-s',
+  deprecated: 'ui-icon-arrowthickstop-1-s',
+};
+
+export default class SelectRankButtonCell extends Component {
 
   static propTypes = {
     disabled: PropTypes.bool,
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.string,
+    value: PropTypes.oneOf( [ 'deprecated', 'normal', 'preferred' ] ),
   };
 
   static defaultProps = {
@@ -56,18 +62,18 @@ export default class SnakTypeSelectButtonCell extends Component {
         arrow={false}
         contentStyle={{ padding: 0 }}
         open={this.state.open}
-        position="bottom right"
+        position="bottom left"
         trigger={
           <JQueryButton
-            className={styles.wef_select_snak_type_button}
+            className={styles.wef_select_rank_button}
             disabled={disabled}
-            icon={styles[ 'ui-icon-wef-snaktype-' + value ]}
-            label={i18n.snakType[ value ]}
+            icon={icons[ value ]}
+            label={i18n.rank[ value ]}
             onClick={this.handleClick}
             ref={this.ref}
             text={false} />
         }>
-        <SnakTypeSelect
+        <RankSelect
           onChange={this.handleChange}
           value={value} />
       </Popup>

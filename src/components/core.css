@@ -81,32 +81,12 @@
 }
 
 /*Properties level */
-.wef-claimrankselector-menu {
-	border: 1px solid #CCC;
-	position: absolute;
-	z-index: +1;
+.wef-rankselector-menu {
+	width: 100%;
 }
 
-.wef-claimrankselector-menu option {
+.wef-rankselector-menu option {
 	padding: 0.25em;
-}
-
-:global(.ui-button) .ui-icon-wef-preffered, :global(.ui-button.ui-state-hover) .ui-icon-wef-preffered {
-    background-image: url(./rank_preffered.png);
-    width: 8px;
-    height: 20px;
-}
-
-:global(.ui-button) .ui-icon-wef-normal, :global(.ui-button.ui-state-hover) .ui-icon-wef-normal {
-    background-image: url(./rank_normal.png);
-    width: 8px;
-    height: 20px;
-}
-
-:global(.ui-button) .ui-icon-wef-deprecated, :global(.ui-button.ui-state-hover) .ui-icon-wef-deprecated {
-    background-image: url(./rank_deprecated.png);
-    width: 8px;
-    height: 20px;
 }
 
 :global(.ui-button) .ui-icon-wef-snaktype-value, :global(.ui-button.ui-state-hover) .ui-icon-wef-snaktype-value {
@@ -156,12 +136,6 @@
 .wef_snak_type_label {
 	font-style: italic;
 	white-space: nowrap;
-}
-
-button.wef_select_snak_type_button :global .ui-button-icon-primary {
-	background-image:
-		url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAACNJREFUOMtjYBhewLZh839i8HA2YHAEIjGW0NaAgQ/EoRcGAJzMvdNs2OYMAAAAAElFTkSuQmCC');
-	background-position: 0 0 !important;
 }
 
 .wef-snaktypeselector-menu {

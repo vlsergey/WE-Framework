@@ -40,7 +40,7 @@ export const Snak = {
   datavalue: PropTypes.shape( DataValue ),
   type: PropTypes.string,
   id: PropTypes.string,
-  rank: PropTypes.oneOf( [ 'preffered', 'normal', 'deprecated' ] ),
+  rank: PropTypes.oneOf( [ 'preferred', 'normal', 'deprecated' ] ),
 };
 
 export function emptySnak( ) {

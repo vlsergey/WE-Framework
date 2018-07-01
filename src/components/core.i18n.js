@@ -11,7 +11,6 @@ const en = {
   actionRemoveClaimsDone: 'Saving changes in entity (remove statements): done',
   actionRemoveClaimsFail: 'Saving changes in entity (remove statements): fail',
 
-  buttonSelectSnakType: 'select snak type',
   buttonAddClaim: 'add claim',
   buttonRemoveClaim: 'remove claim',
   buttonAddQualifier: 'add qualifier',
@@ -81,12 +80,17 @@ const en = {
   labelAliases: 'Aliases',
   placeholderAliases: 'Add “also known as”',
 
-  rankDeprecatedValue: 'deprecated',
-  rankDeprecatedTitle: 'used for a statement that contains information that may not be considered reliable or that is known to include errors. (For example, a statement that documents a wrong population figure that was published in some historic document. In this case the statement is not wrong – the historic document that is given as a reference really made the erroneous claim – but the statement should not be used in most cases.)',
-  rankNormalValue: 'normal',
-  rankNormalTitle: 'used for a statement that contains relevant information that is believed to be correct, but may be too extensive to be shown by default. (For example, historic population figures for Berlin over the course of many years.)',
-  rankPreferredValue: 'preferred',
-  rankPreferredTitle: 'used for a statement with the most important and most up-to-date information. Such a statement will be shown to all users and will be displayed in Wikipedia infoboxes by default. (For example, the most recent population figures for Berlin.)',
+  rank: {
+    deprecated: 'deprecated',
+    normal: 'normal',
+    preferred: 'preferred',
+  },
+
+  rankTitle: {
+    deprecated: 'used for a statement that contains information that may not be considered reliable or that is known to include errors. (For example, a statement that documents a wrong population figure that was published in some historic document. In this case the statement is not wrong – the historic document that is given as a reference really made the erroneous claim – but the statement should not be used in most cases.)',
+    normal: 'used for a statement that contains relevant information that is believed to be correct, but may be too extensive to be shown by default. (For example, historic population figures for Berlin over the course of many years.)',
+    preferred: 'used for a statement with the most important and most up-to-date information. Such a statement will be shown to all users and will be displayed in Wikipedia infoboxes by default. (For example, the most recent population figures for Berlin.)',
+  },
 
   snakType: {
     value: 'custom value',
@@ -150,7 +154,6 @@ const ru = {
   actionRemoveClaimsDone: 'Сохранение изменений в элемент (удаление утверждений): успешно.',
   actionRemoveClaimsFail: 'Сохранение изменений в элемент (удаление утверждений): ошибка!',
 
-  buttonSelectSnakType: 'выбрать тип значения',
   buttonAddClaim: 'добавить утверждение',
   buttonRemoveClaim: 'удалить утверждение',
   buttonAddQualifier: 'добавить квалификатор',
@@ -220,12 +223,17 @@ const ru = {
   labelAliases: 'Также известен как',
   placeholderAliases: 'Добавить «также известен как»',
 
-  rankDeprecatedValue: 'нерекомендуемый',
-  rankDeprecatedTitle: 'используется для утверждений, содержащих информацию, которую нельзя считать надёжной или которая содержит известные ошибки. (Например, утверждение сообщает о неверной численности населения, опубликованной в некоем историческом документе. В этом случае утверждение не является ложным — в историческом документе, указанном в качестве источника, действительно было сделано ошибочное заявление — но такое утверждение в большинстве случаев не стоит использовать.)',
-  rankNormalValue: 'нормальный',
-  rankNormalTitle: ' используется для утверждений, содержащих релевантную информацию, которая считается верной, но которой, возможно, слишком много для отображения по умолчанию. (Например, измерения исторической численности населения Берлина на протяжении множества лет.)',
-  rankPreferredValue: 'предпочтительный',
-  rankPreferredTitle: 'используется для утверждений с наиболее важной и наиболее актуальной информацией. Такое утверждение будет показываться всем участникам и будет отображаться в шаблонах-карточках Википедии по умолчанию. (Например, самые последние сведения о численности населения Берлина.)',
+  rank: {
+    deprecated: 'нерекомендуемый',
+    normal: 'нормальный',
+    preferred: 'предпочтительный',
+  },
+
+  rankTitle: {
+    deprecated: 'используется для утверждений, содержащих информацию, которую нельзя считать надёжной или которая содержит известные ошибки. (Например, утверждение сообщает о неверной численности населения, опубликованной в некоем историческом документе. В этом случае утверждение не является ложным — в историческом документе, указанном в качестве источника, действительно было сделано ошибочное заявление — но такое утверждение в большинстве случаев не стоит использовать.)',
+    normal: ' используется для утверждений, содержащих релевантную информацию, которая считается верной, но которой, возможно, слишком много для отображения по умолчанию. (Например, измерения исторической численности населения Берлина на протяжении множества лет.)',
+    preferred: 'используется для утверждений с наиболее важной и наиболее актуальной информацией. Такое утверждение будет показываться всем участникам и будет отображаться в шаблонах-карточках Википедии по умолчанию. (Например, самые последние сведения о численности населения Берлина.)',
+  },
 
   snakType: {
     value: 'своё значение',
