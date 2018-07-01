@@ -1,6 +1,6 @@
 import { Claim, newStatementClaim } from 'model/Shapes';
 import React, { PureComponent } from 'react';
-import AddClaimButtonCell from './AddClaimButtonCell';
+import ClaimAddButtonCell from './ClaimAddButtonCell';
 import ClaimEditorTableRow from './ClaimEditorTableRow';
 import { connect } from 'react-redux';
 import expect from 'expect';
@@ -14,16 +14,16 @@ class ClaimEditors extends PureComponent {
 
   static propTypes = {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
-    label: PropTypes.oneOfType( [ PropTypes.string, PropTypes.node ] ).isRequired,
-    onAddClaim: PropTypes.func.isRequired,
-    onChangeClaim: PropTypes.func.isRequired,
+    onClaimAdd: PropTypes.func.isRequired,
+    onClaimDelete: PropTypes.func.isRequired,
+    onClaimUpdate: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   };
 
   render() {
-    const { claims, label, onAddClaim, onChangeClaim, propertyDescription } = this.props;
+    const { claims, onClaimAdd, onClaimUpdate, onClaimDelete, propertyDescription } = this.props;
 
-    const firstFirstCell = <AddClaimButtonCell onClick={onAddClaim} />;
+    const firstFirstCell = <ClaimAddButtonCell onClick={onClaimAdd} />;
 
     let children;
     if ( !claims || claims.length === 0 ) {
@@ -31,17 +31,19 @@ class ClaimEditors extends PureComponent {
       children = [ <ClaimEditorTableRow
         claim={newClaim}
         firstCell={firstFirstCell}
+        hasClaimDelete={false}
         key={newClaim.id}
-        label={label}
-        onClaimChange={onChangeClaim}
+        onClaimDelete={onClaimDelete}
+        onClaimUpdate={onClaimUpdate}
         propertyDescription={propertyDescription} /> ];
     } else {
       children = claims.map( ( claim, i ) => <ClaimEditorTableRow
         claim={claim}
         firstCell={i == 0 ? firstFirstCell : <td />}
+        hasClaimDelete
         key={claim.id}
-        label={label}
-        onClaimChange={onChangeClaim}
+        onClaimDelete={onClaimDelete}
+        onClaimUpdate={onClaimUpdate}
         propertyDescription={propertyDescription} /> );
     }
 
@@ -56,11 +58,16 @@ const mapStateToProps = ( state, ownProps ) => ( {
 } );
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {
-  onAddClaim: () => dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription } ),
-  onChangeClaim: claim => {
+  onClaimAdd: () => dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription } ),
+  onClaimUpdate: claim => {
     expect( claim ).toBeAn( 'object' );
     expect( claim.id ).toBeAn( 'string' );
     return dispatch( { type: 'CLAIM_UPDATE', claim } );
+  },
+  onClaimDelete: claim => {
+    expect( claim ).toBeAn( 'object' );
+    expect( claim.id ).toBeAn( 'string' );
+    return dispatch( { type: 'CLAIM_DELETE', claim } );
   },
 } );
 

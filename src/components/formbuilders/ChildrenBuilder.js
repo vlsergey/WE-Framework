@@ -112,12 +112,7 @@ export default class ChildrenBuilder extends PureComponent {
       </td></tr></tbody>;
     }
     expect ( propertyDescription ).toBeA( PropertyDescription );
-
-    const actualLabel = field.label
-      ? field.label
-      : <span title={propertyDescription.description}>{propertyDescription.label}</span>;
-
-    return <ClaimEditors label={actualLabel} propertyDescription={propertyDescription} />;
+    return <ClaimEditors propertyDescription={propertyDescription} />;
   }
 
   renderFields() {

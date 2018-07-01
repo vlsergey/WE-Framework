@@ -58,6 +58,22 @@ const entityReducerF = originalEntity => ( entity = originalEntity, action ) => 
     }
   }
 
+  case 'CLAIM_DELETE': {
+    const { claim } = action;
+    const propertyId = claim.mainsnak.property;
+
+    const existingClaims = entity.claims[ propertyId ];
+    const claimsToSave = existingClaims.filter( original => original.id !== claim.id );
+
+    return {
+      ...entity,
+      claims: {
+        ...entity.claims,
+        [ propertyId ]: claimsToSave,
+      },
+    };
+  }
+
   case 'CLAIM_UPDATE': {
     const { claim } = action;
     const propertyId = claim.mainsnak.property;
