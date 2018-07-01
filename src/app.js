@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import * as settings from './settings/index';
 import AdmEntityEditorTemplate from './editors/AdmEntityEditorTemplate';
 import expect from 'expect';
