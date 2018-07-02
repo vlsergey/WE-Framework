@@ -60,7 +60,7 @@ export default class SnakEditorTableRowPart extends Component {
           <td />
           <SnakValueEditorFactory
             className={styles.wef_snak_replacement_label}
-            onChange={onSnakChange}
+            onSnakChange={onSnakChange}
             propertyDescription={propertyDescription}
             readOnly
             snak={snak} />
