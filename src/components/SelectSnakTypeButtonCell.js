@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import ButtonCell from './ButtonCell';
 import i18n from './core.i18n';
 import JQueryButton from 'wrappers/JQueryButton';
@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import SnakTypeSelect from './SnakTypeSelect';
 import styles from './core.css';
 
-export default class SnakTypeSelectButtonCell extends Component {
+export default class SnakTypeSelectButtonCell extends PureComponent {
 
   static propTypes = {
     disabled: PropTypes.bool,

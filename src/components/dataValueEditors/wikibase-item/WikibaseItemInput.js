@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-export default class WikibaseItemInput extends Component {
+export default class WikibaseItemInput extends PureComponent {
 
   static propTypes = {
     entityId: PropTypes.string,

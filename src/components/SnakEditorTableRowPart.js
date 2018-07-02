@@ -1,5 +1,5 @@
 import * as Shapes from 'model/Shapes';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import i18n from './core.i18n';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
@@ -21,7 +21,7 @@ NotAValueSnakReplacementCell.defautPropTypes = {
   snaktype: 'value',
 };
 
-export default class SnakEditorTableRowPart extends Component {
+export default class SnakEditorTableRowPart extends PureComponent {
 
   static TABLE_COLUMNS = SnakValueEditorFactory.TABLE_COLUMNS + 1;
 

@@ -99,6 +99,34 @@ module.exports = {
     "react/jsx-props-no-multi-spaces": 1,
     "react/jsx-sort-props": 1,
     "react/jsx-tag-spacing": 1,
+    /* Prevent using string references */
+    "react/no-string-refs": 1,
+    /* Prevent this from being used in stateless functional components */
+    "react/no-this-in-sfc": 2,
+    /* Prevents common typos */
+    "react/no-typos": 2,
+    /* Prevent invalid characters from appearing in markup */
+    "react/no-unescaped-entities": 2,
+    /* Prevent usage of unknown DOM property */
+    "react/no-unknown-property": 1,
+    /* Prevent usage of UNSAFE_ methods */
+    "react/no-unsafe": 1,
+    /* Prevent definitions of unused prop types */
+    "react/no-unused-prop-types": 1,
+    /* Prevent definitions of unused state */
+    "react/no-unused-state": 1,
+    /* Prevent usage of setState in componentWillUpdate */
+    "react/no-will-update-set-state": 2,
+    /* Enforce React components to have a shouldComponentUpdate method */
+    "react/require-optimization": 1,
+    /* Enforce ES5 or ES6 class for returning value in render function */
+    "react/require-render-return": 2,
+    /* Prevent extra closing tags for components without children */
+    "react/self-closing-comp": 1,
+    /* Enforce style prop value being an object */
+    "react/style-prop-object": 2,
+    /* Prevent void DOM elements (e.g. <img />, <br />) from receiving children */
+    "react/void-dom-elements-no-children": 2,
 
     /* Enforce spacing between rest and spread operators and their expressions */
     "rest-spread-spacing": 1,

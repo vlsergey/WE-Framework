@@ -98,7 +98,7 @@ export default class ClaimEditorTableRow extends PureComponent {
         {/* delete claim button cell */}
       </AnimatedTr>
       { !!claim.qualifiers && <tr>
-        <td colSpan={2}></td>
+        <td colSpan={2} />
         <td colSpan={ClaimEditorTableRow.TABLE_COLUMNS - 2}>
           <ClaimQualifiersTable claim={claim} onClaimUpdate={onClaimUpdate} />
         </td>

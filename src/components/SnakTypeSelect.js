@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import i18n from './core.i18n';
 import PropTypes from 'prop-types';
 import styles from './core.css';
 
-export default class SnakTypeSelect extends Component {
+export default class SnakTypeSelect extends PureComponent {
 
   static propTypes = {
     onChange: PropTypes.func.isRequired,

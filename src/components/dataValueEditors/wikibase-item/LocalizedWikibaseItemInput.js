@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { labelDescriptionQueue } from 'caches/actions';
 import PropTypes from 'prop-types';
 import WikibaseItemInput from './WikibaseItemInput';
 
-class LocalizedWikibaseItemInput extends Component {
+class LocalizedWikibaseItemInput extends PureComponent {
 
   static propTypes = {
     ...WikibaseItemInput.propTypes,

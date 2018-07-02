@@ -1,13 +1,14 @@
 import * as Shapes from 'model/Shapes';
-import { Component } from 'react';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
 
-export default class AbstractStringBasedDataValueEditor extends Component {
+export default class AbstractStringBasedDataValueEditor extends PureComponent {
 
   static DATAVALUE_TYPE = 'string';
 
   static propTypes = {
+    /* eslint react/no-unused-prop-types: 0 */
     datavalue: PropTypes.shape( Shapes.DataValue ),
     onDataValueChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),

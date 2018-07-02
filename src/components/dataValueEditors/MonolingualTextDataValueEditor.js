@@ -1,16 +1,14 @@
 import * as Shapes from 'model/Shapes';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import LanguageAutocomplete from 'components/languages/LanguageAutocomplete';
-import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import styles from './MonolingualText.css';
 
-export default class MonolingualTextDataValueEditor extends Component {
+export default class MonolingualTextDataValueEditor extends PureComponent {
 
   static propTypes = {
     datavalue: PropTypes.shape( Shapes.DataValue ),
     onDataValueChange: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
     readOnly: PropTypes.bool,
   }
 

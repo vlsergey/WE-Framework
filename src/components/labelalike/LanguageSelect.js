@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import LanguageAutocomplete from 'components/languages/LanguageAutocomplete';
 import { listLabelalikeLanguages } from 'core/selectors.js';
 import PropTypes from 'prop-types';
 
-class LanguageSelect extends Component {
+class LanguageSelect extends PureComponent {
 
   static propTypes = {
     provided: PropTypes.arrayOf( PropTypes.string ),

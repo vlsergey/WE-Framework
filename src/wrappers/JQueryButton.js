@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-export default class JQueryButton extends Component {
+export default class JQueryButton extends PureComponent {
 
   static propTypes = {
     className: PropTypes.string,

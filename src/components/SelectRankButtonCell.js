@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import ButtonCell from './ButtonCell';
 import i18n from './core.i18n';
 import JQueryButton from 'wrappers/JQueryButton';
@@ -13,7 +13,7 @@ const icons = {
   deprecated: 'ui-icon-arrowthickstop-1-s',
 };
 
-export default class SelectRankButtonCell extends Component {
+export default class SelectRankButtonCell extends PureComponent {
 
   static propTypes = {
     disabled: PropTypes.bool,

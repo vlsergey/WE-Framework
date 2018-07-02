@@ -1,13 +1,11 @@
-import { Component } from 'react';
 import { connect } from 'react-redux';
 import expect from 'expect';
 import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
 
-class CacheValueProvider extends Component {
+class CacheValueProvider extends PureComponent {
 
   static propTypes = {
-    action: PropTypes.func,
-    type: PropTypes.string.isRequired,
     cache: PropTypes.object.isRequired,
     cacheKey: PropTypes.string,
     children: PropTypes.func.isRequired,

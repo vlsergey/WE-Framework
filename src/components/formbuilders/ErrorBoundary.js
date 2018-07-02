@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-export default class ErrorBoundary extends Component {
+export default class ErrorBoundary extends PureComponent {
 
   static propTypes = {
     children: PropTypes.node,

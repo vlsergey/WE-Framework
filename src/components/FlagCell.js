@@ -12,7 +12,7 @@ export default class FlagCell extends Component {
   render() {
     const { flagImage } = this.props;
     if ( !flagImage )
-      return <td className={styles.wef_flag_cell}></td>;
+      return <td className={styles.wef_flag_cell} />;
 
     return <td className={styles.wef_flag_cell}>
       <FlagImageHtmlProvider fileName={flagImage}>
