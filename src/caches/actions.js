@@ -6,12 +6,28 @@ import LabelDescription from './LabelDescription';
 import PropertyDescription from 'core/PropertyDescription';
 
 function buildQueueAction( type, maxBatch,
-  isKeyValidF, buildPromiceF, convertResultToEntitiesF ) {
+  isKeyValidF, notifyMessageF, buildPromiceF, convertResultToEntitiesF ) {
   expect( type ).toBeAn( 'string' );
   expect( maxBatch ).toBeA( 'number' );
   expect( isKeyValidF ).toBeA( 'function' );
+  expect( notifyMessageF ).toBeA( 'function' );
   expect( buildPromiceF ).toBeA( 'function' );
   expect( convertResultToEntitiesF ).toBeA( 'function' );
+
+  const notifyOptionsInProgress = {
+    autoHide: false,
+    tag: 'WE-F Cache: ' + type,
+  };
+
+  const notifyOptionsSuccess = {
+    autoHide: true,
+    tag: 'WE-F Cache: ' + type,
+  };
+
+  const notifyOptionsFailure = {
+    autoHide: true,
+    tag: 'WE-F Cache: ' + type,
+  };
 
   function scheduleQueuing() {
     return ( dispatch, getState ) => {
@@ -33,12 +49,15 @@ function buildQueueAction( type, maxBatch,
           type: 'CACHE_' + type + '_REMOVE_FROM_QUEUE',
           cacheKeys: nextBatch,
         } );
+        const notifyMessage = notifyMessageF( nextBatch );
 
+        mw.notify( notifyMessage + '…', notifyOptionsInProgress );
         return buildPromiceF( nextBatch ).then( result => {
           if ( typeof result.error !== 'undefined' ) {
             mw.log.warn( result.error );
             throw new Error( result.error );
           }
+          mw.notify( notifyMessage + '… Success.', notifyOptionsSuccess );
           mw.log( 'Successfully received ' + nextBatch.length + ' cache ' + type + ' items: ' + nextBatch );
 
           const cacheUpdate = convertResultToEntitiesF( result, nextBatch );
@@ -56,6 +75,8 @@ function buildQueueAction( type, maxBatch,
           setTimeout( () => dispatch( scheduleQueuing() ), 0 );
 
         } ).catch( error => {
+          mw.notify( notifyMessage + '… Failure. See console log output for details.',
+            notifyOptionsFailure );
           mw.log.error( 'Unable to batch request following items: ' + nextBatch );
           mw.log.error( error );
           dispatch( {
@@ -108,6 +129,7 @@ const closeTagF = () => '</div>';
 
 export const flagImageHtmlsQueue = buildQueueAction( 'FLAGIMAGEHTMLS', 50,
   () => true,
+  fileNames => 'Rendering ' + fileNames.length + ' flag images on server',
   fileNames => new mw.Api().post( {
     action: 'parse',
     contentmodel: 'wikitext',
@@ -153,6 +175,7 @@ export const flagImageHtmlsQueue = buildQueueAction( 'FLAGIMAGEHTMLS', 50,
 
 export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
   cacheKey => cacheKey.match( /^[PQ](\d+)$/i ),
+  cacheKeys => 'Fetching ' + cacheKeys.length + ' item(s) labels and descriptions from Wikidata',
   cacheKeys => ApiUtils.getWikidataApi()
     .get( {
       action: 'wbgetentities',
@@ -173,6 +196,7 @@ export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
 
 export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS', 50,
   cacheKey => cacheKey.match( /^P(\d+)$/i ),
+  cacheKeys => 'Fetching ' + cacheKeys.length + ' property descriptions from Wikidata',
   cacheKeys => ApiUtils.getWikidataApi()
     .get( {
       action: 'wbgetentities',
@@ -236,6 +260,7 @@ export const buildStringCacheValuesFromEntity = entity => {
 
 export const stringPropertyValuesQueueF = buildQueueAction( 'STRINGPROPERTYVALUES', 10,
   cacheKey => cacheKey.match( /^[PQ](\d+)$/i ),
+  cacheKeys => 'Fetching ' + cacheKeys.length + ' entities from Wikidata',
   cacheKeys => ApiUtils.getWikidataApi()
     .get( {
       action: 'wbgetentities',
