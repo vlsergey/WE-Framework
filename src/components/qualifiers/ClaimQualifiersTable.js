@@ -18,6 +18,7 @@ export default class ClaimQualifiersTable extends PureComponent {
   static propTypes = {
     allowedQualifiers: PropTypes.arrayOf( PropTypes.string ),
     claim: PropTypes.shape( Claim ).isRequired,
+    claimPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     onClaimUpdate: PropTypes.func.isRequired,
   }
 
@@ -63,7 +64,7 @@ export default class ClaimQualifiersTable extends PureComponent {
           {
             snaktype: 'value',
             property: propertyId,
-            hash: 'new#' + ++qualifiersCounter,
+            hash: 'new#ClaimQualifiersTable#' + ++qualifiersCounter,
           },
         ],
       },
@@ -86,7 +87,7 @@ export default class ClaimQualifiersTable extends PureComponent {
   }
 
   render() {
-    const { allowedQualifiers, claim, onClaimUpdate } = this.props;
+    const { allowedQualifiers, claim, claimPropertyDescription, onClaimUpdate } = this.props;
     const { addQualifierMode, hiddenBehindLabel } = this.state;
 
     const qualifiers = claim.qualifiers || {};
@@ -110,6 +111,7 @@ export default class ClaimQualifiersTable extends PureComponent {
           expect( propertyDescription ).toBeA( PropertyDescription );
           return <ClaimQualifiersTBody
             claim={claim}
+            claimPropertyDescription={claimPropertyDescription}
             key={propertyId}
             onClaimUpdate={onClaimUpdate}
             propertyDescription={propertyDescription}
@@ -119,7 +121,7 @@ export default class ClaimQualifiersTable extends PureComponent {
       { addQualifierMode === 'SELECT' &&
         <tbody className={styles.wef_claim_new_qualifier}>
           <AnimatedTr>
-            <th>
+            <th colSpan={2}>
               <NewQualifierSelect
                 allowedQualifiers={allowedQualifiers}
                 alreadyPresent={alreadyPresentQualifiers}
@@ -131,7 +133,7 @@ export default class ClaimQualifiersTable extends PureComponent {
       { addQualifierMode === 'AUTOSUGGEST' &&
         <tbody className={styles.wef_claim_new_qualifier}>
           <AnimatedTr>
-            <th>
+            <th colSpan={2}>
               <NewQualifierAutosuggest onSelect={this.handleQualifierAdd} />
             </th>
             <td />

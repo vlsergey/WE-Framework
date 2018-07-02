@@ -4,6 +4,7 @@ import buildReducers from 'core/reducers';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import CommonsMediaDataValueEditor from 'components/dataValueEditors/CommonsMediaDataValueEditor';
 import P51 from '../../entities/P51';
+import P85 from '../../entities/P85';
 import PropertyDescription from 'core/PropertyDescription';
 import { Provider } from 'react-redux';
 import Q30 from '../../entities/Q30';
@@ -11,7 +12,7 @@ import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import thunk from 'redux-thunk';
 
-describe( 'core/ClaimQualifiersTable', () => {
+describe( 'components/qualifiers/ClaimQualifiersTable', () => {
 
   it( 'correctly calls onClaimUpdate() on qualifier changes', () => {
     const reducers = buildReducers( Q30 );
@@ -27,6 +28,7 @@ describe( 'core/ClaimQualifiersTable', () => {
       <Provider store={store}>
         <ClaimQualifiersTable
           claim={claim}
+          claimPropertyDescription={claim}
           onClaimUpdate={onClaimUpdate} />
       </Provider>
     );

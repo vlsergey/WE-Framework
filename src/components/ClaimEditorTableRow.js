@@ -100,6 +100,7 @@ export default class ClaimEditorTableRow extends PureComponent {
           <ClaimQualifiersTable
             allowedQualifiers={propertyDescription.allowedQualifiers}
             claim={claim}
+            claimPropertyDescription={propertyDescription}
             onClaimUpdate={onClaimUpdate}
             ref={this.claimQualifiersTable} />
         </td>

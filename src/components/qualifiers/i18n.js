@@ -4,6 +4,9 @@ const en = {
   buttonAddQualifier: 'add qualifier',
   buttonRemoveQualifier: 'remove qualifier',
 
+  confirmRemoveQualifier: 'Remove the qualifier „{qualifierPropertyLabel}“ ({qualifierPropertyId})'
+  + ' of the property „{claimPropertyLabel}“ ({claimPropertyId})?',
+
   placehoderAutosuggest: 'Enter text to lookup…',
   placehoderSelect: 'Select qualifier type…',
 
@@ -15,6 +18,9 @@ const en = {
 const ru = {
   buttonAddQualifier: 'добавить квалификатор',
   buttonRemoveQualifier: 'удалить квалификатор',
+
+  confirmRemoveQualifier: 'Удалить квалификатор «{qualifierPropertyLabel}» ({qualifierPropertyId})'
+   + ' свойства «{claimPropertyLabel}» ({claimPropertyId})?',
 
   placehoderAutosuggest: 'Введите текст для поиска квалификатора…',
   placehoderSelect: 'Выберите тип квалификатора…',

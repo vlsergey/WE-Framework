@@ -7,9 +7,11 @@ import SnakEditorTableRowPart from 'components/SnakEditorTableRowPart';
 
 export default class ClaimQualifierTableRow extends PureComponent {
 
-  static TABLE_COLUMNS = 1 + SnakEditorTableRowPart.TABLE_COLUMNS;
+  static TABLE_COLUMNS = 2 + SnakEditorTableRowPart.TABLE_COLUMNS;
 
   static propTypes = {
+    firstCell: PropTypes.node.isRequired,
+    lastCell: PropTypes.node.isRequired,
     onQualifierChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     qualifier: PropTypes.object.isRequired,
@@ -21,9 +23,10 @@ export default class ClaimQualifierTableRow extends PureComponent {
   }
 
   render() {
-    const { onQualifierChange, propertyDescription, qualifier, readOnly } = this.props;
+    const { firstCell, lastCell, onQualifierChange, propertyDescription, qualifier, readOnly } = this.props;
 
     return <AnimatedTr>
+      {firstCell}
       <PropertyLabelCell
         description={propertyDescription.description}
         label={propertyDescription.label}
@@ -33,6 +36,7 @@ export default class ClaimQualifierTableRow extends PureComponent {
         propertyDescription={propertyDescription}
         readOnly={readOnly}
         snak={qualifier} />
+      {lastCell}
     </AnimatedTr>;
   }
 }

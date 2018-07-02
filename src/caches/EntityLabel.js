@@ -15,6 +15,9 @@ export default class EntityLabel extends PureComponent {
 
   render() {
     const { appendEntityId, entityId } = this.props;
+    if ( !entityId )
+      return null;
+
     return <LabelDescriptionProvider entityId={entityId}>
       {labelDescription => {
         if ( !labelDescription )
