@@ -82,6 +82,8 @@ export default class ClaimQualifiersTable extends PureComponent {
 
     const qualifiers = claim.qualifiers || {};
     const qualifierPropertyIds = Object.keys( qualifiers );
+    const alreadyPresentQualifiers = qualifierPropertyIds
+      .filter( propertyId => qualifiers[ propertyId ].length > 0 );
 
     return <table
       className={styles.wef_claim_qualifiers_table}
@@ -111,6 +113,7 @@ export default class ClaimQualifiersTable extends PureComponent {
             <th>
               <NewQualifierSelect
                 allowedQualifiers={allowedQualifiers}
+                alreadyPresent={alreadyPresentQualifiers}
                 onSelect={this.handleQualifierAdd} />
             </th>
             <td />

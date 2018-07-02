@@ -11,6 +11,15 @@ import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueE
 import UrlDataValueEditor from './dataValueEditors/UrlDataValueEditor';
 import WikibaseItemDataValueEditor from './dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
+export const SUPPORTED_DATATYPES = [
+  'external-id',
+  'commonsMedia',
+  'monolingualtext',
+  'string',
+  'url',
+  'wikibase-item',
+];
+
 export default class SnakValueEditorFactory extends PureComponent {
 
   static TABLE_COLUMNS = 12;

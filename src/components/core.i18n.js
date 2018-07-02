@@ -81,6 +81,7 @@ const en = {
   placeholderAliases: 'Add “also known as”',
 
   qualifiersNewSelectPlaceholder: 'Select qualifier type...',
+  qualifiersUnsupportedOptionSuffix: ' (unsupported)',
   qualifiersNewUseDifferentOption: 'Use different qualifier...',
 
   rank: {
@@ -227,6 +228,7 @@ const ru = {
   placeholderAliases: 'Добавить «также известен как»',
 
   qualifiersNewSelectPlaceholder: 'Выберите тип квалификатора...',
+  qualifiersUnsupportedOptionSuffix: ' (не поддерживается)',
   qualifiersNewUseDifferentOption: 'Использовать другой квалификатор...',
 
   rank: {
