@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Claim } from 'model/Shapes';
+import ClaimQualifiersTBody from './ClaimQualifiersTBody';
 import ClaimQualifierTableRow from './ClaimQualifierTableRow';
 import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
@@ -37,23 +38,8 @@ export default class ClaimQualifiersTable extends PureComponent {
     }
   }
 
-  handleQualifierChangeF( propertyId, index ) {
-    return qualifier => {
-      const qualifiers = [ ...this.props.claim.qualifiers[ propertyId ] ];
-      qualifiers[ index ] = qualifier;
-      const newClaim = {
-        ...this.props.claim,
-        qualifiers: {
-          ...this.props.claim.qualifiers,
-          [ propertyId ]: qualifiers,
-        },
-      };
-      this.props.onClaimUpdate( newClaim );
-    };
-  }
-
   render() {
-    const { claim } = this.props;
+    const { claim, onClaimUpdate } = this.props;
     const { hiddenBehindLabel } = this.state;
 
     const allQualifierPropertyIds = Object.keys( claim.qualifiers || [] );
@@ -65,29 +51,40 @@ export default class ClaimQualifiersTable extends PureComponent {
           const propertyDescription = cache[ propertyId ];
 
           if ( typeof propertyDescription === 'undefined' ) {
-            return <tbody key={propertyId}>
-              <tr>
-                <td colSpan={ClaimQualifierTableRow.TABLE_COLUMNS}>
-                  <i>Loading property description of {propertyId}...</i>
-                </td>
-              </tr>
-            </tbody>;
+            return <PropertyIsLoadingTBody
+              key={propertyId}
+              propertyId={propertyId} />;
           }
 
           expect( propertyDescription ).toBeA( PropertyDescription );
-          return <tbody key={propertyId}>
-            { claim.qualifiers[ propertyId ].map( ( qualifier, index ) =>
-              <ClaimQualifierTableRow
-                key={qualifier.hash}
-                onQualifierChange={this.handleQualifierChangeF( propertyId, index )}
-                propertyDescription={propertyDescription}
-                qualifier={qualifier}
-                readOnly={hiddenBehindLabel} />
-            ) }
-          </tbody>;
+          return <ClaimQualifiersTBody
+            claim={claim}
+            key={propertyId}
+            onClaimUpdate={onClaimUpdate}
+            propertyDescription={propertyDescription}
+            readOnly={hiddenBehindLabel} />;
         } )}
       </table>}
     </PropertyDescriptionsProvider>;
   }
 
+}
+
+class PropertyIsLoadingTBody extends PureComponent {
+
+  static propTypes = {
+    propertyId: PropTypes.string.isRequired,
+  }
+
+  render() {
+    const { propertyId } = this.props;
+
+    return <tbody key={propertyId}>
+      <tr>
+        <td colSpan={ClaimQualifierTableRow.TABLE_COLUMNS}>
+          <i>Loading property description of {propertyId}...</i>
+        </td>
+      </tr>
+    </tbody>;
+  }
 }

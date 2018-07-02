@@ -1,12 +1,12 @@
 import { applyMiddleware, createStore } from 'redux';
 import assert from 'assert';
 import buildReducers from 'core/reducers';
-import ClaimQualifiersTable from 'components/ClaimQualifiersTable';
+import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import CommonsMediaDataValueEditor from 'components/dataValueEditors/CommonsMediaDataValueEditor';
-import P51 from '../entities/P51';
+import P51 from '../../entities/P51';
 import PropertyDescription from 'core/PropertyDescription';
 import { Provider } from 'react-redux';
-import Q30 from '../entities/Q30';
+import Q30 from '../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import thunk from 'redux-thunk';

@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 import PropertyDescription from 'core/PropertyDescription';
-import PropertyLabelCell from './PropertyLabelCell';
+import PropertyLabelCell from 'components/PropertyLabelCell';
 import PropTypes from 'prop-types';
-import SnakEditorTableRowPart from './SnakEditorTableRowPart';
+import SnakEditorTableRowPart from 'components/SnakEditorTableRowPart';
 
 export default class ClaimQualifierTableRow extends PureComponent {
 

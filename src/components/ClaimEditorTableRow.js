@@ -2,7 +2,7 @@ import { animated, Spring } from 'react-spring';
 import React, { PureComponent } from 'react';
 import { Claim } from 'model/Shapes';
 import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
-import ClaimQualifiersTable from './ClaimQualifiersTable';
+import ClaimQualifiersTable from './qualifiers/ClaimQualifiersTable';
 import expect from 'expect';
 import FlagCell from './FlagCell';
 import PropertyDescription from 'core/PropertyDescription';
