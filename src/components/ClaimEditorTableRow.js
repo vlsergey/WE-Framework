@@ -1,5 +1,5 @@
-import { animated, Spring } from 'react-spring';
 import React, { PureComponent } from 'react';
+import AnimatedTr from 'components/AnimatedTr';
 import { Claim } from 'model/Shapes';
 import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
 import ClaimQualifiersTable from './qualifiers/ClaimQualifiersTable';
@@ -8,24 +8,13 @@ import FlagCell from './FlagCell';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyLabelCell from './PropertyLabelCell';
 import PropTypes from 'prop-types';
+import QualifierSelectButtonCell from './qualifiers/QualifierSelectButtonCell';
 import SelectRankButtonCell from './SelectRankButtonCell';
 import SnakEditorTableRowPart from './SnakEditorTableRowPart';
 
-const AnimatedTr = ( { children } ) => <Spring from={{ opacity: 0 }} native to={{ opacity: 1 }}>
-  {props =>
-    <animated.tr style={props}>
-      {children}
-    </animated.tr>
-  }
-</Spring>;
-
-AnimatedTr.propTypes = {
-  children: PropTypes.node,
-};
-
 export default class ClaimEditorTableRow extends PureComponent {
 
-  static TABLE_COLUMNS = 5 + SnakEditorTableRowPart.TABLE_COLUMNS;
+  static TABLE_COLUMNS = 6 + SnakEditorTableRowPart.TABLE_COLUMNS;
 
   static propTypes = {
     firstCell: PropTypes.node.isRequired,
@@ -39,13 +28,20 @@ export default class ClaimEditorTableRow extends PureComponent {
   constructor() {
     super( ...arguments );
 
+    this.claimQualifiersTable = React.createRef();
+
     this.handleClaimDelete = this.handleClaimDelete.bind( this );
+    this.handleQualifierSelect = this.handleQualifierSelect.bind( this );
     this.handleRankChange = this.handleRankChange.bind( this );
     this.handleSnakChange = this.handleSnakChange.bind( this );
   }
 
   handleClaimDelete() {
     return this.props.onClaimDelete( this.props.claim );
+  }
+
+  handleQualifierSelect() {
+    this.claimQualifiersTable.current.showQualifierSelect();
   }
 
   handleRankChange( rank ) {
@@ -84,7 +80,8 @@ export default class ClaimEditorTableRow extends PureComponent {
           label={propertyDescription.label}
           propertyId={propertyDescription.id} />
         {/* add quialifier button cell */}
-        {/* next component renders multiple cells */}
+        <QualifierSelectButtonCell
+          onClick={this.handleQualifierSelect} />
         <SnakEditorTableRowPart
           onSnakChange={this.handleSnakChange}
           propertyDescription={propertyDescription}
@@ -97,12 +94,16 @@ export default class ClaimEditorTableRow extends PureComponent {
           propertyLabel={propertyDescription.label} />
         {/* delete claim button cell */}
       </AnimatedTr>
-      { !!claim.qualifiers && <tr>
+      <tr>
         <td colSpan={2} />
         <td colSpan={ClaimEditorTableRow.TABLE_COLUMNS - 2}>
-          <ClaimQualifiersTable claim={claim} onClaimUpdate={onClaimUpdate} />
+          <ClaimQualifiersTable
+            allowedQualifiers={propertyDescription.allowedQualifiers}
+            claim={claim}
+            onClaimUpdate={onClaimUpdate}
+            ref={this.claimQualifiersTable} />
         </td>
-      </tr> }
+      </tr>
     </React.Fragment>;
   }
 

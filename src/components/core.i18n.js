@@ -80,6 +80,9 @@ const en = {
   labelAliases: 'Aliases',
   placeholderAliases: 'Add “also known as”',
 
+  qualifiersNewSelectPlaceholder: 'Select qualifier type...',
+  qualifiersNewUseDifferentOption: 'Use different qualifier...',
+
   rank: {
     deprecated: 'deprecated',
     normal: 'normal',
@@ -222,6 +225,9 @@ const ru = {
   labelDescription: 'Описание',
   labelAliases: 'Также известен как',
   placeholderAliases: 'Добавить «также известен как»',
+
+  qualifiersNewSelectPlaceholder: 'Выберите тип квалификатора...',
+  qualifiersNewUseDifferentOption: 'Использовать другой квалификатор...',
 
   rank: {
     deprecated: 'нерекомендуемый',

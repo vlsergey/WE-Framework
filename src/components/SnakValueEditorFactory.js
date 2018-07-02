@@ -32,9 +32,15 @@ export default class SnakValueEditorFactory extends PureComponent {
   }
 
   handleDataValueChange( datavalue ) {
+    const { propertyDescription, snak } = this.props;
+
+    expect( snak ).toBeAn( 'object' );
+    expect( propertyDescription.datatype ).toBeA( 'string' );
+
     this.props.onSnakChange( {
-      ...this.props.snak,
+      ...snak,
       datavalue,
+      datatype: propertyDescription.datatype,
     } );
   }
 

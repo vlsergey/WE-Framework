@@ -1,12 +1,16 @@
 import React, { PureComponent } from 'react';
+import AnimatedTr from 'components/AnimatedTr';
 import { Claim } from 'model/Shapes';
 import ClaimQualifiersTBody from './ClaimQualifiersTBody';
 import ClaimQualifierTableRow from './ClaimQualifierTableRow';
 import expect from 'expect';
+import NewQualifierSelect from './NewQualifierSelect';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import styles from './ClaimQualifiersTable.css';
+
+let qualifiersCounter = 0;
 
 export default class ClaimQualifiersTable extends PureComponent {
 
@@ -25,9 +29,36 @@ export default class ClaimQualifiersTable extends PureComponent {
 
     this.state = {
       hiddenBehindLabel: true,
+      addQualifierMode: 'HIDDEN',
     };
 
+    this.handleQualifierAdd = this.handleQualifierAdd.bind( this );
     this.showFromBehindLabel = this.showFromBehindLabel.bind( this );
+  }
+
+  handleQualifierAdd( propertyId ) {
+    const { claim } = this.props;
+    const qualifiers = claim.qualifiers || {};
+    const propertyQualifiers = qualifiers[ propertyId ] || [];
+
+    this.setState( {
+      addQualifierMode: 'HIDDEN',
+    } );
+
+    this.props.onClaimUpdate( {
+      ...claim,
+      qualifiers: {
+        ...qualifiers,
+        [ propertyId ]: [
+          ...propertyQualifiers,
+          {
+            snaktype: 'value',
+            property: propertyId,
+            hash: 'new#' + ++qualifiersCounter,
+          },
+        ],
+      },
+    } );
   }
 
   showFromBehindLabel() {
@@ -38,16 +69,25 @@ export default class ClaimQualifiersTable extends PureComponent {
     }
   }
 
-  render() {
-    const { claim, onClaimUpdate } = this.props;
-    const { hiddenBehindLabel } = this.state;
+  showQualifierSelect() {
+    const { allowedQualifiers } = this.props;
+    this.setState( {
+      addQualifierMode: allowedQualifiers.length > 0 ? 'SELECT' : 'AUTOSUGGEST',
+    } );
+  }
 
-    const allQualifierPropertyIds = Object.keys( claim.qualifiers || [] );
-    return <PropertyDescriptionsProvider propertyIds={allQualifierPropertyIds}>
-      {cache => <table
-        className={styles.wef_claim_qualifiers_table}
-        onClick={this.showFromBehindLabel}>
-        { Object.keys( claim.qualifiers ).map( propertyId => {
+  render() {
+    const { allowedQualifiers, claim, onClaimUpdate } = this.props;
+    const { addQualifierMode, hiddenBehindLabel } = this.state;
+
+    const qualifiers = claim.qualifiers || {};
+    const qualifierPropertyIds = Object.keys( qualifiers );
+
+    return <table
+      className={styles.wef_claim_qualifiers_table}
+      onClick={this.showFromBehindLabel}>
+      <PropertyDescriptionsProvider propertyIds={qualifierPropertyIds}>
+        {cache => qualifierPropertyIds.map( propertyId => {
           const propertyDescription = cache[ propertyId ];
 
           if ( typeof propertyDescription === 'undefined' ) {
@@ -64,8 +104,19 @@ export default class ClaimQualifiersTable extends PureComponent {
             propertyDescription={propertyDescription}
             readOnly={hiddenBehindLabel} />;
         } )}
-      </table>}
-    </PropertyDescriptionsProvider>;
+      </PropertyDescriptionsProvider>
+      { addQualifierMode === 'SELECT' &&
+        <tbody className={styles.wef_claim_new_qualifier}>
+          <AnimatedTr>
+            <th>
+              <NewQualifierSelect
+                allowedQualifiers={allowedQualifiers}
+                onSelect={this.handleQualifierAdd} />
+            </th>
+            <td />
+          </AnimatedTr>
+        </tbody>}
+    </table>;
   }
 
 }

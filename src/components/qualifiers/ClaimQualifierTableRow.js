@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import AnimatedTr from 'components/AnimatedTr';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyLabelCell from 'components/PropertyLabelCell';
 import PropTypes from 'prop-types';
@@ -22,7 +23,7 @@ export default class ClaimQualifierTableRow extends PureComponent {
   render() {
     const { onQualifierChange, propertyDescription, qualifier, readOnly } = this.props;
 
-    return <tr>
+    return <AnimatedTr>
       <PropertyLabelCell
         description={propertyDescription.description}
         label={propertyDescription.label}
@@ -32,6 +33,6 @@ export default class ClaimQualifierTableRow extends PureComponent {
         propertyDescription={propertyDescription}
         readOnly={readOnly}
         snak={qualifier} />
-    </tr>;
+    </AnimatedTr>;
   }
 }

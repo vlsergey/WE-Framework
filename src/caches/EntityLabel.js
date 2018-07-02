@@ -5,13 +5,27 @@ import PropTypes from 'prop-types';
 export default class EntityLabel extends PureComponent {
 
   static propTypes ={
+    appendEntityId: PropTypes.bool,
     entityId: PropTypes.string.isRequired,
   }
 
+  static defaultProps = {
+    appendEntityId: false,
+  }
+
   render() {
-    const { entityId } = this.props;
+    const { appendEntityId, entityId } = this.props;
     return <LabelDescriptionProvider entityId={entityId}>
-      {labelDescription => ( labelDescription ? labelDescription.label : null ) || entityId }
+      {labelDescription => {
+        if ( !labelDescription )
+          return entityId;
+
+        let result = labelDescription.label;
+        if ( appendEntityId ) {
+          result += ' (' + entityId + ')';
+        }
+        return result;
+      }}
     </LabelDescriptionProvider>;
   }
 

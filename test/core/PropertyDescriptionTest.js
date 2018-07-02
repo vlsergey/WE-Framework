@@ -26,5 +26,11 @@ describe( 'PropertyDescription', () => {
         'https://tools.wmflabs.org/wikidata-externalid-url/?p=345&url_prefix=http://www.imdb.com/&id=tt0068646' );
     } );
 
+    it( 'Should provide allowed qualifiers', () => {
+      assert.deepEqual(
+        propertyDescription.allowedQualifiers,
+        [ 'P1932', 'P2241', 'P17', 'P1810' ] );
+    } );
+
   } );
 } );

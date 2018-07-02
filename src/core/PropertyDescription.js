@@ -23,6 +23,21 @@ function findSingleStatementByEntityIdValue( entity, property, entityId ) {
   return null;
 }
 
+function getWikibaseItemRestrictions( propertyEntity, restrictionId, valuePropertyId ) {
+  const statement = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', restrictionId );
+  if ( !statement )
+    return [];
+
+  if ( !statement.qualifiers || !statement.qualifiers[ valuePropertyId ] )
+    return [];
+
+  const ok = x => typeof x !== 'undefined' && x !== null;
+  return statement.qualifiers[ valuePropertyId ]
+    .map( qualifier => qualifier.datavalue ).filter( ok )
+    .map( datavalue => datavalue.value ).filter( ok )
+    .map( value => value.id ).filter( ok );
+}
+
 function getStringRestriction( propertyEntity, restrictionId, valuePropertyId ) {
   const statement = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', restrictionId );
   if ( !statement )
@@ -105,6 +120,8 @@ export default class PropertyDescription {
     const translated = I18nUtils.localize( {}, translations );
     for ( const k in translated )
       this[ k ] = translated[ k ];
+
+    this.allowedQualifiers = getWikibaseItemRestrictions( propertyEntity, 'Q21510851', 'P2306' );
 
     this.countries = filterClaimsByRank( propertyEntity.claims.P17 )
       .filter( claimHasMainsnakValue )
