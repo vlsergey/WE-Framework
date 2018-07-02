@@ -79,8 +79,14 @@ function isStringBlank( str ) {
   if ( typeof str === 'undefined' || str === null )
     return true;
   if ( typeof str !== 'string' )
-    throw new Error( 'provided argument is not string' );
+    throw new Error( 'provided argument is not string: ' + JSON.stringify( str ) );
   return str.trim() === '';
+}
+
+function isNumberDefined( number ) {
+  if ( typeof number === 'undefined' || number === null )
+    return false;
+  return true;
 }
 
 function isSnakEmtpy( snak ) {
@@ -100,7 +106,7 @@ function isSnakEmtpy( snak ) {
   case 'time':
     return isStringBlank( datavalue.value.time ) || isStringBlank( datavalue.value.calendarmodel );
   case 'wikibase-entityid':
-    return isStringBlank( datavalue.value[ 'numeric-id' ] ) || isStringBlank( datavalue.value[ 'entity-type' ] );
+    return !isNumberDefined( datavalue.value[ 'numeric-id' ] ) || isStringBlank( datavalue.value[ 'entity-type' ] );
   default:
     return false;
   }
