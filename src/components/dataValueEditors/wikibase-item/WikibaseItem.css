@@ -1,12 +1,11 @@
-.wef_wikibase-item {
-	width: 99%;
-}
-
-.wef_wikibase-item_readonly {
+td.wef_datavalue_wikibase-item_readonly {
   min-width: 99%;
   overflow-x: hidden;
   text-overflow: ellipsis;
-  width: 99%;
+}
+
+.wef_datavalue_wikibase-item input {
+  width: 100%;
 }
 
 .container {

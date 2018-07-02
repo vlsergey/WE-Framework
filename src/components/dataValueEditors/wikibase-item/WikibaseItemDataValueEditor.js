@@ -127,14 +127,14 @@ class WikibaseItemDataValueEditor extends Component {
   render() {
     const { datavalue, propertyDescription, readOnly } = this.props;
 
+    const className = styles[ 'wef_datavalue_' + WikibaseItemDataValueEditor.DATATYPE ];
     const entityId = datavalue && datavalue.value && datavalue.value.id ? datavalue.value.id : null;
     const params = {
       type: 'text',
-      className: styles[ 'wef_' + WikibaseItemDataValueEditor.DATATYPE ],
     };
 
     if ( readOnly ) {
-      return <td className={styles[ 'wef_' + WikibaseItemDataValueEditor.DATATYPE + '_readonly' ]} colSpan={12}>
+      return <td className={className + ' ' + styles[ 'wef_datavalue_' + WikibaseItemDataValueEditor.DATATYPE + '_readonly' ]} colSpan={12}>
         { entityId && <a href={'https://www.wikidata.org/wiki/' + entityId}>
           <EntityLabel entityId={entityId} />
         </a> }
@@ -151,7 +151,7 @@ class WikibaseItemDataValueEditor extends Component {
 
     console.log( 'render with value "' + params.value + '" and suggestions: ' + JSON.stringify( this.state.suggestions ) );
     return <React.Fragment>
-      <td colSpan={11}>
+      <td className={className} colSpan={11}>
         <Autosuggest
           alwaysRenderSuggestions={this.state.componentFocused}
           getSuggestionValue={this.getSuggestionValue}

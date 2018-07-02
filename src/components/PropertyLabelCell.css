@@ -1,9 +1,9 @@
-
-.wef_property_editor_label {
+th.wef_property_label {
 	text-align: left;
 	white-space: nowrap;
+	width: 1%;
 }
 
-.wef_property_editor_label a {
+.wef_property_label a {
 	color: black;
 }

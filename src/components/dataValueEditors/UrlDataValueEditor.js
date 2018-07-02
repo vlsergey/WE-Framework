@@ -23,7 +23,7 @@ export default class UrlDataValueEditor extends AbstractStringBasedDataValueEdit
 
     if ( readOnly ) {
       if ( datavalue && datavalue.value ) {
-        return <td className={styles.wef_url + ' ' + styles.wef_url_readonly} colSpan={12}>
+        return <td className={styles.wef_datavalue_url + ' ' + styles.wef_datavalue_url_readonly} colSpan={12}>
           { href && <a href={href} rel="noopener noreferrer" target="_blank">
             {href}
           </a> }
@@ -41,7 +41,7 @@ export default class UrlDataValueEditor extends AbstractStringBasedDataValueEdit
     };
 
     return <React.Fragment>
-      <td className={styles.wef_url} colSpan={11}>
+      <td className={styles.wef_datavalue_url} colSpan={11}>
         <input {...params} />
       </td>
       <GoToUrlButtonCell href={href} />

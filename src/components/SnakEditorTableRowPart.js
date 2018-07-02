@@ -65,8 +65,10 @@ export default class SnakEditorTableRowPart extends Component {
             readOnly
             snak={snak} />
         </React.Fragment>
-        : <NotAValueSnakReplacementCell
-          snaktype={snak.snaktype} />;
+        : <React.Fragment>
+          <td />
+          <NotAValueSnakReplacementCell snaktype={snak.snaktype} />
+        </React.Fragment>;
     }
 
     return [

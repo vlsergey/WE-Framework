@@ -1,18 +1,6 @@
 /*Form level*/
-.wef_dialog table, .wef_dialog tbody, .wef_dialog tr, .wef_dialog th, .wef_dialog td {
-	padding: 0;
-	margin: 0;
-	line-height: 1.2em;
-}
-
-.wef_dialog fieldset {
-	line-height: 0.75em;
-	margin: 0;
-	padding: 0 0.25em 0.25em;
-}
-
-.wef_dialog .wef_property_editor_tbody:nth-child(odd) {
-	background-color: rgba(0, 0, 0, 0.10);
+.wef_dialog input {
+	box-sizing: border-box;
 }
 
 .wef_button_cell {
@@ -133,7 +121,7 @@
 }
 
 /* Snak value level -- per types */
-.wef_commonsMedia, .wef_string, .wef_url {
+.wef_string, .wef_url {
 	width: 99%;
 }
 

@@ -13,7 +13,7 @@ export default class PropertyLabelCell extends PureComponent {
   render() {
     const { label, description, propertyId } = this.props;
 
-    return <th className={styles.wef_property_editor_label}>
+    return <th className={styles.wef_property_label}>
       <a
         href={'//www.wikidata.org/wiki/Property:' + propertyId}
         rel="noopener noreferrer"

@@ -1,10 +1,9 @@
 import * as ApiUtils from 'core/ApiUtils';
 import * as Shapes from 'model/Shapes';
 import React, { Component } from 'react';
-import dataTypeStyles from './Unsupported.css';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
-import styles from 'components/core.css';
+import styles from './UnsupportedDataValueEditor.css';
 
 export default class UnsupportedDataValueEditor extends Component {
 
@@ -62,13 +61,15 @@ export default class UnsupportedDataValueEditor extends Component {
     const { datavalue, propertyDescription, ...other } = this.props;
     const { datatype } = propertyDescription;
 
+    const className = styles[ 'wef_datavalue_' + propertyDescription.datatype ] + ' ' + styles.wef_datavalue_unsupported;
+
     if ( !this.state.html ) {
-      return <td className={dataTypeStyles.wef_datavalue_unsupported} colSpan={12} {...other}>
-        <span className={styles[ 'wef_' + propertyDescription.datatype ]}>datatype {datatype} is not supported yet</span>
+      return <td className={className} colSpan={12} {...other}>
+        <span>datatype {datatype} is not supported yet</span>
       </td>;
     }
 
-    return <td className={dataTypeStyles.wef_datavalue_unsupported} colSpan={12} {...other}>
+    return <td className={className} colSpan={12} {...other}>
       <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
     </td>;
   }

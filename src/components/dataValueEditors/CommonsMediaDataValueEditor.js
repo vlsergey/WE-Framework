@@ -1,10 +1,9 @@
 import * as ApiUtils from 'core/ApiUtils';
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
 import Autosuggest from 'react-autosuggest';
-import dataTypeStyles from './CommonsMedia.css';
 import MediawikiPreview from 'components/MediawikiPreview';
 import React from 'react';
-import styles from 'components/core.css';
+import styles from './CommonsMediaDataValueEditor.css';
 
 export default class CommonsMediaDataValueEditor extends AbstractStringBasedDataValueEditor {
 
@@ -59,10 +58,11 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
 
   render() {
     const { datavalue, propertyDescription, readOnly } = this.props;
+    const className = styles[ 'wef_datavalue_' + CommonsMediaDataValueEditor.DATATYPE ];
 
     if ( readOnly ) {
       if ( datavalue && datavalue.value ) {
-        return <td colSpan={12}>
+        return <td className={className} colSpan={12}>
           <a
             href={'https://commons.wikimedia.org/wiki/File:' + datavalue.value}
             rel="noopener noreferrer"
@@ -77,7 +77,6 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
 
     const params = {
       type: 'text',
-      className: styles[ 'wef_' + CommonsMediaDataValueEditor.DATATYPE ],
     };
 
     if ( propertyDescription.regexp ) {
@@ -87,7 +86,7 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
     params.value = datavalue ? datavalue.value : '';
     params.onChange = this.handleChange;
 
-    return <td colSpan={12}>
+    return <td className={className} colSpan={12}>
       <Autosuggest
         getSuggestionValue={this.getSuggestionValue}
         inputProps={params}
@@ -95,18 +94,18 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
         onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
         renderSuggestion={this.renderSuggestion}
         suggestions={this.state.suggestions}
-        theme={dataTypeStyles} />
+        theme={styles} />
     </td>;
   }
 
   renderSuggestion( data ) {
-    return <div className={dataTypeStyles.suggestionContent}>
-      <div className={dataTypeStyles.suggestionContentPreviewOuter}>
-        <div className={dataTypeStyles.suggestionContentPreviewInner}>
+    return <div className={styles.suggestionContent}>
+      <div className={styles.suggestionContentPreviewOuter}>
+        <div className={styles.suggestionContentPreviewInner}>
           <MediawikiPreview spinnerSize={45} wikitext={'[[File:' + data + '|50x50px]]'} />
         </div>
       </div>
-      <span className={dataTypeStyles.suggestionContentText}>&nbsp;&nbsp;{data}</span>
+      <span className={styles.suggestionContentText}>&nbsp;&nbsp;{data}</span>
     </div>;
   }
 

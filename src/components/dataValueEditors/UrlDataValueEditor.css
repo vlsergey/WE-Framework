@@ -1,8 +1,8 @@
-.wef_url {
-
+.wef_datavalue_url input {
+  width: 100%
 }
 
-.wef_url_readonly td {
+td.wef_datavalue_url_readonly {
   min-width: 99%;
   overflow-x: hidden;
   text-overflow: ellipsis;
