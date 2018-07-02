@@ -25,7 +25,7 @@ export default class MonolingualTextDataValueEditor extends PureComponent {
     onDataValueChange( {
       ...datavalue,
       value: {
-        ...datavalue.value,
+        ...datavalue ? datavalue.value : undefined,
         language: value,
       },
       type: 'monolingualtext',
@@ -38,7 +38,7 @@ export default class MonolingualTextDataValueEditor extends PureComponent {
     onDataValueChange( {
       ...datavalue,
       value: {
-        ...datavalue.value,
+        ...datavalue ? datavalue.value : undefined,
         text: event.target.value,
       },
       type: 'monolingualtext',

@@ -35,7 +35,32 @@ describe( 'components/dataValueEditors', () => {
       assert.equal( inputs[ 1 ].value, 'TestText' );
     } );
 
-    it ( 'can be changed via keyboard', () => {
+    it ( 'non-existing can be changed via keyboard', () => {
+      let datavalue = undefined;
+      const onDataValueChange = newDataValue => { datavalue = newDataValue; };
+
+      const rendered = ReactTestUtils.renderIntoDocument(
+        <MonolingualTextDataValueEditor
+          datavalue={datavalue}
+          onDataValueChange={onDataValueChange}
+          propertyDescription={p18Description} />
+      );
+      assert.ok( rendered );
+
+      const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( rendered, 'input' );
+      assert.ok( inputs );
+      assert.equal( inputs.length, 2 );
+
+      inputs[ 0 ].value = 'ru';
+      ReactTestUtils.Simulate.change( inputs[ 0 ] );
+      assert.equal( datavalue.value.language, 'ru' );
+
+      inputs[ 1 ].value = 'NewTestText';
+      ReactTestUtils.Simulate.change( inputs[ 1 ] );
+      assert.equal( datavalue.value.text, 'NewTestText' );
+    } );
+
+    it ( 'existing value can be changed via keyboard', () => {
       let datavalue = {
         value: {
           language: 'en',
