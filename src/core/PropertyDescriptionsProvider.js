@@ -11,16 +11,12 @@ import StringPropertyValuesProvider from 'caches/StringPropertyValuesProvider';
 const calcCountryFlags = ( countriesCache, countries ) => countries
   .map( country => countriesCache[ country ] )
   .filter( cacheItem => !!cacheItem )
-  .map( cacheItem => cacheItem.P41 || [] )
-  //TODO: replace with flatMap as soon as awailable
-  .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] ) ;
+  .flatMap( cacheItem => cacheItem.P41 || [] );
 
 const calcCountryLanguageIds = ( countriesCache, countries ) => countries
   .map( country => countriesCache[ country ] )
   .filter( cacheItem => !!cacheItem )
-  .map( cacheItem => cacheItem.P37 || [] )
-  //TODO: replace with flatMap as soon as awailable
-  .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] ) ;
+  .flatMap( cacheItem => cacheItem.P37 || [] );
 
 export default class PropertyDescriptionsProvider extends PureComponent {
 
@@ -54,8 +50,7 @@ export default class PropertyDescriptionsProvider extends PureComponent {
         const languageCodes = languageIds
           .filter( entityId => !!languagesCache[ entityId ] )
           .filter( entityId => !!languagesCache[ entityId ].P424 )
-          .map( entityId => languagesCache[ entityId ].P424 )
-          .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] );
+          .flatMap( entityId => languagesCache[ entityId ].P424 );
 
         const result = {
           ...propertyDescription,
@@ -90,16 +85,14 @@ export default class PropertyDescriptionsProvider extends PureComponent {
     propertyIds
       .filter( propertyId => !!cache[ propertyId ] )
       .map( propertyId => cache[ propertyId ] )
-      .map( propertyDescription => propertyDescription.countries )
-      .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] )
+      .flatMap( propertyDescription => propertyDescription.countries )
   );
 
   memoizeSourceWebsitesLanguages = defaultMemoize ( ( propertyIds, cache ) =>
     propertyIds
       .filter( propertyId => !!cache[ propertyId ] )
       .map( propertyId => cache[ propertyId ] )
-      .map( propertyDescription => propertyDescription.sourceWebsitesLanguages )
-      .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] )
+      .flatMap( propertyDescription => propertyDescription.sourceWebsitesLanguages )
   );
 
   render() {

@@ -128,10 +128,9 @@ export default class PropertyDescription {
       .filter( claimHasMainsnakValue )
       .filter( claim => claim.qualifiers && claim.qualifiers.P407 )
       .map( claim => claim.qualifiers.P407 )
-      .map( qualifiers => qualifiers
+      .flatMap( qualifiers => qualifiers
         .filter( qualifier => qualifier && qualifier.datavalue && qualifier.datavalue.value && qualifier.datavalue.value.id )
-        .map( qualifier => qualifier.datavalue.value.id ) )
-      .reduce( ( acc, cur ) => [ ...acc, ...cur ], [] );
+        .map( qualifier => qualifier.datavalue.value.id ) );
 
     this.languageIds = [];
     this.languageCodes = [];
