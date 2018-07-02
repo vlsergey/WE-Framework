@@ -6,6 +6,7 @@ import ExternalIdDataValueEditor from './dataValueEditors/ExternalIdDataValueEdi
 import MonolingualTextDataValueEditor from './dataValueEditors/MonolingualTextDataValueEditor';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
+import QuantityDataValueEditor from './dataValueEditors/quantity/QuantityDataValueEditor';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueEditor';
 import UrlDataValueEditor from './dataValueEditors/UrlDataValueEditor';
@@ -15,6 +16,7 @@ export const SUPPORTED_DATATYPES = [
   'external-id',
   'commonsMedia',
   'monolingualtext',
+  'quantity',
   'string',
   'url',
   'wikibase-item',
@@ -72,6 +74,8 @@ export default class SnakValueEditorFactory extends PureComponent {
       return <CommonsMediaDataValueEditor {...dataValueEditorProps} />;
     case 'monolingualtext':
       return <MonolingualTextDataValueEditor {...dataValueEditorProps} />;
+    case 'quantity':
+      return <QuantityDataValueEditor {...dataValueEditorProps} />;
     case 'string':
       return <StringDataValueEditor {...dataValueEditorProps} />;
     case 'url':

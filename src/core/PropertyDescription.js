@@ -2,6 +2,8 @@ import * as I18nUtils from 'utils/I18nUtils';
 import expect from 'expect';
 import { filterClaimsByRank } from 'model/ModelUtils';
 
+const ok = x => typeof x !== 'undefined' && x != null;
+
 function findSingleStatementByEntityIdValue( entity, property, entityId ) {
   if ( !entity.claims || !entity.claims[ property ] ) {
     return null;
@@ -127,7 +129,8 @@ export default class PropertyDescription {
       .filter( claimHasMainsnakValue )
       .map( claim => claim.mainsnak.datavalue.value.id );
 
-    this.regexp = getStringRestriction( propertyEntity, 'Q21502404', 'P1793' );
+    this.languageIds = [];
+    this.languageCodes = [];
 
     if ( propertyEntity.claims && propertyEntity.claims.P1630 ) {
       this.urlFormatters = filterClaimsByRank( propertyEntity.claims.P1630 )
@@ -136,6 +139,22 @@ export default class PropertyDescription {
     } else {
       this.urlFormatters = [];
     }
+
+    const unitRestriction = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', 'Q21514353' );
+    if ( unitRestriction ) {
+      const quantityUnitsSnaks =
+        [ unitRestriction.qualifiers ].filter( ok )
+          .flatMap( qualifiers => qualifiers.P2305 ).filter( ok );
+
+      this.quantityUnitEnabled = !( quantityUnitsSnaks.length === 1 && quantityUnitsSnaks[ 0 ].snaktype === 'novalue' );
+      this.quantityUnits = quantityUnitsSnaks
+        .filter( qualifier => qualifier.snaktype === 'value' )
+        .map( qualifier => qualifier.datavalue ).filter( ok )
+        .map( datavalue => datavalue.value ).filter( ok )
+        .map( value => value.id ).filter( ok );
+    }
+
+    this.regexp = getStringRestriction( propertyEntity, 'Q21502404', 'P1793' );
 
     this.sourceWebsites = filterClaimsByRank( ( propertyEntity.claims || {} ).P1896 )
       .filter( claimHasMainsnakValue )
@@ -148,9 +167,6 @@ export default class PropertyDescription {
       .flatMap( qualifiers => qualifiers
         .filter( qualifier => qualifier && qualifier.datavalue && qualifier.datavalue.value && qualifier.datavalue.value.id )
         .map( qualifier => qualifier.datavalue.value.id ) );
-
-    this.languageIds = [];
-    this.languageCodes = [];
   }
 
   formatUrl( value ) {

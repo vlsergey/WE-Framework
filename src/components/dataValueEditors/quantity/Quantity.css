@@ -1,0 +1,19 @@
+.wef_datavalue_quantity table {
+  width: 100%;
+}
+
+.wef_datavalue_quantity td {
+  padding: 0 0.1em;
+}
+
+td.modeselect {
+  width: 1%;
+}
+
+td.unitselect {
+  width: 1%;
+}
+
+.wef_datavalue_quantity input {
+  width: 100%;
+}

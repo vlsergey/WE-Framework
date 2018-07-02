@@ -4,7 +4,6 @@ import buildReducers from 'core/reducers';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import CommonsMediaDataValueEditor from 'components/dataValueEditors/CommonsMediaDataValueEditor';
 import P51 from '../../entities/P51';
-import P85 from '../../entities/P85';
 import PropertyDescription from 'core/PropertyDescription';
 import { Provider } from 'react-redux';
 import Q30 from '../../entities/Q30';
