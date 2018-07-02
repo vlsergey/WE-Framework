@@ -10,6 +10,7 @@ class LocalizedWikibaseItemInput extends PureComponent {
     ...WikibaseItemInput.propTypes,
     cache: PropTypes.object.isRequired,
     queue: PropTypes.func.isRequired,
+    wikibaseItemInputRef: PropTypes.object.isRequired,
   };
 
   componentDidMount() {
@@ -31,20 +32,22 @@ class LocalizedWikibaseItemInput extends PureComponent {
 
   render() {
     /* eslint no-unused-vars: 0 */
-    const { cache, entityId, queue, ...etc } = this.props;
+    const { cache, entityId, queue, wikibaseItemInputRef, ...etc } = this.props;
 
     if ( !entityId ) {
       return <WikibaseItemInput
         {...etc}
         entityId={entityId}
-        entityLabel={null} />;
+        entityLabel={null}
+        ref={wikibaseItemInputRef} />;
     } else {
       const labelDescription = cache[ entityId ];
       const entityLabel = labelDescription ? labelDescription.label : null;
       return <WikibaseItemInput
         {...etc}
         entityId={entityId}
-        entityLabel={entityLabel} />;
+        entityLabel={entityLabel}
+        ref={wikibaseItemInputRef} />;
     }
   }
 }

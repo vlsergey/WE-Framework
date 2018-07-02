@@ -38,9 +38,10 @@ class WikibaseItemDataValueEditor extends Component {
     this.state = {
       suggestions: [ ],
       textValue: '',
-      cleanValue: true,
     };
     this.wikidataApi = ApiUtils.getWikidataApi();
+
+    this.wikibaseItemInputRef = React.createRef();
 
     this.handleChange = this.handleChange.bind( this );
     this.handleSuggestionsClearRequested = this.handleSuggestionsClearRequested.bind( this );
@@ -92,17 +93,24 @@ class WikibaseItemDataValueEditor extends Component {
 
   handleChange( event, { method, newValue } ) {
     console.log( 'handleChange(..., { "' + method + '", "' + newValue + '"})' );
+    const { cache, datavalue, onDataValueChange } = this.props;
 
     switch ( method ) {
     case 'type': {
+      // the only thing we can do by typing -- is to clear data
+      if ( newValue === null || newValue.trim() === '' ) {
+        onDataValueChange( {
+          ...datavalue,
+          value: null,
+          type: 'wikibase-entityid',
+        } );
+      }
       this.setState( {
         textValue: newValue,
-        cleanValue: false,
       } );
       break;
     }
     default: {
-      const { cache, datavalue, onDataValueChange } = this.props;
 
       onDataValueChange( {
         ...datavalue,
@@ -116,8 +124,8 @@ class WikibaseItemDataValueEditor extends Component {
 
       this.setState( {
         textValue: cache[ newValue ] && cache[ newValue ].label ? cache[ newValue ].label : newValue,
-        cleanValue: true,
       } );
+      this.wikibaseItemInputRef.current.clearDirtyState();
 
       break;
     }
@@ -145,11 +153,10 @@ class WikibaseItemDataValueEditor extends Component {
       params.pattern = propertyDescription.regexp;
     }
 
-    params.cleanValue = this.state.cleanValue;
-    params.value = this.state.textValue;
     params.onChange = this.handleChange;
+    params.value = this.state.textValue;
 
-    console.log( 'render with value "' + params.value + '" and suggestions: ' + JSON.stringify( this.state.suggestions ) );
+    console.log( 'WikibaseItemDataValueEditor / render with value "' + params.value + '" and suggestions: ' + JSON.stringify( this.state.suggestions ) );
     return <React.Fragment>
       <td className={className} colSpan={11}>
         <Autosuggest
@@ -170,7 +177,7 @@ class WikibaseItemDataValueEditor extends Component {
   renderInput( inputProps ) {
     const { datavalue } = this.props;
     const { value, onChange, ref, ...etc } = inputProps;
-    console.log( 'renderInput() with datavalue ' + JSON.stringify( datavalue ) + ' value "' + value + '"' );
+    console.log( 'WikibaseItemDataValueEditor / renderInput() with datavalue ' + JSON.stringify( datavalue ) + ' value "' + value + '"' );
 
     if ( datavalue && datavalue.value && datavalue.value.id ) {
       return <LocalizedWikibaseItemInput
@@ -178,13 +185,15 @@ class WikibaseItemDataValueEditor extends Component {
         entityId={datavalue.value.id}
         inputRef={ref}
         onChange={onChange}
-        value={this.state.textValue} />;
+        value={this.state.textValue}
+        wikibaseItemInputRef={this.wikibaseItemInputRef} />;
     } else {
       return <LocalizedWikibaseItemInput
         {...etc}
         inputRef={ref}
         onChange={onChange}
-        value={this.state.textValue} />;
+        value={this.state.textValue}
+        wikibaseItemInputRef={this.wikibaseItemInputRef} />;
     }
   }
 

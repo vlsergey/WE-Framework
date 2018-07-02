@@ -62,8 +62,8 @@ describe( 'components/dataValueEditors', () => {
       assert.equal( input.value, 'Q35120' );
     } );
 
-    it ( 'click on suggestion will change value', () => {
-      console.log( '===8<=== click on suggestion will change value' );
+    it ( 'click; type; select; clear', () => {
+      console.log( '===8<=== click; type; select; clear' );
       const datavalue = {
         value: {
           'entity-type': 'item',
@@ -86,6 +86,7 @@ describe( 'components/dataValueEditors', () => {
         return [];
       }
 
+      console.log( 'TEST: initial rendering' );
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <WikibaseItemDataValueEditor
@@ -120,6 +121,14 @@ describe( 'components/dataValueEditors', () => {
       console.log( 'TEST: click on Suggestion: ReactTestUtils.Simulate.click' );
       ReactTestUtils.Simulate.click( ReactDOM.findDOMNode( suggestionComponents[ 0 ] ) );
       assert.equal( input.value, 'Q222111' );
+
+      // last check -- that we can DELETE value
+      console.log( 'TEST: clear input' );
+      input.value = '';
+      ReactTestUtils.Simulate.change( input );
+
+      assert.equal( input.value, '' );
+      assert.equal( datavalue.value, null );
     } );
   } );
 } );

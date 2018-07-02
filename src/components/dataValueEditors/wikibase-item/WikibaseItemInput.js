@@ -7,9 +7,9 @@ export default class WikibaseItemInput extends PureComponent {
     entityId: PropTypes.string,
     entityLabel: PropTypes.string,
     value: PropTypes.string,
-    cleanValue: PropTypes.bool,
 
     inputRef: PropTypes.func,
+
     onBlur: PropTypes.func,
     onChange: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
@@ -17,25 +17,8 @@ export default class WikibaseItemInput extends PureComponent {
 
   static getEtcProps( props ) {
     /* eslint no-unused-vars: 0 */
-    const { cleanValue, entityId, entityLabel, inputRef, value,
-      onBlur, onChange, onFocus,
-      ...etc } = props;
+    const { entityId, entityLabel, inputRef, value, onBlur, onChange, onFocus, ...etc } = props;
     return etc;
-  }
-
-  static getDerivedStateFromProps( props, state ) {
-    console.log( 'WikibaseItemInput / getDerivedStateFromProps ( \n'
-      + '\t' + JSON.stringify( props ) + ',\n '
-      + '\t' + JSON.stringify( state ) + ' )' );
-    return {
-      ...state,
-      entityId: props.entityId,
-      entityLabel: props.entityLabel,
-      dirty: state.dirty && !props.cleanValue,
-      value: props.cleanValue
-        ? props.entityLabel || props.entityId || ''
-        : state.value,
-    };
   }
 
   constructor() {
@@ -43,8 +26,6 @@ export default class WikibaseItemInput extends PureComponent {
     this.state = {
       dirty: false,
       focused: false,
-      entityId: this.props.entityId,
-      entityLabel: this.props.entityLabel,
       value: this.props.entityLabel || this.props.entityId || '',
     };
 
@@ -56,6 +37,13 @@ export default class WikibaseItemInput extends PureComponent {
   setState( update ) {
     console.log( 'WikibaseItemInput / setState( ' + JSON.stringify( update ) + ' )' );
     super.setState( update );
+  }
+
+  clearDirtyState() {
+    console.log( 'WikibaseItemInput / clearDirtyState' );
+    this.setState( {
+      dirty: false,
+    } );
   }
 
   handleChange( event ) {
@@ -85,13 +73,15 @@ export default class WikibaseItemInput extends PureComponent {
   }
 
   render() {
-    const { inputRef } = this.props;
+    const { entityId, entityLabel, inputRef } = this.props;
     const etc = WikibaseItemInput.getEtcProps( this.props );
-    const { dirty, focused, entityId, entityLabel, value } = this.state;
+    const { dirty, focused, value } = this.state;
 
     let inputValue;
-    if ( focused || dirty ) {
+    if ( dirty ) {
       inputValue = value;
+    } else if ( focused ) {
+      inputValue = entityLabel || entityId || '';
     } else if ( entityId && entityLabel ) {
       inputValue = entityLabel + ' (' + entityId + ')';
     } else if ( entityId ) {
