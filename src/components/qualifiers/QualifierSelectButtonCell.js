@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
-import i18n from 'components/core.i18n';
+import i18n from './i18n';
 import JQueryButton from 'wrappers/JQueryButton';
 import PropTypes from 'prop-types';
 

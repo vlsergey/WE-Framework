@@ -1,0 +1,59 @@
+.container {
+  position: relative;
+}
+
+.container input {
+  width: 100%;
+}
+
+.suggestionsContainer {
+  display: none;
+}
+
+.containerOpen .suggestionsContainer {
+  display: block;
+  position: absolute;
+  width: 300px;
+  border: 1px solid #aaa;
+  background-color: #fff;
+  font-family: Helvetica, sans-serif;
+  font-weight: 300;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  z-index: 2;
+}
+
+.suggestionsList {
+  margin: 0;
+  padding: 0;
+  list-style-image: none;
+  list-style-type: none;
+}
+
+.suggestion:not(:first-child) {
+  border-top: 1px solid #ddd;
+}
+
+.suggestionHighlighted {
+  background-color: #0C7EAF;
+  color: #fff;
+}
+
+.property_suggestion {
+  cursor: pointer;
+  max-width: 23em;
+  overflow: hidden;
+  padding: .25em;
+  text-align: left;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  width: 23em;
+  white-space: nowrap;
+}
+
+.property_suggestion_label {
+  font-weight: bold;
+}
+
+.property_suggestion_description {
+}

@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import i18n from 'components/core.i18n';
+import i18n from './i18n';
 import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import styles from './NewQualifierSelect.css';
@@ -42,7 +42,7 @@ export default class NewQualifierSelect extends PureComponent {
     const { allowedQualifiers, alreadyPresent } = this.props;
 
     return <select defaultValue="_placeholder" onChange={this.handleChange}>
-      <option disabled hidden key="_placeholder" value="_placeholder">{i18n.qualifiersNewSelectPlaceholder}</option>
+      <option disabled hidden key="_placeholder" value="_placeholder">{i18n.placehoderSelect}</option>
       <PropertyDescriptionsProvider propertyIds={allowedQualifiers}>
         { cache => sort( cache, allowedQualifiers ).map( propertyId => {
           const propertyDescription = cache[ propertyId ];
@@ -59,6 +59,7 @@ export default class NewQualifierSelect extends PureComponent {
             unsupported={SUPPORTED_DATATYPES.indexOf( propertyDescription.datatype ) === -1} />;
         } )}
       </PropertyDescriptionsProvider>
+      <option key="OTHER" value="OTHER">{i18n.optionOther}</option>
     </select>;
   }
 }
@@ -85,7 +86,7 @@ class NewQualifierSelectOption extends PureComponent {
       ? label + ' (' + propertyId + ')'
       : propertyId )
       + ( unsupported
-        ? i18n.qualifiersUnsupportedOptionSuffix
+        ? i18n.optionSuffixUnsupported
         : '' );
 
     return <option

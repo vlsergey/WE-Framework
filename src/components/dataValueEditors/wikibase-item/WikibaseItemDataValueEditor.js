@@ -78,6 +78,7 @@ class WikibaseItemDataValueEditor extends Component {
         language,
         limit: NUMBER_OF_SUGGESTIONS_PER_LANGUAGE,
         search: value,
+        type: 'item',
       } ).then( result => {
         result.search.forEach( item => resultSet.add( item.id ) );
         this.setState( {
@@ -160,7 +161,6 @@ class WikibaseItemDataValueEditor extends Component {
     return <React.Fragment>
       <td className={className} colSpan={11}>
         <Autosuggest
-          alwaysRenderSuggestions={this.state.componentFocused}
           getSuggestionValue={this.getSuggestionValue}
           inputProps={params}
           onSuggestionsClearRequested={this.handleSuggestionsClearRequested}

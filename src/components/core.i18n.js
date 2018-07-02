@@ -13,8 +13,6 @@ const en = {
 
   buttonAddClaim: 'add claim',
   buttonRemoveClaim: 'remove claim',
-  buttonAddQualifier: 'add qualifier',
-  buttonRemoveQualifier: 'remove qualifier',
   buttonUrlNavigate: 'open specified URL',
   buttonCreateOrEdit: 'create or edit wikidata item',
   buttonCreateOrEditPrefixCreate: 'create as: ',
@@ -79,10 +77,6 @@ const en = {
   labelDescription: 'Description',
   labelAliases: 'Aliases',
   placeholderAliases: 'Add “also known as”',
-
-  qualifiersNewSelectPlaceholder: 'Select qualifier type...',
-  qualifiersUnsupportedOptionSuffix: ' (unsupported)',
-  qualifiersNewUseDifferentOption: 'Use different qualifier...',
 
   rank: {
     deprecated: 'deprecated',
@@ -160,8 +154,6 @@ const ru = {
 
   buttonAddClaim: 'добавить утверждение',
   buttonRemoveClaim: 'удалить утверждение',
-  buttonAddQualifier: 'добавить квалификатор',
-  buttonRemoveQualifier: 'удалить квалификатор',
   buttonUrlNavigate: 'открыть указанный URL',
   buttonCreateOrEdit: 'создать или редактировать элемент Викиданных',
   buttonCreateOrEditPrefixCreate: 'создать: ',
@@ -226,10 +218,6 @@ const ru = {
   labelDescription: 'Описание',
   labelAliases: 'Также известен как',
   placeholderAliases: 'Добавить «также известен как»',
-
-  qualifiersNewSelectPlaceholder: 'Выберите тип квалификатора...',
-  qualifiersUnsupportedOptionSuffix: ' (не поддерживается)',
-  qualifiersNewUseDifferentOption: 'Использовать другой квалификатор...',
 
   rank: {
     deprecated: 'нерекомендуемый',

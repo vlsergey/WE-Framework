@@ -4,6 +4,7 @@ import { Claim } from 'model/Shapes';
 import ClaimQualifiersTBody from './ClaimQualifiersTBody';
 import ClaimQualifierTableRow from './ClaimQualifierTableRow';
 import expect from 'expect';
+import NewQualifierAutosuggest from './NewQualifierAutosuggest';
 import NewQualifierSelect from './NewQualifierSelect';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
@@ -37,6 +38,14 @@ export default class ClaimQualifiersTable extends PureComponent {
   }
 
   handleQualifierAdd( propertyId ) {
+    if ( propertyId === 'OTHER' ) {
+      // switch from simple select to complex autosuggest
+      this.setState( {
+        addQualifierMode: 'AUTOSUGGEST',
+      } );
+      return;
+    }
+
     const { claim } = this.props;
     const qualifiers = claim.qualifiers || {};
     const propertyQualifiers = qualifiers[ propertyId ] || [];
@@ -115,6 +124,15 @@ export default class ClaimQualifiersTable extends PureComponent {
                 allowedQualifiers={allowedQualifiers}
                 alreadyPresent={alreadyPresentQualifiers}
                 onSelect={this.handleQualifierAdd} />
+            </th>
+            <td />
+          </AnimatedTr>
+        </tbody>}
+      { addQualifierMode === 'AUTOSUGGEST' &&
+        <tbody className={styles.wef_claim_new_qualifier}>
+          <AnimatedTr>
+            <th>
+              <NewQualifierAutosuggest onSelect={this.handleQualifierAdd} />
             </th>
             <td />
           </AnimatedTr>
