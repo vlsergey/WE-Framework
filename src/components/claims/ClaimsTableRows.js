@@ -71,7 +71,7 @@ export default class ClaimsTableRows extends PureComponent {
       : null;
 
     return <React.Fragment>
-      <AnimatedTr {...other} key="claim">
+      <AnimatedTr {...other}>
         {firstCell}
         <SelectRankButtonCell onChange={this.handleRankChange} value={claim.rank} />
         <FlagCell flagImage={flagImage} />
