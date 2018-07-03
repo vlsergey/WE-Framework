@@ -132,6 +132,7 @@ module.exports = {
     "rest-spread-spacing": 1,
 
     "semi": [1, "always"],
+    "semi-spacing": 1,
     /* Import Sorting */
     "sort-imports": [1, {"ignoreCase" : true}],
     "space-before-function-paren": [1, "never"],

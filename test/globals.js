@@ -16,7 +16,7 @@ mw.Api = Api;
 
 mw.log = text => console.log( text );
 mw.log.error = text => console.error( text );
-mw.notify = text => console.log( text ) ;
+mw.notify = text => console.log( text );
 
 const jQuery = () => ( {
   button: () => ( {} ),

@@ -51,5 +51,5 @@ export function onEditorLinkClick( editorDescription, entityId ) {
       throw new Error( 'Wikidata answer format is not expected one' );
     }
     return result.entities[ entityId ];
-  } ).then( entity => openEditor( editorDescription, entity ) ) ;
+  } ).then( entity => openEditor( editorDescription, entity ) );
 }
