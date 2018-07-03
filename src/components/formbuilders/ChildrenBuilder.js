@@ -130,7 +130,7 @@ export default class ChildrenBuilder extends PureComponent {
               {this.renderField( field, cache[ field.property ] )}
             </ErrorBoundary>
           )
-        } </table>;
+        }</table>;
       } }
     </PropertyDescriptionsProvider>;
   }
