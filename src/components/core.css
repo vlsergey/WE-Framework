@@ -11,28 +11,6 @@
 	box-sizing: border-box;
 }
 
-.wef_button_cell {
-	padding: 0;
-	margin: 0;
-	width: 1px;
-}
-
-.wef_button_cell td {
-	vertical-align: middle;
-}
-
-.wef_button_cell .ui-button {
-	vertical-align: middle;
-}
-
-.wef_button_cell :global .ui-button {
-	margin: 0 0.1em !important;
-}
-
-.wef_button_cell :global .ui-button .ui-button-text {
-	padding: 0 0.5em !important;
-}
-
 .wef_progress_item {
 	white-space: nowrap;
 }
@@ -247,10 +225,6 @@
 	width: 1px;
 	font-weight: bold;
 	white-space: nowrap;
-}
-
-.wef_button_cell_addColumnQualifier {
-	vertical-align: bottom;
 }
 
 /* References */

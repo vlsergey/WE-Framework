@@ -1,0 +1,24 @@
+.buttonCell {
+	padding: 0;
+	margin: 0;
+	width: 1px;
+}
+
+.buttonCell td {
+	vertical-align: middle;
+}
+
+.buttonCell .ui-button {
+	vertical-align: middle;
+}
+
+.buttonCell :global .ui-button {
+	margin: 0 0.1em !important;
+	box-shadow: none;
+	width: 20px;
+	height: 16px;
+}
+
+.buttonCell :global .ui-button :global .ui-button-text {
+	padding: 0 0.5em !important;
+}

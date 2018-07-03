@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import i18n from 'components/core.i18n';
-import JQueryButton from 'wrappers/JQueryButton';
 import PropTypes from 'prop-types';
 
 export default class ClaimDeleteButtonCell extends PureComponent {
@@ -37,14 +36,11 @@ export default class ClaimDeleteButtonCell extends PureComponent {
   render() {
     const { disabled } = this.props;
 
-    return <ButtonCell>
-      <JQueryButton
-        disabled={disabled}
-        icon={'ui-icon-trash'}
-        label={i18n.buttonRemoveClaim}
-        onClick={this.handleClick}
-        text={false} />
-    </ButtonCell>;
+    return <ButtonCell
+      disabled={disabled}
+      icon={'ui-icon-trash'}
+      label={i18n.buttonRemoveClaim}
+      onClick={this.handleClick} />;
   }
 
 }

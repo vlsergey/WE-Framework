@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import i18n from 'components/core.i18n';
-import JQueryButton from 'wrappers/JQueryButton';
 import Popup from 'reactjs-popup';
 import PropTypes from 'prop-types';
 import RankSelect from './RankSelect';
@@ -57,27 +56,22 @@ export default class SelectRankButtonCell extends PureComponent {
   render() {
     const { disabled, value } = this.props;
 
-    return <ButtonCell>
-      <Popup
+    return <ButtonCell
+      className={styles.wef_select_rank_button}
+      disabled={disabled}
+      icon={icons[ value ]}
+      label={i18n.rank[ value ]}
+      onClick={this.handleClick}
+      text={false}>{ children => <Popup
         arrow={false}
         contentStyle={{ padding: 0 }}
         open={this.state.open}
         position="bottom left"
-        trigger={
-          <JQueryButton
-            className={styles.wef_select_rank_button}
-            disabled={disabled}
-            icon={icons[ value ]}
-            label={i18n.rank[ value ]}
-            onClick={this.handleClick}
-            ref={this.ref}
-            text={false} />
-        }>
+        trigger={children}>
         <RankSelect
           onChange={this.handleChange}
           value={value} />
-      </Popup>
-    </ButtonCell>;
+      </Popup>}</ButtonCell>;
   }
 
 }

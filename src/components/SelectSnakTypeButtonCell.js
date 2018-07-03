@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from './ButtonCell';
 import i18n from './core.i18n';
-import JQueryButton from 'wrappers/JQueryButton';
 import Popup from 'reactjs-popup';
 import PropTypes from 'prop-types';
 import SnakTypeSelect from './SnakTypeSelect';
@@ -51,27 +50,22 @@ export default class SnakTypeSelectButtonCell extends PureComponent {
   render() {
     const { disabled, value } = this.props;
 
-    return <ButtonCell>
-      <Popup
-        arrow={false}
-        contentStyle={{ padding: 0 }}
-        open={this.state.open}
-        position="bottom right"
-        trigger={
-          <JQueryButton
-            className={styles.wef_select_snak_type_button}
-            disabled={disabled}
-            icon={styles[ 'ui-icon-wef-snaktype-' + value ]}
-            label={i18n.snakType[ value ]}
-            onClick={this.handleClick}
-            ref={this.ref}
-            text={false} />
-        }>
-        <SnakTypeSelect
-          onChange={this.handleChange}
-          value={value} />
-      </Popup>
-    </ButtonCell>;
+    return <ButtonCell
+      disabled={disabled}
+      icon={styles[ 'ui-icon-wef-snaktype-' + value ]}
+      label={i18n.snakType[ value ]}
+      onClick={this.handleClick}>
+      {children =>
+        <Popup
+          arrow={false}
+          contentStyle={{ padding: 0 }}
+          open={this.state.open}
+          position="bottom right"
+          trigger={children}>
+          <SnakTypeSelect
+            onChange={this.handleChange}
+            value={value} />
+        </Popup>}</ButtonCell>;
   }
 
 }
