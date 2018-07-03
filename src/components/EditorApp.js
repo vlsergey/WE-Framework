@@ -71,7 +71,7 @@ class EditorApp extends Component {
     return this.state.visible && <DialogWrapper
       buttons={buttons}
       className={styles.wef_dialog}
-      minWidth={800}
+      minWidth={950}
       onClose={onExit}
       title={description.title}>
       <EditorTabsBuilder tabs={description.tabs} />

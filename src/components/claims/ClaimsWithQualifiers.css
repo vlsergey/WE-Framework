@@ -1,0 +1,15 @@
+table.claims_with_qualifiers {
+  width: 100%;
+}
+
+.claims_with_qualifiers > thead > tr > th {
+  height: 2em;
+}
+
+.claims_with_qualifiers > tbody > tr > td {
+  vertical-align: top;
+}
+
+.qualifier_table {
+  width: 100%;
+}

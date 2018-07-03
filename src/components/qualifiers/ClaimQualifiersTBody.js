@@ -13,82 +13,123 @@ export default class ClaimQualifiersTBody extends PureComponent {
   static propTypes = {
     claim: PropTypes.object,
     claimPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
+    displayEmpty: PropTypes.bool,
+    displayLabels: PropTypes.bool,
     onClaimUpdate: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     readOnly: PropTypes.bool.isRequired,
   }
 
+  static defaultProps = {
+    displayEmpty: false,
+    displayLabels: true,
+  }
+
   constructor() {
     super( ...arguments );
 
+    this.emptyQualifierHash = 'new#ClaimQualifiersTBody#' + ++qualifiersCounter;
+    this.handleEmptyQualifierChange = this.handleEmptyQualifierChange.bind( this );
     this.handleQualifierAdd = this.handleQualifierAdd.bind( this );
+    this.handleQualifierAddTwice = this.handleQualifierAddTwice.bind( this );
+  }
+
+  handleQualifiersChange( reducer ) {
+    const { id } = this.props.propertyDescription;
+
+    const claim = this.props.claim || {};
+    const allQualifiers = claim.qualifiers || {};
+    const qualifiers = allQualifiers[ id ] || [];
+    const newQualifiers = reducer( qualifiers );
+    expect( newQualifiers ).toBeAn( 'array' );
+
+    this.props.onClaimUpdate( {
+      ...claim,
+      qualifiers: {
+        ...allQualifiers,
+        [ id ]: newQualifiers,
+      },
+    } );
   }
 
   handleQualifierAdd() {
     const { datatype, id } = this.props.propertyDescription;
 
-    const qualifiers = [ ...this.props.claim.qualifiers[ id ] ];
-    const newClaim = {
-      ...this.props.claim,
-      qualifiers: {
-        ...this.props.claim.qualifiers,
-        [ id ]: [
-          ...qualifiers,
-          {
-            snaktype: 'value',
-            property: id,
-            hash: 'new#ClaimQualifiersTBody#' + ++qualifiersCounter,
-            datatype,
-          },
-        ],
-      },
-    };
-    this.props.onClaimUpdate( newClaim );
+    this.handleQualifiersChange( qualifiers => [ ...qualifiers, {
+      snaktype: 'value',
+      property: id,
+      hash: 'new#ClaimQualifiersTBody#' + ++qualifiersCounter,
+      datatype,
+    } ] );
+  }
+
+  handleQualifierAddTwice() {
+    const { datatype, id } = this.props.propertyDescription;
+
+    this.handleQualifiersChange( qualifiers => [ ...qualifiers, {
+      snaktype: 'value',
+      property: id,
+      hash: 'new#ClaimQualifiersTBody#' + ++qualifiersCounter,
+      datatype,
+    }, {
+      snaktype: 'value',
+      property: id,
+      hash: 'new#ClaimQualifiersTBody#' + ++qualifiersCounter,
+      datatype,
+    } ] );
   }
 
   handleQualifierChangeF( index ) {
-    const propertyId = this.props.propertyDescription.id;
+    return qualifier => this.handleQualifiersChange( qualifiers => {
+      const newQualifiers = [ ...qualifiers ];
+      newQualifiers[ index ] = qualifier;
+      return newQualifiers;
+    } );
+  }
 
-    return qualifier => {
-      const qualifiers = [ ...this.props.claim.qualifiers[ propertyId ] ];
-      qualifiers[ index ] = qualifier;
-      const newClaim = {
-        ...this.props.claim,
-        qualifiers: {
-          ...this.props.claim.qualifiers,
-          [ propertyId ]: qualifiers,
-        },
-      };
-      this.props.onClaimUpdate( newClaim );
-    };
+  handleEmptyQualifierChange( qualifier ) {
+    this.handleQualifiersChange( () => [ qualifier ] );
   }
 
   handleQualifierRemoveF( indexToDelete ) {
-    const propertyId = this.props.propertyDescription.id;
-
-    return () => {
-      const qualifiers = this.props.claim.qualifiers[ propertyId ]
-        .filter( ( item, i ) => i !== indexToDelete );
-
-      const newClaim = {
-        ...this.props.claim,
-        qualifiers: {
-          ...this.props.claim.qualifiers,
-          [ propertyId ]: qualifiers,
-        },
-      };
-      this.props.onClaimUpdate( newClaim );
-    };
+    return () => this.handleQualifiersChange( qualifiers => qualifiers
+      .filter( ( item, i ) => i !== indexToDelete ) );
   }
 
   render() {
-    const { claim, claimPropertyDescription, propertyDescription, readOnly } = this.props;
-    const qualifiers = claim.qualifiers[ propertyDescription.id ];
+    const { claim, claimPropertyDescription, displayEmpty, displayLabels, propertyDescription, readOnly } = this.props;
+    const qualifiers = ( claim.qualifiers || {} )[ propertyDescription.id ];
+
+    if ( !qualifiers || qualifiers.length == 0 ) {
+      if ( !displayEmpty )
+        return null;
+
+      const { datatype, id } = this.props.propertyDescription;
+
+      return <tbody>
+        <ClaimQualifierTableRow
+          displayLabel={displayLabels}
+          firstCell={<QualifierAddButtonCell onClick={this.handleQualifierAddTwice} />}
+          key={this.emptyQualifierHash}
+          lastCell={<td />}
+          onQualifierChange={this.handleEmptyQualifierChange}
+          propertyDescription={propertyDescription}
+          qualifier={{
+            snaktype: 'value',
+            property: id,
+            hash: this.emptyQualifierHash,
+            datatype,
+          }} />
+      </tbody>;
+    }
+
+
     expect( qualifiers ).toBeAn( 'array' );
 
     return <tbody>
       { qualifiers.map( ( qualifier, index ) =>
         <ClaimQualifierTableRow
+          displayLabel={displayLabels}
           firstCell={index === 0
             ? <QualifierAddButtonCell onClick={this.handleQualifierAdd} />
             : <td />}

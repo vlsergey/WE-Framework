@@ -17,6 +17,7 @@ export default class ClaimQualifiersTable extends PureComponent {
 
   static propTypes = {
     allowedQualifiers: PropTypes.arrayOf( PropTypes.string ),
+    disabledQualifiers: PropTypes.arrayOf( PropTypes.string ),
     claim: PropTypes.shape( Claim ).isRequired,
     claimPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     onClaimUpdate: PropTypes.func.isRequired,
@@ -24,6 +25,7 @@ export default class ClaimQualifiersTable extends PureComponent {
 
   static defaultProps = {
     allowedQualifiers: [],
+    disabledQualifiers: [],
   }
 
   constructor() {
@@ -87,11 +89,12 @@ export default class ClaimQualifiersTable extends PureComponent {
   }
 
   render() {
-    const { allowedQualifiers, claim, claimPropertyDescription, onClaimUpdate } = this.props;
+    const { allowedQualifiers, claim, claimPropertyDescription, disabledQualifiers, onClaimUpdate } = this.props;
     const { addQualifierMode, hiddenBehindLabel } = this.state;
 
     const qualifiers = claim.qualifiers || {};
-    const qualifierPropertyIds = Object.keys( qualifiers );
+    const qualifierPropertyIds = Object.keys( qualifiers )
+      .filter( qualifier => disabledQualifiers.indexOf( qualifier ) === -1 );
     const alreadyPresentQualifiers = qualifierPropertyIds
       .filter( propertyId => qualifiers[ propertyId ].length > 0 );
 

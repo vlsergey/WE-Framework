@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react';
-import ButtonCell from './ButtonCell';
-import i18n from './core.i18n';
+import ButtonCell from 'components/ButtonCell';
+import i18n from 'components/core.i18n';
 import JQueryButton from 'wrappers/JQueryButton';
 import Popup from 'reactjs-popup';
 import PropTypes from 'prop-types';
 import RankSelect from './RankSelect';
-import styles from './core.css';
+import styles from 'components/core.css';
 
 const icons = {
   preferred: 'ui-icon-arrowthickstop-1-n',

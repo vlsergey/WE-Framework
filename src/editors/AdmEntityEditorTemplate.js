@@ -11,10 +11,9 @@ const editorDescription = {
       fields: [
         /* official name */
         { property: 'P1448' },
-
         /* instance of */
         { property: 'P31' },
-        /* instance of */
+        /* located in the administrative territorial entity */
         { property: 'P131' },
         /* part of */
         { property: 'P361' },
@@ -33,19 +32,31 @@ const editorDescription = {
     {
       label: 'Media',
       key: 'media',
+      fieldsets: [
+        {
+          labelEntityId: 'Q14660',
+          fields: [
+            /* flag */
+            { property: 'P163' },
+            /* flag image */
+            { property: 'P41', columns: [ 'P580', 'P582' ] },
+          ],
+        },
+        {
+          labelEntityId: 'Q14659',
+          fields: [
+            /* coat of arms */
+            { property: 'P237' },
+            /* coat of arms image */
+            { property: 'P94', columns: [ 'P580', 'P582' ] },
+          ],
+        },
+      ],
       fields: [
         /* Image */
         { property: 'P18' },
         /* song */
         { property: 'P85' },
-        /* flag image */
-        { property: 'P41' },
-        /* flag */
-        { property: 'P163' },
-        /* coat of arms image */
-        { property: 'P94' },
-        /* coat of arms */
-        { property: 'P237' },
         /* commons */
         { property: 'P373' },
       ],

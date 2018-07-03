@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import i18n from './core.i18n';
+import i18n from '../core.i18n';
 import PropTypes from 'prop-types';
-import styles from './core.css';
+import styles from '../core.css';
 
 const RANKS = [ 'preferred', 'normal', 'deprecated' ];
 

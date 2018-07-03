@@ -11,6 +11,7 @@ export default class ClaimQualifierTableRow extends PureComponent {
 
   static propTypes = {
     firstCell: PropTypes.node.isRequired,
+    displayLabel: PropTypes.bool,
     lastCell: PropTypes.node.isRequired,
     onQualifierChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
@@ -19,18 +20,20 @@ export default class ClaimQualifierTableRow extends PureComponent {
   }
 
   static defaultProps = {
+    displayLabel: true,
     readOnly: false,
   }
 
   render() {
-    const { firstCell, lastCell, onQualifierChange, propertyDescription, qualifier, readOnly } = this.props;
+    const { firstCell, displayLabel, lastCell, onQualifierChange, propertyDescription, qualifier, readOnly } = this.props;
 
+    // TODO: looks ugly, inline and cleanup this
     return <AnimatedTr>
       {firstCell}
-      <PropertyLabelCell
+      { displayLabel && <PropertyLabelCell
         description={propertyDescription.description}
         label={propertyDescription.label}
-        propertyId={propertyDescription.id} />
+        propertyId={propertyDescription.id} /> }
       <SnakEditorTableRowPart
         onSnakChange={onQualifierChange}
         propertyDescription={propertyDescription}
