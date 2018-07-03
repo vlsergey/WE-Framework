@@ -69,6 +69,8 @@ module.exports = {
     "no-useless-rename": 1,
     /* require let or const instead of var */
     "no-var": 1,
+    /* disallow whitespace before properties */
+    "no-whitespace-before-property": 1,
 
     "object-curly-spacing": [1, "always"],
     /* require or disallow method and property shorthand syntax for object literals */
