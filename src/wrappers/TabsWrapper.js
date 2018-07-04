@@ -12,6 +12,7 @@ export default class TabsWrapper extends Component {
       label: PropTypes.oneOfType( [ PropTypes.node, PropTypes.string ] ),
       content: PropTypes.node,
     } ) ),
+    onActivate: PropTypes.func,
   };
 
   constructor() {
@@ -21,7 +22,9 @@ export default class TabsWrapper extends Component {
   }
 
   componentDidMount() {
-    jQuery( this.ref.current ).tabs();
+    jQuery( this.ref.current ).tabs( {
+      activate: this.props.onActivate,
+    } );
   }
 
   componentWillUnmount() {

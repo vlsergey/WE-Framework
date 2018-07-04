@@ -1,13 +1,12 @@
 import React, { PureComponent } from 'react';
 import { ChildrenContainer } from './FormShapes';
-import ClaimsTableBody from 'components/claims/ClaimsTableBody';
-import ClaimsWithQualifiersTable from 'components/claims/ClaimsWithQualifiersTable';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import { defaultMemoize } from 'reselect';
 import EntityLabel from 'caches/EntityLabel';
 import ErrorBoundary from './ErrorBoundary';
 import expect from 'expect';
 import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';
+import PropertyClaimContainer from 'components/claims/PropertyClaimContainer';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
@@ -108,26 +107,12 @@ export default class ChildrenBuilder extends PureComponent {
       'Property attribute is not specified in field description: ' + JSON.stringify( field ) );
 
     if ( !propertyDescription || !propertyDescription.label ) {
-      return <tbody><tr><td colSpan={ClaimsTableBody.TABLE_COLUMNS}>
+      return <tbody><tr><td colSpan={99}>
         <i>Loading property description of {propertyId}...</i>
       </td></tr></tbody>;
     }
     expect ( propertyDescription ).toBeA( PropertyDescription );
-
-    if ( field.columns ) {
-      expect( field.columns ).toBeAn( 'array' );
-      return <tbody>
-        <tr>
-          <td colSpan={ClaimsTableBody.TABLE_COLUMNS}>
-            <ClaimsWithQualifiersTable
-              columns={field.columns}
-              propertyDescription={propertyDescription} />
-          </td>
-        </tr>
-      </tbody>;
-    }
-
-    return <ClaimsTableBody propertyDescription={propertyDescription} />;
+    return <PropertyClaimContainer propertyDescription={propertyDescription} />;
   }
 
   renderFields() {

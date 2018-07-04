@@ -27,6 +27,7 @@ export default class DialogWrapper extends Component {
       close: onClose,
       dialogClass: className,
       minWidth,
+      open: () => this.resizeToFit(),
     } );
   }
 
@@ -44,6 +45,13 @@ export default class DialogWrapper extends Component {
     return <div ref={this.ref} title={title}>
       {children}
     </div>;
+  }
+
+  resizeToFit() {
+    const wrapped = jQuery( this.ref.current );
+    if ( wrapped.parent().height() > $( window ).height() ) {
+      wrapped.height( $( window ).height() * 0.7 );
+    }
   }
 
 }

@@ -63,7 +63,7 @@ const editorDescription = {
     {
       labelEntityId: 'P166',
       fields: [
-        /* cast member */
+        /* award received */
         { property: 'P166', columns: [ 'P585', 'P1027' ] },
       ],
     },

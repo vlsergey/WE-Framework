@@ -2,13 +2,12 @@ import { Claim, newStatementClaim } from 'model/Shapes';
 import React, { PureComponent } from 'react';
 import ClaimAddButtonCell from './ClaimAddButtonCell';
 import ClaimsWithQualifiersTableRows from './ClaimsWithQualifiersTableRows';
-import { connect } from 'react-redux';
 import EntityLabel from 'caches/EntityLabel';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import styles from './ClaimsWithQualifiers.css';
 
-class ClaimsWithQualifiersTable extends PureComponent {
+export default class ClaimsWithQualifiersTable extends PureComponent {
 
   static propTypes = {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
@@ -60,22 +59,3 @@ class ClaimsWithQualifiersTable extends PureComponent {
     </table>;
   }
 }
-
-const EMPTY_ARRAY = [];
-
-const mapStateToProps = ( state, ownProps ) => ( {
-  claims: state.entity.claims[ ownProps.propertyDescription.id ] || EMPTY_ARRAY,
-} );
-
-const mapDispatchToProps = ( dispatch, ownProps ) => ( {
-  onClaimAdd: () => dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription } ),
-  onClaimAdd2: () => {
-    dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription } );
-    dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription } );
-  },
-  onClaimUpdate: claim => dispatch( { type: 'CLAIM_UPDATE', claim } ),
-  onClaimDelete: claim => dispatch( { type: 'CLAIM_DELETE', claim } ),
-} );
-
-const ClaimsWithQualifiersTableConnected = connect( mapStateToProps, mapDispatchToProps )( ClaimsWithQualifiersTable );
-export default ClaimsWithQualifiersTableConnected;

@@ -89,7 +89,7 @@ export default class QuantityDataValueEditor extends PureComponent {
             readOnly: true,
             value,
           } )}
-          return <a
+          <a
             href={unit}
             rel="noopener noreferrer"
             target="_blank">

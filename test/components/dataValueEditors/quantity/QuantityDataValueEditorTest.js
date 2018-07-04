@@ -10,7 +10,6 @@ import PropertyDescription from 'core/PropertyDescription';
 import { Provider } from 'react-redux';
 import Q1367759 from '../../../entities/Q30';
 import React from 'react';
-import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import thunk from 'redux-thunk';
 

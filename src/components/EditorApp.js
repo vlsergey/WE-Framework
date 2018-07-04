@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import DialogWrapper from 'wrappers/DialogWrapper';
+import DialogWithTabs from 'components/formbuilders/DialogWithTabs';
 import { EditorShape } from 'components/formbuilders/FormShapes';
-import EditorTabsBuilder from 'components/formbuilders/EditorTabsBuilder';
 import i18n from './core.i18n';
 import PropTypes from 'prop-types';
 import save from 'core/save';
@@ -68,14 +67,13 @@ class EditorApp extends Component {
       },
     } );
 
-    return this.state.visible && <DialogWrapper
+    return this.state.visible && <DialogWithTabs
       buttons={buttons}
       className={styles.wef_dialog}
       minWidth={950}
       onClose={onExit}
-      title={description.title}>
-      <EditorTabsBuilder tabs={description.tabs} />
-    </DialogWrapper>;
+      tabs={description.tabs}
+      title={description.title} />;
   }
 
 }
