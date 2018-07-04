@@ -1,0 +1,28 @@
+.time > input {
+  width: 100%;
+}
+
+.time select {
+  width: 100%;
+}
+
+.timeDetails th, .timeDetails td {
+  padding: .1em .25em !important;
+}
+
+.timeDetails th {
+  text-align: left;
+}
+
+td.timeRendered {
+  height: 3em;
+}
+
+.timeRendered {
+  font-weight: bold;
+  font-size: larger
+}
+
+.timeError {
+  color: red;
+}

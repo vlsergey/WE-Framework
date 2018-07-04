@@ -1,8 +1,8 @@
 const path = require('path');
-var StringReplacePlugin = require("string-replace-webpack-plugin");
+const StringReplacePlugin = require("string-replace-webpack-plugin");
 
 module.exports = {
-  mode: "none", // no defaults
+  mode: "production", // no defaults
 
   entry: './src/app.js',
 
@@ -37,14 +37,15 @@ module.exports = {
       },
       // configure replacements for file patterns
       {
-        test : /js$/,
+        test : /\.js$/,
         loader : StringReplacePlugin.replace({
           replacements : [ {
             pattern : /\/\/fb\.me\//ig,
             replacement : function(match, p1, offset, string) {
               return "//fb-removeme.me/";
             }
-          } ]
+          },
+         ]
         })
       }
     ]
@@ -55,6 +56,14 @@ module.exports = {
       path.resolve(__dirname, "src"),
       "node_modules"
     ],
+  },
+
+  optimization: {
+    minimize: false,
+  },
+
+  performance: {
+    hints: false,
   },
 
   output: {

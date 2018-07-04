@@ -283,11 +283,11 @@ export function update( updates ) {
         if ( result.entity ) {
           updates.entityId = result.entity.id;
         }
-      } ).fail( function( jqXHR, textStatus ) {
+      } ).catch( ( code, error ) => {
         console.log( i18n.errorUpdateEntity );
-        console.log( arguments );
+        console.log( error );
         mw.notify( i18n.actionUpdateEntityFail, notifySaveOptions );
-        alert( i18n.errorUpdateEntity + ': ' + textStatus );
+        alert( i18n.errorUpdateEntity + ': ' + error.info );
       } );
   } else {
     saveAction = $.when();

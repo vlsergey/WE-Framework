@@ -23,10 +23,22 @@ function filterEmptyClaims( claims ) {
 
     const propertyClaims = claims[ propertyId ]
       .filter( claim => !isSnakEmtpy( claim.mainsnak ) )
-      .map( claim => ( {
-        ...claim,
-        qualifiers: filterEmptyQualifiers( claim.qualifiers ),
-      } ) );
+      .map( claim => {
+        const oldQualifiers = claim.qualifiers;
+        if ( typeof oldQualifiers !== 'object' )
+          return claim;
+
+        const newQualifiers = filterEmptyQualifiers( claim.qualifiers );
+        if ( typeof oldQualifiers !== 'object' || Object.keys( newQualifiers ) === 0 ) {
+          const newClaim = { ...claim };
+          delete newClaim.qualifiers;
+          return newClaim;
+        }
+        return {
+          ...claim,
+          qualifiers: newQualifiers,
+        };
+      } );
 
     if ( propertyClaims.length > 0 ) {
       result[ propertyId ] = propertyClaims;

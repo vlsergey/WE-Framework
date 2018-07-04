@@ -8,6 +8,7 @@ import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import QuantityDataValueEditor from './dataValueEditors/quantity/QuantityDataValueEditor';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
+import TimeDataValueEditor from './dataValueEditors/time/TimeDataValueEditor';
 import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueEditor';
 import UrlDataValueEditor from './dataValueEditors/UrlDataValueEditor';
 import WikibaseItemDataValueEditor from './dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
@@ -18,6 +19,7 @@ export const SUPPORTED_DATATYPES = [
   'monolingualtext',
   'quantity',
   'string',
+  'time',
   'url',
   'wikibase-item',
 ];
@@ -78,6 +80,8 @@ export default class SnakValueEditorFactory extends PureComponent {
       return <QuantityDataValueEditor {...dataValueEditorProps} />;
     case 'string':
       return <StringDataValueEditor {...dataValueEditorProps} />;
+    case 'time':
+      return <TimeDataValueEditor {...dataValueEditorProps} />;
     case 'url':
       return <UrlDataValueEditor {...dataValueEditorProps} />;
     case 'wikibase-item':

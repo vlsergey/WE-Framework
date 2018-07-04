@@ -137,7 +137,8 @@ export function collectClaimUpdates( originalEntity, entity ) {
     } );
 }
 
-export function collectEntityUpdates( originalEntity, entity ) {
+export function collectEntityUpdates( originalEntity, entityWithEmptyClaims ) {
+  const entity = filterEmptyEntityStructures( entityWithEmptyClaims );
   let data = {};
 
   const updatedLabels = collectlLabelalikeUpdates( originalEntity, entity, 'labels',
@@ -170,8 +171,7 @@ function save() {
   return ( dispatch, getState ) => {
     notify( 'Analyzing changes...' );
     const state = getState();
-    const data = collectEntityUpdates( state.originalEntity,
-      filterEmptyEntityStructures( state.entity ) );
+    const data = collectEntityUpdates( state.originalEntity, state.entity );
 
     if ( Object.keys( data ).length === 0 ) {
       notify( 'No changes' );
