@@ -35,9 +35,10 @@ class WikibaseItemDataValueEditor extends Component {
   constructor() {
     super( ...arguments );
 
+    const value = ( ( this.props.datavalue || {} ).value || {} ).id || null;
     this.state = {
-      suggestions: [ ],
-      textValue: '',
+      suggestions: value ? [ value ] : [],
+      textValue: value || '',
     };
     this.wikidataApi = ApiUtils.getWikidataApi();
 
