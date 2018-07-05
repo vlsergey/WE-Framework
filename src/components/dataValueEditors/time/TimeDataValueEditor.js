@@ -31,6 +31,7 @@ export default class TimeDataValueEditor extends PureComponent {
 
     this.handleBlur = () => this.setState( { focused: false } );
     this.handleFocused = () => this.setState( { focused: true } );
+    this.handleKeyDown = this.handleKeyDown.bind( this );
 
     this.handleTextChange = this.handleTextChange.bind( this );
     this.handleChangeManualCalendarModel = calendarModel => { this.setState( { calendarModel } ); this.requestParsing( ); };
@@ -38,10 +39,18 @@ export default class TimeDataValueEditor extends PureComponent {
 
     this.handleToggleManualCalendarModel = this.handleToggleManualCalendarModel.bind( this );
     this.handleToggleManualPrecision = this.handleToggleManualPrecision.bind( this );
+
+    this.refPopup = React.createRef();
   }
 
   componentDidMount() {
     this.requestRender( true );
+  }
+
+  handleKeyDown( event ){
+    if ( event.key == 'Tab' ){
+      this.refPopup.current.closePopup();
+    }
   }
 
   handleToggleManualCalendarModel() {
@@ -163,6 +172,7 @@ export default class TimeDataValueEditor extends PureComponent {
       onBlur={this.handleBlur}
       onChange={this.handleTextChange}
       onFocues={this.handleFocus}
+      onKeyDown={this.handleKeyDown}
       value={text} />;
 
     const details = <DetailsArea
@@ -184,6 +194,7 @@ export default class TimeDataValueEditor extends PureComponent {
         on="focus"
         open={focused ? true : undefined}
         position="bottom left"
+        ref={this.refPopup}
         trigger={input}>
         {details}
       </Popup>
