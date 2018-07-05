@@ -6,7 +6,7 @@ import styles from './ButtonCell.css';
 export default class ButtonCell extends PureComponent {
 
   static propTypes = {
-    children: PropTypes.func.isRequired,
+    children: PropTypes.func,
     disabled: PropTypes.bool,
     icon: PropTypes.string.isRequired,
     label: PropTypes.string,
