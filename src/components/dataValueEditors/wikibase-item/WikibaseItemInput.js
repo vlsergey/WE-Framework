@@ -34,20 +34,13 @@ export default class WikibaseItemInput extends PureComponent {
     this.handleFocus = this.handleFocus.bind( this );
   }
 
-  setState( update ) {
-    console.log( 'WikibaseItemInput / setState( ' + JSON.stringify( update ) + ' )' );
-    super.setState( update );
-  }
-
   clearDirtyState() {
-    console.log( 'WikibaseItemInput / clearDirtyState' );
     this.setState( {
       dirty: false,
     } );
   }
 
   handleChange( event ) {
-    console.log( 'WikibaseItemInput / handleChange( "' + event.target.value + '" )' );
     this.setState( {
       dirty: true,
       focused: true,
@@ -57,7 +50,6 @@ export default class WikibaseItemInput extends PureComponent {
   }
 
   handleFocus( ) {
-    console.log( 'WikibaseItemInput / handleFocus' );
     this.setState( {
       focused: true,
     } );
@@ -65,7 +57,6 @@ export default class WikibaseItemInput extends PureComponent {
   }
 
   handleBlur( ) {
-    console.log( 'WikibaseItemInput / handleBlur' );
     this.setState( {
       focused: false,
     } );
@@ -90,7 +81,6 @@ export default class WikibaseItemInput extends PureComponent {
       inputValue = '';
     }
 
-    console.log( 'WikibaseItemInput / render( "' + inputValue + '" ); props: ' + JSON.stringify( this.props ) + '; state: ' + JSON.stringify( this.state ) );
     return <input
       {...etc}
       onBlur={this.handleBlur}

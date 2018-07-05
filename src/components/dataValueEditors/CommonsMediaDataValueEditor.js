@@ -37,12 +37,6 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
       pssearch: value,
       format: 'json',
     } ).then( result => {
-      if ( result.error ) {
-        console.log( result );
-        mw.notify( 'Unable to expand templates: ' + result.error.info );
-        return;
-      }
-
       const suggestions = result.query.prefixsearch.map( p => p.title.substring( 'File:'.length ) );
       this.setState( { suggestions } );
     } );

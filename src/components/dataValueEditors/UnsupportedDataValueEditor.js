@@ -44,12 +44,6 @@ export default class UnsupportedDataValueEditor extends Component {
       format: 'json',
       generate: 'text/html',
     } ).done( result => {
-      if ( result.error ) {
-        console.log( result );
-        mw.notify( 'Unable to render datavalue: ' + result.error.info );
-        return;
-      }
-
       let html = result.result;
       html = html.replace( 'href="/', 'href="//www.wikidata.org/' );
       this.setState( { html } );

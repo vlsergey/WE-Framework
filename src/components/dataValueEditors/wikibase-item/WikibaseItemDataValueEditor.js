@@ -52,18 +52,11 @@ class WikibaseItemDataValueEditor extends Component {
     this.renderSuggestion = this.renderSuggestion.bind( this );
   }
 
-  setState( update ) {
-    console.log( 'setState( ' + JSON.stringify( update ) + ' )' );
-    super.setState( update );
-  }
-
   handleSuggestionsClearRequested() {
-    console.log( 'handleSuggestionsClearRequested()' );
     this.setState( { suggestions: [] } );
   }
 
   handleSuggestionsFetchRequested( { value } ) {
-    console.log( 'handleSuggestionsFetchRequested(..., { "' + value + '"})' );
     expect( value ).toBeA( 'string' );
 
     if ( this.props.testSuggestionsProvider ) {
@@ -94,7 +87,6 @@ class WikibaseItemDataValueEditor extends Component {
   }
 
   handleChange( event, { method, newValue } ) {
-    console.log( 'handleChange(..., { "' + method + '", "' + newValue + '"})' );
     const { cache, datavalue, onDataValueChange } = this.props;
 
     switch ( method ) {
@@ -158,7 +150,6 @@ class WikibaseItemDataValueEditor extends Component {
     params.onChange = this.handleChange;
     params.value = this.state.textValue;
 
-    console.log( 'WikibaseItemDataValueEditor / render with value "' + params.value + '" and suggestions: ' + JSON.stringify( this.state.suggestions ) );
     return <React.Fragment>
       <td className={className} colSpan={11}>
         <Autosuggest
@@ -177,8 +168,8 @@ class WikibaseItemDataValueEditor extends Component {
 
   renderInput( inputProps ) {
     const { datavalue } = this.props;
+    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "value" }] */
     const { value, onChange, ref, ...etc } = inputProps;
-    console.log( 'WikibaseItemDataValueEditor / renderInput() with datavalue ' + JSON.stringify( datavalue ) + ' value "' + value + '"' );
 
     if ( datavalue && datavalue.value && datavalue.value.id ) {
       return <LocalizedWikibaseItemInput
