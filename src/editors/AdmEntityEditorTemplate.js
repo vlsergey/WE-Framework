@@ -182,6 +182,32 @@ const editorDescription = {
         },
       ],
     },
+    {
+      labelEntityId: 'Q106487', /* ISO 3166 */
+      fieldsets: [
+        {
+          fields: [
+            { property: 'P297' } /* ISO 3166-1 alpha-2 code */,
+            { property: 'P298' } /* ISO 3166-1 alpha-3 code */,
+            { property: 'P299' } /* ISO 3166-1 numeric code */,
+            { property: 'P300' } /* ISO 3166-2 code */,
+            { property: 'P773' } /* ISO 3166-3 */,
+          ],
+        },
+      ],
+    },
+    {
+      labelEntityId: 'Q36524',
+      key: 'authoritycontrol',
+      specials: [
+        { type: 'SparqlPropertyGroup',
+          sparql: 'SELECT ?property '
+                    + 'WHERE { '
+                    + '?property wdt:P31 wd:Q19829908 . '
+                    + '?property wikibase:propertyType wikibase:ExternalId . '
+                    + '}' },
+      ],
+    },
   ],
 };
 
