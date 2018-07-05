@@ -73,7 +73,7 @@ const editorDescription = {
       ],
     },
     {
-      labelEntityId: 'Q309',
+      labelEntityId: 'Q309' /* history */,
       fieldsets: [
         {
           fields: [
@@ -83,21 +83,21 @@ const editorDescription = {
           ],
         },
         {
-          labelEntityId: 'P138',
+          labelEntityId: 'P138' /* named after */,
           fields: [
             { property: 'P138' } /* named after */,
           ],
         },
         {
-          labelEntityId: 'P793',
+          labelEntityId: 'P793' /* significant event */,
           fields: [
-            { property: 'P793' } /* named after */,
+            { property: 'P793' } /* significant event */,
           ],
         },
       ],
     },
     {
-      labelEntityId: 'Q1071',
+      labelEntityId: 'Q1071' /* geography */,
       fieldsets: [
         {
           fields: [
@@ -153,23 +153,33 @@ const editorDescription = {
         {
           fields: [
             { property: 'P1125' } /* Gini coefficient */,
-            { property: 'P1082', colunns: [ 'P585' ] } /* population */,
+            { property: 'P1082' } /* population */,
           ],
         },
       ],
     },
     {
-      labelEntityId: 'P190', /* member of */
+      labelEntityId: 'P190' /* twinned administrative body */,
       fieldsets: [
         {
           fields: [
-            { property: 'P190' } /* member of */,
+            { property: 'P190' } /* twinned administrative body */,
           ],
         },
       ],
     },
     {
-      labelEntityId: 'Q4167836', /* member of */
+      labelEntityId: 'P463', /* member of */
+      fieldsets: [
+        {
+          fields: [
+            { property: 'P463' } /* member of */,
+          ],
+        },
+      ],
+    },
+    {
+      labelEntityId: 'Q4167836', /* categories */
       fieldsets: [
         {
           fields: [
@@ -183,9 +193,17 @@ const editorDescription = {
       ],
     },
     {
-      labelEntityId: 'Q106487', /* ISO 3166 */
+      labelEntityId: 'Q853614', /* identifier */
       fieldsets: [
         {
+          fields: [
+            { property: 'P281' } /* postal code */,
+            { property: 'P395' } /* licence plate code */,
+            { property: 'P473' } /* local dialing code */,
+          ],
+        },
+        {
+          labelEntityId: 'Q106487',
           fields: [
             { property: 'P297' } /* ISO 3166-1 alpha-2 code */,
             { property: 'P298' } /* ISO 3166-1 alpha-3 code */,
