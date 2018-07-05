@@ -26,6 +26,7 @@ export default class JQueryButton extends PureComponent {
       className={cn.join( ' ' )}
       onClick={onClick}
       role="button"
+      tabIndex={0}
       title={label}>
       <span className={'ui-button-icon-primary ui-icon ' + ( icon || '' )} />
       <span className="ui-button-text">{label}</span>
