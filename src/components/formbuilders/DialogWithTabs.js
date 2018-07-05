@@ -15,6 +15,9 @@ export default class DialogWithTabs extends PureComponent{
 
     this.dialogRef = React.createRef();
     this.handleTabChange = this.handleTabChange.bind( this );
+
+    this.close = () => this.dialogRef.current.close();
+    this.open = () => this.dialogRef.current.open();
   }
 
   handleTabChange() {

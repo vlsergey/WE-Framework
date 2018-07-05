@@ -2,9 +2,10 @@ import * as ApiUtils from './ApiUtils';
 import deepEqual from 'deep-equal';
 import expect from 'expect';
 import filterEmptyEntityStructures from './filterEmptyEntityStructures';
-import i18n from 'components/core.i18n.js';
+import i18n from './i18n.js';
 
-//const TAG = 'WE-Framework gadget';
+const SUMMARY_PREFIX = 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ';
+const TAG = 'WE-Framework gadget';
 
 const notifyOptions = {
   autoHide: true,
@@ -167,7 +168,25 @@ export function collectEntityUpdates( originalEntity, entityWithEmptyClaims ) {
   return data;
 }
 
-function save() {
+export function closeWithoutSave( reject ) {
+  return ( dispatch, getState ) => {
+    notify( 'Analyzing changes...' );
+    const state = getState();
+    const data = collectEntityUpdates( state.originalEntity, state.entity );
+    const hasChanges = Object.keys( data ).length !== 0;
+
+    if ( !hasChanges ) {
+      reject( 'User closed dialog window while no changes were made' );
+      return;
+    }
+    if ( confirm( i18n.confirmCloseWithoutSave ) ) {
+      reject( 'User closed dialog window and confirmed discardind changes' );
+      return;
+    }
+  };
+}
+
+export function saveAndClose( resolve, reject ) {
   return ( dispatch, getState ) => {
     notify( 'Analyzing changes...' );
     const state = getState();
@@ -194,23 +213,92 @@ function save() {
 
     ApiUtils.getWikidataApi()
       .postWithEditToken( params )
+      .catch( ( code, { error } ) => {
+        mw.log.error( i18n.errorUpdateEntity );
+        mw.log.error( error );
+        notify( i18n.actionUpdateEntityFail );
+        alert( i18n.errorUpdateEntity + ': ' + error.info );
+        reject();
+      } )
       .then( result => {
-        if ( result.error ) {
-          mw.log.error( i18n.errorUpdateEntity );
-          mw.log.error( result.error );
-          notify( i18n.actionUpdateEntityFail );
-          alert( i18n.errorUpdateEntity + ': ' + result.error.info );
+        notify( i18n.actionUpdateEntityDone );
+        const entityId = result.entity.id;
+
+        return tagRevisions( entityId, true )
+          .then( () => resolve( entityId ) );
+      } )
+      .catch( error => {
+        mw.log.error( i18n.errorUpdateEntity );
+        mw.log.error( error );
+        notify( i18n.actionUpdateEntityFail );
+        alert( i18n.errorUpdateEntity + ': ' + JSON.stringify( error ) );
+        reject();
+      } );
+  };
+
+  function tagRevisions( entityId, displayNotifications ) {
+    const notifyOptions = {
+      autoHide: true,
+      tag: 'WE-F Revisions Tags',
+    };
+
+    function notify( text ) {
+      if ( displayNotifications )
+        mw.notify( '[WE-F] ' + text, notifyOptions );
+      else
+        console.log( '[WEF_Utils.tagRevisions] ' + text );
+    }
+
+    const wikidataApi = ApiUtils.getWikidataApi();
+
+    if ( displayNotifications )
+      notify( 'Query last 50 Wikidata entity revisions of ' + entityId );
+
+    return wikidataApi.getPromise( {
+      action: 'query',
+      prop: 'revisions',
+      titles: entityId,
+      rvprop: 'comment|ids|tags',
+      rvlimit: 50,
+    } )
+
+      .then( result => {
+
+        notify( 'Received last Wikidata entity revisions of ' + entityId );
+        if ( result.query && result.query.pages ) {
+          const page = result.query.pages[ Object.keys( result.query.pages )[ 0 ] ];
+          if ( page && page.revisions ) {
+            notify( 'Received last ' + page.revisions.length + ' Wikidata entity revisions of ' + entityId );
+
+            return page.revisions
+              .filter( revision => !!revision.comment )
+              .filter( revision => revision.comment.indexOf( SUMMARY_PREFIX ) !== -1 )
+              .filter( revision => revision.tags.indexOf( TAG ) === -1 )
+              .map( revision => revision.revid );
+          }
+        }
+
+        return [];
+      } )
+
+      .then( revisions => {
+
+        if ( revisions.length == 0 ) {
+          notify( 'Nothing to update in revisions history of ' + entityId );
           return;
         }
 
-        notify( i18n.actionUpdateEntityDone );
-      } ).fail( ( jqXHR, textStatus ) => {
-        mw.log.error( i18n.errorUpdateEntity );
-        mw.log.error( arguments );
-        notify( i18n.actionUpdateEntityFail );
-        alert( i18n.errorUpdateEntity + ': ' + textStatus );
-      } );
-  };
-}
+        return wikidataApi.postWithEditTokenPromise( {
+          action: 'tag',
+          revid: revisions.join( '|' ),
+          add: TAG,
+        } );
 
-export default save;
+      } )
+
+      .then( () => {
+        notify( 'Sucessfully update tags to revisions history' );
+      } );
+  }
+
+}

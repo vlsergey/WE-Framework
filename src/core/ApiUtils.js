@@ -9,6 +9,23 @@ const WG_SITE_NAME = mw.config.get( 'wgSiteName' );
 const WG_TITLE = mw.config.get( 'wgTitle' );
 const WG_WIKIBASE_ITEM_ID = mw.config.get( 'wgWikibaseItemId' );
 
+function addPromises( api ) {
+  const toPromise = origin => function() {
+    const args = arguments;
+    return new Promise( ( resolve, reject ) => {
+      origin.apply( api, args )
+        .then( resolve ).catch( reject );
+    } );
+  };
+
+  api.getPromise = toPromise( api.get );
+  api.postPromise = toPromise( api.post );
+  api.postWithTokenPromise = toPromise( api.postWithToken );
+  api.postWithEditTokenPromise = toPromise( api.postWithEditToken );
+
+  return api;
+}
+
 let deferredEntityIdPromise = null;
 export function getEntityIdDeferred() {
   if ( deferredEntityIdPromise ) {
@@ -59,7 +76,7 @@ export function getEntityIdDeferred() {
   return deferredEntityIdPromise;
 }
 
-export function getCommonsApi() {
+function getCommonsApiImpl() {
   let api;
   if ( !isCommons() ) {
     api = new mw.ForeignApi( '//commons.wikimedia.org/w/api.php' );
@@ -71,14 +88,16 @@ export function getCommonsApi() {
       return this.postWithToken( 'edit', params, ajaxOptions );
     };
   }
-  return api;
+  return addPromises( api );
 }
+let commonsApi = null;
+export const getCommonsApi = () => commonsApi === null ? commonsApi = getCommonsApiImpl() : commonsApi;
 
 export function isCommons() {
   return WG_SITE_NAME === 'Wikimedia Commons';
 }
 
-export function getWikidataApi() {
+function getWikidataApiImpl() {
   let api;
   if ( !isWikidata() ) {
     api = new mw.ForeignApi( '//www.wikidata.org/w/api.php' );
@@ -90,8 +109,10 @@ export function getWikidataApi() {
       return this.postWithToken( 'edit', params, ajaxOptions );
     };
   }
-  return api;
+  return addPromises( api );
 }
+let wikidataApi = null;
+export const getWikidataApi = () => wikidataApi === null ? wikidataApi = getWikidataApiImpl() : wikidataApi;
 
 export function isWikidata() {
   return WG_SITE_NAME === 'Wikidata';

@@ -24,12 +24,24 @@ export function openEditor( editorDescription, entity ) {
   const reducers = buildReducers( entity );
   const store = createStore( reducers, applyMiddleware( thunk ) );
 
-  /* eslint react/jsx-no-bind: 0 */
-  ReactDOM.render( <Provider store={store}>
-    <EditorApp description={editorDescription} entity={entity} onExit={() => destroyEditor( appDiv )} />
-  </Provider>, appDiv );
+  return new Promise( ( resolve, reject ) => {
+    ReactDOM.render( <Provider store={store}>
+      <EditorApp
+        description={editorDescription}
+        entity={entity}
+        reject={reject}
+        resolve={resolve} />
+    </Provider>, appDiv );
+  } )
 
-  return appDiv;
+    .then( () => {
+      ApiUtils.purge();
+      destroyEditor( appDiv );
+    } )
+    .catch( error => {
+      mw.log( error );
+      destroyEditor( appDiv );
+    } );
 }
 
 export function onEditorLinkClick( editorDescription, entityId ) {

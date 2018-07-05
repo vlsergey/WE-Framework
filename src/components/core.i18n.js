@@ -2,15 +2,6 @@ import * as I18nUtils from 'utils/I18nUtils';
 
 const en = {
 
-  actionAnalyzeChanges: 'Collecting and analyzing changes to entity',
-  actionNoChangesPurge: 'No changes found, purge and refresh current page',
-  actionUpdateEntity: 'Saving changes in entity (update and create statements)',
-  actionUpdateEntityDone: 'Saving changes in entity (update and create statements): done',
-  actionUpdateEntityFail: 'Saving changes in entity (update and create statements): fail',
-  actionRemoveClaims: 'Saving changes in entity (remove statements)',
-  actionRemoveClaimsDone: 'Saving changes in entity (remove statements): done',
-  actionRemoveClaimsFail: 'Saving changes in entity (remove statements): fail',
-
   buttonAddClaim: 'add claim',
   buttonRemoveClaim: 'remove claim',
   buttonUrlNavigate: 'open specified URL',
@@ -35,7 +26,6 @@ const en = {
   dialogSaveChangesTitle: 'Saving changes to Wikidata...',
 
   errorAnalyzeChanges: 'Unable to collect and analyze changes',
-  errorUpdateEntity: 'Unable to update entity',
   errorRemoveClaims: 'Unable to remove outdated statements from entity',
 
   inputGlobeLatitudeLabel: 'Latitude',
@@ -131,15 +121,6 @@ const fr = {
 
 const ru = {
 
-  actionAnalyzeChanges: 'Сбор и анализ изменений в элементе',
-  actionNoChangesPurge: 'Изменения не найдены, перезагрузка текущей страницы',
-  actionUpdateEntity: 'Сохранение изменений в элемент (обновление и создание утверждений)',
-  actionUpdateEntityDone: 'Сохранение изменений в элемент (обновление и создание утверждений): успешно.',
-  actionUpdateEntityFail: 'Сохранение изменений в элемент (обновление и создание утверждений): ошибка!',
-  actionRemoveClaims: 'Сохранение изменений в элемент (удаление утверждений)',
-  actionRemoveClaimsDone: 'Сохранение изменений в элемент (удаление утверждений): успешно.',
-  actionRemoveClaimsFail: 'Сохранение изменений в элемент (удаление утверждений): ошибка!',
-
   buttonAddClaim: 'добавить утверждение',
   buttonRemoveClaim: 'удалить утверждение',
   buttonUrlNavigate: 'открыть указанный URL',
@@ -164,7 +145,6 @@ const ru = {
   dialogSaveChangesTitle: 'Сохранение изменений на Викиданных',
 
   errorAnalyzeChanges: 'Произошла ошибка при анализе изменений',
-  errorUpdateEntity: 'Произошла ошибка при сохранении изменений в элемент',
   errorRemoveClaims: 'Произошла ошибка при удалении устаревших утверждений из элемента',
 
   inputGlobeLatitudeLabel: 'Широта',

@@ -8,6 +8,7 @@ export default class DialogWrapper extends Component {
     children: PropTypes.node,
     className: PropTypes.string,
     minWidth: PropTypes.number,
+    onBeforeClose: PropTypes.func,
     onClose: PropTypes.func,
     title: PropTypes.string,
   };
@@ -18,11 +19,12 @@ export default class DialogWrapper extends Component {
   }
 
   componentDidMount() {
-    const { buttons, className, minWidth, onClose } = this.props;
+    const { buttons, className, minWidth, onBeforeClose, onClose } = this.props;
 
     jQuery( this.ref.current ).dialog( {
       autoOpen: true,
       autoResize: true,
+      beforeClose: onBeforeClose,
       buttons,
       close: onClose,
       dialogClass: className,
@@ -33,6 +35,14 @@ export default class DialogWrapper extends Component {
 
   componentWillUnmount() {
     jQuery( this.ref.current ).dialog( 'destroy' );
+  }
+
+  close() {
+    jQuery( this.ref.current ).dialog( 'close' );
+  }
+
+  open() {
+    jQuery( this.ref.current ).dialog( 'open' );
   }
 
   shouldComponentUpdate() {
