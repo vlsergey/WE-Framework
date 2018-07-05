@@ -41,7 +41,6 @@ class EditorApp extends Component {
       text: i18n.dialogButtonSaveText,
       label: i18n.dialogButtonSaveLabel,
       click: () => {
-        this.dialogRef.current.close();
         saveAndClose( resolve, reject );
       },
     } );
