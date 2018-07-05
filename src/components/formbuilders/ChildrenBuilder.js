@@ -5,6 +5,7 @@ import { defaultMemoize } from 'reselect';
 import EntityLabel from 'caches/EntityLabel';
 import ErrorBoundary from './ErrorBoundary';
 import expect from 'expect';
+import i18n from './i18n';
 import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';
 import PropertyClaimContainer from 'components/claims/PropertyClaimContainer';
 import PropertyDescription from 'core/PropertyDescription';
@@ -74,8 +75,44 @@ export default class ChildrenBuilder extends PureComponent {
 
   static propTypes = {
     ...ChildrenContainer,
+    quickSearch: PropTypes.bool,
     sortBy: PropTypes.arrayOf( PropTypes.string ),
   };
+
+  static defaultProps = {
+    quickSearch: false,
+  }
+
+  filter = defaultMemoize( ( cache, sorted, originalTerm ) => {
+    if ( !originalTerm || originalTerm.trim() === '' ) return sorted;
+    const term = originalTerm.trim().toLowerCase();
+
+    let toFilter = sorted.map( field => ( {
+      ...field,
+      ...cache[ field.property ],
+    } ) );
+
+    const result = [];
+
+    const filter = ( fieldF, checkF ) => {
+      toFilter = toFilter.filter( item => {
+        const fieldValue = fieldF( item );
+        if ( typeof fieldValue === 'string' && checkF( fieldValue.toLowerCase() ) ) {
+          result.push( item );
+          return false;
+        }
+        return true;
+      } );
+    };
+
+    // TODO: aliases? other languages?
+    filter( item => item.label, value => value.startsWith( term ) );
+    filter( item => item.description, value => value.startsWith( term ) );
+    filter( item => item.label, value => value.indexOf( term ) !== -1 );
+    filter( item => item.description, value => value.indexOf( term ) !== -1 );
+
+    return result.map( item => ( { property: item.property } ) );
+  } );
 
   sort = defaultMemoize( ( cache, fields, sortBy ) => {
     const result = fields.map( field => ( {
@@ -92,6 +129,19 @@ export default class ChildrenBuilder extends PureComponent {
     return result.map( item => ( { property: item.property } ) );
   } );
 
+
+  constructor() {
+    super( ...arguments );
+
+    this.state = {
+      displayEmpty: true,
+      quickSearchTerm: '',
+    };
+
+    this.handleDisplayEmptyToggle = () => this.setState( { displayEmpty: !this.state.displayEmpty } );
+    this.handleQuickSearchTermChange = event => this.setState( { quickSearchTerm: event.target.value || '' } );
+  }
+
   render() {
     return <React.Fragment>
       {this.renderSpecials()}
@@ -100,7 +150,7 @@ export default class ChildrenBuilder extends PureComponent {
     </React.Fragment>;
   }
 
-  renderField( field, propertyDescription ) {
+  renderField( field, propertyDescription, displayEmpty ) {
     expect ( field ).toBeAn( 'object' );
     const propertyId = field.property;
     expect ( propertyId ).toBeAn( 'string',
@@ -112,25 +162,57 @@ export default class ChildrenBuilder extends PureComponent {
       </td></tr></tbody>;
     }
     expect ( propertyDescription ).toBeA( PropertyDescription );
-    return <PropertyClaimContainer propertyDescription={propertyDescription} />;
+    return <PropertyClaimContainer
+      displayEmpty={displayEmpty}
+      propertyDescription={propertyDescription} />;
   }
 
   renderFields() {
-    const { fields, sortBy } = this.props;
+    const { fields, quickSearch, sortBy } = this.props;
+    const { displayEmpty, quickSearchTerm } = this.state;
+
     if ( !fields || fields.length == 0 )
       return null;
 
     return <PropertyDescriptionsProvider propertyIds={fields.map( field => field.property )}>
       {cache => {
         const sorted = !!sortBy && sortBy.length > 0 ? this.sort( cache, fields, sortBy ) : fields;
+        const filtered = this.filter( cache, sorted, quickSearchTerm );
 
-        return <table className={styles.wef_table}>{
-          sorted.map( field =>
-            <ErrorBoundary description={'field: ' + JSON.stringify( field )} key={field.property}>
-              {this.renderField( field, cache[ field.property ] )}
-            </ErrorBoundary>
-          )
-        }</table>;
+        return <table className={styles.wef_table}>
+          { quickSearch && <thead className={styles.quickSearch} key="quickSearch">
+            <tr>
+              <td colSpan={99}>
+                <table>
+                  <tr>
+                    <td>
+                      <label>&nbsp;&nbsp;{i18n.labelQuickSearchTerm}&nbsp;&nbsp;&nbsp;<input
+                        onChange={this.handleQuickSearchTermChange}
+                        type="text"
+                        value={quickSearchTerm} />
+                      </label>
+                    </td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td>
+                      <label>&nbsp;&nbsp;{i18n.labelDisplayEmpty}&nbsp;&nbsp;&nbsp;<input
+                        checked={displayEmpty}
+                        onChange={this.handleDisplayEmptyToggle}
+                        type="checkbox" />
+                      </label>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </thead>
+          }
+          {
+            filtered.map( field =>
+              <ErrorBoundary description={'field: ' + JSON.stringify( field )} key={field.property}>
+                {this.renderField( field, cache[ field.property ], displayEmpty )}
+              </ErrorBoundary>
+            )
+          }</table>;
       } }
     </PropertyDescriptionsProvider>;
   }

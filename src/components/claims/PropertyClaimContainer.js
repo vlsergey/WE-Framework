@@ -11,6 +11,7 @@ class PropertyClaimContainer extends PureComponent {
 
   static propTypes = {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
+    displayEmpty: PropTypes.bool,
     onClaimAdd: PropTypes.func.isRequired,
     onClaimAddTwice: PropTypes.func.isRequired,
     onClaimDelete: PropTypes.func.isRequired,
@@ -21,7 +22,8 @@ class PropertyClaimContainer extends PureComponent {
   columnsMemoization = claimColumnsF();
 
   render() {
-    const { claims, onClaimAdd, onClaimAddTwice, onClaimDelete, onClaimUpdate, propertyDescription } = this.props;
+    const { claims, displayEmpty, propertyDescription,
+      onClaimAdd, onClaimAddTwice, onClaimDelete, onClaimUpdate } = this.props;
     const columns = this.columnsMemoization( claims );
 
     if ( columns.length !== 0 ) {
@@ -31,6 +33,7 @@ class PropertyClaimContainer extends PureComponent {
             <ClaimsWithQualifiersTable
               claims={claims}
               columns={columns}
+              displayEmpty={displayEmpty}
               onClaimAdd={onClaimAdd}
               onClaimAddTwice={onClaimAddTwice}
               onClaimDelete={onClaimDelete}
@@ -43,6 +46,7 @@ class PropertyClaimContainer extends PureComponent {
 
     return <ClaimsTableBody
       claims={claims}
+      displayEmpty={displayEmpty}
       onClaimAdd={onClaimAdd}
       onClaimAddTwice={onClaimAddTwice}
       onClaimDelete={onClaimDelete}

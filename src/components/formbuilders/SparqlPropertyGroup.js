@@ -74,7 +74,10 @@ export default class SparqlPropertyGroup extends Component {
     }
 
     return <div className={styles.sparql_property_group}>
-      <ChildrenBuilder fields={properties} sortBy={sortBy.split( /[ ;,\t]/ )} />
+      <ChildrenBuilder
+        fields={properties}
+        quickSearch
+        sortBy={sortBy.split( /[ ;,\t]/ )} />
     </div>;
   }
 

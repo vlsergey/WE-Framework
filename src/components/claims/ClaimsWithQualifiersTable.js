@@ -12,6 +12,7 @@ export default class ClaimsWithQualifiersTable extends PureComponent {
   static propTypes = {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
     columns: PropTypes.arrayOf( PropTypes.string ).isRequired,
+    displayEmpty: PropTypes.bool,
     onClaimAdd: PropTypes.func.isRequired,
     onClaimAdd2: PropTypes.func.isRequired,
     onClaimDelete: PropTypes.func.isRequired,
@@ -20,10 +21,13 @@ export default class ClaimsWithQualifiersTable extends PureComponent {
   };
 
   render() {
-    const { claims, columns, onClaimAdd, onClaimAdd2, onClaimUpdate, onClaimDelete, propertyDescription } = this.props;
+    const { claims, columns, displayEmpty, propertyDescription,
+      onClaimAdd, onClaimAdd2, onClaimUpdate, onClaimDelete } = this.props;
 
     let children;
     if ( !claims || claims.length === 0 ) {
+      if ( !displayEmpty ) return null;
+
       const newClaim = newStatementClaim( propertyDescription );
       children = [ <ClaimsWithQualifiersTableRows
         claim={newClaim}
