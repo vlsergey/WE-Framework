@@ -13,16 +13,15 @@ describe( 'test/components/references', () => {
 
   describe( 'ClaimReferencesEditorDialog', () => {
 
+    const reducers = buildReducers( Q30 );
+    const store = createStore( reducers, applyMiddleware( thunk ) );
+
     Object.values( Q30.claims )
       .flatMap( arr => arr )
       .filter( claim => !!claim.references )
       .forEach( claim => {
 
         it( 'References of claim ' + claim.id + ' be rendered', () => {
-
-          const reducers = buildReducers( Q30 );
-          const store = createStore( reducers, applyMiddleware( thunk ) );
-
           const rendered = ReactTestUtils.renderIntoDocument(
             <Provider store={store}>
               <ClaimReferencesEditorDialog
