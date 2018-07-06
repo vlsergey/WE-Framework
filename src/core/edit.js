@@ -13,7 +13,7 @@ export function destroyEditor( appDiv ) {
   document.body.removeChild( appDiv );
 }
 
-export function openEditor( editorDescription, entity ) {
+export function renderEditor( editorDescription, entity, resolve, reject ) {
   expect( editorDescription ).toBeAn( 'object' );
   expect( entity ).toBeAn( 'object' );
   expect( entity.id ).toBeA( 'string' );
@@ -24,23 +24,28 @@ export function openEditor( editorDescription, entity ) {
   const reducers = buildReducers( entity );
   const store = createStore( reducers, applyMiddleware( thunk ) );
 
-  return new Promise( ( resolve, reject ) => {
-    ReactDOM.render( <Provider store={store}>
-      <EditorApp
-        description={editorDescription}
-        entity={entity}
-        reject={reject}
-        resolve={resolve} />
-    </Provider>, appDiv );
-  } )
+  ReactDOM.render( <Provider store={store}>
+    <EditorApp
+      description={editorDescription}
+      entity={entity}
+      reject={reject}
+      resolve={resolve} />
+  </Provider>, appDiv );
 
+  return appDiv;
+}
+
+export function openEditor( editorDescription, entity ) {
+  let appDiv;
+  return new Promise( ( resolve, reject ) => {
+    appDiv = renderEditor( editorDescription, entity, resolve, reject );
+  } )
     .then( () => {
-      ApiUtils.purge();
-      destroyEditor( appDiv );
+      if ( appDiv ) destroyEditor( appDiv );
     } )
     .catch( error => {
       mw.log( error );
-      destroyEditor( appDiv );
+      if ( appDiv ) destroyEditor( appDiv );
     } );
 }
 
@@ -49,7 +54,7 @@ export function onEditorLinkClick( editorDescription, entityId ) {
   expect ( entityId ).toBeA( 'string' );
 
   mw.notify( 'Get Wikidata entity content for ' + entityId + '...' );
-  ApiUtils.getWikidataApi().get( {
+  ApiUtils.getWikidataApi().getPromise( {
     action: 'wbgetentities',
     ids: entityId,
     format: 'json',
@@ -63,5 +68,7 @@ export function onEditorLinkClick( editorDescription, entityId ) {
       throw new Error( 'Wikidata answer format is not expected one' );
     }
     return result.entities[ entityId ];
-  } ).then( entity => openEditor( editorDescription, entity ) );
+  } )
+    .then( entity => openEditor( editorDescription, entity ) )
+    .then( ApiUtils.purge );
 }
