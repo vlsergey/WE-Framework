@@ -38,6 +38,13 @@ const editorDescription = {
       ],
     },
     {
+      labelEntityId: 'P348',
+      key: 'versions',
+      fields: [
+        { property: 'P348' } /* software version */,
+      ],
+    },
+    {
       labelEntityId: 'Q235557',
       key: 'fileFormats',
       fieldsets: [
@@ -53,6 +60,16 @@ const editorDescription = {
             { property: 'P1073' } /* output formats */,
           ],
         },
+      ],
+    },
+    {
+      labelEntityId: 'Q36524',
+      key: 'authoritycontrol',
+      fields: [
+        { property: 'P3381' } /* File Format Wiki page ID */,
+        { property: 'P646' } /* Freebase ID */,
+        { property: 'P3417' } /* Quora topic ID */,
+        { property: 'P3984' } /* subreddit */,
       ],
     },
   ],
