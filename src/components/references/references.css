@@ -17,6 +17,7 @@
 
 table.referencesEditorTable {
   width: 100%;
+  border-collapse: collapse;;
 }
 
 table.referencesEditorTable > tbody > tr {
@@ -30,4 +31,12 @@ table.referencesEditorTable > tbody > tr {
 
 table.claimReferenceEditor {
   width: 100%;
+}
+
+.referencePropertyAlreadyPresent {
+  color: gray;
+}
+
+.referencePropertyUnsupported {
+  color: darkgray;
 }

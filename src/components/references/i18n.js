@@ -12,6 +12,7 @@ const en = {
 
   dialogLabelAddRecentlyUsed: 'Quick add recently used sources',
 
+  placehoderSelect: 'Select property to add to reference',
 };
 
 const ru = {
@@ -25,6 +26,8 @@ const ru = {
   dialogButtonCloseTitle: 'Закрыть диалоговое окно',
 
   dialogLabelAddRecentlyUsed: 'Быстрое добавление недавно использованных источников',
+
+  placehoderSelect: 'Выберите свойство для добавления к ссылке',
 
 };
 

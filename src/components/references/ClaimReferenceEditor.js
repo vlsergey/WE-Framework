@@ -1,8 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
+import ReferencePropertySelect from './ReferencePropertySelect';
 import ReferencePropertySnaksEditor from './ReferencePropertySnaksEditor';
 import styles from './references.css';
+
+let snaksCounter = 0;
 
 export default class ClaimReferenceEditor extends PureComponent {
 
@@ -14,7 +17,28 @@ export default class ClaimReferenceEditor extends PureComponent {
   constructor() {
     super( ...arguments );
 
+    this.handleReferencePropertyAdd = this.handleReferencePropertyAdd.bind( this );
     this.handleSnaksChange = this.handleSnaksChange.bind( this );
+  }
+
+  handleReferencePropertyAdd( propertyId ) {
+    const { onReferenceChange, reference } = this.props;
+    const existing = ( reference.snaks || {} )[ propertyId ] || [];
+
+    onReferenceChange( {
+      ...reference,
+      snaks: {
+        ...reference.snaks,
+        [ propertyId ]: [
+          ...existing,
+          {
+            snaktype: 'value',
+            property: propertyId,
+            hash: 'ClaimReferenceEditor#new#' + ++snaksCounter,
+          },
+        ],
+      },
+    } );
   }
 
   handleSnaksChange( propertyId, snaks ) {
@@ -52,6 +76,13 @@ export default class ClaimReferenceEditor extends PureComponent {
               snaks={snaks[ propertyId ]} />;
           } )
         }</PropertyDescriptionsProvider>
+        <tr>
+          <td colSpan={99}>
+            <ReferencePropertySelect
+              alreadyPresent={propertyIds}
+              onSelect={this.handleReferencePropertyAdd} />
+          </td>
+        </tr>
       </tbody>
     </table>;
   }

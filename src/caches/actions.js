@@ -193,6 +193,36 @@ export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
   }
 );
 
+export const propertiesSparqlQueueF = buildQueueAction( 'PROPERTIESBYSPARQL', 1,
+  () => true,
+  cacheKeys => 'Executing SPARQL query: ' + cacheKeys[ 0 ],
+  cacheKeys => fetch( 'https://query.wikidata.org/sparql?query=' + encodeURIComponent( cacheKeys[ 0 ] ), {
+    headers: {
+      Accept: 'application/sparql-results+json',
+    },
+  } )
+    .then( body => body.json() ),
+  ( result, sparql ) => {
+    const columnName = result.head.vars[ 0 ];
+
+    const propertyIds = result.results.bindings.map( binding => {
+      const type = binding[ columnName ].type;
+      if ( type != 'uri' ) {
+        throw new Error( 'SPARQL result column type must be \'uri\'' );
+      }
+      const value = binding[ columnName ].value;
+      if ( !value.startsWith( 'http://www.wikidata.org/entity/P' ) ) {
+        throw new Error( 'SPARQL result column value must start \'http://www.wikidata.org/entity/P\'' );
+      }
+      return value.substr( 'http://www.wikidata.org/entity/'.length );
+    } );
+
+    return {
+      [ sparql ]: propertyIds,
+    };
+  }
+);
+
 export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS', 50,
   cacheKey => cacheKey.match( /^P(\d+)$/i ),
   cacheKeys => 'Fetching ' + cacheKeys.length + ' property descriptions from Wikidata',
@@ -213,6 +243,7 @@ export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS'
     return cacheUpdate;
   }
 );
+
 
 const PROPERTIES_TO_CACHE = [
   // country
