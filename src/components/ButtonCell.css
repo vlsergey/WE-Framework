@@ -1,7 +1,8 @@
 .buttonCell {
 	padding: 0;
 	margin: 0;
-	width: 1px;
+	width: 24px;
+	height: 20px;
 }
 
 .buttonCell td {
@@ -15,8 +16,8 @@
 .buttonCell :global .ui-button {
 	margin: 0 0.1em !important;
 	box-shadow: none;
-	width: 20px;
-	height: 16px;
+	width: 24px;
+	height: 20px;
 }
 
 .buttonCell :global .ui-button :global .ui-button-text {

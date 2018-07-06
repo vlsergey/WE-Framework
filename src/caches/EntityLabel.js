@@ -20,7 +20,7 @@ export default class EntityLabel extends PureComponent {
 
     return <LabelDescriptionProvider entityId={entityId}>
       {labelDescription => {
-        if ( !labelDescription )
+        if ( !labelDescription || !labelDescription.label )
           return entityId;
 
         let result = labelDescription.label;

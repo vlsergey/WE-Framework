@@ -3,6 +3,7 @@ import AnimatedTr from 'components/AnimatedTr';
 import { Claim } from 'model/Shapes';
 import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
+import ClaimReferencesButtonCell from 'components/references/ClaimReferencesButtonCell';
 import expect from 'expect';
 import FlagCell from './FlagCell';
 import PropertyDescription from 'core/PropertyDescription';
@@ -14,7 +15,7 @@ import SnakEditorTableRowPart from 'components/SnakEditorTableRowPart';
 
 export default class ClaimsTableRows extends PureComponent {
 
-  static TABLE_COLUMNS = 6 + SnakEditorTableRowPart.TABLE_COLUMNS;
+  static TABLE_COLUMNS = 7 + SnakEditorTableRowPart.TABLE_COLUMNS;
 
   static propTypes = {
     firstCell: PropTypes.node.isRequired,
@@ -85,7 +86,9 @@ export default class ClaimsTableRows extends PureComponent {
           onSnakChange={this.handleSnakChange}
           propertyDescription={propertyDescription}
           snak={claim.mainsnak} />
-        {/* references editor button cell */}
+        <ClaimReferencesButtonCell
+          claim={claim}
+          onClaimUpdate={onClaimUpdate} />
         <ClaimDeleteButtonCell
           disabled={!hasClaimDelete}
           onClaimDelete={this.handleClaimDelete}

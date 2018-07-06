@@ -21,16 +21,15 @@ export default class JQueryButton extends PureComponent {
     if ( !text ) cn.push( 'ui-button-icon-only' );
     if ( className ) cn.push( className );
 
-    return <div
+    return <button
       aria-disabled="false"
       className={cn.join( ' ' )}
       onClick={onClick}
       role="button"
-      tabIndex={0}
       title={label}>
-      <span className={'ui-button-icon-primary ui-icon ' + ( icon || '' )} />
+      { icon && <span className={'ui-button-icon-primary ui-icon ' + ( icon || '' )} />}
       <span className="ui-button-text">{label}</span>
-    </div>;
+    </button>;
   }
 
 }

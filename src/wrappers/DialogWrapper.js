@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-export default class DialogWrapper extends Component {
+export default class DialogWrapper extends PureComponent {
 
   static propTypes = {
     buttons: PropTypes.arrayOf( PropTypes.object ),
@@ -45,9 +45,9 @@ export default class DialogWrapper extends Component {
     jQuery( this.ref.current ).dialog( 'open' );
   }
 
-  shouldComponentUpdate() {
-    return false;
-  }
+  // shouldComponentUpdate() {
+  //   return false;
+  // }
 
   render() {
     const { children, title } = this.props;

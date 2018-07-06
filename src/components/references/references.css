@@ -1,0 +1,33 @@
+.referencesButtonCell {
+  width: 24px;
+	height: 20px;
+}
+
+.referencesButton {
+  min-width: 24px;
+  width: 24px;
+	height: 20px;
+  margin: 0 !important;
+}
+
+.referencesButton span {
+  position: relative;
+  top: -1px;
+}
+
+table.referencesEditorTable {
+  width: 100%;
+}
+
+table.referencesEditorTable > tbody > tr {
+  border-collapse: collapse;
+  border-bottom: darkgray 2px dotted;
+}
+
+.referenceCounter {
+  vertical-align: top;
+}
+
+table.claimReferenceEditor {
+  width: 100%;
+}

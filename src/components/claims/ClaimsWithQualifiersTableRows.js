@@ -4,6 +4,7 @@ import { Claim } from 'model/Shapes';
 import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import ClaimQualifiersTBody from 'components/qualifiers/ClaimQualifiersTBody';
+import ClaimReferencesButtonCell from 'components/references/ClaimReferencesButtonCell';
 import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
@@ -80,7 +81,9 @@ export default class ClaimsWithQualifiersTableRows extends PureComponent {
           onSnakChange={this.handleSnakChange}
           propertyDescription={propertyDescription}
           snak={claim.mainsnak} />
-        {/* references editor button cell */}
+        <ClaimReferencesButtonCell
+          claim={claim}
+          onClaimUpdate={onClaimUpdate} />
         <ClaimDeleteButtonCell
           disabled={!hasClaimDelete}
           onClaimDelete={this.handleClaimDelete}

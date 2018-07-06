@@ -99,15 +99,6 @@ const en = {
   timePrecision13: 'minute',
   timePrecision14: 'second',
   timePrecisionOther: 'other',
-
-  sourcesDialogTitle: 'View and edit sources for claim — WE-Framework',
-  sourcesButtonUpdateLabelsText: 'Update labels',
-  sourcesButtonUpdateLabelsLabel: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
-  sourcesButtonAddText: 'Add',
-  sourcesButtonAddLabel: 'Add new reference to the list',
-  sourcesButtonCloseText: 'Close',
-  sourcesButtonCloseLabel: 'Close the dialog',
-  sourcesLabelAddUsedReferences: 'Quick add recently used sources: ',
 };
 
 const fr = {
@@ -209,15 +200,6 @@ const ru = {
   timePrecision13: 'минута',
   timePrecision14: 'секунда',
   timePrecisionOther: 'другое',
-
-  sourcesDialogTitle: 'Просмотр и редактирование источников для утверждения — WE-Framework',
-  sourcesButtonUpdateLabelsText: 'Обновить названия',
-  sourcesButtonUpdateLabelsLabel: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
-  sourcesButtonAddText: 'Добавить',
-  sourcesButtonAddLabel: 'Добавить новую сноску на источник в список',
-  sourcesButtonCloseText: 'Закрыть',
-  sourcesButtonCloseLabel: 'Закрыть диалоговое окно',
-  sourcesLabelAddUsedReferences: 'Быстрое добавление недавно использованных источников: ',
 };
 
 const translations = { en, fr, ru };
