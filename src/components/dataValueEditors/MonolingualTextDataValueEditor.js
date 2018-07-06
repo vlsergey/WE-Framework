@@ -38,6 +38,8 @@ export default class MonolingualTextDataValueEditor extends PureComponent {
     onDataValueChange( {
       ...datavalue,
       value: {
+        // set language of current content language if no specified yet AND some text entered
+        language: event.target.value.trim() !== '' ? mw.config.get( 'wgContentLanguage' ) : undefined,
         ...datavalue ? datavalue.value : undefined,
         text: event.target.value,
       },
