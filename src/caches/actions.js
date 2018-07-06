@@ -111,7 +111,6 @@ function buildQueueAction( type, maxBatch,
       expect( queue ).toBeA( Set );
 
       if ( !queue.has( cacheKey ) ) {
-        mw.log( 'Queueing for cache ' + type + ' population: ' + cacheKey );
         dispatch( {
           type: 'CACHE_' + type + '_QUEUE',
           cacheKey,
