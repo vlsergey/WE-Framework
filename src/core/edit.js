@@ -43,9 +43,10 @@ export function openEditor( editorDescription, entity ) {
     .then( () => {
       if ( appDiv ) destroyEditor( appDiv );
     } )
-    .catch( error => {
-      mw.log( error );
+    .catch( reason => {
+      mw.log( reason );
       if ( appDiv ) destroyEditor( appDiv );
+      return Promise.reject( reason );
     } );
 }
 
