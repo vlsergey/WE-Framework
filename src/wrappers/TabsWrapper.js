@@ -8,7 +8,6 @@ export default class TabsWrapper extends Component {
 
   static propTypes = {
     tabs: PropTypes.arrayOf( PropTypes.shape( {
-      key: PropTypes.string.isRequired,
       label: PropTypes.oneOfType( [ PropTypes.node, PropTypes.string ] ),
       content: PropTypes.node,
     } ) ),

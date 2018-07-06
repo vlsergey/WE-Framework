@@ -4,7 +4,6 @@ const editorDescription = {
   tabs: [
     {
       label: 'General',
-      key: 'general',
       specials: [
         { type: 'LabelsAndDescriptionArea' },
       ],

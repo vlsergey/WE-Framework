@@ -4,7 +4,6 @@ const editorDescription = {
   tabs: [
     {
       label: 'General',
-      key: 'general',
       specials: [
         { type: 'LabelsAndDescriptionArea' },
       ],
@@ -42,7 +41,6 @@ const editorDescription = {
     },
     {
       label: 'Media',
-      key: 'media',
       fieldsets: [
         {
           labelEntityId: 'Q14660',
@@ -216,7 +214,6 @@ const editorDescription = {
     },
     {
       labelEntityId: 'Q36524',
-      key: 'authoritycontrol',
       specials: [
         { type: 'SparqlPropertyGroup',
           sparql: 'SELECT ?property '

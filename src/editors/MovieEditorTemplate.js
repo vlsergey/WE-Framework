@@ -4,7 +4,6 @@ const editorDescription = {
   tabs: [
     {
       label: 'General',
-      key: 'general',
       specials: [
         { type: 'LabelsAndDescriptionArea' },
       ],
@@ -69,7 +68,6 @@ const editorDescription = {
     },
     {
       labelEntityId: 'Q36524',
-      key: 'authoritycontrol',
       specials: [
         { type: 'SparqlPropertyGroup',
           sparql: 'SELECT ?property '
