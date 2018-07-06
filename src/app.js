@@ -6,6 +6,7 @@ import expect from 'expect';
 import { getEntityIdDeferred } from './core/ApiUtils';
 import MovieEditorTemplate from './editors/MovieEditorTemplate';
 import { onEditorLinkClick } from './core/edit';
+import SoftwareEditorTemplate from './editors/SoftwareEditorTemplate';
 
 mw.loader.using( [ //
   'jquery.ui.autocomplete', //
@@ -21,6 +22,7 @@ mw.loader.using( [ //
   settings.registerEditor( AdmEntityEditorTemplate );
   settings.registerEditor( EntityEditorTemplate );
   settings.registerEditor( MovieEditorTemplate );
+  settings.registerEditor( SoftwareEditorTemplate );
 
   if ( mw.config.get( 'wgArticleId' ) ) {
     getEntityIdDeferred().then( entityId => {
