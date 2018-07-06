@@ -8,8 +8,14 @@ const editorDescription = {
         { type: 'LabelsAndDescriptionArea' },
       ],
       fields: [
-        /* instance of */
-        { property: 'P31' },
+        { property: 'P31' } /* instance of */,
+        { property: 'P279' } /* subclass of */,
+      ],
+    },
+    {
+      labelEntityId: 'P1343',
+      fields: [
+        { property: 'P1343' } /* described by source */,
       ],
     },
   ],
