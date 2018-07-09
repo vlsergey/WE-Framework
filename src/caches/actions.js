@@ -237,10 +237,12 @@ export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS'
     } ),
   result => {
     const cacheUpdate = {};
-    Object.values( result.entities ).forEach( entity => {
-      const propertyDescription = new PropertyDescription( entity );
-      cacheUpdate[ entity.id ] = Object.freeze( propertyDescription );
-    } );
+    Object.values( result.entities )
+      .filter( entity => typeof entity.missing === 'undefined' )
+      .forEach( entity => {
+        const propertyDescription = new PropertyDescription( entity );
+        cacheUpdate[ entity.id ] = Object.freeze( propertyDescription );
+      } );
     return cacheUpdate;
   }
 );
