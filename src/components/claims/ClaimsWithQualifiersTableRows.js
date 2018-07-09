@@ -111,7 +111,7 @@ export default class ClaimsWithQualifiersTableRows extends PureComponent {
       </AnimatedTr>
       <AnimatedTr>
         <td colSpan={2} />
-        <td colSpan={SnakEditorTableRowPart.TABLE_COLUMNS + columns.length + 2}>
+        <td colSpan={1 + SnakEditorTableRowPart.TABLE_COLUMNS + 2 + columns.length * 1}>
           <ClaimQualifiersTable
             allowedQualifiers={propertyDescription.allowedQualifiers}
             claim={claim}

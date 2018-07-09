@@ -53,7 +53,7 @@ export default class ClaimsWithQualifiersTable extends PureComponent {
     return <table className={styles.claims_with_qualifiers}>
       <thead>
         <tr>
-          <th colSpan={17}>{propertyDescription.label || propertyDescription.id}</th>
+          <th colSpan={18}>{propertyDescription.label || propertyDescription.id}</th>
           { columns.map( column => <th key={column}>
             <EntityLabel entityId={column} />
           </th> ) }
