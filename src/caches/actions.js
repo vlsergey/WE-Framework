@@ -3,6 +3,7 @@ import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
 import expect from 'expect';
 import { filterClaimsByRank } from 'model/ModelUtils';
 import LabelDescription from './LabelDescription';
+import md5 from 'md5';
 import PropertyDescription from 'core/PropertyDescription';
 
 function buildQueueAction( type, maxBatch,
@@ -123,7 +124,7 @@ function buildQueueAction( type, maxBatch,
 
 }
 
-const openTagF = fileName => '<div data-filename=\"' + fileName + '\">';
+const openTagF = fileName => '<div data-filename=\"' + md5( fileName ) + '\">';
 const closeTagF = () => '</div>';
 
 export const flagImageHtmlsQueue = buildQueueAction( 'FLAGIMAGEHTMLS', 50,
