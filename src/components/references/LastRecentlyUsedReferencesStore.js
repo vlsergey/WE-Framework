@@ -32,7 +32,7 @@ export function onReferenceUpdate( reference ) {
   if ( !reference ) return;
 
   const entityIds = ( reference.snaks || {} )
-    .P143.filter( ok )
+    .P248.filter( ok )
     .map( snak => snak.datavalue ).filter( ok )
     .map( datavalue => datavalue.value ).filter( ok )
     .map( value => value.id ).filter( ok );
