@@ -29,7 +29,6 @@ export default class ClaimReferencesButtonCell extends PureComponent {
     return <td className={styles.referencesButtonCell}>
       <JQueryButton
         className={styles.referencesButton}
-        disabled={count === 0}
         icon={null}
         label={'[' + count + ']'}
         onClick={this.handleClick}
