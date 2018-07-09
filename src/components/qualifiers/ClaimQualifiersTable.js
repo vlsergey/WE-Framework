@@ -4,14 +4,13 @@ import { Claim } from 'model/Shapes';
 import ClaimQualifiersTBody from './ClaimQualifiersTBody';
 import ClaimQualifierTableRow from './ClaimQualifierTableRow';
 import expect from 'expect';
+import generateRandomString from 'utils/generateRandomString';
 import NewQualifierAutosuggest from './NewQualifierAutosuggest';
 import NewQualifierSelect from './NewQualifierSelect';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import styles from './ClaimQualifiersTable.css';
-
-let qualifiersCounter = 0;
 
 export default class ClaimQualifiersTable extends PureComponent {
 
@@ -66,7 +65,7 @@ export default class ClaimQualifiersTable extends PureComponent {
           {
             snaktype: 'value',
             property: propertyId,
-            hash: 'new#ClaimQualifiersTable#' + ++qualifiersCounter,
+            hash: generateRandomString(),
           },
         ],
       },

@@ -1,11 +1,10 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
+import generateRandomString from 'utils/generateRandomString';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyLabelCell from 'components/PropertyLabelCell';
 import PropTypes from 'prop-types';
 import SnakEditorTableRowPart from 'components/SnakEditorTableRowPart';
-
-let snaksCounter = 0;
 
 export default class ReferencePropertySnaksEditor extends PureComponent {
 
@@ -30,7 +29,7 @@ export default class ReferencePropertySnaksEditor extends PureComponent {
         {
           snaktype: 'value',
           property: propertyDescription.id,
-          hash: 'ReferencePropertySnaksEditor#new#' + ++snaksCounter,
+          hash: generateRandomString(),
           datatype: propertyDescription.datatype,
         },
       ]

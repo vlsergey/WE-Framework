@@ -1,10 +1,9 @@
 import React, { PureComponent } from 'react';
 import { Claim } from 'model/Shapes';
 import ClaimReferenceEditor from './ClaimReferenceEditor';
+import generateRandomString from 'utils/generateRandomString';
 import PropTypes from 'prop-types';
 import styles from './references.css';
-
-let referencesCounter = 0;
 
 export default class ClaimReferencesEditorContent extends PureComponent {
 
@@ -28,7 +27,7 @@ export default class ClaimReferencesEditorContent extends PureComponent {
       references: [
         ...references,
         {
-          hash: 'new#' + ++referencesCounter,
+          hash: generateRandomString(),
           snaks: {},
         },
       ],

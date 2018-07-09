@@ -1,12 +1,11 @@
 import React, { PureComponent } from 'react';
 import ClaimQualifierTableRow from './ClaimQualifierTableRow';
 import expect from 'expect';
+import generateRandomString from 'utils/generateRandomString';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import QualifierAddButtonCell from './QualifierAddButtonCell';
 import QualifierRemoveButtonCell from './QualifierRemoveButtonCell';
-
-let qualifiersCounter = 0;
 
 export default class ClaimQualifiersTBody extends PureComponent {
 
@@ -28,7 +27,7 @@ export default class ClaimQualifiersTBody extends PureComponent {
   constructor() {
     super( ...arguments );
 
-    this.emptyQualifierHash = 'new#ClaimQualifiersTBody#' + ++qualifiersCounter;
+    this.emptyQualifierHash = generateRandomString();
     this.handleEmptyQualifierChange = this.handleEmptyQualifierChange.bind( this );
     this.handleQualifierAdd = this.handleQualifierAdd.bind( this );
     this.handleQualifierAddTwice = this.handleQualifierAddTwice.bind( this );
@@ -58,7 +57,7 @@ export default class ClaimQualifiersTBody extends PureComponent {
     this.handleQualifiersChange( qualifiers => [ ...qualifiers, {
       snaktype: 'value',
       property: id,
-      hash: 'new#ClaimQualifiersTBody#' + ++qualifiersCounter,
+      hash: generateRandomString(),
       datatype,
     } ] );
   }
@@ -69,12 +68,12 @@ export default class ClaimQualifiersTBody extends PureComponent {
     this.handleQualifiersChange( qualifiers => [ ...qualifiers, {
       snaktype: 'value',
       property: id,
-      hash: 'new#ClaimQualifiersTBody#' + ++qualifiersCounter,
+      hash: generateRandomString(),
       datatype,
     }, {
       snaktype: 'value',
       property: id,
-      hash: 'new#ClaimQualifiersTBody#' + ++qualifiersCounter,
+      hash: generateRandomString(),
       datatype,
     } ] );
   }

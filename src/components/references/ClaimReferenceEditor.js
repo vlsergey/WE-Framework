@@ -1,11 +1,10 @@
 import React, { PureComponent } from 'react';
+import generateRandomString from 'utils/generateRandomString';
 import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import ReferencePropertySelect from './ReferencePropertySelect';
 import ReferencePropertySnaksEditor from './ReferencePropertySnaksEditor';
 import styles from './references.css';
-
-let snaksCounter = 0;
 
 export default class ClaimReferenceEditor extends PureComponent {
 
@@ -34,7 +33,7 @@ export default class ClaimReferenceEditor extends PureComponent {
           {
             snaktype: 'value',
             property: propertyId,
-            hash: 'ClaimReferenceEditor#new#' + ++snaksCounter,
+            hash: generateRandomString(),
           },
         ],
       },
