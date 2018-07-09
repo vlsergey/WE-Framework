@@ -1,31 +1,23 @@
-import * as ApiUtils from 'core/ApiUtils';
-import * as Shapes from 'model/Shapes';
-import React, { Component } from 'react';
-import Autosuggest from 'react-autosuggest';
-import { connect } from 'react-redux';
-import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
+import React, { PureComponent } from 'react';
+import AutocompleteMode from './AutocompleteMode';
+import { DataValue } from 'model/Shapes';
 import EntityLabel from 'caches/EntityLabel';
-import expect from 'expect';
 import GoToWikidataButtonCell from './GoToWikidataButtonCell';
-import LocalizedWikibaseItemInput from './LocalizedWikibaseItemInput';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
+import SelectMode from './SelectMode';
 import styles from './WikibaseItem.css';
-import Suggestion from './Suggestion';
 
-const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
-
-class WikibaseItemDataValueEditor extends Component {
+export default class WikibaseItemDataValueEditor extends PureComponent {
 
   static DATATYPE = 'wikibase-item';
+  static DATAVALUE_TYPE = 'wikibase-entityid';
 
   static propTypes = {
-    cache: PropTypes.object.isRequired,
-    datavalue: PropTypes.shape( Shapes.DataValue ),
+    datavalue: PropTypes.shape( DataValue ),
     onDataValueChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
     readOnly: PropTypes.bool,
-    testSuggestionsProvider: PropTypes.func,
   }
 
   static defaultProps = {
@@ -35,168 +27,39 @@ class WikibaseItemDataValueEditor extends Component {
   constructor() {
     super( ...arguments );
 
-    const value = ( ( this.props.datavalue || {} ).value || {} ).id || null;
     this.state = {
-      suggestions: value ? [ value ] : [],
-      textValue: value || '',
+      selectMode: SelectMode.isCompatibleWithProps( this.props ),
     };
-    this.wikidataApi = ApiUtils.getWikidataApi();
 
-    this.wikibaseItemInputRef = React.createRef();
-
-    this.handleChange = this.handleChange.bind( this );
-    this.handleSuggestionsClearRequested = this.handleSuggestionsClearRequested.bind( this );
-    this.handleSuggestionsFetchRequested = this.handleSuggestionsFetchRequested.bind( this );
-
-    this.renderInput = this.renderInput.bind( this );
-    this.renderSuggestion = this.renderSuggestion.bind( this );
-  }
-
-  handleSuggestionsClearRequested() {
-    this.setState( { suggestions: [] } );
-  }
-
-  handleSuggestionsFetchRequested( { value } ) {
-    expect( value ).toBeA( 'string' );
-
-    if ( this.props.testSuggestionsProvider ) {
-      this.setState( {
-        suggestions: this.props.testSuggestionsProvider( value ),
-      } );
-    }
-
-    const resultSet = new Set();
-    DEFAULT_LANGUAGES.forEach( language => {
-      this.wikidataApi.get( {
-        action: 'wbsearchentities',
-        language,
-        limit: NUMBER_OF_SUGGESTIONS_PER_LANGUAGE,
-        search: value,
-        type: 'item',
-      } ).then( result => {
-        result.search.forEach( item => resultSet.add( item.id ) );
-        this.setState( {
-          suggestions: [ ...resultSet ],
-        } );
-      } );
-    } );
-  }
-
-  getSuggestionValue( data ) {
-    return data ? data : '';
-  }
-
-  handleChange( event, { method, newValue } ) {
-    const { cache, datavalue, onDataValueChange } = this.props;
-
-    switch ( method ) {
-    case 'type': {
-      // the only thing we can do by typing -- is to clear data
-      if ( newValue === null || newValue.trim() === '' ) {
-        onDataValueChange( {
-          ...datavalue,
-          value: null,
-          type: 'wikibase-entityid',
-        } );
-      }
-      this.setState( {
-        textValue: newValue,
-      } );
-      break;
-    }
-    default: {
-
-      onDataValueChange( {
-        ...datavalue,
-        value: {
-          'entity-type': 'item',
-          'numeric-id': newValue.substr( 1 ),
-          'id': newValue,
-        },
-        type: 'wikibase-entityid',
-      } );
-
-      this.setState( {
-        textValue: cache[ newValue ] && cache[ newValue ].label ? cache[ newValue ].label : newValue,
-      } );
-      this.wikibaseItemInputRef.current.clearDirtyState();
-
-      break;
-    }
-    }
+    this.handleOtherSelect = () => this.setState( { selectMode: false } );
   }
 
   render() {
-    const { datavalue, propertyDescription, readOnly } = this.props;
+    const { datavalue, readOnly, ...etc } = this.props;
 
+    const currentValue = ( ( datavalue || {} ).value || {} ).id || '';
     const className = styles[ 'wef_datavalue_' + WikibaseItemDataValueEditor.DATATYPE ];
-    const entityId = datavalue && datavalue.value && datavalue.value.id ? datavalue.value.id : null;
-    const params = {
-      type: 'text',
-    };
 
     if ( readOnly ) {
-      return <td className={className + ' ' + styles[ 'wef_datavalue_' + WikibaseItemDataValueEditor.DATATYPE + '_readonly' ]} colSpan={12}>
-        { entityId && <a href={'https://www.wikidata.org/wiki/' + entityId}>
-          <EntityLabel entityId={entityId} />
+      return <td
+        className={className + ' ' + styles[ 'wef_datavalue_' + WikibaseItemDataValueEditor.DATATYPE + '_readonly' ]}
+        colSpan={12}>
+        { currentValue && <a href={'https://www.wikidata.org/wiki/' + currentValue}>
+          <EntityLabel entityId={currentValue} />
         </a> }
       </td>;
     }
 
-    if ( propertyDescription.regexp ) {
-      params.pattern = propertyDescription.regexp;
-    }
-
-    params.onChange = this.handleChange;
-    params.value = this.state.textValue;
-
+    const { selectMode } = this.state;
     return <React.Fragment>
       <td className={className} colSpan={11}>
-        <Autosuggest
-          getSuggestionValue={this.getSuggestionValue}
-          inputProps={params}
-          onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-          onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-          renderInputComponent={this.renderInput}
-          renderSuggestion={this.renderSuggestion}
-          suggestions={this.state.suggestions}
-          theme={styles} />
+        {
+          selectMode
+            ? <SelectMode datavalue={datavalue} onOtherSelect={this.handleOtherSelect} {...etc} />
+            : <AutocompleteMode datavalue={datavalue} {...etc} />
+        }
       </td>
-      <GoToWikidataButtonCell entityId={entityId} />
+      <GoToWikidataButtonCell entityId={currentValue} />
     </React.Fragment>;
   }
-
-  renderInput( inputProps ) {
-    const { datavalue } = this.props;
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "value" }] */
-    const { value, onChange, ref, ...etc } = inputProps;
-
-    if ( datavalue && datavalue.value && datavalue.value.id ) {
-      return <LocalizedWikibaseItemInput
-        {...etc}
-        entityId={datavalue.value.id}
-        inputRef={ref}
-        onChange={onChange}
-        value={this.state.textValue}
-        wikibaseItemInputRef={this.wikibaseItemInputRef} />;
-    } else {
-      return <LocalizedWikibaseItemInput
-        {...etc}
-        inputRef={ref}
-        onChange={onChange}
-        value={this.state.textValue}
-        wikibaseItemInputRef={this.wikibaseItemInputRef} />;
-    }
-  }
-
-  renderSuggestion( data ) {
-    return <Suggestion entityId={data} />;
-  }
 }
-
-const mapStateToProps = state => ( {
-  cache: state.LABELDESCRIPTIONS.cache,
-} );
-
-const WikibaseItemDataValueEditorConnected = connect( mapStateToProps )( WikibaseItemDataValueEditor );
-export default WikibaseItemDataValueEditorConnected;

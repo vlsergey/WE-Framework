@@ -4,6 +4,10 @@ td.wef_datavalue_wikibase-item_readonly {
   text-overflow: ellipsis;
 }
 
+.wef_datavalue_wikibase-item select {
+  width: 100%;
+}
+
 .wef_datavalue_wikibase-item input {
   width: 100%;
 }

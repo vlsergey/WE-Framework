@@ -1,6 +1,7 @@
 import { applyMiddleware, createStore } from 'redux';
 import assert from 'assert';
 import buildReducers from 'core/reducers';
+import P21 from '../../entities/P21';
 import P31 from '../../entities/P31';
 import PropertyDescription from 'core/PropertyDescription';
 import { Provider } from 'react-redux';
@@ -21,9 +22,71 @@ describe( 'components/dataValueEditors', () => {
 
   describe( 'WikibaseItemDataValueEditor', () => {
 
+    const p21Description = new PropertyDescription( P21 );
     const p31Description = new PropertyDescription( P31 );
 
-    it ( 'can be rendered with empty datavalue', () => {
+    it ( 'can be rendered with empty datavalue for property with limited options and can be changed', () => {
+      const datavalue = {};
+      const onDataValueChange = newDataValue => {
+        console.log( 'TEST: onDataValueChange( ' + JSON.stringify( newDataValue ) + ' )' );
+        Object.keys( datavalue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
+        Object.keys( newDataValue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
+      };
+
+      const rendered = ReactTestUtils.renderIntoDocument(
+        <Provider store={store}>
+          <WikibaseItemDataValueEditor
+            datavalue={datavalue}
+            onDataValueChange={onDataValueChange}
+            propertyDescription={p21Description} />
+        </Provider>
+      );
+      assert.ok( rendered );
+
+      const select = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'select' );
+      assert.ok( select );
+      assert.equal( select.value, '' );
+
+      select.value = 'Q6581072';
+      ReactTestUtils.Simulate.change( select );
+      assert( datavalue.value.id, 'Q6581072' );
+    } );
+
+    it ( 'can be rendered with non-empty datavalue for property with limited options and can be changed', () => {
+      const datavalue = {
+        value: {
+          'entity-type': 'item',
+          'numeric-id': 6581072,
+          'id': 'Q6581072',
+        },
+        type: 'wikibase-entityid',
+      };
+      const onDataValueChange = newDataValue => {
+        console.log( 'TEST: onDataValueChange( ' + JSON.stringify( newDataValue ) + ' )' );
+        Object.keys( datavalue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
+        Object.keys( newDataValue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
+      };
+
+      const rendered = ReactTestUtils.renderIntoDocument(
+        <Provider store={store}>
+          <WikibaseItemDataValueEditor
+            datavalue={datavalue}
+            onDataValueChange={onDataValueChange}
+            propertyDescription={p21Description} />
+        </Provider>
+      );
+      assert.ok( rendered );
+
+      const select = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'select' );
+      assert.ok( select );
+      assert.equal( select.value, 'Q6581072' );
+
+      select.value = 'Q6581097';
+      ReactTestUtils.Simulate.change( select );
+      assert( datavalue.value.id, 'Q6581097' );
+    } );
+
+    it ( 'can be rendered with empty datavalue for generic property', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <WikibaseItemDataValueEditor

@@ -140,6 +140,19 @@ export default class PropertyDescription {
       this.urlFormatters = [];
     }
 
+    const oneOfConstrains = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', 'Q21510859' );
+    if ( oneOfConstrains ) {
+      const oneOfSnaks =
+        [ oneOfConstrains.qualifiers ].filter( ok )
+          .flatMap( qualifiers => qualifiers.P2305 ).filter( ok );
+
+      this.oneOf = oneOfSnaks
+        .filter( qualifier => qualifier.snaktype === 'value' )
+        .map( qualifier => qualifier.datavalue ).filter( ok )
+        .map( datavalue => datavalue.value ).filter( ok )
+        .map( value => value.id ).filter( ok );
+    }
+
     const unitRestriction = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', 'Q21514353' );
     if ( unitRestriction ) {
       const quantityUnitsSnaks =
