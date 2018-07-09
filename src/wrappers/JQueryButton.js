@@ -10,11 +10,12 @@ export default class JQueryButton extends PureComponent {
     icon: PropTypes.string,
     label: PropTypes.string,
     text: PropTypes.bool,
+    title: PropTypes.string,
   };
 
   render() {
     // opimize JQuery alike behavious by direct rendering into HTML
-    const { disabled, className, icon, label, onClick, text } = this.props;
+    const { disabled, className, icon, label, onClick, text, title } = this.props;
 
     const cn = [ 'ui-button', 'ui-widget', 'ui-state-default', 'ui-corner-all' ];
     if ( disabled ) { cn.push( 'ui-button-disabled' ); cn.push( 'ui-state-disabled' ); }
@@ -26,7 +27,7 @@ export default class JQueryButton extends PureComponent {
       className={cn.join( ' ' )}
       onClick={onClick}
       role="button"
-      title={label}>
+      title={title || label}>
       { icon && <span className={'ui-button-icon-primary ui-icon ' + ( icon || '' )} />}
       <span className="ui-button-text">{label}</span>
     </button>;

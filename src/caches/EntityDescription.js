@@ -2,6 +2,10 @@ import React, { PureComponent } from 'react';
 import LabelDescriptionProvider from './LabelDescriptionProvider';
 import PropTypes from 'prop-types';
 
+export function constructDescription( labelDescription ) {
+  return labelDescription ? labelDescription.description : null;
+}
+
 export default class EntityLabel extends PureComponent {
 
   static propTypes ={
@@ -14,7 +18,7 @@ export default class EntityLabel extends PureComponent {
       return null;
 
     return <LabelDescriptionProvider entityId={entityId}>
-      {labelDescription => ( labelDescription ? labelDescription.description : null ) || null }
+      {constructDescription}
     </LabelDescriptionProvider>;
   }
 

@@ -2,6 +2,17 @@ import React, { PureComponent } from 'react';
 import LabelDescriptionProvider from './LabelDescriptionProvider';
 import PropTypes from 'prop-types';
 
+export function constructLabel( entityId, labelDescription, appendEntityId ) {
+  if ( !labelDescription || !labelDescription.label )
+    return entityId;
+
+  let result = labelDescription.label;
+  if ( appendEntityId ) {
+    result += ' (' + entityId + ')';
+  }
+  return result;
+}
+
 export default class EntityLabel extends PureComponent {
 
   static propTypes ={
@@ -19,16 +30,7 @@ export default class EntityLabel extends PureComponent {
       return null;
 
     return <LabelDescriptionProvider entityId={entityId}>
-      {labelDescription => {
-        if ( !labelDescription || !labelDescription.label )
-          return entityId;
-
-        let result = labelDescription.label;
-        if ( appendEntityId ) {
-          result += ' (' + entityId + ')';
-        }
-        return result;
-      }}
+      {labelDescription => constructLabel( entityId, labelDescription, appendEntityId )}
     </LabelDescriptionProvider>;
   }
 
