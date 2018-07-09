@@ -7,6 +7,8 @@ import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import styles from './ClaimsWithQualifiers.css';
 
+const QUALIFIER_COLUMNS_WIDTH = [ '0%', '33%', '25%', '20%', '17%' ];
+
 export default class ClaimsWithQualifiersTable extends PureComponent {
 
   static propTypes = {
@@ -53,10 +55,14 @@ export default class ClaimsWithQualifiersTable extends PureComponent {
     return <table className={styles.claims_with_qualifiers}>
       <thead>
         <tr>
-          <th colSpan={18}>{propertyDescription.label || propertyDescription.id}</th>
-          { columns.map( column => <th key={column}>
-            <EntityLabel entityId={column} />
-          </th> ) }
+          <th colSpan={18} key="_mainsnak">
+            {propertyDescription.label || propertyDescription.id}
+          </th>
+          { columns.map( column =>
+            <th key={column} width={QUALIFIER_COLUMNS_WIDTH[ columns.length ]}>
+              <EntityLabel entityId={column} />
+            </th>
+          ) }
         </tr>
       </thead>
       <tbody className={styles.wef_property_editor_tbody}>{children}</tbody>
