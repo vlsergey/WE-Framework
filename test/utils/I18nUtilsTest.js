@@ -1,4 +1,4 @@
-import * as I18nUtils from '../../src/utils/I18nUtils';
+import * as I18nUtils from 'utils/I18nUtils';
 import assert from 'assert';
 
 describe( 'I18nUtils', () => {
