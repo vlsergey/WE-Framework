@@ -1,8 +1,8 @@
 import i18n from './i18n';
 
 const editorDescription = {
-  linkTitle: i18n.linkLabel,
-  title: i18n.dialogTitle,
+  linkText: i18n.personLinkText,
+  dialogTitle: i18n.personDialogTitle,
   tabs: [
     {
       label: i18n.tabGeneral,

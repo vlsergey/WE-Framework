@@ -1,6 +1,6 @@
 const editorDescription = {
-  linkTitle: 'WEF: AdmEntity',
-  title: 'Administrative Entity',
+  linkText: 'WEF: AdmEntity',
+  dialogTitle: 'Administrative Entity',
   tabs: [
     {
       label: 'General',

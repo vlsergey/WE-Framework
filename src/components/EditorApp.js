@@ -60,7 +60,7 @@ class EditorApp extends Component {
       onBeforeClose={this.handleCloseClick}
       ref={this.dialogRef}
       tabs={description.tabs}
-      title={description.title} />;
+      title={description.dialogTitle} />;
   }
 
 }

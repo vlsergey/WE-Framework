@@ -1,6 +1,6 @@
 const editorDescription = {
-  linkTitle: 'WEF: Software',
-  title: 'Software',
+  linkText: 'WEF: Software',
+  dialogTitle: 'Software',
   tabs: [
     {
       label: 'General',

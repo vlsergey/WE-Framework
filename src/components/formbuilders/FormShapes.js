@@ -7,8 +7,8 @@ export const ChildrenContainer = {
 };
 
 export const EditorShape = {
-  linkTitle: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  dialogTitle: PropTypes.string.isRequired,
+  linkText: PropTypes.string.isRequired,
   tabs: PropTypes.arrayOf( PropTypes.shape( TabShape ) ),
 };
 

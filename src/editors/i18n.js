@@ -7,8 +7,11 @@ const en = {
   tabEducationAndScience: 'education & science',
   tabMedia: 'media',
 
-  linkLabel: 'WEF: Person',
-  dialogTitle: 'Person data — WE-Framework',
+  personLinkText: 'WEF: Person',
+  personDialogTitle: 'Person data — WE-Framework',
+
+  taxonLinkText: 'WEF: Taxon',
+  taxonDialogTitle: 'Taxon data — WE-Framework',
 
 };
 
@@ -18,8 +21,8 @@ const fr = {
   tabEducationAndScience: 'scolarité et science',
   tabMedia: 'images, sons et vidéos',
 
-  linkLabel: 'WEF : Biographie',
-  dialogTitle: 'Données biographiques — WE-Framework',
+  personLinkText: 'WEF : Biographie',
+  personDialogTitle: 'Données biographiques — WE-Framework',
 };
 
 const ru = {
@@ -28,8 +31,12 @@ const ru = {
   tabEducationAndScience: 'образование и наука',
   tabMedia: 'медиа',
 
-  linkLabel: 'WEF: Персона',
-  dialogTitle: 'Свойства персоны — WE-Framework',
+  personLinkText: 'WEF: Персона',
+  personDialogTitle: 'Свойства персоны — WE-Framework',
+
+  taxonLinkText: 'WEF: Таксон',
+  taxonDialogTitle: 'Свойства таксона — WE-Framework',
+
 };
 
 const translations = { en, fr, ru };

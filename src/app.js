@@ -8,12 +8,11 @@ import MovieEditorTemplate from './editors/MovieEditorTemplate';
 import { onEditorLinkClick } from './core/edit';
 import PersonEditorTemplate from './editors/PersonEditorTemplate';
 import SoftwareEditorTemplate from './editors/SoftwareEditorTemplate';
+import TaxonEditorTemplate from './editors/TaxonEditorTemplate';
 
 mw.loader.using( [ //
-  'jquery.ui.autocomplete', //
   'jquery.ui.dialog', //
   'jquery.ui.tabs', //
-  'jquery.ui.tooltip', //
   'jquery.uls.data', //
   'mediawiki.ForeignApi',
 ], () => {
@@ -25,16 +24,17 @@ mw.loader.using( [ //
   settings.registerEditor( MovieEditorTemplate );
   settings.registerEditor( PersonEditorTemplate );
   settings.registerEditor( SoftwareEditorTemplate );
+  settings.registerEditor( TaxonEditorTemplate );
 
   if ( mw.config.get( 'wgArticleId' ) ) {
     getEntityIdDeferred().then( entityId => {
 
       settings.getEnabledEditors().forEach( editorDescription => {
         expect( editorDescription ).toBeAn( 'object' );
-        expect( editorDescription.linkTitle ).toBeA( 'string' );
+        expect( editorDescription.linkText ).toBeA( 'string' );
 
         const editorLeftMenuLink = $( document.createElement( 'a' ) )
-          .text( editorDescription.linkTitle )
+          .text( editorDescription.linkText )
           .click( () => {
             onEditorLinkClick( editorDescription, entityId );
           } );
@@ -46,7 +46,7 @@ mw.loader.using( [ //
   }
 
   const leftMenuLink = $( document.createElement( 'a' ) )
-    .text( settings.linkTitle )
+    .text( settings.linkText )
     .click( () => {
       settings.start();
     } );

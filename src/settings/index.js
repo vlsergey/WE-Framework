@@ -4,14 +4,14 @@ import i18n from './i18n';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-export const { linkTitle } = i18n;
+export const { linkText } = i18n;
 
 const editors = [];
 
 export function registerEditor( editorDescription ) {
   expect( editorDescription ).toBeAn( 'object' );
-  expect( editorDescription.linkTitle ).toBeA( 'string' );
-  expect( editorDescription.title ).toBeA( 'string' );
+  expect( editorDescription.dialogTitle ).toBeA( 'string' );
+  expect( editorDescription.linkText ).toBeA( 'string' );
   expect( editorDescription.tabs ).toBeAn( 'array' );
 
   editors.push( editorDescription );
