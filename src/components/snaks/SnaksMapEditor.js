@@ -8,6 +8,7 @@ import SnaksArrayEditor from './SnaksArrayEditor';
 export default class SnaksMapEditor extends PureComponent {
 
   static propTypes = {
+    ignorePropertyIds: PropTypes.arrayOf( PropTypes.string ),
     onSnaksMapUpdate: PropTypes.func.isRequired,
     snaksMap: PropTypes.object,
     readOnly: PropTypes.bool,
@@ -16,6 +17,7 @@ export default class SnaksMapEditor extends PureComponent {
   }
 
   static defaultProps = {
+    ignorePropertyIds: [],
     readOnly: false,
   }
 
@@ -29,11 +31,12 @@ export default class SnaksMapEditor extends PureComponent {
   }
 
   render() {
-    const { readOnly, removeButtonLabel, removeButtonConfirmMessageF, snaksMap } = this.props;
+    const { ignorePropertyIds, readOnly, removeButtonLabel, removeButtonConfirmMessageF, snaksMap } = this.props;
 
     if ( !snaksMap ) return null;
 
-    const propertyIds = Object.keys( snaksMap );
+    const propertyIds = Object.keys( snaksMap )
+      .filter( propertyId => ignorePropertyIds.indexOf( propertyId ) === -1 );
     return <PropertyDescriptionsProvider propertyIds={propertyIds}>
       {cache => propertyIds.map( propertyId => {
         const propertyDescription = cache[ propertyId ];

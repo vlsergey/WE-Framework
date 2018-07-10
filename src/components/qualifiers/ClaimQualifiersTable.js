@@ -113,9 +113,7 @@ export default class ClaimQualifiersTable extends PureComponent {
     const { addQualifierMode, hiddenBehindLabel } = this.state;
 
     const qualifiers = claim.qualifiers || {};
-    const qualifierPropertyIds = Object.keys( qualifiers )
-      .filter( qualifier => disabledQualifiers.indexOf( qualifier ) === -1 );
-    const alreadyPresentQualifiers = qualifierPropertyIds
+    const alreadyPresentQualifiers = Object.keys( qualifiers )
       .filter( propertyId => qualifiers[ propertyId ].length > 0 );
 
     return <table
@@ -123,6 +121,7 @@ export default class ClaimQualifiersTable extends PureComponent {
       onClick={this.showFromBehindLabel}>
       <SnaksMapEditor
         addButtonLabel={i18n.buttonLabelAddQualifier}
+        ignorePropertyIds={disabledQualifiers}
         onSnaksMapUpdate={this.handleQualifiersUpdate}
         readOnly={hiddenBehindLabel}
         removeButtonConfirmMessageF={this.removeButtonConfirmMessageF}
