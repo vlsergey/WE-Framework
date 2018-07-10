@@ -30,10 +30,7 @@ export default class SnakTableRow extends PureComponent {
     // TODO: looks ugly, inline and cleanup this
     return <AnimatedTr>
       {firstCell}
-      { displayLabel && <PropertyLabelCell
-        description={propertyDescription.description}
-        label={propertyDescription.label}
-        propertyId={propertyDescription.id} /> }
+      { displayLabel && <PropertyLabelCell propertyDescription={propertyDescription} /> }
       <SnakEditorTableRowPart
         onSnakChange={onSnakChange}
         propertyDescription={propertyDescription}

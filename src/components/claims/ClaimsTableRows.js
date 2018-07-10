@@ -82,10 +82,7 @@ export default class ClaimsTableRows extends PureComponent {
         <SelectRankButtonCell onChange={this.handleRankChange} value={claim.rank} />
         <FlagCell flagImage={flagImage} />
         { displayLabel
-          ? <PropertyLabelCell
-            description={propertyDescription.description}
-            label={propertyDescription.label}
-            propertyId={propertyDescription.id} />
+          ? <PropertyLabelCell propertyDescription={propertyDescription} />
           : <td />
         }
         <QualifierSelectButtonCell

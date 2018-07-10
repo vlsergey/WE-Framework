@@ -232,7 +232,7 @@ export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS'
       action: 'wbgetentities',
       languages: API_PARAMETER_LANGUAGES,
       languagefallback: true,
-      props: 'claims|datatype|labels',
+      props: 'claims|datatype|labels|descriptions',
       ids: cacheKeys.join( '|' ),
     } ),
   result => {
