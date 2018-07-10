@@ -5,7 +5,7 @@ import PropertyLabelCell from 'components/PropertyLabelCell';
 import PropTypes from 'prop-types';
 import SnakEditorTableRowPart from 'components/SnakEditorTableRowPart';
 
-export default class ClaimQualifierTableRow extends PureComponent {
+export default class SnakTableRow extends PureComponent {
 
   static TABLE_COLUMNS = 2 + SnakEditorTableRowPart.TABLE_COLUMNS;
 
@@ -13,10 +13,10 @@ export default class ClaimQualifierTableRow extends PureComponent {
     firstCell: PropTypes.node.isRequired,
     displayLabel: PropTypes.bool,
     lastCell: PropTypes.node.isRequired,
-    onQualifierChange: PropTypes.func.isRequired,
+    onSnakChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-    qualifier: PropTypes.object.isRequired,
     readOnly: PropTypes.bool,
+    snak: PropTypes.object.isRequired,
   }
 
   static defaultProps = {
@@ -25,7 +25,7 @@ export default class ClaimQualifierTableRow extends PureComponent {
   }
 
   render() {
-    const { firstCell, displayLabel, lastCell, onQualifierChange, propertyDescription, qualifier, readOnly } = this.props;
+    const { firstCell, displayLabel, lastCell, onSnakChange, propertyDescription, snak, readOnly } = this.props;
 
     // TODO: looks ugly, inline and cleanup this
     return <AnimatedTr>
@@ -35,10 +35,10 @@ export default class ClaimQualifierTableRow extends PureComponent {
         label={propertyDescription.label}
         propertyId={propertyDescription.id} /> }
       <SnakEditorTableRowPart
-        onSnakChange={onQualifierChange}
+        onSnakChange={onSnakChange}
         propertyDescription={propertyDescription}
         readOnly={readOnly}
-        snak={qualifier} />
+        snak={snak} />
       {lastCell}
     </AnimatedTr>;
   }

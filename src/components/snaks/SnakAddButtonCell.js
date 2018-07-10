@@ -3,7 +3,7 @@ import ButtonCell from 'components/ButtonCell';
 import i18n from './i18n';
 import PropTypes from 'prop-types';
 
-export default class QualifierAddButtonCell extends PureComponent {
+export default class SnakAddButtonCell extends PureComponent {
 
   static propTypes = {
     disabled: PropTypes.bool,
@@ -20,7 +20,7 @@ export default class QualifierAddButtonCell extends PureComponent {
     return <ButtonCell
       disabled={disabled}
       icon="ui-icon-plus"
-      label={i18n.buttonAddQualifier}
+      label={i18n.buttonLabelAdd}
       onClick={onClick} />;
   }
 

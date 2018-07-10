@@ -3,6 +3,9 @@ import * as I18nUtils from 'utils/I18nUtils';
 const en = {
 
   buttonTitleReferences: 'View and edit references (sources) of the claim',
+  buttonTitleRemoveQualifier: 'Remove reference property value',
+
+  confirmRemoveSnakTemplate: 'Remove reference property „{snakPropertyLabel}“ ({snakPropertyId}) value?',
 
   dialogTitle: 'View and edit references (sources) of the claim — WE-Framework',
 
@@ -20,6 +23,9 @@ const en = {
 const ru = {
 
   buttonTitleReferences: 'Просмотр и редактирование источников для утверждения',
+  buttonTitleRemoveQualifier: 'Удалить значение свойства для источника',
+
+  confirmRemoveSnakTemplate: 'Удалить значение свойства «{snakPropertyLabel}» ({snakPropertyId}) источника?',
 
   dialogTitle: 'Просмотр и редактирование источников для утверждения — WE-Framework',
 

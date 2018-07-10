@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
 import generateRandomString from 'utils/generateRandomString';
-import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
+import i18n from './i18n';
 import PropTypes from 'prop-types';
 import ReferencePropertySelect from './ReferencePropertySelect';
-import ReferencePropertySnaksEditor from './ReferencePropertySnaksEditor';
+import SnaksMapEditor from 'components/snaks/SnaksMapEditor';
 import styles from './references.css';
 
 export default class ClaimReferenceEditor extends PureComponent {
@@ -51,30 +51,32 @@ export default class ClaimReferenceEditor extends PureComponent {
     } );
   }
 
+  handleSnaksMapUpdate( snaks ) {
+    this.props.onReferenceChange( {
+      ...this.props.reference,
+      snaks,
+    } );
+  }
+
+  removeButtonConfirmMessageF( snakPropertyDescription ) {
+    return i18n.confirmRemoveSnakTemplate
+      .replace( '{snakPropertyId}', snakPropertyDescription.id )
+      .replace( '{snakPropertyLabel}', snakPropertyDescription.label || snakPropertyDescription.id );
+  }
+
   render() {
     const { reference } = this.props;
     const snaks = reference.snaks || {};
     const propertyIds = Object.keys( snaks );
 
     return <table className={styles.claimReferenceEditor}>
+      <SnaksMapEditor
+        addButtonLabel={i18n.buttonLabelAddQualifier}
+        onSnaksMapUpdate={this.handleSnaksMapUpdate}
+        removeButtonConfirmMessageF={this.removeButtonConfirmMessageF}
+        removeButtonLabel={i18n.buttonTitleRemoveQualifier}
+        snaksMap={reference.snaks} />
       <tbody>
-        <PropertyDescriptionsProvider propertyIds={propertyIds}>{ cache =>
-          propertyIds.map( propertyId => {
-            const propertyDescription = cache[ propertyId ];
-            if ( !propertyDescription ) {
-              return <tr>
-                <td colSpan={99}>
-                  <i>Loading property description of {propertyId}...</i>
-                </td>
-              </tr>;
-            }
-            return <ReferencePropertySnaksEditor
-              key={propertyId}
-              onSnaksChange={this.handleSnaksChange}
-              propertyDescription={propertyDescription}
-              snaks={snaks[ propertyId ]} />;
-          } )
-        }</PropertyDescriptionsProvider>
         <tr>
           <td colSpan={99}>
             <ReferencePropertySelect

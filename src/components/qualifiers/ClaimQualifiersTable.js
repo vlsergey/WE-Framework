@@ -1,15 +1,14 @@
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
 import { Claim } from 'model/Shapes';
-import ClaimQualifiersTBody from './ClaimQualifiersTBody';
-import ClaimQualifierTableRow from './ClaimQualifierTableRow';
 import expect from 'expect';
 import generateRandomString from 'utils/generateRandomString';
+import i18n from './i18n';
 import NewQualifierAutosuggest from './NewQualifierAutosuggest';
 import NewQualifierSelect from './NewQualifierSelect';
 import PropertyDescription from 'core/PropertyDescription';
-import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
+import SnaksMapEditor from 'components/snaks/SnaksMapEditor';
 import styles from './ClaimQualifiersTable.css';
 
 export default class ClaimQualifiersTable extends PureComponent {
@@ -35,7 +34,14 @@ export default class ClaimQualifiersTable extends PureComponent {
       addQualifierMode: 'HIDDEN',
     };
 
+    const { claimPropertyDescription } = this.props;
+    this.confirmRemoveQualifierTemplate = i18n.confirmRemoveQualifierTemplate
+      .replace( '{claimPropertyId}', claimPropertyDescription.id )
+      .replace( '{claimPropertyLabel}', claimPropertyDescription.label || claimPropertyDescription.id );
+
     this.handleQualifierAdd = this.handleQualifierAdd.bind( this );
+    this.handleQualifiersUpdate = this.handleQualifiersUpdate.bind( this );
+    this.removeButtonConfirmMessageF = this.removeButtonConfirmMessageF.bind( this );
     this.showFromBehindLabel = this.showFromBehindLabel.bind( this );
   }
 
@@ -87,8 +93,23 @@ export default class ClaimQualifiersTable extends PureComponent {
     } );
   }
 
+  handleQualifiersUpdate( qualifiers ) {
+    this.props.onClaimUpdate( {
+      ...this.props.claim,
+      qualifiers,
+    } );
+  }
+
+  removeButtonConfirmMessageF( qualifierPropertyDescription ) {
+    expect( qualifierPropertyDescription ).toBeA( PropertyDescription );
+
+    return this.confirmRemoveQualifierTemplate
+      .replace( '{qualifierPropertyId}', qualifierPropertyDescription.id )
+      .replace( '{qualifierPropertyLabel}', qualifierPropertyDescription.label || qualifierPropertyDescription.id );
+  }
+
   render() {
-    const { allowedQualifiers, claim, claimPropertyDescription, disabledQualifiers, onClaimUpdate } = this.props;
+    const { allowedQualifiers, claim, disabledQualifiers } = this.props;
     const { addQualifierMode, hiddenBehindLabel } = this.state;
 
     const qualifiers = claim.qualifiers || {};
@@ -100,26 +121,13 @@ export default class ClaimQualifiersTable extends PureComponent {
     return <table
       className={styles.wef_claim_qualifiers_table}
       onClick={this.showFromBehindLabel}>
-      <PropertyDescriptionsProvider propertyIds={qualifierPropertyIds}>
-        {cache => qualifierPropertyIds.map( propertyId => {
-          const propertyDescription = cache[ propertyId ];
-
-          if ( typeof propertyDescription === 'undefined' ) {
-            return <PropertyIsLoadingTBody
-              key={propertyId}
-              propertyId={propertyId} />;
-          }
-
-          expect( propertyDescription ).toBeA( PropertyDescription );
-          return <ClaimQualifiersTBody
-            claim={claim}
-            claimPropertyDescription={claimPropertyDescription}
-            key={propertyId}
-            onClaimUpdate={onClaimUpdate}
-            propertyDescription={propertyDescription}
-            readOnly={hiddenBehindLabel} />;
-        } )}
-      </PropertyDescriptionsProvider>
+      <SnaksMapEditor
+        addButtonLabel={i18n.buttonLabelAddQualifier}
+        onSnaksMapUpdate={this.handleQualifiersUpdate}
+        readOnly={hiddenBehindLabel}
+        removeButtonConfirmMessageF={this.removeButtonConfirmMessageF}
+        removeButtonLabel={i18n.buttonLabelRemoveQualifier}
+        snaksMap={qualifiers} />
       { addQualifierMode === 'SELECT' &&
         <tbody className={styles.wef_claim_new_qualifier}>
           <AnimatedTr>
@@ -144,23 +152,4 @@ export default class ClaimQualifiersTable extends PureComponent {
     </table>;
   }
 
-}
-
-class PropertyIsLoadingTBody extends PureComponent {
-
-  static propTypes = {
-    propertyId: PropTypes.string.isRequired,
-  }
-
-  render() {
-    const { propertyId } = this.props;
-
-    return <tbody key={propertyId}>
-      <tr>
-        <td colSpan={ClaimQualifierTableRow.TABLE_COLUMNS}>
-          <i>Loading property description of {propertyId}...</i>
-        </td>
-      </tr>
-    </tbody>;
-  }
 }
