@@ -99,6 +99,11 @@ export default class TimeDataValueEditor extends PureComponent {
         precision: this.state.precision || undefined,
         calendarmodel: this.state.calendarModel || undefined,
       } ),
+    } ).catch( ( code, { error } ) => {
+      // are still in sync?
+      if ( value !== this.state.text ) return;
+      this.setState( { parsing: false, error: error.info } );
+      throw new Error( error.info );
     } ).then( response => {
       // are still in sync?
       if ( value !== this.state.text ) return;
@@ -110,10 +115,8 @@ export default class TimeDataValueEditor extends PureComponent {
         type: 'time',
       } );
       this.requestRender();
-    } ).catch( ( code, { error } ) => {
-      // are still in sync?
-      if ( value !== this.state.text ) return;
-      this.setState( { parsing: false, error: error.info } );
+    } ).catch( error => {
+      mw.warn( 'Unable to parse time value: ' + error );
     } );
   }
 

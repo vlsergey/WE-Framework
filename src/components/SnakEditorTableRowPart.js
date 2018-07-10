@@ -29,10 +29,13 @@ export default class SnakEditorTableRowPart extends PureComponent {
     onSnakChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     readOnly: PropTypes.bool,
-    snak: PropTypes.shape( Shapes.Snak ).isRequired,
+    snak: PropTypes.shape( Shapes.Snak ),
   };
 
   static defaultProps = {
+    snak: {
+      snaktype: 'value',
+    },
     readOnly: false,
   }
 

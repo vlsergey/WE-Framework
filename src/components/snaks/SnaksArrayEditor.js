@@ -35,7 +35,13 @@ export default class SnaksArrayEditor extends PureComponent {
   }
 
   handleEmptySnakChange( snak ) {
-    this.props.onSnaksArrayUpdate( [ snak ] );
+    const { datatype, id } = this.props.propertyDescription;
+
+    this.props.onSnaksArrayUpdate( [ {
+      ...snak,
+      property: id,
+      datatype,
+    } ] );
   }
 
   handleSnakAdd() {
@@ -73,8 +79,14 @@ export default class SnaksArrayEditor extends PureComponent {
   }
 
   handleSnakChangeF( index ) {
+    const { datatype, id } = this.props.propertyDescription;
+
     return snak => this.props.onSnaksArrayUpdate(
-      this.props.snaksArray.map( ( item, i ) => i === index ? snak : item )
+      this.props.snaksArray.map( ( item, i ) => i === index ? {
+        ...snak,
+        property: id,
+        datatype,
+      } : item )
     );
   }
 
@@ -98,7 +110,7 @@ export default class SnaksArrayEditor extends PureComponent {
           displayLabel={displayLabels}
           firstCell={<SnakAddButtonCell onClick={this.handleSnakAddTwice} />}
           lastCell={<td />}
-          onQualifierChange={this.handleEmptySnakChange}
+          onSnakChange={this.handleEmptySnakChange}
           propertyDescription={propertyDescription}
           qualifier={{
             snaktype: 'value',

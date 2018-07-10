@@ -35,7 +35,7 @@ class PropertyClaimContainer extends PureComponent {
       return <tbody>
         <tr>
           <td colSpan={ClaimsTableBody.TABLE_COLUMNS}>
-            <ClaimsWithQualifiersTable {...this.props} />
+            <ClaimsWithQualifiersTable columns={columns} {...this.props} />
           </td>
         </tr>
       </tbody>;

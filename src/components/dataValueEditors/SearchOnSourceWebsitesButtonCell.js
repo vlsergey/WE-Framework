@@ -6,6 +6,7 @@ import { defaultMemoize } from 'reselect';
 import i18n from 'components/core.i18n';
 import PropTypes from 'prop-types';
 
+const ok = x => x !== undefined && x !== null;
 const NOOP = () => {};
 
 class SearchOnSourceWebsitesButtonCell extends PureComponent {
@@ -20,20 +21,20 @@ class SearchOnSourceWebsitesButtonCell extends PureComponent {
   memoizeUrl = defaultMemoize( ( labels, languageCodes, sourceWebsites ) => {
     const languageSet = new Set( ...languageCodes );
 
-    let qLabels = Object.values( labels )
+    let qLabels = Object.values( labels ).filter( ok )
       .filter( label => languageSet.has( label.language ) )
       .map( label => label.value )
       .filter( value => value !== undefined && value !== null && value.trim() !== '' );
 
     if ( qLabels.length === 0 ) {
-      qLabels = Object.values( labels )
+      qLabels = Object.values( labels ).filter( ok )
         .filter( label => DEFAULT_LANGUAGES.indexOf( label.language ) !== -1 )
         .map( label => label.value )
         .filter( value => value !== undefined && value !== null && value.trim() !== '' );
     }
     qLabels = [ ...new Set( qLabels ) ];
 
-    const qSites = sourceWebsites
+    const qSites = sourceWebsites.filter( ok )
       .filter( value => value !== undefined && value !== null && value.trim() !== '' )
       .map( site => 'site:' + site.trim() );
 
