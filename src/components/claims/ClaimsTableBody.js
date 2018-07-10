@@ -13,6 +13,7 @@ export default class ClaimsTableBody extends PureComponent {
   static propTypes = {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
     displayEmpty: PropTypes.bool,
+    displayLabel: PropTypes.bool,
     onClaimAdd: PropTypes.func.isRequired,
     onClaimAddTwice: PropTypes.func.isRequired,
     onClaimDelete: PropTypes.func.isRequired,
@@ -20,8 +21,13 @@ export default class ClaimsTableBody extends PureComponent {
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   };
 
+  static defaultProps = {
+    displayEmpty: true,
+    displayLabel: true,
+  }
+
   render() {
-    const { claims, displayEmpty, propertyDescription,
+    const { claims, displayEmpty, displayLabel, propertyDescription,
       onClaimAdd, onClaimAddTwice, onClaimUpdate, onClaimDelete } = this.props;
 
     let children;
@@ -31,6 +37,7 @@ export default class ClaimsTableBody extends PureComponent {
       const newClaim = newStatementClaim( propertyDescription );
       children = [ <ClaimsTableRows
         claim={newClaim}
+        displayLabel={displayLabel}
         firstCell={<ClaimAddButtonCell onClick={onClaimAddTwice} />}
         hasClaimDelete={false}
         key={newClaim.id}
@@ -40,6 +47,7 @@ export default class ClaimsTableBody extends PureComponent {
     } else {
       children = claims.map( ( claim, i ) => <ClaimsTableRows
         claim={claim}
+        displayLabel={displayLabel}
         firstCell={i == 0 ? <ClaimAddButtonCell onClick={onClaimAdd} /> : <td />}
         hasClaimDelete
         key={claim.id}

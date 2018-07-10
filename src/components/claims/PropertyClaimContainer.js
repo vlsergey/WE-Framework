@@ -12,6 +12,7 @@ class PropertyClaimContainer extends PureComponent {
   static propTypes = {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
     displayEmpty: PropTypes.bool,
+    displayLabel: PropTypes.bool,
     onClaimAdd: PropTypes.func.isRequired,
     onClaimAddTwice: PropTypes.func.isRequired,
     onClaimDelete: PropTypes.func.isRequired,
@@ -19,39 +20,28 @@ class PropertyClaimContainer extends PureComponent {
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   };
 
+  static defaultProps = {
+    displayEmpty: true,
+    displayLabel: true,
+  }
+
   columnsMemoization = claimColumnsF();
 
   render() {
-    const { claims, displayEmpty, propertyDescription,
-      onClaimAdd, onClaimAddTwice, onClaimDelete, onClaimUpdate } = this.props;
+    const { claims } = this.props;
     const columns = this.columnsMemoization( claims );
 
     if ( columns.length !== 0 ) {
       return <tbody>
         <tr>
           <td colSpan={ClaimsTableBody.TABLE_COLUMNS}>
-            <ClaimsWithQualifiersTable
-              claims={claims}
-              columns={columns}
-              displayEmpty={displayEmpty}
-              onClaimAdd={onClaimAdd}
-              onClaimAddTwice={onClaimAddTwice}
-              onClaimDelete={onClaimDelete}
-              onClaimUpdate={onClaimUpdate}
-              propertyDescription={propertyDescription} />
+            <ClaimsWithQualifiersTable {...this.props} />
           </td>
         </tr>
       </tbody>;
     }
 
-    return <ClaimsTableBody
-      claims={claims}
-      displayEmpty={displayEmpty}
-      onClaimAdd={onClaimAdd}
-      onClaimAddTwice={onClaimAddTwice}
-      onClaimDelete={onClaimDelete}
-      onClaimUpdate={onClaimUpdate}
-      propertyDescription={propertyDescription} />;
+    return <ClaimsTableBody {...this.props} />;
   }
 }
 

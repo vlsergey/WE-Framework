@@ -206,6 +206,7 @@ const editorDescription = {
       labelEntityId: 'Q20978643' /* point of view */,
       fieldsets: [
         {
+          labelEntityId: 'P102' /* member of political party */,
           fields: [
             { property: 'P102' } /* member of political party */,
           ],
@@ -244,26 +245,39 @@ const editorDescription = {
       ],
     },
 
-
     {
       labelEntityId: 'P166' /* award received */,
-      fields: [
-        { property: 'P166' } /* award received */,
+      fieldsets: [
+        {
+          labelEntityId: 'P166',
+          fields: [
+            { property: 'P166' } /* award received */,
+          ],
+        },
       ],
     },
-
 
     {
       labelEntityId: 'P1830' /* entities owned by the subject */,
-      fields: [
-        { property: 'P1830' } /* entities owned by the subject */,
+      fieldsets: [
+        {
+          labelEntityId: 'P1830' /* entities owned by the subject */,
+          fields: [
+            { property: 'P1830' } /* entities owned by the subject */,
+          ],
+        },
       ],
     },
 
     {
-      labelEntityId: 'P1343',
-      fields: [
-        { property: 'P1343' } /* described by source */,
+      labelEntityId: 'P1343' /* described by source */,
+      fieldsets: [
+        {
+          labelEntityId: 'P1343' /* described by source */,
+          fields: [
+            { property: 'P1343' } /* described by source */,
+          ],
+        },
       ],
     },
 

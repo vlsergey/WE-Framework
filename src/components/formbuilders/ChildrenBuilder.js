@@ -76,10 +76,13 @@ export default class ChildrenBuilder extends PureComponent {
   static propTypes = {
     ...ChildrenContainer,
     quickSearch: PropTypes.bool,
+    // can be used to hide claim property label
+    parentLabelEntityId: PropTypes.string,
     sortBy: PropTypes.arrayOf( PropTypes.string ),
   };
 
   static defaultProps = {
+    parentLabelEntityId: null,
     quickSearch: false,
   }
 
@@ -150,7 +153,7 @@ export default class ChildrenBuilder extends PureComponent {
     </React.Fragment>;
   }
 
-  renderField( field, propertyDescription, displayEmpty ) {
+  renderField( field, propertyDescription, props = {} ) {
     expect ( field ).toBeAn( 'object' );
     const propertyId = field.property;
     expect ( propertyId ).toBeAn( 'string',
@@ -163,12 +166,12 @@ export default class ChildrenBuilder extends PureComponent {
     }
     expect ( propertyDescription ).toBeA( PropertyDescription );
     return <PropertyClaimContainer
-      displayEmpty={displayEmpty}
+      {...props}
       propertyDescription={propertyDescription} />;
   }
 
   renderFields() {
-    const { fields, quickSearch, sortBy } = this.props;
+    const { fields, parentLabelEntityId, quickSearch, sortBy } = this.props;
     const { displayEmpty, quickSearchTerm } = this.state;
 
     if ( !fields || fields.length == 0 )
@@ -209,7 +212,10 @@ export default class ChildrenBuilder extends PureComponent {
           {
             filtered.map( field =>
               <ErrorBoundary description={'field: ' + JSON.stringify( field )} key={field.property}>
-                {this.renderField( field, cache[ field.property ], displayEmpty )}
+                {this.renderField( field, cache[ field.property ], {
+                  displayEmpty: true,
+                  displayLabel: fields.length !== 1 || parentLabelEntityId !== field.property,
+                } )}
               </ErrorBoundary>
             )
           }</table>;

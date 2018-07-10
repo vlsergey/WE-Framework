@@ -18,13 +18,18 @@ export default class ClaimsTableRows extends PureComponent {
   static TABLE_COLUMNS = 7 + SnakEditorTableRowPart.TABLE_COLUMNS;
 
   static propTypes = {
-    firstCell: PropTypes.node.isRequired,
     claim: PropTypes.shape( Claim ).isRequired,
+    displayLabel: PropTypes.bool,
+    firstCell: PropTypes.node.isRequired,
     hasClaimDelete: PropTypes.bool.isRequired,
     onClaimDelete: PropTypes.func.isRequired,
     onClaimUpdate: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
   };
+
+  static defaultProps = {
+    displayLabel: true,
+  }
 
   constructor() {
     super( ...arguments );
@@ -66,7 +71,7 @@ export default class ClaimsTableRows extends PureComponent {
 
   render() {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*" }] */
-    const { claim, firstCell, hasClaimDelete, onClaimDelete, onClaimUpdate, propertyDescription, ...other } = this.props;
+    const { claim, displayLabel, firstCell, hasClaimDelete, onClaimDelete, onClaimUpdate, propertyDescription, ...other } = this.props;
     const flagImage = propertyDescription.countryFlags && propertyDescription.countryFlags.length > 0
       ? propertyDescription.countryFlags[ 0 ]
       : null;
@@ -76,10 +81,13 @@ export default class ClaimsTableRows extends PureComponent {
         {firstCell}
         <SelectRankButtonCell onChange={this.handleRankChange} value={claim.rank} />
         <FlagCell flagImage={flagImage} />
-        <PropertyLabelCell
-          description={propertyDescription.description}
-          label={propertyDescription.label}
-          propertyId={propertyDescription.id} />
+        { displayLabel
+          ? <PropertyLabelCell
+            description={propertyDescription.description}
+            label={propertyDescription.label}
+            propertyId={propertyDescription.id} />
+          : <td />
+        }
         <QualifierSelectButtonCell
           onClick={this.handleQualifierSelect} />
         <SnakEditorTableRowPart
