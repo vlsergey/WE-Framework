@@ -17,7 +17,7 @@ export default class ClaimReferenceEditor extends PureComponent {
     super( ...arguments );
 
     this.handleReferencePropertyAdd = this.handleReferencePropertyAdd.bind( this );
-    this.handleSnaksChange = this.handleSnaksChange.bind( this );
+    this.handleSnaksMapUpdate = this.handleSnaksMapUpdate.bind( this );
   }
 
   handleReferencePropertyAdd( propertyId ) {
@@ -36,17 +36,6 @@ export default class ClaimReferenceEditor extends PureComponent {
             hash: generateRandomString(),
           },
         ],
-      },
-    } );
-  }
-
-  handleSnaksChange( propertyId, snaks ) {
-    const { onReferenceChange, reference } = this.props;
-    onReferenceChange( {
-      ...reference,
-      snaks: {
-        ...reference.snaks,
-        [ propertyId ]: snaks,
       },
     } );
   }
