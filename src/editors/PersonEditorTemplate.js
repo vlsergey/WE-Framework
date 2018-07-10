@@ -160,7 +160,7 @@ const editorDescription = {
           ],
         },
         {
-          labelEntityId: 'P463',
+          labelEntityId: 'P39',
           fields: [
             { property: 'P39' } /* position held */,
           ],
@@ -222,26 +222,43 @@ const editorDescription = {
 
     {
       labelEntityId: 'Q349' /* sport */,
-      fieldsets: [
-        {
-          fields: [
-            { property: 'P2416' } /* sports discipline competed in */,
-            { property: 'P54' } /* member of sports team */,
-            { property: 'P413' } /* position played on team */,
-            { property: 'P423' } /* shooting handedness */,
-            { property: 'P741' } /* playing hand */,
-            { property: 'P468' } /* dan/kyu rank */,
-            { property: 'P2415' } /* personal best */,
-          ],
-        },
-        {
-          fields: [
-            { property: 'P1447' } /* Sports Reference ID */,
-          ],
-        },
+      fields: [
+        { property: 'P2416' } /* sports discipline competed in */,
+        { property: 'P54' } /* member of sports team */,
+        { property: 'P413' } /* position played on team */,
+        { property: 'P423' } /* shooting handedness */,
+        { property: 'P741' } /* playing hand */,
+        { property: 'P468' } /* dan/kyu rank */,
+        { property: 'P2415' } /* personal best */,
       ],
     },
 
+    {
+      labelEntityId: 'Q11042' /* culture */,
+      fields: [
+        { property: 'P135' } /* movement */,
+        { property: 'P412' } /* voice type */,
+        { property: 'P1303' } /* instrument */,
+        { property: 'P800' } /* notable works */,
+        { property: 'P358' } /* discography */,
+      ],
+    },
+
+
+    {
+      labelEntityId: 'P166' /* award received */,
+      fields: [
+        { property: 'P166' } /* award received */,
+      ],
+    },
+
+
+    {
+      labelEntityId: 'P1830' /* entities owned by the subject */,
+      fields: [
+        { property: 'P1830' } /* entities owned by the subject */,
+      ],
+    },
 
     {
       labelEntityId: 'P1343',
@@ -250,69 +267,6 @@ const editorDescription = {
       ],
     },
 
-    // {
-    //   labelEntityId: 'Q1415395' /* film industry */,
-    //   specials: [
-    //     { type: 'SparqlPropertyGroup',
-    //       sparql: 'SELECT ?property '
-    //                 + 'WHERE { '
-    //                 + '?property wdt:P31 wd:Q19595382 . '
-    //                 + '?property wdt:P31 wd:Q22964274 . '
-    //                 + '?property wikibase:propertyType wikibase:ExternalId . '
-    //                 + '}' },
-    //   ],
-    // },
-    // {
-    //   labelEntityId: 'Q638' /* music */,
-    //   specials: [
-    //     { type: 'SparqlPropertyGroup',
-    //       sparql: 'SELECT ?property '
-    //                 + 'WHERE { '
-    //                 + '?property wdt:P31 wd:Q19595382 . '
-    //                 + '?property wdt:P31 wd:Q27525351 . '
-    //                 + '?property wikibase:propertyType wikibase:ExternalId . '
-    //                 + '}' },
-    //   ],
-    // },
-    // {
-    //   labelEntityId: 'Q6576792' /* online community */,
-    //   specials: [
-    //     { type: 'SparqlPropertyGroup',
-    //       sparql: 'SELECT ?property '
-    //                 + 'WHERE { '
-    //                 + '?property wdt:P31 wd:Q19595382 . '
-    //                 + '?property wdt:P31 wd:Q30041186 . '
-    //                 + '?property wikibase:propertyType wikibase:ExternalId . '
-    //                 + '}' },
-    //   ],
-    // },
-    // {
-    //   labelEntityId: 'Q349' /* sport */,
-    //   specials: [
-    //     { type: 'SparqlPropertyGroup',
-    //       sparql: 'SELECT ?property '
-    //                 + 'WHERE { '
-    //                 + '?property wdt:P31 wd:Q19595382 . '
-    //                 + '?property wdt:P31 wd:Q21818626 . '
-    //                 + '?property wikibase:propertyType wikibase:ExternalId . '
-    //                 + '}' },
-    //   ],
-    // },
-    // {
-    //   labelEntityId: 'Q36524' /* authority control */,
-    //   specials: [
-    //     { type: 'SparqlPropertyGroup',
-    //       sparql: 'SELECT ?property '
-    //                 + 'WHERE { '
-    //                 + '?property wdt:P31 wd:Q19595382 . '
-    //                 + 'MINUS {?property wdt:P31 wd:Q22964274} . '
-    //                 + 'MINUS {?property wdt:P31 wd:Q27525351} . '
-    //                 + 'MINUS {?property wdt:P31 wd:Q30041186} . '
-    //                 + 'MINUS {?property wdt:P31 wd:Q21818626} . '
-    //                 + '?property wikibase:propertyType wikibase:ExternalId . '
-    //                 + '}' },
-    //   ],
-    // },
   ],
 };
 
