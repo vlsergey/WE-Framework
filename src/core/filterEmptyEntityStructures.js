@@ -32,7 +32,7 @@ function filterEmptyClaims( claims ) {
           return claim;
 
         const newQualifiers = filterSnaksMap( claim.qualifiers );
-        if ( typeof oldQualifiers !== 'object' || Object.keys( newQualifiers ) === 0 ) {
+        if ( typeof newQualifiers !== 'object' || Object.keys( newQualifiers ) === 0 ) {
           const newClaim = { ...claim };
           delete newClaim.qualifiers;
           return newClaim;
