@@ -1,3 +1,6 @@
+import expect from 'expect';
+
+const ok = x => typeof x !== 'undefined' && x !== null;
 
 function filterEmptyAliases( aliases ) {
   const result = {};
@@ -28,7 +31,7 @@ function filterEmptyClaims( claims ) {
         if ( typeof oldQualifiers !== 'object' )
           return claim;
 
-        const newQualifiers = filterEmptyQualifiers( claim.qualifiers );
+        const newQualifiers = filterSnaksMap( claim.qualifiers );
         if ( typeof oldQualifiers !== 'object' || Object.keys( newQualifiers ) === 0 ) {
           const newClaim = { ...claim };
           delete newClaim.qualifiers;
@@ -37,6 +40,27 @@ function filterEmptyClaims( claims ) {
         return {
           ...claim,
           qualifiers: newQualifiers,
+        };
+      } )
+      .map( claim => {
+        const oldReferences = claim.references;
+        if ( typeof oldReferences !== 'object' )
+          return claim;
+
+        const newReferences = claim.references.filter( ok )
+          .map( ref => {
+            const snaks = filterSnaksMap( ref.snaks );
+            if ( !snaks ) return;
+            return { ...ref, snaks };
+          } ).filter( ok );
+        if ( newReferences.length === 0 ) {
+          const newClaim = { ...claim };
+          delete newClaim.references;
+          return newClaim;
+        }
+        return {
+          ...claim,
+          references: newReferences,
         };
       } );
 
@@ -58,22 +82,28 @@ function filterEmptyLabelalikes( labelalikes ) {
   return result;
 }
 
-function filterEmptyQualifiers( qualifiers ) {
-  if ( typeof qualifiers === 'undefined' )
+function filterSnaksMap( snaksMap ) {
+  if ( typeof snaksMap === 'undefined' )
     return undefined;
+  expect( snaksMap ).toBeAn( 'object' );
 
   const result = {};
-  Object.keys( qualifiers ).forEach( propertyId => {
-    if ( !Array.isArray( qualifiers[ propertyId ] ) )
-      return;
+  let resultIsEmpty = true;
+  Object.keys( snaksMap )
+    .forEach( propertyId => {
+      if ( !Array.isArray( snaksMap[ propertyId ] ) )
+        return;
 
-    const propertyQualifiers = qualifiers[ propertyId ]
-      .filter( qualifier => !isSnakEmtpy( qualifier ) );
+      const propertySnaks = snaksMap[ propertyId ]
+        .filter( snak => !isSnakEmtpy( snak ) );
 
-    if ( propertyQualifiers.length > 0 ) {
-      result[ propertyId ] = propertyQualifiers;
-    }
-  } );
+      if ( propertySnaks.length > 0 ) {
+        result[ propertyId ] = propertySnaks;
+        resultIsEmpty = false;
+      }
+    } );
+
+  if ( resultIsEmpty ) return; // undefined
   return result;
 }
 
