@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
 import { Claim } from 'model/Shapes';
 import ClaimReferencesEditorDialog from './ClaimReferencesEditorDialog';
+import { defaultMemoize } from 'reselect';
+import i18n from './i18n';
 import JQueryButton from 'wrappers/JQueryButton';
 import PropTypes from 'prop-types';
 import styles from './references.css';
@@ -19,20 +21,21 @@ export default class ClaimReferencesButtonCell extends PureComponent {
       displayEditor: false,
     };
 
+    this.labelMemoize = defaultMemoize( claim => '[' + ( ( claim || {} ).references || [] ).length + ']' );
     this.handleClick = () => this.setState( { displayEditor: !this.state.displayEditor } );
   }
 
   render() {
     const { claim, onClaimUpdate } = this.props;
-    const count = ( ( claim || {} ).references || [] ).length;
 
     return <td className={styles.referencesButtonCell}>
       <JQueryButton
         className={styles.referencesButton}
         icon={null}
-        label={'[' + count + ']'}
+        label={this.labelMemoize( claim )}
         onClick={this.handleClick}
-        text />
+        text
+        title={i18n.buttonTitleReferences} />
       {this.state.displayEditor && <ClaimReferencesEditorDialog
         claim={claim}
         onClaimUpdate={onClaimUpdate}

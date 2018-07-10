@@ -2,7 +2,9 @@ import * as I18nUtils from 'utils/I18nUtils';
 
 const en = {
 
-  dialogTitle: 'View and edit references (sources) of claim — WE-Framework',
+  buttonTitleReferences: 'View and edit references (sources) of the claim',
+
+  dialogTitle: 'View and edit references (sources) of the claim — WE-Framework',
 
   dialogButtonAddLabel: 'Add',
   dialogButtonAddTitle: 'Add new reference to the list',
@@ -16,6 +18,8 @@ const en = {
 };
 
 const ru = {
+
+  buttonTitleReferences: 'Просмотр и редактирование источников для утверждения',
 
   dialogTitle: 'Просмотр и редактирование источников для утверждения — WE-Framework',
 
