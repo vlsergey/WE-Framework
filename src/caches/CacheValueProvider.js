@@ -24,10 +24,11 @@ class CacheValueProvider extends PureComponent {
     expect( child ).toBeA( 'function' );
 
     const { cacheKey, cache } = this.props;
-    if ( !cacheKey )
-      return child( null );
+    const result = cacheKey
+      ? child( cache[ cacheKey ] )
+      : child( null );
 
-    return child( cache[ cacheKey ] );
+    return result || null;
   }
 
   componentDidUpdate( prevProps ) {

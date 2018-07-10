@@ -3,7 +3,7 @@ import LabelDescriptionProvider from './LabelDescriptionProvider';
 import PropTypes from 'prop-types';
 
 export function constructDescription( labelDescription ) {
-  return labelDescription ? labelDescription.description : null;
+  return ( labelDescription || {} ).description || null;
 }
 
 export default class EntityLabel extends PureComponent {
