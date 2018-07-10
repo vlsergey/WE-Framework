@@ -54,6 +54,10 @@ describe( 'PropertyDescription', () => {
     assert.deepEqual( pd2044.quantityUnits, [ 'Q11573', 'Q828224', 'Q3710' ] );
   } );
 
+  it( 'Source Websites parsed ', () => {
+    assert.deepEqual( pd345.sourceWebsites, [ 'http://www.imdb.com/' ] );
+  } );
+
   it( 'Correctly format URLs', () => {
     assert.equal( pd345.formatUrl( null ), '' );
     assert.equal( pd345.formatUrl( '' ), '' );

@@ -1,0 +1,75 @@
+import React, { PureComponent } from 'react';
+import ButtonCell from 'components/ButtonCell';
+import { connect } from 'react-redux';
+import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
+import { defaultMemoize } from 'reselect';
+import i18n from 'components/core.i18n';
+import PropTypes from 'prop-types';
+
+const NOOP = () => {};
+
+class SearchOnSourceWebsitesButtonCell extends PureComponent {
+
+  static propTypes = {
+    disabled: PropTypes.bool,
+    labels: PropTypes.object,
+    languageCodes: PropTypes.arrayOf( PropTypes.string ).isRequired,
+    sourceWebsites: PropTypes.arrayOf( PropTypes.string ).isRequired,
+  }
+
+  memoizeUrl = defaultMemoize( ( labels, languageCodes, sourceWebsites ) => {
+    const languageSet = new Set( ...languageCodes );
+
+    let qLabels = Object.values( labels )
+      .filter( label => languageSet.has( label.language ) )
+      .map( label => label.value )
+      .filter( value => value !== undefined && value !== null && value.trim() !== '' );
+
+    if ( qLabels.length === 0 ) {
+      qLabels = Object.values( labels )
+        .filter( label => DEFAULT_LANGUAGES.indexOf( label.language ) !== -1 )
+        .map( label => label.value )
+        .filter( value => value !== undefined && value !== null && value.trim() !== '' );
+    }
+    qLabels = [ ...new Set( qLabels ) ];
+
+    const qSites = sourceWebsites
+      .filter( value => value !== undefined && value !== null && value.trim() !== '' )
+      .map( site => 'site:' + site.trim() );
+
+    if ( qSites.length === 0 || qLabels === 0 ) return null;
+
+    const result = '//google.com/search?sourceid=vlsergey_wef&ie=UTF-8&q=' +
+      encodeURIComponent(
+        ( qSites.length > 1 ? '(' + qSites.join( ' OR ' ) + ')' : qSites )
+        + ' '
+        + ( qLabels.length > 1 ? '(' + qLabels.join( ' OR ' ) + ')' : qLabels )
+      );
+    return result;
+  } );
+
+  render() {
+    const { disabled, labels, languageCodes, sourceWebsites } = this.props;
+    const url = this.memoizeUrl( labels, languageCodes, sourceWebsites );
+
+    return <ButtonCell
+      disabled={disabled || !url}
+      icon="ui-icon-search"
+      label={i18n.buttonSearchOnWebsites}
+      onClick={NOOP}>
+      { children => <a href={url ? url : '#'}
+        rel="noopener noreferrer"
+        target="_blank">{children}</a>}
+    </ButtonCell>;
+  }
+
+}
+
+const EMPTY_OBJECT = {};
+
+const mapStateToProps = state => ( {
+  labels: state.entity.labels || EMPTY_OBJECT,
+} );
+
+const SearchOnSourceWebsitesButtonCellConnected = connect( mapStateToProps )( SearchOnSourceWebsitesButtonCell );
+export default SearchOnSourceWebsitesButtonCellConnected;
