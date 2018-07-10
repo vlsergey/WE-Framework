@@ -22,7 +22,7 @@ export default class ClaimReferencesButtonCell extends PureComponent {
     };
 
     this.labelMemoize = defaultMemoize( claim => '[' + ( ( claim || {} ).references || [] ).length + ']' );
-    this.handleClick = () => this.setState( { displayEditor: !this.state.displayEditor } );
+    this.handleClick = () => this.setState( state => ( { displayEditor: !state.displayEditor } ) );
   }
 
   render() {

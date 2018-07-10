@@ -138,7 +138,7 @@ export default class ChildrenBuilder extends PureComponent {
       quickSearchTerm: '',
     };
 
-    this.handleDisplayEmptyToggle = () => this.setState( { displayEmpty: !this.state.displayEmpty } );
+    this.handleDisplayEmptyToggle = () => this.setState( state => ( { displayEmpty: !state.displayEmpty } ) );
     this.handleQuickSearchTermChange = event => this.setState( { quickSearchTerm: event.target.value || '' } );
   }
 

@@ -35,9 +35,9 @@ export default class ClaimReferencesEditorContent extends PureComponent {
 
   bindLruClick( item ) {
     return () => {
-      this.setState( {
-        lru: this.state.lru.filter( i => i.key !== item.key ),
-      } );
+      this.setState( state => ( {
+        lru: state.lru.filter( i => i.key !== item.key ),
+      } ) );
       this.handleReferenceAddImpl( {
         ...item.value,
         hash: generateRandomString(),

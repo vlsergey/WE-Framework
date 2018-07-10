@@ -27,12 +27,13 @@ export default class SelectRankButtonCell extends PureComponent {
 
   constructor() {
     super( ...arguments );
-    this.handleClick = this.handleClick.bind( this );
-    this.handleChange = this.handleChange.bind( this );
 
     this.state = {
       open: false,
     };
+
+    this.handleClick = () => this.setState( state => ( { open: !state.open } ) );
+    this.handleChange = this.handleChange.bind( this );
   }
 
   handleChange( value ) {
@@ -45,12 +46,6 @@ export default class SelectRankButtonCell extends PureComponent {
       if ( onChange )
         onChange( ...arguments );
     }
-  }
-
-  handleClick() {
-    this.setState( {
-      open: !this.state.open,
-    } );
   }
 
   render() {

@@ -95,12 +95,23 @@ module.exports = {
     "react/jsx-curly-spacing": [1, {"when": "never"}],
     /* Enforce boolean attributes notation in JSX */
     "react/jsx-boolean-value": 1,
+    /* Enforce or disallow spaces inside of curly braces in JSX attributes and expressions. */
+    "react/jsx-child-element-spacing": 1,
     /* Enforce or disallow spaces around equal signs in JSX attributes */
     "react/jsx-equals-spacing": [1, "newer"],
     "react/jsx-no-bind": 1,
+    /* Prevent duplicate properties in JSX */
+    "react/jsx-no-duplicate-props": 1,
+    /* Disallow undeclared variables in JSX */
+    "react/jsx-no-undef": 1,
+    /* Disallow multiple spaces between inline JSX props */
     "react/jsx-props-no-multi-spaces": 1,
     "react/jsx-sort-props": 1,
     "react/jsx-tag-spacing": 1,
+    /* Prevent using this.state within a this.setState */
+    "react/no-access-state-in-setstate": 1,
+    /* Prevent problem with children and props.dangerouslySetInnerHTML */
+    "react/no-danger-with-children": 1,
     /* Prevent using string references */
     "react/no-string-refs": 1,
     /* Prevent this from being used in stateless functional components */

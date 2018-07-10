@@ -21,7 +21,7 @@ export default class SnakTypeSelectButtonCell extends PureComponent {
 
   constructor() {
     super( ...arguments );
-    this.handleClick = this.handleClick.bind( this );
+    this.handleClick = () => this.setState( state => ( { open: !state.open } ) );
     this.handleChange = this.handleChange.bind( this );
 
     this.state = {
@@ -39,12 +39,6 @@ export default class SnakTypeSelectButtonCell extends PureComponent {
       if ( onChange )
         onChange( ...arguments );
     }
-  }
-
-  handleClick() {
-    this.setState( {
-      open: !this.state.open,
-    } );
   }
 
   render() {
