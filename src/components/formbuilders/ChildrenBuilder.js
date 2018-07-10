@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import { ChildrenContainer } from './FormShapes';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import { defaultMemoize } from 'reselect';
-import EntityLabel from 'caches/EntityLabel';
 import ErrorBoundary from './ErrorBoundary';
 import expect from 'expect';
+import FieldsetBuilder from './FieldsetBuilder';
 import i18n from './i18n';
 import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';
 import PropertyClaimContainer from 'components/claims/PropertyClaimContainer';
@@ -217,18 +217,6 @@ export default class ChildrenBuilder extends PureComponent {
     </PropertyDescriptionsProvider>;
   }
 
-  renderFieldset( fieldset ) {
-    expect ( fieldset ).toBeAn( 'object' );
-
-    return <fieldset >
-      { fieldset.label && <legend>{fieldset.label}</legend> }
-      { fieldset.labelEntityId && <legend>
-        <EntityLabel entityId={fieldset.labelEntityId} />
-      </legend> }
-      <ChildrenBuilder {...fieldset} />
-    </fieldset>;
-  }
-
   renderFieldsets() {
     const { fieldsets } = this.props;
     if ( !fieldsets || fieldsets.length === 0 )
@@ -236,7 +224,7 @@ export default class ChildrenBuilder extends PureComponent {
 
     return fieldsets.map( ( fieldset, index ) =>
       <ErrorBoundary description={'fieldset: ' + JSON.stringify( fieldset )} key={fieldset.key || 'fieldset-' + index}>
-        {this.renderFieldset( fieldset )}
+        <FieldsetBuilder fieldset={fieldset} />
       </ErrorBoundary>
     );
   }
