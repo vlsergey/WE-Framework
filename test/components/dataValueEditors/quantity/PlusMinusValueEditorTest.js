@@ -2,6 +2,7 @@ import assert from 'assert';
 import PlusMinusValueEditor from 'components/dataValueEditors/quantity/PlusMinusValueEditor';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
+import TableTBodyTr from '../TableTBodyTr';
 
 const NOOP = () => {};
 
@@ -10,7 +11,9 @@ describe( 'components/dataValueEditors/quantity', () => {
 
     it( 'can be rendered read-only with undefined value', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <PlusMinusValueEditor onValueChange={NOOP} readOnly value={undefined} />
+        <TableTBodyTr>
+          <PlusMinusValueEditor onValueChange={NOOP} readOnly value={undefined} />
+        </TableTBodyTr>
       );
       assert.ok( rendered );
     } );
@@ -29,7 +32,9 @@ describe( 'components/dataValueEditors/quantity', () => {
         Object.keys( newValue ).forEach( key => value[ key ] = newValue[ key ] );
       };
       const rendered = ReactTestUtils.renderIntoDocument(
-        <PlusMinusValueEditor onValueChange={onValueChange} value={value} />
+        <TableTBodyTr>
+          <PlusMinusValueEditor onValueChange={onValueChange} value={value} />
+        </TableTBodyTr>
       );
       assert.ok( rendered );
 

@@ -25,7 +25,7 @@ export function newStatementClaim( propertyDescription ) {
 }
 
 export const DataValue = {
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   value: PropTypes.any,
 };
 

@@ -9,7 +9,6 @@ describe( 'caches/actions', () => {
     it( 'can extact required data from entity', () => {
 
       const result = buildStringCacheValuesFromEntity( Q30 );
-      console.log( result );
 
       assert.deepEqual( result.P17, [ 'Q30' ] );
       assert.deepEqual( result.P37, [ 'Q1860', 'Q7976' ] );

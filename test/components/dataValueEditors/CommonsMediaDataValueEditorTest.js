@@ -4,6 +4,7 @@ import P18 from '../../entities/P18';
 import PropertyDescription from 'core/PropertyDescription';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
+import TableTBodyTr from './TableTBodyTr';
 
 const NOOP = () => {};
 
@@ -15,13 +16,15 @@ describe( 'components/dataValueEditors', () => {
 
     it ( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <CommonsMediaDataValueEditor
-          datavalue={{
-            value: 'Image.jpg',
-            type: 'string',
-          }}
-          onDataValueChange={NOOP}
-          propertyDescription={p18Description} />
+        <TableTBodyTr>
+          <CommonsMediaDataValueEditor
+            datavalue={{
+              value: 'Image.jpg',
+              type: 'string',
+            }}
+            onDataValueChange={NOOP}
+            propertyDescription={p18Description} />
+        </TableTBodyTr>
       );
       assert.ok( rendered );
     } );
@@ -34,10 +37,12 @@ describe( 'components/dataValueEditors', () => {
       const onDataValueChange = newDataValue => { datavalue = newDataValue; };
 
       const rendered = ReactTestUtils.renderIntoDocument(
-        <CommonsMediaDataValueEditor
-          datavalue={datavalue}
-          onDataValueChange={onDataValueChange}
-          propertyDescription={p18Description} />
+        <TableTBodyTr>
+          <CommonsMediaDataValueEditor
+            datavalue={datavalue}
+            onDataValueChange={onDataValueChange}
+            propertyDescription={p18Description} />
+        </TableTBodyTr>
       );
       assert.ok( rendered );
 

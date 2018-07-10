@@ -1,4 +1,5 @@
 import { applyMiddleware, createStore } from 'redux';
+import assert from 'assert';
 import buildReducers from 'core/reducers';
 import ClaimReferencesEditorDialog from 'components/references/ClaimReferencesEditorDialog';
 import { Provider } from 'react-redux';
@@ -30,6 +31,7 @@ describe( 'test/components/references', () => {
                 onCloseClick={NOOP} />
             </Provider>
           );
+          assert.ok( rendered );
         } );
 
       } );

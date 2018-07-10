@@ -1,15 +1,16 @@
 import { applyMiddleware, createStore } from 'redux';
 import assert from 'assert';
 import buildReducers from 'core/reducers';
-import P21 from '../../entities/P21';
-import P31 from '../../entities/P31';
+import P21 from '../../../entities/P21';
+import P31 from '../../../entities/P31';
 import PropertyDescription from 'core/PropertyDescription';
 import { Provider } from 'react-redux';
-import Q1367759 from '../../entities/Q1367759';
+import Q1367759 from '../../../entities/Q1367759';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
 import Suggestion from 'components/dataValueEditors/wikibase-item/Suggestion';
+import TableTBodyTr from '../TableTBodyTr';
 import thunk from 'redux-thunk';
 import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
@@ -28,17 +29,18 @@ describe( 'components/dataValueEditors', () => {
     it ( 'can be rendered with empty datavalue for property with limited options and can be changed', () => {
       const datavalue = {};
       const onDataValueChange = newDataValue => {
-        console.log( 'TEST: onDataValueChange( ' + JSON.stringify( newDataValue ) + ' )' );
         Object.keys( datavalue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
         Object.keys( newDataValue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
       };
 
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <WikibaseItemDataValueEditor
-            datavalue={datavalue}
-            onDataValueChange={onDataValueChange}
-            propertyDescription={p21Description} />
+          <TableTBodyTr>
+            <WikibaseItemDataValueEditor
+              datavalue={datavalue}
+              onDataValueChange={onDataValueChange}
+              propertyDescription={p21Description} />
+          </TableTBodyTr>
         </Provider>
       );
       assert.ok( rendered );
@@ -62,17 +64,18 @@ describe( 'components/dataValueEditors', () => {
         type: 'wikibase-entityid',
       };
       const onDataValueChange = newDataValue => {
-        console.log( 'TEST: onDataValueChange( ' + JSON.stringify( newDataValue ) + ' )' );
         Object.keys( datavalue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
         Object.keys( newDataValue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
       };
 
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <WikibaseItemDataValueEditor
-            datavalue={datavalue}
-            onDataValueChange={onDataValueChange}
-            propertyDescription={p21Description} />
+          <TableTBodyTr>
+            <WikibaseItemDataValueEditor
+              datavalue={datavalue}
+              onDataValueChange={onDataValueChange}
+              propertyDescription={p21Description} />
+          </TableTBodyTr>
         </Provider>
       );
       assert.ok( rendered );
@@ -89,10 +92,12 @@ describe( 'components/dataValueEditors', () => {
     it ( 'can be rendered with empty datavalue for generic property', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <WikibaseItemDataValueEditor
-            datavalue={null}
-            onDataValueChange={NOOP}
-            propertyDescription={p31Description} />
+          <TableTBodyTr>
+            <WikibaseItemDataValueEditor
+              datavalue={null}
+              onDataValueChange={NOOP}
+              propertyDescription={p31Description} />
+          </TableTBodyTr>
         </Provider>
       );
       assert.ok( rendered );
@@ -105,17 +110,19 @@ describe( 'components/dataValueEditors', () => {
     it ( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <WikibaseItemDataValueEditor
-            datavalue={{
-              value: {
-                'entity-type': 'item',
-                'numeric-id': 35120,
-                'id': 'Q35120',
-              },
-              type: 'wikibase-entityid',
-            }}
-            onDataValueChange={NOOP}
-            propertyDescription={p31Description} />
+          <TableTBodyTr>
+            <WikibaseItemDataValueEditor
+              datavalue={{
+                value: {
+                  'entity-type': 'item',
+                  'numeric-id': 35120,
+                  'id': 'Q35120',
+                },
+                type: 'wikibase-entityid',
+              }}
+              onDataValueChange={NOOP}
+              propertyDescription={p31Description} />
+          </TableTBodyTr>
         </Provider>
       );
       assert.ok( rendered );
@@ -126,7 +133,6 @@ describe( 'components/dataValueEditors', () => {
     } );
 
     it ( 'click; type; select; clear', () => {
-      console.log( '===8<=== click; type; select; clear' );
       const datavalue = {
         value: {
           'entity-type': 'item',
@@ -136,27 +142,26 @@ describe( 'components/dataValueEditors', () => {
         type: 'wikibase-entityid',
       };
       const onDataValueChange = newDataValue => {
-        console.log( 'TEST: onDataValueChange( ' + JSON.stringify( newDataValue ) + ' )' );
         Object.keys( datavalue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
         Object.keys( newDataValue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
       };
 
       function testSuggestionsProvider( value ) {
-        console.log( 'TEST: testSuggestionsProvider(' + value + ')' );
         if ( value == '222' ) {
           return [ 'Q222111', 'Q222222' ];
         }
         return [];
       }
 
-      console.log( 'TEST: initial rendering' );
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <WikibaseItemDataValueEditor
-            datavalue={datavalue}
-            onDataValueChange={onDataValueChange}
-            propertyDescription={p31Description}
-            testSuggestionsProvider={testSuggestionsProvider} />
+          <TableTBodyTr>
+            <WikibaseItemDataValueEditor
+              datavalue={datavalue}
+              onDataValueChange={onDataValueChange}
+              propertyDescription={p31Description}
+              testSuggestionsProvider={testSuggestionsProvider} />
+          </TableTBodyTr>
         </Provider>
       );
       assert.ok( rendered );
@@ -165,11 +170,9 @@ describe( 'components/dataValueEditors', () => {
       assert.ok( input );
       assert.equal( input.value, 'Q35120' );
 
-      console.log( 'TEST: ReactTestUtils.Simulate.focus' );
       input.focus();
       ReactTestUtils.Simulate.focus( input );
 
-      console.log( 'TEST: change value: ReactTestUtils.Simulate.change' );
       input.value = '222';
       ReactTestUtils.Simulate.change( input );
 
@@ -179,14 +182,10 @@ describe( 'components/dataValueEditors', () => {
       assert.equal( suggestionComponents.length, 2 );
 
       // after click we need to see item label
-      // console.log( 'TEST: click on Suggestion: ReactTestUtils.Simulate.blur' );
-      // ReactTestUtils.Simulate.blur( input );
-      console.log( 'TEST: click on Suggestion: ReactTestUtils.Simulate.click' );
       ReactTestUtils.Simulate.click( ReactDOM.findDOMNode( suggestionComponents[ 0 ] ) );
       assert.equal( input.value, 'Q222111' );
 
       // last check -- that we can DELETE value
-      console.log( 'TEST: clear input' );
       input.value = '';
       ReactTestUtils.Simulate.change( input );
 

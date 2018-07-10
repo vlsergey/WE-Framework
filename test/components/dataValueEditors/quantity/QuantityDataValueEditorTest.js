@@ -11,6 +11,7 @@ import { Provider } from 'react-redux';
 import Q1367759 from '../../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
+import TableTBodyTr from '../TableTBodyTr';
 import thunk from 'redux-thunk';
 
 const NOOP = () => {};
@@ -27,9 +28,11 @@ describe( 'components/dataValueEditors/quantity', () => {
     it ( 'can be rendered with undefined datavalue', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <QuantityDataValueEditor
-            onDataValueChange={NOOP}
-            propertyDescription={p1971Description} />
+          <TableTBodyTr>
+            <QuantityDataValueEditor
+              onDataValueChange={NOOP}
+              propertyDescription={p1971Description} />
+          </TableTBodyTr>
         </Provider>
       );
       assert.ok( rendered );
@@ -38,10 +41,12 @@ describe( 'components/dataValueEditors/quantity', () => {
     it ( 'can be rendered with null datavalue', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <QuantityDataValueEditor
-            datavalue={null}
-            onDataValueChange={NOOP}
-            propertyDescription={p1971Description} />
+          <TableTBodyTr>
+            <QuantityDataValueEditor
+              datavalue={null}
+              onDataValueChange={NOOP}
+              propertyDescription={p1971Description} />
+          </TableTBodyTr>
         </Provider>
       );
       assert.ok( rendered );
@@ -77,10 +82,12 @@ describe( 'components/dataValueEditors/quantity', () => {
 
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <QuantityDataValueEditor
-            datavalue={datavalue}
-            onDataValueChange={NOOP}
-            propertyDescription={p1971Description} />
+          <TableTBodyTr>
+            <QuantityDataValueEditor
+              datavalue={datavalue}
+              onDataValueChange={NOOP}
+              propertyDescription={p1971Description} />
+          </TableTBodyTr>
         </Provider>
       );
       assert.ok( rendered );
@@ -105,9 +112,11 @@ describe( 'components/dataValueEditors/quantity', () => {
     it ( 'with empty value can change to any mode and back', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <QuantityDataValueEditor
-            onDataValueChange={NOOP}
-            propertyDescription={p1971Description} />
+          <TableTBodyTr>
+            <QuantityDataValueEditor
+              onDataValueChange={NOOP}
+              propertyDescription={p1971Description} />
+          </TableTBodyTr>
         </Provider>
       );
       assert.ok( rendered );
@@ -130,12 +139,14 @@ describe( 'components/dataValueEditors/quantity', () => {
         Object.keys( newDataValue.value ).forEach( key => datavalue.value[ key ] = newDataValue.value[ key ] );
       };
 
-      const rendered = ReactTestUtils.renderIntoDocument( <Provider store={store}><table><tbody><tr>
-        <QuantityDataValueEditor
-          datavalue={datavalue}
-          onDataValueChange={onDataValueChange}
-          propertyDescription={p1971Description} />
-      </tr></tbody></table></Provider> );
+      const rendered = ReactTestUtils.renderIntoDocument( <Provider store={store}>
+        <TableTBodyTr>
+          <QuantityDataValueEditor
+            datavalue={datavalue}
+            onDataValueChange={onDataValueChange}
+            propertyDescription={p1971Description} />
+        </TableTBodyTr>
+      </Provider> );
       assert.ok( rendered );
 
       // switch to plus-minus

@@ -4,6 +4,7 @@ import P18 from '../../entities/P18';
 import PropertyDescription from 'core/PropertyDescription';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
+import TableTBodyTr from './TableTBodyTr';
 
 const NOOP = () => {};
 
@@ -15,16 +16,18 @@ describe( 'components/dataValueEditors', () => {
 
     it ( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <MonolingualTextDataValueEditor
-          datavalue={{
-            value: {
-              language: 'en',
-              text: 'TestText',
-            },
-            type: 'monolingualtext',
-          }}
-          onDataValueChange={NOOP}
-          propertyDescription={p18Description} />
+        <TableTBodyTr>
+          <MonolingualTextDataValueEditor
+            datavalue={{
+              value: {
+                language: 'en',
+                text: 'TestText',
+              },
+              type: 'monolingualtext',
+            }}
+            onDataValueChange={NOOP}
+            propertyDescription={p18Description} />
+        </TableTBodyTr>
       );
       assert.ok( rendered );
 
@@ -40,10 +43,12 @@ describe( 'components/dataValueEditors', () => {
       const onDataValueChange = newDataValue => { datavalue = newDataValue; };
 
       const rendered = ReactTestUtils.renderIntoDocument(
-        <MonolingualTextDataValueEditor
-          datavalue={datavalue}
-          onDataValueChange={onDataValueChange}
-          propertyDescription={p18Description} />
+        <TableTBodyTr>
+          <MonolingualTextDataValueEditor
+            datavalue={datavalue}
+            onDataValueChange={onDataValueChange}
+            propertyDescription={p18Description} />
+        </TableTBodyTr>
       );
       assert.ok( rendered );
 
@@ -71,10 +76,12 @@ describe( 'components/dataValueEditors', () => {
       const onDataValueChange = newDataValue => { datavalue = newDataValue; };
 
       const rendered = ReactTestUtils.renderIntoDocument(
-        <MonolingualTextDataValueEditor
-          datavalue={datavalue}
-          onDataValueChange={onDataValueChange}
-          propertyDescription={p18Description} />
+        <TableTBodyTr>
+          <MonolingualTextDataValueEditor
+            datavalue={datavalue}
+            onDataValueChange={onDataValueChange}
+            propertyDescription={p18Description} />
+        </TableTBodyTr>
       );
       assert.ok( rendered );
 

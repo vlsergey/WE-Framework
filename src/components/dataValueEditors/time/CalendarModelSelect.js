@@ -4,6 +4,8 @@ import i18n from './i18n';
 import PropTypes from 'prop-types';
 import styles from './Time.css';
 
+const EMPTY_STRING = '';
+
 export default class CalendarModelSelect extends PureComponent {
 
   static propTypes = {
@@ -30,7 +32,7 @@ export default class CalendarModelSelect extends PureComponent {
       className={styles.calendarModelSelect}
       disabled={readOnly}
       onChange={this.handleChange}
-      value={value}
+      value={value || EMPTY_STRING}
       {...other}>
       { CALENDAR_MODELS.map( calendarModel =>
         <option key={calendarModel} value={calendarModel}>

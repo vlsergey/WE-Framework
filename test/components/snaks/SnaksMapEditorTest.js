@@ -1,9 +1,9 @@
 import { applyMiddleware, createStore } from 'redux';
 import assert from 'assert';
 import buildReducers from 'core/reducers';
+import P31 from '../../entities/P31';
 import PropertyDescription from 'core/PropertyDescription';
 import { Provider } from 'react-redux';
-import P31 from '../../entities/P31';
 import Q30 from '../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
@@ -44,8 +44,8 @@ describe( 'test/components/references', () => {
         },
       } );
 
-      const snaksArrayEditor = ReactTestUtils.findRenderedComponentWithType( rendered, SnaksArrayEditor );
-      const tbody = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'tbody' );
+      ReactTestUtils.findRenderedComponentWithType( rendered, SnaksArrayEditor );
+      ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'tbody' );
     } );
 
   } );
