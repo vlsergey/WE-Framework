@@ -6,15 +6,15 @@ import { PureComponent } from 'react';
 class CacheValueProvider extends PureComponent {
 
   static propTypes = {
-    cache: PropTypes.object.isRequired,
+    cacheData: PropTypes.object.isRequired,
     cacheKey: PropTypes.string,
     children: PropTypes.func.isRequired,
     queue: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
-    const { cache, cacheKey, queue } = this.props;
-    if ( !!cacheKey && typeof cache[ cacheKey ] === 'undefined' ) {
+    const { cacheData, cacheKey, queue } = this.props;
+    if ( !!cacheKey && typeof cacheData[ cacheKey ] === 'undefined' ) {
       queue( cacheKey );
     }
   }
@@ -23,31 +23,31 @@ class CacheValueProvider extends PureComponent {
     const child = this.props.children;
     expect( child ).toBeA( 'function' );
 
-    const { cacheKey, cache } = this.props;
+    const { cacheKey, cacheData } = this.props;
     const result = cacheKey
-      ? child( cache[ cacheKey ] )
+      ? child( cacheData[ cacheKey ] )
       : child( null );
 
     return result || null;
   }
 
   componentDidUpdate( prevProps ) {
-    const { cache, cacheKey, queue } = this.props;
+    const { cacheData, cacheKey, queue } = this.props;
 
     if ( prevProps.cacheKey !== cacheKey
         && !!cacheKey
-        && typeof cache[ cacheKey ] === 'undefined' ) {
+        && typeof cacheData[ cacheKey ] === 'undefined' ) {
       queue( cacheKey );
     }
   }
 }
 
 const mapStateToProps = ( state, ownProps ) => ( {
-  cache: state[ ownProps.type ].cache,
+  cacheData: state[ ownProps.cache.type ].cache,
 } );
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {
-  queue: cacheKey => dispatch( ownProps.action( cacheKey ) ),
+  queue: cacheKey => dispatch( ownProps.cache.actionQueue( cacheKey ) ),
 } );
 
 const CacheValueProviderConnected = connect( mapStateToProps, mapDispatchToProps )( CacheValueProvider );

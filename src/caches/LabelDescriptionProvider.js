@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import CacheValueProvider from 'caches/CacheValueProvider';
-import { labelDescriptionQueue } from 'caches/actions';
+import labelDescriptionCache from './labelDescriptionCache';
 import PropTypes from 'prop-types';
 
 export default class LabelDescriptionProvider extends PureComponent {
@@ -14,9 +14,8 @@ export default class LabelDescriptionProvider extends PureComponent {
     const { children, entityId } = this.props;
 
     return <CacheValueProvider
-      action={labelDescriptionQueue}
-      cacheKey={entityId}
-      type={'LABELDESCRIPTIONS'}>
+      cache={labelDescriptionCache}
+      cacheKey={entityId}>
       {children}
     </CacheValueProvider>;
   }

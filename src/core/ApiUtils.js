@@ -76,6 +76,18 @@ export function getEntityIdDeferred() {
   return deferredEntityIdPromise;
 }
 
+function getServerApiImpl() {
+  const api = new mw.Api();
+  if ( typeof api.postWithEditToken === 'undefined' ) {
+    api.postWithEditToken = function( params, ajaxOptions ) {
+      return this.postWithToken( 'edit', params, ajaxOptions );
+    };
+  }
+  return addPromises( api );
+}
+let serverApi = null;
+export const getServerApi = () => serverApi === null ? serverApi = getServerApiImpl() : serverApi;
+
 function getCommonsApiImpl() {
   let api;
   if ( !isCommons() ) {

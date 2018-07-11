@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import { labelDescriptionQueue } from 'caches/actions';
+import labelDescriptionCache from 'caches/labelDescriptionCache';
 import PropTypes from 'prop-types';
 import WikibaseItemInput from './WikibaseItemInput';
 
@@ -57,7 +57,7 @@ const mapStateToProps = state => ( {
 } );
 
 const mapDispatchToProps = dispatch => ( {
-  queue: key => dispatch( labelDescriptionQueue( key ) ),
+  queue: key => dispatch( labelDescriptionCache.actionQueue( key ) ),
 } );
 
 const LocalizedWikibaseItemInputConnected = connect( mapStateToProps, mapDispatchToProps )( LocalizedWikibaseItemInput );

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import CacheValueProvider from 'caches/CacheValueProvider';
-import { propertiesSparqlQueueF } from 'caches/actions';
+import propertiesBySparqlCache from './propertiesBySparqlCache';
 import PropTypes from 'prop-types';
 
 export default class PropertiesBySparqlProvider extends PureComponent {
@@ -14,9 +14,8 @@ export default class PropertiesBySparqlProvider extends PureComponent {
     const { children, sparql } = this.props;
 
     return <CacheValueProvider
-      action={propertiesSparqlQueueF}
-      cacheKey={sparql}
-      type={'PROPERTIESBYSPARQL'}>
+      cache={propertiesBySparqlCache}
+      cacheKey={sparql}>
       {children}
     </CacheValueProvider>;
   }

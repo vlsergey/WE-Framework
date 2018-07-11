@@ -1,10 +1,10 @@
 import assert from 'assert';
-import { buildStringCacheValuesFromEntity } from 'caches/actions';
+import { buildStringCacheValuesFromEntity } from 'caches/stringPropertyValuesCache';
 import Q30 from '../entities/Q30';
 
-describe( 'caches/actions', () => {
+describe( 'caches', () => {
 
-  describe( 'buildStringCacheValuesFromEntity', () => {
+  describe( 'stringPropertyValuesCache', () => {
 
     it( 'can extact required data from entity', () => {
 

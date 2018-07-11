@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import CacheValueProvider from 'caches/CacheValueProvider';
-import { flagImageHtmlsQueue } from 'caches/actions';
+import flagImageHtmlCache from './flagImageHtmlCache';
 import PropTypes from 'prop-types';
 
 export default class FlagImageHtmlProvider extends PureComponent {
@@ -14,9 +14,8 @@ export default class FlagImageHtmlProvider extends PureComponent {
     const { children, fileName } = this.props;
 
     return <CacheValueProvider
-      action={flagImageHtmlsQueue}
-      cacheKey={fileName}
-      type={'FLAGIMAGEHTMLS'}>
+      cache={flagImageHtmlCache}
+      cacheKey={fileName}>
       {children}
     </CacheValueProvider>;
   }

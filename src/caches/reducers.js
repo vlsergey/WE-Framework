@@ -1,3 +1,4 @@
+import caches from './Caches';
 import expect from 'expect';
 
 const initialState = {
@@ -51,18 +52,8 @@ function cacheReducerBuilder( type ) {
 
 }
 
-export const FLAGIMAGEHTMLS = cacheReducerBuilder( 'FLAGIMAGEHTMLS' );
-export const LABELDESCRIPTIONS = cacheReducerBuilder( 'LABELDESCRIPTIONS' );
-export const PROPERTIESBYSPARQL = cacheReducerBuilder( 'PROPERTIESBYSPARQL' );
-export const PROPERTYDESCRIPTIONS = cacheReducerBuilder( 'PROPERTYDESCRIPTIONS' );
-export const STRINGPROPERTYVALUES = cacheReducerBuilder( 'STRINGPROPERTYVALUES' );
-
-const reducers = {
-  FLAGIMAGEHTMLS,
-  LABELDESCRIPTIONS,
-  PROPERTIESBYSPARQL,
-  PROPERTYDESCRIPTIONS,
-  STRINGPROPERTYVALUES,
-};
-
+const reducers = {};
+Object.keys( caches ).forEach( key => {
+  reducers[ key ] = cacheReducerBuilder( key );
+} );
 export default reducers;

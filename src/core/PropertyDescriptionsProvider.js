@@ -4,7 +4,7 @@ import deepEqual from 'deep-equal';
 import { defaultMemoize } from 'reselect';
 import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
-import { propertyDescriptionQueue } from 'caches/actions';
+import propertyDescriptionCacheController from 'caches/propertyDescriptionCache';
 import PropTypes from 'prop-types';
 import StringPropertyValuesProvider from 'caches/StringPropertyValuesProvider';
 
@@ -103,9 +103,8 @@ export default class PropertyDescriptionsProvider extends PureComponent {
     const { children, propertyIds } = this.props;
 
     return <CacheValuesProvider
-      action={propertyDescriptionQueue}
-      cacheKeys={propertyIds}
-      type={'PROPERTYDESCRIPTIONS'}>
+      cache={propertyDescriptionCacheController}
+      cacheKeys={propertyIds} >
       { propertyDescriptionCache => {
         if ( !propertyDescriptionCache )
           return children( null );
