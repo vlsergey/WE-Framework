@@ -12,6 +12,12 @@ const editorDescription = {
       fieldsets: [
         {
           fields: [
+            { property: 'P31' } /* instance of */,
+            { property: 'P18' } /* image */,
+          ],
+        },
+        {
+          fields: [
             { property: 'P50' } /* author */,
             { property: 'P767' } /* collaborator */,
             { property: 'P98' } /* editor */,
@@ -24,11 +30,6 @@ const editorDescription = {
             { property: 'P364' } /* original language */,
             { property: 'P571' } /* date of foundation or creation */,
             { property: 'P577' } /* date of publication */,
-          ],
-        },
-        {
-          fields: [
-            { property: 'P18' } /* instance of */,
           ],
         },
       ],

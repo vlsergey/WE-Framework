@@ -7,6 +7,9 @@ const en = {
   tabEducationAndScience: 'education & science',
   tabMedia: 'media',
 
+  frbrEditionLinkText: 'WEF: FRBR Edition',
+  frbrEditionDialogTitle: 'FRBR Edition data — WE-Framework',
+
   frbrWorkLinkText: 'WEF: FRBR Work',
   frbrWorkDialogTitle: 'FRBR Work data — WE-Framework',
 
@@ -34,8 +37,11 @@ const ru = {
   tabEducationAndScience: 'образование и наука',
   tabMedia: 'медиа',
 
+  frbrEditionLinkText: 'WEF: FRBR издание',
+  frbrEditionDialogTitle: 'Свойства издания (FRBR) — WE-Framework',
+
   frbrWorkLinkText: 'WEF: FRBR работа',
-  frbrWorkDialogTitle: 'Свойства работы — WE-Framework',
+  frbrWorkDialogTitle: 'Свойства работы (FRBR) — WE-Framework',
 
   personLinkText: 'WEF: Персона',
   personDialogTitle: 'Свойства персоны — WE-Framework',
