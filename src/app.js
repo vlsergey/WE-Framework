@@ -3,6 +3,7 @@ import * as settings from './settings/index';
 import AdmEntityEditorTemplate from './editors/AdmEntityEditorTemplate';
 import EntityEditorTemplate from './editors/EntityEditorTemplate';
 import expect from 'expect';
+import FrbrWorkEditorTemplate from './editors/FrbrWorkEditorTemplate';
 import { getEntityIdDeferred } from './core/ApiUtils';
 import MovieEditorTemplate from './editors/MovieEditorTemplate';
 import { onEditorLinkClick } from './core/edit';
@@ -21,6 +22,7 @@ mw.loader.using( [ //
 
   settings.registerEditor( AdmEntityEditorTemplate );
   settings.registerEditor( EntityEditorTemplate );
+  settings.registerEditor( FrbrWorkEditorTemplate );
   settings.registerEditor( MovieEditorTemplate );
   settings.registerEditor( PersonEditorTemplate );
   settings.registerEditor( SoftwareEditorTemplate );

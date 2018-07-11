@@ -7,6 +7,9 @@ const en = {
   tabEducationAndScience: 'education & science',
   tabMedia: 'media',
 
+  frbrWorkLinkText: 'WEF: FRBR Work',
+  frbrWorkDialogTitle: 'FRBR Work data — WE-Framework',
+
   personLinkText: 'WEF: Person',
   personDialogTitle: 'Person data — WE-Framework',
 
@@ -30,6 +33,9 @@ const ru = {
   tabBirthAndDeath: 'рождение и смерть',
   tabEducationAndScience: 'образование и наука',
   tabMedia: 'медиа',
+
+  frbrWorkLinkText: 'WEF: FRBR работа',
+  frbrWorkDialogTitle: 'Свойства работы — WE-Framework',
 
   personLinkText: 'WEF: Персона',
   personDialogTitle: 'Свойства персоны — WE-Framework',
