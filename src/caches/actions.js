@@ -6,6 +6,8 @@ import LabelDescription from './LabelDescription';
 import md5 from 'md5';
 import PropertyDescription from 'core/PropertyDescription';
 
+const PAUSE_BEFORE_REQUEUE = 100;
+
 function buildQueueAction( type, maxBatch,
   isKeyValidF, notifyMessageF, buildPromiceF, convertResultToEntitiesF ) {
   expect( type ).toBeAn( 'string' );
@@ -73,7 +75,7 @@ function buildQueueAction( type, maxBatch,
             type: 'CACHE_' + type + '_SET_STATE',
             state: 'WAITING',
           } );
-          setTimeout( () => dispatch( scheduleQueuing() ), 0 );
+          setTimeout( () => dispatch( scheduleQueuing() ), PAUSE_BEFORE_REQUEUE );
 
         } ).catch( error => {
           mw.notify( notifyMessage + '… Failure. See console log output for details.',
@@ -84,7 +86,7 @@ function buildQueueAction( type, maxBatch,
             type: 'CACHE_' + type + '_SET_STATE',
             state: 'WAITING',
           } );
-          setTimeout( () => dispatch( scheduleQueuing() ), 0 );
+          setTimeout( () => dispatch( scheduleQueuing() ), PAUSE_BEFORE_REQUEUE );
         } );
       }
     };
@@ -118,7 +120,7 @@ function buildQueueAction( type, maxBatch,
         } );
       }
 
-      setTimeout( () => dispatch( scheduleQueuing( ) ), 0 );
+      setTimeout( () => dispatch( scheduleQueuing( ) ), PAUSE_BEFORE_REQUEUE );
     };
   };
 

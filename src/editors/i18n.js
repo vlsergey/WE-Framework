@@ -7,6 +7,9 @@ const en = {
   tabEducationAndScience: 'education & science',
   tabMedia: 'media',
 
+  externalLinksLinkText: 'WEF: External IDs',
+  externalLinksDialogTitle: 'External IDs and links — WE-Framework',
+
   frbrEditionLinkText: 'WEF: FRBR Edition',
   frbrEditionDialogTitle: 'FRBR Edition data — WE-Framework',
 
@@ -36,6 +39,9 @@ const ru = {
   tabBirthAndDeath: 'рождение и смерть',
   tabEducationAndScience: 'образование и наука',
   tabMedia: 'медиа',
+
+  externalLinksLinkText: 'WEF: Коды и cсылки',
+  externalLinksDialogTitle: 'Внешние идентификаторы и ссылки — WE-Framework',
 
   frbrEditionLinkText: 'WEF: FRBR издание',
   frbrEditionDialogTitle: 'Свойства издания (FRBR) — WE-Framework',
