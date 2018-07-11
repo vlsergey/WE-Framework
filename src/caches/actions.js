@@ -52,24 +52,90 @@ function buildQueueAction( type, useIndexedDb, maxBatch,
     tag: 'WE-F Cache: ' + type,
   };
 
+  const queue = new Set();
   let queueState = 'WAITING';
+
+  function scanDatabase( dispatch ) {
+    expect( dispatch ).toBeA( 'function' );
+    queueState = 'SCAN';
+
+    const transaction = dbConnection.transaction( [ 'CACHE' ], 'readonly' );
+    const objectStore = transaction.objectStore( 'CACHE' );
+
+    const compare = indexedDB.cmp.bind( indexedDB );
+    const queueCopy = [ ...queue ].sort( compare );
+    let index = 0;
+
+    const cacheUpdate = {};
+    const doCacheUpdate = () => {
+      const keys = Object.keys( cacheUpdate );
+      if ( keys.length > 0 ) {
+        dispatch( {
+          type: 'CACHE_' + type + '_PUT',
+          cacheUpdate,
+        } );
+        keys.forEach( cacheKey => queue.delete( cacheKey ) );
+      }
+    };
+
+    const keyRange = IDBKeyRange.bound( queueCopy[ 0 ], queueCopy[ queueCopy.length - 1 ] );
+
+    const request = objectStore.openCursor( keyRange );
+    request.onsuccess = event => {
+      const cursor = event.target.result;
+
+      if ( cursor ) {
+        if ( cursor.key === queueCopy[ index ] && cursor.value ) {
+          const fromDb = cursor.value;
+          const enchanced = enchanceIndexedDbResultF( fromDb );
+          cacheUpdate[ queueCopy[ index ] ] = enchanced;
+        }
+        while ( index < queueCopy.length && compare( queueCopy[ index ], cursor.key ) <= 0 ) {
+          index++;
+        }
+      }
+
+      if ( cursor && index < queueCopy.length ) {
+        cursor.continue( queueCopy[ index ] );
+        return;
+      }
+
+      queueState = 'DB SCAN COMPLETED';
+      doCacheUpdate();
+      setTimeout( () => dispatch( scheduleQueuing() ), PAUSE_BEFORE_REQUEUE );
+    };
+    request.onerror = () => {
+      queueState = 'DB SCAN COMPLETED';
+      doCacheUpdate();
+      setTimeout( () => dispatch( scheduleQueuing() ), PAUSE_BEFORE_REQUEUE );
+    };
+  }
 
   function scheduleQueuing() {
     return ( dispatch, getState ) => {
 
       const data = getState()[ type ];
       expect( data ).toBeAn( 'object', 'Cache not found: ' + type );
-      const queue = data.queue;
-      expect( queue ).toBeA( Set );
 
-      if ( queueState === 'WAITING' && data.queue.size > 0 ) {
+      if ( queueState === 'WAITING' ) {
+        if ( dbConnection && queue.size > 0 ) {
+          scanDatabase( dispatch );
+          return;
+        } else {
+          queueState = 'DB SCAN COMPLETED';
+        }
+      }
+
+      if ( queueState === 'DB SCAN COMPLETED' && queue.size > 0 ) {
         queueState = 'SCHEDULED';
-        const nextBatch = [ ...queue ].slice( 0, Math.min( maxBatch, queue.size ) );
 
-        dispatch( {
-          type: 'CACHE_' + type + '_REMOVE_FROM_QUEUE',
-          cacheKeys: nextBatch,
-        } );
+        const nextBatch = [ ...queue ].slice( 0, Math.min( maxBatch, queue.size ) );
+        if ( queue.size >= maxBatch ) {
+          nextBatch.forEach( item => queue.delete( item ) );
+        } else {
+          queue.clear();
+        }
+
         const notifyMessage = notifyMessageF( nextBatch );
 
         mw.notify( notifyMessage + '…', notifyOptionsInProgress );
@@ -141,48 +207,10 @@ function buildQueueAction( type, useIndexedDb, maxBatch,
       if ( cachedValue )
         return;
 
-      const ifNoDataInDb = () => {
-        const queue = data.queue;
-        expect( queue ).toBeA( Set );
-
-        if ( !queue.has( cacheKey ) ) {
-          dispatch( {
-            type: 'CACHE_' + type + '_QUEUE',
-            cacheKey,
-          } );
-        }
-
+      if ( !queue.has( cacheKey ) ) {
+        queue.add( cacheKey );
         setTimeout( () => dispatch( scheduleQueuing( ) ), PAUSE_BEFORE_REQUEUE );
-      };
-
-      if ( !dbConnection ) {
-        ifNoDataInDb();
-        return;
       }
-
-      const dbRequest = dbConnection
-        .transaction( [ 'CACHE' ] )
-        .objectStore( 'CACHE' )
-        .get( cacheKey );
-      dbRequest.onsuccess = () => {
-        let result = dbRequest.result;
-        if ( result ) {
-          result = enchanceIndexedDbResultF( result );
-          dispatch( {
-            type: 'CACHE_' + type + '_PUT',
-            cacheUpdate: {
-              [ cacheKey ]: result,
-            },
-          } );
-        } else {
-          ifNoDataInDb();
-        }
-      };
-      dbRequest.onerror = err => {
-        mw.log.warn( 'Unable to query indexedDb' );
-        mw.log.warn( err );
-        ifNoDataInDb();
-      };
     };
   };
 

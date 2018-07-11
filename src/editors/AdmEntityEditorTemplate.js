@@ -219,6 +219,7 @@ const editorDescription = {
           sparql: 'SELECT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31 wd:Q19829908 . '
+                    + 'MINUS { ?property wdt:P31 wd:Q24041622 } . ' /* Wikidata property for bodies of water */
                     + '?property wikibase:propertyType wikibase:ExternalId . '
                     + '}' },
       ],

@@ -60,7 +60,7 @@
   },
   "scripts": {
     "build": "webpack",
-    "watch": "webpack --watch",
+    "watch": "webpack --watch --progress",
     "deploy": "eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js && node ./dist/deploy-to-wikipedia.out.js",
     "test:watch": "karma start karma.conf.js --no-single-run",
     "test:watch:chrome": "karma start karma.conf.js --no-single-run --browsers Chrome"
