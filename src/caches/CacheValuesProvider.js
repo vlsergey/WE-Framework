@@ -25,6 +25,23 @@ class CacheValuesProvider extends PureComponent {
     }
   }
 
+  previousResult = {}
+
+  memoizeResult( cache, cacheKeys ) {
+    let hasChanges = false;
+    const newResult = {};
+    cacheKeys.forEach( key => {
+      newResult[ key ] = cache[ key ];
+      if ( this.previousResult[ key ] !== newResult[ key ] ) {
+        hasChanges = true;
+      }
+    } );
+    if ( hasChanges ) {
+      this.previousResult = newResult;
+    }
+    return this.previousResult;
+  }
+
   render() {
     const child = this.props.children;
     expect( child ).toBeA( 'function' );
@@ -33,8 +50,9 @@ class CacheValuesProvider extends PureComponent {
     if ( !cacheKeys )
       return child( EMPTY_OBJECT );
 
-    // it's okay to return the whole cache
-    return child( cache );
+    // limit cache return and memoize result for react speed-up
+    const limitedCache = this.memoizeResult( cache, cacheKeys );
+    return child( limitedCache );
   }
 
   componentDidUpdate( prevProps ) {

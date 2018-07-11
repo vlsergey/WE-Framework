@@ -32,6 +32,8 @@ function buildQueueAction( type, maxBatch,
     tag: 'WE-F Cache: ' + type,
   };
 
+  let queueState = 'WAITING';
+
   function scheduleQueuing() {
     return ( dispatch, getState ) => {
 
@@ -40,12 +42,8 @@ function buildQueueAction( type, maxBatch,
       const queue = data.queue;
       expect( queue ).toBeA( Set );
 
-      if ( data.state === 'WAITING' && data.queue.size > 0 ) {
-        dispatch( {
-          type: 'CACHE_' + type + '_SET_STATE',
-          state: 'SCHEDULED',
-        } );
-
+      if ( queueState === 'WAITING' && data.queue.size > 0 ) {
+        queueState = 'SCHEDULED';
         const nextBatch = [ ...queue ].slice( 0, Math.min( maxBatch, queue.size ) );
 
         dispatch( {
@@ -71,10 +69,7 @@ function buildQueueAction( type, maxBatch,
             cacheUpdate,
           } );
 
-          dispatch( {
-            type: 'CACHE_' + type + '_SET_STATE',
-            state: 'WAITING',
-          } );
+          queueState = 'WAITING';
           setTimeout( () => dispatch( scheduleQueuing() ), PAUSE_BEFORE_REQUEUE );
 
         } ).catch( error => {
@@ -82,10 +77,8 @@ function buildQueueAction( type, maxBatch,
             notifyOptionsFailure );
           mw.log.error( 'Unable to batch request following items: ' + nextBatch );
           mw.log.error( error );
-          dispatch( {
-            type: 'CACHE_' + type + '_SET_STATE',
-            state: 'WAITING',
-          } );
+
+          queueState = 'WAITING';
           setTimeout( () => dispatch( scheduleQueuing() ), PAUSE_BEFORE_REQUEUE );
         } );
       }

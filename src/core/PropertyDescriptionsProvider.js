@@ -8,15 +8,19 @@ import { propertyDescriptionQueue } from 'caches/actions';
 import PropTypes from 'prop-types';
 import StringPropertyValuesProvider from 'caches/StringPropertyValuesProvider';
 
-const calcCountryFlags = ( countriesCache, countries ) => countries
-  .map( country => countriesCache[ country ] )
-  .filter( cacheItem => !!cacheItem )
-  .flatMap( cacheItem => cacheItem.P41 || [] );
+const EMPTY_ARRAY = [];
 
-const calcCountryLanguageIds = ( countriesCache, countries ) => countries
+const intern = x => Array.isArray( x ) && x.length === 0 ? EMPTY_ARRAY : x;
+
+const calcCountryFlags = ( countriesCache, countries ) => intern( countries
   .map( country => countriesCache[ country ] )
   .filter( cacheItem => !!cacheItem )
-  .flatMap( cacheItem => cacheItem.P37 || [] );
+  .flatMap( cacheItem => cacheItem.P41 || EMPTY_ARRAY ) );
+
+const calcCountryLanguageIds = ( countriesCache, countries ) => intern( countries
+  .map( country => countriesCache[ country ] )
+  .filter( cacheItem => !!cacheItem )
+  .flatMap( cacheItem => cacheItem.P37 || EMPTY_ARRAY ) );
 
 export default class PropertyDescriptionsProvider extends PureComponent {
 
@@ -47,10 +51,10 @@ export default class PropertyDescriptionsProvider extends PureComponent {
           languageIds = countryLanguageIds;
         }
 
-        const languageCodes = languageIds
+        const languageCodes = intern( languageIds
           .filter( entityId => !!languagesCache[ entityId ] )
           .filter( entityId => !!languagesCache[ entityId ].P424 )
-          .flatMap( entityId => languagesCache[ entityId ].P424 );
+          .flatMap( entityId => languagesCache[ entityId ].P424 ) );
 
         const result = {
           ...propertyDescription,
@@ -74,25 +78,25 @@ export default class PropertyDescriptionsProvider extends PureComponent {
   );
 
   memoizeAllLanguageIds = defaultMemoize( ( ids1, ids2 ) =>
-    [ ...new Set( [ ...ids1, ...ids2 ] ) ]
+    intern( [ ...new Set( [ ...ids1, ...ids2 ] ) ] )
   );
 
   memoizeAllCountriesLanguageIds = defaultMemoize( ( countriesCache, countries ) =>
-    calcCountryLanguageIds( countriesCache, countries )
+    intern( calcCountryLanguageIds( countriesCache, countries ) )
   );
 
   memoizeCountries = defaultMemoize ( ( propertyIds, cache ) =>
-    propertyIds
+    intern( propertyIds
       .filter( propertyId => !!cache[ propertyId ] )
       .map( propertyId => cache[ propertyId ] )
-      .flatMap( propertyDescription => propertyDescription.countries )
+      .flatMap( propertyDescription => propertyDescription.countries ) )
   );
 
   memoizeSourceWebsitesLanguages = defaultMemoize ( ( propertyIds, cache ) =>
-    propertyIds
+    intern( propertyIds
       .filter( propertyId => !!cache[ propertyId ] )
       .map( propertyId => cache[ propertyId ] )
-      .flatMap( propertyDescription => propertyDescription.sourceWebsitesLanguages )
+      .flatMap( propertyDescription => propertyDescription.sourceWebsitesLanguages ) )
   );
 
   render() {

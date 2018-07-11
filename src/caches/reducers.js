@@ -44,12 +44,6 @@ function cacheReducerBuilder( type ) {
         ...state,
         queue: remove( state.queue, action.cacheKeys ),
       };
-    case 'CACHE_' + type + '_SET_STATE':
-      expect( action.state ).toBeA( 'string' );
-      return {
-        ...state,
-        state: action.state,
-      };
     }
 
     return state;
