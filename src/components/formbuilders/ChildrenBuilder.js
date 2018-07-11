@@ -123,10 +123,13 @@ export default class ChildrenBuilder extends PureComponent {
       ...cache[ field.property ],
     } ) );
     for ( let sortByIndex = sortBy.length - 1; sortByIndex >= 0; sortByIndex-- ) {
-      switch ( sortBy[ sortByIndex ] ) {
+      const sortMethod = sortBy[ sortByIndex ];
+      if ( !sortMethod ) continue;
+
+      switch ( sortMethod ) {
       case 'language': stableSort( result, compareByLanguageCodes ); break;
       case 'label': stableSort( result, compareByLabel ); break;
-      default: mw.log( 'Unknown sort method: ' + sortBy[ sortByIndex ] ); break;
+      default: mw.log( 'Unknown sort method: ' + sortMethod ); break;
       }
     }
     return result.map( item => ( { property: item.property } ) );

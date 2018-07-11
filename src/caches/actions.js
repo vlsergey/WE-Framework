@@ -6,16 +6,36 @@ import LabelDescription from './LabelDescription';
 import md5 from 'md5';
 import PropertyDescription from 'core/PropertyDescription';
 
+const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+
 const PAUSE_BEFORE_REQUEUE = 100;
 
-function buildQueueAction( type, maxBatch,
-  isKeyValidF, notifyMessageF, buildPromiceF, convertResultToEntitiesF ) {
+function buildQueueAction( type, useIndexedDb, maxBatch,
+  isKeyValidF, enchanceIndexedDbResultF, notifyMessageF, buildPromiceF, convertResultToEntitiesF ) {
   expect( type ).toBeAn( 'string' );
   expect( maxBatch ).toBeA( 'number' );
   expect( isKeyValidF ).toBeA( 'function' );
+  expect( enchanceIndexedDbResultF ).toBeA( 'function' );
   expect( notifyMessageF ).toBeA( 'function' );
   expect( buildPromiceF ).toBeA( 'function' );
   expect( convertResultToEntitiesF ).toBeA( 'function' );
+
+  let dbConnection = null;
+  if ( useIndexedDb && indexedDB ) {
+    const dbOpenRequest = indexedDB.open( 'WEF_CACHE_' + type, 1 );
+    dbOpenRequest.onerror = function( err ){
+      mw.log.warn( 'Unable to open indexedDB' );
+      mw.log.warn( err );
+    };
+    dbOpenRequest.onsuccess = () => {
+      console.debug( 'Successfully open indexedDB connection for database ' + type );
+      dbConnection = dbOpenRequest.result;
+    };
+    dbOpenRequest.onupgradeneeded = event => {
+      const db = event.target.result;
+      db.createObjectStore( 'CACHE' );
+    };
+  }
 
   const notifyOptionsInProgress = {
     autoHide: false,
@@ -64,6 +84,24 @@ function buildQueueAction( type, maxBatch,
           const cacheUpdate = convertResultToEntitiesF( result, nextBatch );
           expect( cacheUpdate ).toBeAn( 'object' );
 
+          if ( dbConnection ) {
+            nextBatch.forEach( cacheKey => {
+              const item = cacheUpdate[ cacheKey ];
+              if ( !item ) return;
+
+              const dbRequest = dbConnection
+                .transaction( [ 'CACHE' ], 'readwrite' )
+                .objectStore( 'CACHE' )
+                .put( item, cacheKey );
+              dbRequest.onsuccess = () =>
+                console.debug( 'Stored object in ' + type + ' indexed store with key ' + cacheKey );
+              dbRequest.onerror = err => {
+                mw.warn( 'Unable to store object in ' + type + ' indexed store with key ' + cacheKey );
+                mw.warn( err );
+              };
+            } );
+          }
+
           dispatch( {
             type: 'CACHE_' + type + '_PUT',
             cacheUpdate,
@@ -103,17 +141,48 @@ function buildQueueAction( type, maxBatch,
       if ( cachedValue )
         return;
 
-      const queue = data.queue;
-      expect( queue ).toBeA( Set );
+      const ifNoDataInDb = () => {
+        const queue = data.queue;
+        expect( queue ).toBeA( Set );
 
-      if ( !queue.has( cacheKey ) ) {
-        dispatch( {
-          type: 'CACHE_' + type + '_QUEUE',
-          cacheKey,
-        } );
+        if ( !queue.has( cacheKey ) ) {
+          dispatch( {
+            type: 'CACHE_' + type + '_QUEUE',
+            cacheKey,
+          } );
+        }
+
+        setTimeout( () => dispatch( scheduleQueuing( ) ), PAUSE_BEFORE_REQUEUE );
+      };
+
+      if ( !dbConnection ) {
+        ifNoDataInDb();
+        return;
       }
 
-      setTimeout( () => dispatch( scheduleQueuing( ) ), PAUSE_BEFORE_REQUEUE );
+      const dbRequest = dbConnection
+        .transaction( [ 'CACHE' ] )
+        .objectStore( 'CACHE' )
+        .get( cacheKey );
+      dbRequest.onsuccess = () => {
+        let result = dbRequest.result;
+        if ( result ) {
+          result = enchanceIndexedDbResultF( result );
+          dispatch( {
+            type: 'CACHE_' + type + '_PUT',
+            cacheUpdate: {
+              [ cacheKey ]: result,
+            },
+          } );
+        } else {
+          ifNoDataInDb();
+        }
+      };
+      dbRequest.onerror = err => {
+        mw.log.warn( 'Unable to query indexedDb' );
+        mw.log.warn( err );
+        ifNoDataInDb();
+      };
     };
   };
 
@@ -122,8 +191,9 @@ function buildQueueAction( type, maxBatch,
 const openTagF = fileName => '<div data-filename=\"' + md5( fileName ) + '\">';
 const closeTagF = () => '</div>';
 
-export const flagImageHtmlsQueue = buildQueueAction( 'FLAGIMAGEHTMLS', 50,
+export const flagImageHtmlsQueue = buildQueueAction( 'FLAGIMAGEHTMLS', true, 50,
   () => true,
+  result => result,
   fileNames => 'Rendering ' + fileNames.length + ' flag images on server',
   fileNames => new mw.Api().post( {
     action: 'parse',
@@ -168,8 +238,9 @@ export const flagImageHtmlsQueue = buildQueueAction( 'FLAGIMAGEHTMLS', 50,
   }
 );
 
-export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
+export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', true, 50,
   cacheKey => cacheKey.match( /^[PQ](\d+)$/i ),
+  result => result,
   cacheKeys => 'Fetching ' + cacheKeys.length + ' item(s) labels and descriptions from Wikidata',
   cacheKeys => ApiUtils.getWikidataApi()
     .get( {
@@ -189,8 +260,9 @@ export const labelDescriptionQueue = buildQueueAction( 'LABELDESCRIPTIONS', 50,
   }
 );
 
-export const propertiesSparqlQueueF = buildQueueAction( 'PROPERTIESBYSPARQL', 1,
+export const propertiesSparqlQueueF = buildQueueAction( 'PROPERTIESBYSPARQL', true, 1,
   () => true,
+  result => result,
   cacheKeys => 'Executing SPARQL query: ' + cacheKeys[ 0 ],
   cacheKeys => fetch( 'https://query.wikidata.org/sparql?query=' + encodeURIComponent( cacheKeys[ 0 ] ), {
     headers: {
@@ -219,8 +291,12 @@ export const propertiesSparqlQueueF = buildQueueAction( 'PROPERTIESBYSPARQL', 1,
   }
 );
 
-export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS', 50,
+export const propertyDescriptionQueue = buildQueueAction( 'PROPERTYDESCRIPTIONS', true, 50,
   cacheKey => cacheKey.match( /^P(\d+)$/i ),
+  result => {
+    Object.setPrototypeOf( result, PropertyDescription.prototype );
+    return result;
+  },
   cacheKeys => 'Fetching ' + cacheKeys.length + ' property descriptions from Wikidata',
   cacheKeys => ApiUtils.getWikidataApi()
     .get( {
@@ -286,8 +362,9 @@ export const buildStringCacheValuesFromEntity = entity => {
   return entityResult;
 };
 
-export const stringPropertyValuesQueueF = buildQueueAction( 'STRINGPROPERTYVALUES', 10,
+export const stringPropertyValuesQueueF = buildQueueAction( 'STRINGPROPERTYVALUES', true, 10,
   cacheKey => cacheKey.match( /^[PQ](\d+)$/i ),
+  result => result,
   cacheKeys => 'Fetching ' + cacheKeys.length + ' entities from Wikidata',
   cacheKeys => ApiUtils.getWikidataApi()
     .get( {
