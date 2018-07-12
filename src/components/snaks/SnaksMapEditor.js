@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
-import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
+import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import SnaksArrayEditor from './SnaksArrayEditor';
 

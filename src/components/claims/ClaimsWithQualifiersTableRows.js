@@ -6,7 +6,7 @@ import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import ClaimReferencesButtonCell from 'components/references/ClaimReferencesButtonCell';
 import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
-import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
+import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import QualifierSelectButtonCell from 'components/qualifiers/QualifierSelectButtonCell';
 import SelectRankButtonCell from './SelectRankButtonCell';

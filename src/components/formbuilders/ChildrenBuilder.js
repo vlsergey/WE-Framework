@@ -9,7 +9,7 @@ import i18n from './i18n';
 import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';
 import PropertyClaimContainer from 'components/claims/PropertyClaimContainer';
 import PropertyDescription from 'core/PropertyDescription';
-import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
+import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import SparqlPropertyGroup from './SparqlPropertyGroup';
 import styles from 'components/core.css';

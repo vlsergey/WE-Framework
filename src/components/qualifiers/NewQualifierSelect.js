@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import i18n from './i18n';
-import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
+import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import styles from './NewQualifierSelect.css';
 import { SUPPORTED_DATATYPES } from 'components/SnakValueEditorFactory';

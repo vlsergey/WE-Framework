@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import i18n from './i18n';
 import PropertiesBySparqlProvider from 'caches/PropertiesBySparqlProvider';
-import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
+import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import styles from './references.css';
 import { SUPPORTED_DATATYPES } from 'components/SnakValueEditorFactory';

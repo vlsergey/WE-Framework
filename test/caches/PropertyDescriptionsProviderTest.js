@@ -3,7 +3,7 @@ import assert from 'assert';
 import buildReducers from 'core/reducers';
 import P345 from '../entities/P345';
 import PropertyDescription from 'core/PropertyDescription';
-import PropertyDescriptionsProvider from 'core/PropertyDescriptionsProvider';
+import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import { Provider } from 'react-redux';
 import Q1367759 from '../entities/Q1367759';
 import React from 'react';
