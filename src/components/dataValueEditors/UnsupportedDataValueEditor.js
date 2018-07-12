@@ -20,6 +20,7 @@ export default class UnsupportedDataValueEditor extends Component {
     };
 
     this.loadHtml = this.loadHtml.bind( this );
+    this.wikidataApi = ApiUtils.getWikidataApi();
 
     // initial loading
     this.loadHtml();
@@ -37,13 +38,13 @@ export default class UnsupportedDataValueEditor extends Component {
     if ( !datavalue || !propertyDescription )
       return;
 
-    ApiUtils.getWikidataApi().post( {
+    this.wikidataApi.postPromise( {
       action: 'wbformatvalue',
       datavalue: JSON.stringify( datavalue ),
       datatype: propertyDescription.datatype,
       format: 'json',
       generate: 'text/html',
-    } ).done( result => {
+    } ).then( result => {
       let html = result.result;
       html = html.replace( 'href="/', 'href="//www.wikidata.org/' );
       this.setState( { html } );
