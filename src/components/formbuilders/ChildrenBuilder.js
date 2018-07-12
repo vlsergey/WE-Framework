@@ -190,23 +190,25 @@ export default class ChildrenBuilder extends PureComponent {
             <tr>
               <td colSpan={99}>
                 <table>
-                  <tr>
-                    <td>
-                      <label>&nbsp;&nbsp;{i18n.labelQuickSearchTerm}&nbsp;&nbsp;&nbsp;<input
-                        onChange={this.handleQuickSearchTermChange}
-                        type="text"
-                        value={quickSearchTerm} />
-                      </label>
-                    </td>
-                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                    <td>
-                      <label>&nbsp;&nbsp;{i18n.labelDisplayEmpty}&nbsp;&nbsp;&nbsp;<input
-                        checked={displayEmpty}
-                        onChange={this.handleDisplayEmptyToggle}
-                        type="checkbox" />
-                      </label>
-                    </td>
-                  </tr>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <label>&nbsp;&nbsp;{i18n.labelQuickSearchTerm}&nbsp;&nbsp;&nbsp;<input
+                          onChange={this.handleQuickSearchTermChange}
+                          type="text"
+                          value={quickSearchTerm} />
+                        </label>
+                      </td>
+                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td>
+                        <label>&nbsp;&nbsp;{i18n.labelDisplayEmpty}&nbsp;&nbsp;&nbsp;<input
+                          checked={displayEmpty}
+                          onChange={this.handleDisplayEmptyToggle}
+                          type="checkbox" />
+                        </label>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
               </td>
             </tr>
