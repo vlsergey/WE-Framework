@@ -70,7 +70,7 @@ const editorDescription = {
       labelEntityId: 'Q36524',
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31 wd:Q29542094 . '
                     + '?property wikibase:propertyType wikibase:ExternalId . '

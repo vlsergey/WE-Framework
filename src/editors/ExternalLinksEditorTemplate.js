@@ -8,7 +8,7 @@ const editorDescription = {
       labelEntityId: 'Q6576792' /* online community */,
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31 wd:Q30041186 . ' /* Wikidata property related to online communities */
                     + '?property wikibase:propertyType wikibase:ExternalId . '
@@ -19,7 +19,7 @@ const editorDescription = {
       labelEntityId: 'Q11424' /* cinema */,
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
         + 'WHERE { '
         + '?property wdt:P31 wd:Q29542094 . '
         + '?property wikibase:propertyType wikibase:ExternalId . '
@@ -30,7 +30,7 @@ const editorDescription = {
       labelEntityId: 'Q638' /* music */,
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31/wdt:P279* wd:Q27525351 . ' /* Wikidata property related to music */
                     + '?property wikibase:propertyType wikibase:ExternalId . '
@@ -41,7 +41,7 @@ const editorDescription = {
       labelEntityId: 'Q7991' /* natural science */,
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31/wdt:P279* wd:Q52425722 . ' /* Wikidata property related to natural science */
                     + '?property wikibase:propertyType wikibase:ExternalId . '
@@ -52,7 +52,7 @@ const editorDescription = {
       labelEntityId: 'Q349' /* sport */,
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31/wdt:P279* wd:Q21818626 . ' /* Wikidata property related to sport */
                     + '?property wikibase:propertyType wikibase:ExternalId . '
@@ -63,7 +63,7 @@ const editorDescription = {
       labelEntityId: 'Q7889' /* video game */,
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31/wdt:P279* wd:Q28147643 . ' /* Wikidata property related to video games */
                     + '?property wikibase:propertyType wikibase:ExternalId . '
@@ -74,7 +74,7 @@ const editorDescription = {
       labelEntityId: 'Q5292' /* encyclopedia */,
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31/wdt:P279* wd:Q55452870 . ' /* Wikidata property, related to encyclopedia */
                     + '?property wikibase:propertyType wikibase:ExternalId . '
@@ -85,7 +85,7 @@ const editorDescription = {
       labelEntityId: 'Q36524' /* authority control */,
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + ' ?property wdt:P31/wdt:P279* wd:Q18614948 . ' /* Wikidata property for authority control, with reciprocal use of Wikidata */
                     + ' ?property wikibase:propertyType wikibase:ExternalId . '

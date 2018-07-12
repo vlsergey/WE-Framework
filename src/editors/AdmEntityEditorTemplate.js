@@ -216,7 +216,7 @@ const editorDescription = {
       labelEntityId: 'Q36524',
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31 wd:Q19829908 . '
                     + 'MINUS { ?property wdt:P31 wd:Q24041622 } . ' /* Wikidata property for bodies of water */

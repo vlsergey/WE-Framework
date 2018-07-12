@@ -68,7 +68,7 @@ const editorDescription = {
       labelEntityId: 'Q36524' /* authority control */,
       specials: [
         { type: 'SparqlPropertyGroup',
-          sparql: 'SELECT ?property '
+          sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31 wd:Q29547399 . ' /* Wikidata property to identify books */
                     + '?property wikibase:propertyType wikibase:ExternalId . '

@@ -30,7 +30,7 @@ export default class ReferencePropertySelect extends PureComponent {
     const { alreadyPresent } = this.props;
 
     // see https://www.wikidata.org/wiki/Q18608359
-    return <PropertiesBySparqlProvider sparql={'SELECT ?property '
+    return <PropertiesBySparqlProvider sparql={'SELECT DISTINCT ?property '
               + 'WHERE { '
               + '?property wdt:P31 wd:Q18608359 . '
               + '}'}>
