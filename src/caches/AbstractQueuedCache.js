@@ -16,11 +16,13 @@ export default class AbstractQueuedCache {
     this.notifyOptionsSuccess = { autoHide: true, tag: 'WE-F Cache: ' + type };
     this.notifyOptionsFailure = { autoHide: true, tag: 'WE-F Cache: ' + type };
 
-    this.queue = new Set();
+    this.dbQueue = new Set();
+    this.requestQueue = new Set();
     this.queueState = 'WAITING';
     this.queueHasNewElements = false;
     this.nextBatch = EMPTY_SET;
 
+    this.useIndexedDb = useIndexedDb;
     this.dbConnection = null;
     if ( useIndexedDb && indexedDB ) {
       const dbOpenRequest = indexedDB.open( 'WEF_CACHE_' + type, 1 );
@@ -69,32 +71,54 @@ export default class AbstractQueuedCache {
     throw new Error( 'Child class need to implement convertResultToEntities( result, cacheKeys ) function' );
   }
 
+  getCache( ) {
+    expect( this.getState ).toBeA( 'function', 'Provided getState argument value is not a function' );
+
+    const data = this.getState()[ this.type ];
+    expect( data ).toBeAn( 'object', 'Cache not found: ' + this.type );
+
+    const cache = data.cache;
+    expect( cache ).toBeAn( 'object', 'Cache not found: ' + this.type );
+
+    return cache;
+  }
+
+  putToCache( cacheUpdate ) {
+    expect( this.dispatch ).toBeA( 'function', 'Provided dispatch argument value is not a function' );
+    expect( cacheUpdate ).toBeAn( 'object', 'Provided cacheUpdate argument value is not a function' );
+
+    this.dispatch( {
+      type: 'CACHE_' + this.type + '_PUT',
+      cacheUpdate,
+    } );
+  }
+
   actionQueue( cacheKeys ) {
     expect( cacheKeys ).toBeAn( 'array' );
 
     return ( dispatch, getState ) => {
       expect( dispatch ).toBeA( 'function' );
       expect( getState ).toBeA( 'function' );
+      this.dispatch = dispatch;
+      this.getState = getState;
 
-      const data = getState()[ this.type ];
-      expect( data ).toBeAn( 'object', 'Cache not found: ' + this.type );
-
-      const cache = data.cache;
-      expect( cache ).toBeAn( 'object', 'Cache not found: ' + this.type );
-
+      const cache = this.getCache( );
       this.validateCacheKeys( cacheKeys );
 
       let queued = false;
       cacheKeys.forEach( cacheKey => {
-        if ( !this.queue.has( cacheKey ) && !this.nextBatch.has( cacheKey ) ) {
-          this.queue.add( cacheKey );
+        if ( !this.dbQueue.has( cacheKey )
+            && !this.requestQueue.has( cacheKey )
+            && !this.nextBatch.has( cacheKey ) ) {
+          this.dbQueue.add( cacheKey );
           queued = true;
         }
       } );
 
       if ( queued && this.queueState === 'WAITING' ) {
         this.changeState( 'WAITING', 'SCHEDULED' );
-        setTimeout( () => dispatch( this.actionDbScan( ) ), PAUSE_BEFORE_REQUEUE );
+        setTimeout( () => this.checkIfDatabaseScanRequired( ),
+          PAUSE_BEFORE_REQUEUE );
       }
     };
   }
@@ -109,50 +133,55 @@ export default class AbstractQueuedCache {
     }
   }
 
-  actionDbScan() {
-    return ( dispatch, getState ) => {
-      expect( this.queueState ).toEqual( 'SCHEDULED' );
+  checkIfDatabaseScanRequired( ) {
+    expect( this.queueState ).toEqual( 'SCHEDULED' );
 
-      const data = getState()[ this.type ];
-      expect( data ).toBeAn( 'object', 'Cache not found: ' + this.type );
+    const data = this.getState()[ this.type ];
+    expect( data ).toBeAn( 'object', 'Cache not found: ' + this.type );
 
-      if ( this.dbConnection && this.queue.size > 0 ) {
+    if ( this.dbQueue.size !== 0 ) {
+      if ( this.dbConnection ) {
         this.changeState( 'SCHEDULED', 'SCAN' );
-        this.scanDatabase( dispatch );
+        this.scanDatabase( );
         return;
+      } else {
+        this.dbQueue.forEach( cacheKey => this.requestQueue.add( cacheKey ) );
+        this.dbQueue.clear();
       }
+    }
 
-      if ( this.queue.size > 0 ) {
-        this.changeState( 'SCHEDULED', 'REQUEST' );
-        this.queueNextBatch( dispatch );
-        return;
-      }
+    if ( this.requestQueue.size > 0 ) {
+      this.changeState( 'SCHEDULED', 'REQUEST' );
+      this.queueNextBatch( );
+      return;
+    }
 
-      this.queueState = 'WAITING';
-    };
+    this.changeState( 'SCHEDULED', 'WAITING' );
   }
 
-  scanDatabase( dispatch ) {
+  scanDatabase( ) {
     expect( this.queueState ).toEqual( 'SCAN' );
 
-    const cacheKeys = [ ...this.queue ];
+    const cacheKeys = [ ...this.dbQueue ];
     const setCopy = new Set( cacheKeys );
-    this.scanDatabaseImpl( dispatch, cacheKeys )
+    this.scanDatabaseImpl( cacheKeys )
       .finally( () => {
         expect( this.queueState ).toEqual( 'SCAN' );
 
-        if ( [ ...this.queue ].some( cacheKey => !setCopy.has( cacheKey ) ) ) {
+        if ( [ ...this.dbQueue ].some( cacheKey => !setCopy.has( cacheKey ) ) ) {
           // TODO: possible optimization: scan only new keys
-          this.scanDatabase( dispatch );
+          this.scanDatabase( );
         } else {
+          this.dbQueue.forEach( cacheKey => this.requestQueue.add( cacheKey ) );
+          this.dbQueue.clear();
+
           this.changeState( 'SCAN', 'REQUEST' );
-          this.queueNextBatch( dispatch );
+          this.queueNextBatch( );
         }
       } );
   }
 
-  scanDatabaseImpl( dispatch, cacheKeys ) {
-    expect( dispatch ).toBeA( 'function' );
+  scanDatabaseImpl( cacheKeys ) {
     expect( cacheKeys ).toBeAn( 'array' );
     expect( this.queueState ).toEqual( 'SCAN' );
 
@@ -166,12 +195,11 @@ export default class AbstractQueuedCache {
           const cacheUpdate = {};
           keys.forEach( cacheKey => {
             cacheUpdate[ cacheKey ] = this.enchanceIndexedDbResult( result[ cacheKey ] );
-            this.queue.delete( cacheKey );
+            this.dbQueue.delete( cacheKey );
           } );
-          dispatch( {
-            type: 'CACHE_' + this.type + '_PUT',
-            cacheUpdate,
-          } );
+
+          this.putToCache( cacheUpdate );
+          this.onCacheUpdateFromDatabase( cacheUpdate );
         }
       } )
       .catch( exc => {
@@ -180,22 +208,22 @@ export default class AbstractQueuedCache {
       } );
   }
 
-  queueNextBatch( dispatch ) {
-    expect( dispatch ).toBeA( 'function' );
+  queueNextBatch() {
     expect( this.queueState ).toEqual( 'REQUEST' );
 
-    if ( this.queue.size === 0 ) {
-      this.changeState( 'REQUEST', 'WAITING' );
+    if ( this.requestQueue.size === 0 ) {
+      this.changeState( 'REQUEST', 'SCHEDULED' );
+      this.checkIfDatabaseScanRequired();
       return;
     }
 
-    const nextBatch = [ ...this.queue ].slice( 0, Math.min( this.maxBatch, this.queue.size ) );
+    const nextBatch = [ ...this.requestQueue ].slice( 0, Math.min( this.maxBatch, this.requestQueue.size ) );
     // remember so we can check on queue if element in progress of request
     this.nextBatch = new Set( nextBatch );
-    if ( this.queue.size >= this.maxBatch ) {
-      nextBatch.forEach( item => this.queue.delete( item ) );
+    if ( this.requestQueue.size >= this.maxBatch ) {
+      nextBatch.forEach( item => this.requestQueue.delete( item ) );
     } else {
-      this.queue.clear();
+      this.requestQueue.clear();
     }
 
     const notifyMessage = this.notifyMessage( nextBatch );
@@ -207,14 +235,12 @@ export default class AbstractQueuedCache {
 
       const cacheUpdate = this.convertResultToEntities( result, nextBatch );
       expect( cacheUpdate ).toBeAn( 'object' );
-      dispatch( {
-        type: 'CACHE_' + this.type + '_PUT',
-        cacheUpdate,
-      } );
+      this.putToCache( cacheUpdate );
       this.storeInIndexDb( cacheUpdate );
+      this.onCacheUpdateFromRequest( cacheUpdate );
 
       this.nextBatch = EMPTY_SET;
-      this.decideNextAction( dispatch );
+      this.decideNextAction( );
 
     } ).catch( error => {
       mw.notify( notifyMessage + '… Failure. See console log output for details.',
@@ -223,19 +249,19 @@ export default class AbstractQueuedCache {
       mw.log.error( error );
 
       this.nextBatch = EMPTY_SET;
-      this.decideNextAction( dispatch );
+      this.decideNextAction( );
     } );
   }
 
-  decideNextAction( dispatch ) {
+  decideNextAction( ) {
     expect( this.queueState ).toEqual( 'REQUEST' );
 
     if ( this.queueHasNewElements ) {
       this.queueHasNewElements = false;
       this.changeState( 'REQUEST', 'SCHEDULED' );
-      setTimeout( () => dispatch( this.actionDbScan() ), PAUSE_BEFORE_REQUEUE );
+      setTimeout( () => this.dispatch( this.actionDbScan() ), PAUSE_BEFORE_REQUEUE );
     } else {
-      this.queueNextBatch( dispatch );
+      this.queueNextBatch( );
     }
   }
 
@@ -250,4 +276,11 @@ export default class AbstractQueuedCache {
     } );
   }
 
+  onCacheUpdateFromDatabase( cacheUpdate ) {
+    /* eslint no-unused-vars: 0 */
+  }
+
+  onCacheUpdateFromRequest( cacheUpdate ) {
+    /* eslint no-unused-vars: 0 */
+  }
 }

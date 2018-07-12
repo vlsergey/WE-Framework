@@ -1,11 +1,11 @@
-import AbstractQueuedCache from './AbstractQueuedCache';
+import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
 import { getWikidataApi } from 'core/ApiUtils';
 import PropertyDescription from 'core/PropertyDescription';
 
 const TYPE = 'PROPERTYDESCRIPTIONS';
 
-class PropertyDescriptionCache extends AbstractQueuedCache {
+class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
 
   constructor() {
     super( TYPE, true, 50 );

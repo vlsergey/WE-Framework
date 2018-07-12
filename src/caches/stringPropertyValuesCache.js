@@ -1,4 +1,4 @@
-import AbstractQueuedCache from './AbstractQueuedCache';
+import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 import { filterClaimsByRank } from 'model/ModelUtils';
 import { getWikidataApi } from 'core/ApiUtils';
 
@@ -17,6 +17,9 @@ const EMPTY_ARRAY = [];
 export const buildStringCacheValuesFromEntity = entity => {
 
   const entityResult = {};
+  entityResult.lastrevid = entity.lastrevid;
+  entityResult.pageid = entity.pageid;
+
   PROPERTIES_TO_CACHE.forEach( propertyId => {
     if ( !entity.claims ){
       entityResult[ propertyId ] = EMPTY_ARRAY;
@@ -43,7 +46,7 @@ export const buildStringCacheValuesFromEntity = entity => {
   return entityResult;
 };
 
-class StringPropertyValuesCache extends AbstractQueuedCache {
+class StringPropertyValuesCache extends AbstractQueuedCacheWithPostcheck {
 
   constructor() {
     super( TYPE, true, 10 );
@@ -69,8 +72,7 @@ class StringPropertyValuesCache extends AbstractQueuedCache {
   convertResultToEntities( result ) {
     const cacheUpdate = {};
     Object.values( result.entities ).forEach( entity => {
-      const entityResult = buildStringCacheValuesFromEntity( entity );
-      cacheUpdate[ entity.id ] = Object.freeze( entityResult );
+      cacheUpdate[ entity.id ] = buildStringCacheValuesFromEntity( entity );
     } );
     return cacheUpdate;
   }

@@ -10,7 +10,7 @@ const closeTagF = () => '</div>';
 class FlagImageHtmlCache extends AbstractQueuedCache {
 
   constructor() {
-    super( TYPE, true, 50 );
+    super( TYPE, false, 50 );
   }
 
   notifyMessage( fileNames ) {

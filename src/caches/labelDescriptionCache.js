@@ -8,7 +8,7 @@ const TYPE = 'LABELDESCRIPTIONS';
 class LabelDescriptionCache extends AbstractQueuedCache {
 
   constructor() {
-    super( TYPE, true, 50 );
+    super( TYPE, false, 50 );
   }
 
   isKeyValid( cacheKey ) {

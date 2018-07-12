@@ -98,6 +98,8 @@ export default class PropertyDescription {
 
     this.id = propertyEntity.id;
     this.datatype = propertyEntity.datatype;
+    this.pageid = propertyEntity.pageid;
+    this.lastrevid = propertyEntity.lastrevid;
 
     const translations = {};
 

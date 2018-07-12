@@ -1,8 +1,8 @@
-import AbstractQueuedCache from './AbstractQueuedCache';
+import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 
 const TYPE = 'PROPERTIESBYSPARQL';
 
-class PropertiesBySparqlCache extends AbstractQueuedCache {
+class PropertiesBySparqlCache extends AbstractQueuedCacheWithPostcheck {
 
   constructor() {
     super( TYPE, true, 1 );

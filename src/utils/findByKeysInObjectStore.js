@@ -3,9 +3,15 @@ import expect from 'expect';
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 const compare = indexedDB ? indexedDB.cmp.bind( indexedDB ) : undefined;
 
+const EMPTY_OBJECT = {};
+
 export default function findByKeysInObjectStore( objectStore, unsortedKeys ) {
   expect( objectStore ).toBeA( IDBObjectStore );
   expect( unsortedKeys ).toBeAn( 'array' );
+
+  if ( unsortedKeys.length === 0 ) {
+    return Promise.resolve( EMPTY_OBJECT );
+  }
 
   return new Promise( ( resolve, reject ) => {
     const sortedKeys = [ ...unsortedKeys ].sort( compare );
