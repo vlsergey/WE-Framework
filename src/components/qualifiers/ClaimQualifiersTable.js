@@ -15,6 +15,7 @@ export default class ClaimQualifiersTable extends PureComponent {
 
   static propTypes = {
     allowedQualifiers: PropTypes.arrayOf( PropTypes.string ),
+    defaultAddQuailifier: PropTypes.bool.isRequired,
     disabledQualifiers: PropTypes.arrayOf( PropTypes.string ),
     claim: PropTypes.shape( Claim ).isRequired,
     claimPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
@@ -31,7 +32,9 @@ export default class ClaimQualifiersTable extends PureComponent {
 
     this.state = {
       hiddenBehindLabel: true,
-      addQualifierMode: 'HIDDEN',
+      addQualifierMode: this.props.defaultAddQuailifier
+        ? this.props.allowedQualifiers.length > 0 ? 'SELECT' : 'AUTOSUGGEST'
+        : 'HIDDEN',
     };
 
     const { claimPropertyDescription } = this.props;

@@ -34,6 +34,10 @@ export default class ClaimsTableRows extends PureComponent {
   constructor() {
     super( ...arguments );
 
+    this.state = {
+      displayQualifierSelect: false,
+    };
+
     this.claimQualifiersTable = React.createRef();
 
     this.handleClaimDelete = this.handleClaimDelete.bind( this );
@@ -47,7 +51,11 @@ export default class ClaimsTableRows extends PureComponent {
   }
 
   handleQualifierSelect() {
-    this.claimQualifiersTable.current.showQualifierSelect();
+    if ( this.claimQualifiersTable.current !== null ) {
+      this.claimQualifiersTable.current.showQualifierSelect();
+    } else {
+      this.setState( { displayQualifierSelect: true } );
+    }
   }
 
   handleRankChange( rank ) {
@@ -72,6 +80,7 @@ export default class ClaimsTableRows extends PureComponent {
   render() {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*" }] */
     const { claim, displayLabel, firstCell, hasClaimDelete, onClaimDelete, onClaimUpdate, propertyDescription, ...other } = this.props;
+    const { displayQualifierSelect } = this.state;
     const flagImage = propertyDescription.countryFlags && propertyDescription.countryFlags.length > 0
       ? propertyDescription.countryFlags[ 0 ]
       : null;
@@ -100,17 +109,18 @@ export default class ClaimsTableRows extends PureComponent {
           propertyId={propertyDescription.id}
           propertyLabel={propertyDescription.label} />
       </AnimatedTr>
-      <tr>
+      { ( displayQualifierSelect || claim.qualifiers ) && <tr>
         <td colSpan={2} />
         <td colSpan={ClaimsTableRows.TABLE_COLUMNS - 2}>
           <ClaimQualifiersTable
             allowedQualifiers={propertyDescription.allowedQualifiers}
             claim={claim}
             claimPropertyDescription={propertyDescription}
+            defaultAddQuailifier={displayQualifierSelect}
             onClaimUpdate={onClaimUpdate}
             ref={this.claimQualifiersTable} />
         </td>
-      </tr>
+      </tr> }
     </React.Fragment>;
   }
 
