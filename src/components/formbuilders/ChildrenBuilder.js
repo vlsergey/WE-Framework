@@ -163,9 +163,9 @@ export default class ChildrenBuilder extends PureComponent {
       'Property attribute is not specified in field description: ' + JSON.stringify( field ) );
 
     if ( !propertyDescription || !propertyDescription.label ) {
-      return <tbody><tr><td colSpan={99}>
+      return <tr><td colSpan={99}>
         <i>Loading property description of {propertyId}...</i>
-      </td></tr></tbody>;
+      </td></tr>;
     }
     expect ( propertyDescription ).toBeA( PropertyDescription );
     return <PropertyClaimContainer
@@ -214,16 +214,15 @@ export default class ChildrenBuilder extends PureComponent {
             </tr>
           </thead>
           }
-          {
-            filtered.map( field =>
-              <ErrorBoundary description={'field: ' + JSON.stringify( field )} key={field.property}>
-                {this.renderField( field, cache[ field.property ], {
-                  displayEmpty: true,
-                  displayLabel: fields.length !== 1 || parentLabelEntityId !== field.property,
-                } )}
-              </ErrorBoundary>
-            )
-          }</table>;
+          <tbody>{filtered.map( field =>
+            <ErrorBoundary description={'field: ' + JSON.stringify( field )} key={field.property}>
+              {this.renderField( field, cache[ field.property ], {
+                displayEmpty: true,
+                displayLabel: fields.length !== 1 || parentLabelEntityId !== field.property,
+              } )}
+            </ErrorBoundary>
+          )}</tbody>
+        </table>;
       } }
     </PropertyDescriptionsProvider>;
   }

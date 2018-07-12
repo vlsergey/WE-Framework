@@ -32,13 +32,11 @@ class PropertyClaimContainer extends PureComponent {
     const columns = this.columnsMemoization( claims );
 
     if ( columns.length !== 0 ) {
-      return <tbody>
-        <tr>
-          <td colSpan={ClaimsTableBody.TABLE_COLUMNS}>
-            <ClaimsWithQualifiersTable columns={columns} {...this.props} />
-          </td>
-        </tr>
-      </tbody>;
+      return <tr>
+        <td colSpan={ClaimsTableBody.TABLE_COLUMNS}>
+          <ClaimsWithQualifiersTable columns={columns} {...this.props} />
+        </td>
+      </tr>;
     }
 
     return <ClaimsTableBody {...this.props} />;
