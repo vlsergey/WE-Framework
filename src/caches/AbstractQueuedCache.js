@@ -40,7 +40,6 @@ export default class AbstractQueuedCache {
   changeState( expectedState, newState ) {
     expect( this.queueState ).toEqual( expectedState );
     this.queueState = newState;
-    console.log( this.type + '\tChanging state from ' + expectedState + ' to ' + newState );
   }
 
   isKeyValid( cacheKey ) {
