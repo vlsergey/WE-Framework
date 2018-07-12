@@ -3,3 +3,9 @@
   overflow-y: auto;
   resize: vertical;
 }
+
+:global(.manuallyResized) .sparql_property_group {
+  height: unset;
+  overflow-y: unset;
+  resize: unset;
+}
