@@ -5,7 +5,7 @@ const TYPE = 'PROPERTIESBYSPARQL';
 class PropertiesBySparqlCache extends AbstractQueuedCache {
 
   constructor() {
-    super( TYPE, true, 50 );
+    super( TYPE, true, 1 );
   }
 
   notifyMessage( cacheKeys ) {
@@ -37,6 +37,15 @@ class PropertiesBySparqlCache extends AbstractQueuedCache {
       }
       return value.substr( 'http://www.wikidata.org/entity/'.length );
     } );
+
+    /* eslint no-undef: 0 */
+    if ( process.env.NODE_ENV !== 'production' ) {
+      if ( propertyIds.length !== new Set( propertyIds ).size ) {
+        mw.log.warn( 'SPARQL result has non-distinct values' );
+        mw.log.warn( sparql );
+        mw.log.warn( propertyIds );
+      }
+    }
 
     return {
       [ sparql ]: propertyIds,

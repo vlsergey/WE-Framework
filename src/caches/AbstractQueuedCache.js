@@ -37,6 +37,12 @@ export default class AbstractQueuedCache {
     }
   }
 
+  changeState( expectedState, newState ) {
+    expect( this.queueState ).toEqual( expectedState );
+    this.queueState = newState;
+    console.log( this.type + '\tChanging state from ' + expectedState + ' to ' + newState );
+  }
+
   isKeyValid( cacheKey ) {
     /* eslint no-unused-vars: 0 */
     return true;
@@ -84,7 +90,7 @@ export default class AbstractQueuedCache {
         this.queue.add( cacheKey );
         this.queueHasNewElements = true;
         if ( this.queueState === 'WAITING' ) {
-          this.queueState = 'SCHEDULED';
+          this.changeState( 'WAITING', 'SCHEDULED' );
           setTimeout( () => dispatch( this.actionDbScan( ) ), PAUSE_BEFORE_REQUEUE );
         }
       }
@@ -99,13 +105,13 @@ export default class AbstractQueuedCache {
       expect( data ).toBeAn( 'object', 'Cache not found: ' + this.type );
 
       if ( this.dbConnection && this.queue.size > 0 ) {
-        this.queueState = 'SCAN';
+        this.changeState( 'SCHEDULED', 'SCAN' );
         this.scanDatabase( dispatch );
         return;
       }
 
       if ( this.queue.size > 0 ) {
-        this.queueState = 'REQUEST';
+        this.changeState( 'SCHEDULED', 'REQUEST' );
         this.queueNextBatch( dispatch );
         return;
       }
@@ -127,7 +133,7 @@ export default class AbstractQueuedCache {
           // TODO: possible optimization: scan only new keys
           this.scanDatabase( dispatch );
         } else {
-          this.queueState = 'REQUEST';
+          this.changeState( 'SCAN', 'REQUEST' );
           this.queueNextBatch( dispatch );
         }
       } );
@@ -167,7 +173,7 @@ export default class AbstractQueuedCache {
     expect( this.queueState ).toEqual( 'REQUEST' );
 
     if ( this.queue.size === 0 ) {
-      this.queueState = 'WAITING';
+      this.changeState( 'REQUEST', 'WAITING' );
       return;
     }
 
@@ -210,7 +216,7 @@ export default class AbstractQueuedCache {
 
     if ( this.queueHasNewElements ) {
       this.queueHasNewElements = false;
-      this.queueState = 'SCHEDULED';
+      this.changeState( 'REQUEST', 'SCHEDULED' );
       setTimeout( () => dispatch( this.actionDbScan() ), PAUSE_BEFORE_REQUEUE );
     } else {
       this.queueNextBatch( dispatch );
