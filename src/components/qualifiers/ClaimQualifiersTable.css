@@ -3,5 +3,6 @@
 }
 
 .wef_claim_new_qualifier th {
-  width: 1%;
+  text-align: left;
+  width: 1px;
 }
