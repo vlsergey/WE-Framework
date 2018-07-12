@@ -1,18 +1,16 @@
-import { animated, Spring } from 'react-spring';
+import animations from './animations.css';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const AnimatedTr = ( { children, ...etc } ) => typeof requestAnimationFrame === 'function'
-  ? <Spring from={{ opacity: 0 }} native to={{ opacity: 1 }}>
-    {props =>
-      <animated.tr style={props} {...etc}>
-        {children}
-      </animated.tr>
-    }
-  </Spring>
-  : <tr>{children}</tr>;
+const AnimatedTr = ( { children, className, ...etc } ) => {
+  const resultClassName = className
+    ? className + ' ' + animations.animatedFateIn
+    : animations.animatedFateIn;
+  return <tr className={resultClassName} {...etc}>{children}</tr>;
+};
 
 AnimatedTr.propTypes = {
+  className: PropTypes.string,
   children: PropTypes.node,
 };
 
