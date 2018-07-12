@@ -29,7 +29,7 @@ export default class JQueryButton extends PureComponent {
       role="button"
       title={title || label}>
       { icon && <span className={'ui-button-icon-primary ui-icon ' + ( icon || '' )} />}
-      <span className="ui-button-text">{label}</span>
+      { text && <span className="ui-button-text">{label}</span>}
     </button>;
   }
 
