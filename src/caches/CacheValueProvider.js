@@ -47,7 +47,7 @@ const mapStateToProps = ( state, ownProps ) => ( {
 } );
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {
-  queue: cacheKey => dispatch( ownProps.cache.actionQueue( cacheKey ) ),
+  queue: cacheKey => dispatch( ownProps.cache.actionQueue( [ cacheKey ] ) ),
 } );
 
 const CacheValueProviderConnected = connect( mapStateToProps, mapDispatchToProps )( CacheValueProvider );

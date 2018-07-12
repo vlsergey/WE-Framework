@@ -3,6 +3,7 @@ import findByKeysInObjectStore from 'utils/findByKeysInObjectStore';
 
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
+const EMPTY_SET = Object.freeze( new Set() );
 const PAUSE_BEFORE_REQUEUE = 100;
 
 export default class AbstractQueuedCache {
@@ -18,6 +19,7 @@ export default class AbstractQueuedCache {
     this.queue = new Set();
     this.queueState = 'WAITING';
     this.queueHasNewElements = false;
+    this.nextBatch = EMPTY_SET;
 
     this.dbConnection = null;
     if ( useIndexedDb && indexedDB ) {
@@ -67,7 +69,9 @@ export default class AbstractQueuedCache {
     throw new Error( 'Child class need to implement convertResultToEntities( result, cacheKeys ) function' );
   }
 
-  actionQueue( cacheKey ) {
+  actionQueue( cacheKeys ) {
+    expect( cacheKeys ).toBeAn( 'array' );
+
     return ( dispatch, getState ) => {
       expect( dispatch ).toBeA( 'function' );
       expect( getState ).toBeA( 'function' );
@@ -78,22 +82,31 @@ export default class AbstractQueuedCache {
       const cache = data.cache;
       expect( cache ).toBeAn( 'object', 'Cache not found: ' + this.type );
 
-      const test = this.isKeyValid( cacheKey );
-      if ( !test ) throw new Error( 'Provided cacheKey is not valid: ' + cacheKey );
+      this.validateCacheKeys( cacheKeys );
 
-      const cachedValue = cache[ cacheKey ];
-      if ( cachedValue )
-        return;
-
-      if ( !this.queue.has( cacheKey ) ) {
-        this.queue.add( cacheKey );
-        this.queueHasNewElements = true;
-        if ( this.queueState === 'WAITING' ) {
-          this.changeState( 'WAITING', 'SCHEDULED' );
-          setTimeout( () => dispatch( this.actionDbScan( ) ), PAUSE_BEFORE_REQUEUE );
+      let queued = false;
+      cacheKeys.forEach( cacheKey => {
+        if ( !this.queue.has( cacheKey ) && !this.nextBatch.has( cacheKey ) ) {
+          this.queue.add( cacheKey );
+          queued = true;
         }
+      } );
+
+      if ( queued && this.queueState === 'WAITING' ) {
+        this.changeState( 'WAITING', 'SCHEDULED' );
+        setTimeout( () => dispatch( this.actionDbScan( ) ), PAUSE_BEFORE_REQUEUE );
       }
     };
+  }
+
+  validateCacheKeys( cacheKeys ) {
+    /* eslint no-undef: 0 */
+    if ( process.env.NODE_ENV !== 'production' ) {
+      cacheKeys.forEach( cacheKey => {
+        const test = this.isKeyValid( cacheKey );
+        if ( !test ) throw new Error( 'Provided cacheKey is not valid: ' + cacheKey );
+      } );
+    }
   }
 
   actionDbScan() {
@@ -177,6 +190,8 @@ export default class AbstractQueuedCache {
     }
 
     const nextBatch = [ ...this.queue ].slice( 0, Math.min( this.maxBatch, this.queue.size ) );
+    // remember so we can check on queue if element in progress of request
+    this.nextBatch = new Set( nextBatch );
     if ( this.queue.size >= this.maxBatch ) {
       nextBatch.forEach( item => this.queue.delete( item ) );
     } else {
@@ -198,6 +213,7 @@ export default class AbstractQueuedCache {
       } );
       this.storeInIndexDb( cacheUpdate );
 
+      this.nextBatch = EMPTY_SET;
       this.decideNextAction( dispatch );
 
     } ).catch( error => {
@@ -206,6 +222,7 @@ export default class AbstractQueuedCache {
       mw.log.error( 'Unable to batch request following items: ' + nextBatch );
       mw.log.error( error );
 
+      this.nextBatch = EMPTY_SET;
       this.decideNextAction( dispatch );
     } );
   }

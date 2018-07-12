@@ -57,7 +57,7 @@ const mapStateToProps = state => ( {
 } );
 
 const mapDispatchToProps = dispatch => ( {
-  queue: key => dispatch( labelDescriptionCache.actionQueue( key ) ),
+  queue: key => dispatch( labelDescriptionCache.actionQueue( [ key ] ) ),
 } );
 
 const LocalizedWikibaseItemInputConnected = connect( mapStateToProps, mapDispatchToProps )( LocalizedWikibaseItemInput );

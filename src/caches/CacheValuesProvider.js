@@ -17,11 +17,8 @@ class CacheValuesProvider extends PureComponent {
   componentDidMount() {
     const { cacheData, cacheKeys, queue } = this.props;
     if ( cacheKeys ) {
-      cacheKeys.forEach( cacheKey => {
-        if ( typeof cacheData[ cacheKey ] === 'undefined' ) {
-          queue( cacheKey );
-        }
-      } );
+      const missing = cacheKeys.filter( cacheKey => cacheData[ cacheKey ] === undefined );
+      if ( missing.length > 0 ) queue( missing );
     }
   }
 
@@ -60,11 +57,8 @@ class CacheValuesProvider extends PureComponent {
 
     if ( prevProps.cacheKeys !== cacheKeys
         && !!cacheKeys ) {
-      cacheKeys.forEach( cacheKey => {
-        if ( typeof cacheData[ cacheKey ] === 'undefined' ) {
-          queue( cacheKey );
-        }
-      } );
+      const missing = cacheKeys.filter( cacheKey => cacheData[ cacheKey ] === undefined );
+      if ( missing.length > 0 ) queue( missing );
     }
   }
 }
@@ -74,7 +68,7 @@ const mapStateToProps = ( state, ownProps ) => ( {
 } );
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {
-  queue: cacheKey => dispatch( ownProps.cache.actionQueue( cacheKey ) ),
+  queue: cacheKeys => dispatch( ownProps.cache.actionQueue( cacheKeys ) ),
 } );
 
 const CacheValuesProviderConnected = connect( mapStateToProps, mapDispatchToProps )( CacheValuesProvider );
