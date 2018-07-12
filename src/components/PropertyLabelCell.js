@@ -17,7 +17,7 @@ export default class PropertyLabelCell extends PureComponent {
         rel="noopener noreferrer"
         target="_blank"
         title={description}>
-        <span>{label || id}</span>
+        {label || id}
       </a>
     </th>;
   }
