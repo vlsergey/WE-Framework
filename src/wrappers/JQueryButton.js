@@ -5,7 +5,7 @@ export default class JQueryButton extends PureComponent {
 
   static propTypes = {
     className: PropTypes.string,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
     disabled: PropTypes.bool,
     icon: PropTypes.string,
     label: PropTypes.string,

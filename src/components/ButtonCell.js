@@ -10,7 +10,7 @@ export default class ButtonCell extends PureComponent {
     disabled: PropTypes.bool,
     icon: PropTypes.string.isRequired,
     label: PropTypes.string,
-    onClick: PropTypes.func.isRequired,
+    onClick: PropTypes.func,
   };
 
   render() {
