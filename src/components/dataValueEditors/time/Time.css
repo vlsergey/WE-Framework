@@ -6,12 +6,28 @@
   width: 100%;
 }
 
+.timeDetailsPopup {
+  white-space: nowrap;
+  width: 20em;
+}
+
+table.timeDetails {
+  outline: none;
+}
+
 .timeDetails th, .timeDetails td {
   padding: .1em .25em !important;
 }
 
 .timeDetails th {
   text-align: left;
+}
+
+/* checkboxes */
+.timeDetails td input {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  vertical-align: middle;
 }
 
 td.timeRendered {

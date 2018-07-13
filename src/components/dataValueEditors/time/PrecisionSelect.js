@@ -9,7 +9,7 @@ export default class PrecisionSelect extends PureComponent {
 
   static propTypes = {
     onChange: PropTypes.func.isRequired,
-    value: PropTypes.string,
+    value: PropTypes.number,
     readOnly: PropTypes.bool.isRequired,
   };
 
@@ -31,10 +31,10 @@ export default class PrecisionSelect extends PureComponent {
       className={styles.precisionSelect}
       disabled={readOnly}
       onChange={this.handleChange}
-      value={value || EMPTY_STRING}
+      value={typeof value === 'number' ? value.toString() : EMPTY_STRING}
       {...other}>
       {[ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ].map( precision =>
-        <option key={precision} value={precision}>{i18n.precision[ precision ]}</option>
+        <option key={precision} value={precision.toString()}>{i18n.precision[ precision ]}</option>
       )}
     </select>;
   }

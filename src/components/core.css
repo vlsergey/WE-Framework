@@ -54,24 +54,6 @@
 	padding: 0.25em;
 }
 
-:global(.ui-button) .ui-icon-wef-snaktype-value, :global(.ui-button.ui-state-hover) .ui-icon-wef-snaktype-value {
-    background-image: url(./snaktype_value.png);
-    width: 16px;
-    height: 16px;
-}
-
-:global(.ui-button) .ui-icon-wef-snaktype-novalue, :global(.ui-button.ui-state-hover) .ui-icon-wef-snaktype-novalue {
-    background-image: url(./snaktype_novalue.png);
-    width: 16px;
-    height: 16px;
-}
-
-:global(.ui-button) .ui-icon-wef-snaktype-somevalue, :global(.ui-button.ui-state-hover) .ui-icon-wef-snaktype-somevalue {
-    background-image: url(./snaktype_somevalue.png);
-    width: 16px;
-    height: 16px;
-}
-
 .wef_property_editor_column_cell {
 	min-width: 150px;
 }

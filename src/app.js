@@ -13,6 +13,15 @@ import PersonEditorTemplate from './editors/PersonEditorTemplate';
 import SoftwareEditorTemplate from './editors/SoftwareEditorTemplate';
 import TaxonEditorTemplate from './editors/TaxonEditorTemplate';
 
+function loadSemanticUiCss( ) {
+  /* eslint no-undef: 0 */
+  if ( process.env.NODE_ENV === 'production' ) {
+    require( 'semantic-ui-css/components/popup.min.css?global' );
+  } else {
+    require( 'semantic-ui-css/components/popup.css?global' );
+  }
+}
+
 mw.loader.using( [ //
   'jquery.ui.dialog', //
   'jquery.ui.tabs', //
@@ -21,6 +30,7 @@ mw.loader.using( [ //
 ], () => {
 
   require( 'fetch-polyfill' );
+  loadSemanticUiCss();
 
   settings.registerEditor( AdmEntityEditorTemplate );
   settings.registerEditor( EntityEditorTemplate );

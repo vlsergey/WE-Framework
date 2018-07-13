@@ -2,20 +2,25 @@ const path = require('path');
 const StringReplacePlugin = require("string-replace-webpack-plugin");
 
 module.exports = {
-  mode: "production", // no defaults
+  mode: "none", // no defaults
 
   entry: './src/app.js',
 
   module: {
     rules: [
       {
-        test: /\.(png|jpg)$/,
+        test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
         loader: 'url-loader',
-        include: /src/,
       },
       {
         test: /\.css$/,
-        include: /src/,
+        include: /semantic\-ui\-css/,
+        // exclude: /node_modules/,
+        use: [ 'style-loader', 'css-loader', 'postcss-loader' ]
+      },
+      {
+        test: /\.css$/,
+        // include: /src/,
         exclude: /node_modules/,
         loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
       },
@@ -56,10 +61,6 @@ module.exports = {
       path.resolve(__dirname, "src"),
       "node_modules"
     ],
-  },
-
-  optimization: {
-    minimize: false,
   },
 
   performance: {

@@ -2,9 +2,11 @@ import * as ApiUtils from 'core/ApiUtils';
 import * as Shapes from 'model/Shapes';
 import React, { PureComponent } from 'react';
 import DetailsArea from './DetailsArea';
-import Popup from 'reactjs-popup';
+import Popup from 'semantic-ui-react/dist/commonjs/modules/Popup';
 import PropTypes from 'prop-types';
 import styles from './Time.css';
+
+const POPUP_ON_CLICK_FOCUS = [ 'click', 'focus' ];
 
 export default class TimeDataValueEditor extends PureComponent {
 
@@ -29,10 +31,6 @@ export default class TimeDataValueEditor extends PureComponent {
     };
     this.wikidataApi = ApiUtils.getWikidataApi();
 
-    this.handleBlur = () => this.setState( { focused: false } );
-    this.handleFocused = () => this.setState( { focused: true } );
-    this.handleKeyDown = this.handleKeyDown.bind( this );
-
     this.handleTextChange = this.handleTextChange.bind( this );
     this.handleChangeManualCalendarModel = calendarModel => { this.setState( { calendarModel } ); this.requestParsing( ); };
     this.handleChangeManualPrecision = precision => { this.setState( { precision } ); this.requestParsing( ); };
@@ -45,12 +43,6 @@ export default class TimeDataValueEditor extends PureComponent {
 
   componentDidMount() {
     this.requestRender( true );
-  }
-
-  handleKeyDown( event ){
-    if ( event.key == 'Tab' ){
-      this.refPopup.current.closePopup();
-    }
   }
 
   handleToggleManualCalendarModel() {
@@ -161,7 +153,9 @@ export default class TimeDataValueEditor extends PureComponent {
 
   render() {
     const { datavalue, readOnly } = this.props;
-    const { calendarModel, focused, parsing, rendering, error, precision, renderedAsHtml, text } = this.state;
+    const { calendarModel,
+      // focused,
+      parsing, rendering, error, precision, renderedAsHtml, text } = this.state;
     const value = ( datavalue || {} ).value || {};
 
     if ( readOnly ) {
@@ -172,9 +166,7 @@ export default class TimeDataValueEditor extends PureComponent {
     }
 
     const input = <input
-      onBlur={this.handleBlur}
       onChange={this.handleTextChange}
-      onFocues={this.handleFocus}
       onKeyDown={this.handleKeyDown}
       value={text} />;
 
@@ -191,14 +183,17 @@ export default class TimeDataValueEditor extends PureComponent {
       preview={renderedAsHtml}
       spinner={parsing || rendering} />;
 
+    // closeOnTriggerBlur={false}
+
     return <td className={styles.time} colSpan={12}>
       <Popup
-        contentStyle={{ width: '30em' }}
-        on="focus"
-        open={focused ? true : undefined}
+        className={styles.timeDetailsPopup}
+        closeOnTriggerClick={false}
+        hoverable
+        on={POPUP_ON_CLICK_FOCUS}
         position="bottom left"
-        ref={this.refPopup}
-        trigger={input}>
+        trigger={input}
+        wide={false}>
         {details}
       </Popup>
     </td>;

@@ -14,13 +14,13 @@ export default class DetailsArea extends PureComponent {
     preview: PropTypes.string,
     error: PropTypes.string,
 
-    parsedCalendarModel: PropTypes.string.isRequired,
-    manualCalendarModel: PropTypes.string.isRequired,
+    parsedCalendarModel: PropTypes.string,
+    manualCalendarModel: PropTypes.string,
     onManualCalendarModelToggle: PropTypes.func.isRequired,
     onManualCalendarModelChange: PropTypes.func.isRequired,
 
-    parsedPrecision: PropTypes.number.isRequired,
-    manualPrecision: PropTypes.number.isRequired,
+    parsedPrecision: PropTypes.number,
+    manualPrecision: PropTypes.number,
     onManualPrecisionToggle: PropTypes.func.isRequired,
     onManualPrecisionChange: PropTypes.func.isRequired,
   }
@@ -33,7 +33,8 @@ export default class DetailsArea extends PureComponent {
       onManualCalendarModelChange, onManualPrecisionChange,
     } = this.props;
 
-    return <table className={styles.timeDetails}>
+    // we need tabindex thus popup will be able to stay open when clicked on DetailsArea
+    return <table className={styles.timeDetails + ' ui-widget'} tabIndex={0}>
       <tbody>
         <tr>
           <th colSpan={3}>
