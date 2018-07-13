@@ -27,7 +27,7 @@ class FlagImageHtmlCache extends AbstractQueuedCache {
       prop: 'text',
       text: fileNames
         .map( fileName => openTagF( fileName )
-            + '[[File:' + fileName + '|22x22px|frameless|link=]]'
+            + '[[File:' + fileName + '|22x16px|frameless|link=]]'
           + closeTagF( fileName ) )
         .join( '\r\n' ),
     } );
