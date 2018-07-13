@@ -10,7 +10,7 @@
   	"react",
     ["env", {
       "targets": {
-        "browsers": ["last 2 versions", "safari >= 10", "ie >= 11"]
+        "browsers": [">0.1%", "safari >= 10", "ie >= 11"]
       }
     }]
   ]
