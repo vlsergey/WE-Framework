@@ -1,6 +1,7 @@
 import i18n from './i18n';
 
 const editorDescription = {
+  id: 'FrbrEdition',
   linkText: i18n.frbrEditionLinkText,
   dialogTitle: i18n.frbrEditionDialogTitle,
   tabs: [

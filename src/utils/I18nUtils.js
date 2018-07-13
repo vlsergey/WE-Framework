@@ -1,6 +1,6 @@
 export const DEFAULT_LANGUAGES = [];
 
-[ mw.config.get( 'wgContentLanguage' ), mw.config.get( 'wgUserLanguage' ), 'en', 'ru' ]
+[ mw.config.get( 'wgUserLanguage' ), mw.config.get( 'wgContentLanguage' ), 'en', 'ru' ]
   .forEach( code => { if ( DEFAULT_LANGUAGES.indexOf( code ) === -1 ) DEFAULT_LANGUAGES.push( code ); } );
 
 export const API_PARAMETER_LANGUAGES = DEFAULT_LANGUAGES.join( '|' );

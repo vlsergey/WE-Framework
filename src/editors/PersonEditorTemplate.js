@@ -1,6 +1,7 @@
 import i18n from './i18n';
 
 const editorDescription = {
+  id: 'Person',
   linkText: i18n.personLinkText,
   dialogTitle: i18n.personDialogTitle,
   tabs: [

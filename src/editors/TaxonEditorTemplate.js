@@ -1,6 +1,7 @@
 import i18n from './i18n';
 
 const editorDescription = {
+  id: 'Taxon',
   linkText: i18n.taxonLinkText,
   dialogTitle: i18n.taxonDialogTitle,
   tabs: [

@@ -7,7 +7,12 @@ const en = {
   tabEducationAndScience: 'education & science',
   tabMedia: 'media',
 
+  admEntityLinkText: 'WEF: AdmEntity',
+  admEntityDescription: 'Administrative entities: countries, states, cities',
+  admEntityDialogTitle: 'Administrative entity — WE-Framework',
+
   externalLinksLinkText: 'WEF: External IDs',
+  externalLinksDescription: 'External IDs and authoritive control',
   externalLinksDialogTitle: 'External IDs and links — WE-Framework',
 
   frbrEditionLinkText: 'WEF: FRBR Edition',
@@ -40,7 +45,12 @@ const ru = {
   tabEducationAndScience: 'образование и наука',
   tabMedia: 'медиа',
 
+  admEntityLinkText: 'WEF: Адм. единица',
+  admEntityDescription: 'Административные единицы: страны, штаты, области, города',
+  admEntityDialogTitle: 'Административная единица — WE-Framework',
+
   externalLinksLinkText: 'WEF: Коды и cсылки',
+  externalLinksDescription: 'Внешние ссылки, идентификаторы и нормативный контроль',
   externalLinksDialogTitle: 'Внешние идентификаторы и ссылки — WE-Framework',
 
   frbrEditionLinkText: 'WEF: FRBR издание',

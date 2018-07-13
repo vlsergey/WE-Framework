@@ -1,8 +1,8 @@
 import * as I18nUtils from 'utils/I18nUtils';
 
 const en = {
-  linkText: 'WE-F Settings',
-  windowTitle: 'WE-F Settings',
+  linkText: 'WEF: Settings',
+  dialogTitle: 'Enabled editors settings — WE-Framework',
 
   fieldSetEditors: 'Editors to enable (in left menu and dropdowns)',
 
@@ -11,8 +11,8 @@ const en = {
 };
 
 const ru = {
-  linkText: 'WE-F: Настройка',
-  windowTitle: 'WE-F: Настройка гаджетов',
+  linkText: 'WEF: Настройки',
+  dialogTitle: 'Загружаемые гаджеты — WE-Framework',
 
   fieldSetEditors: 'Включить следующие редакторы (в меню и в выпадающих списках)',
 

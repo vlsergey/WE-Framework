@@ -1,6 +1,10 @@
+import i18n from './i18n';
+
 const editorDescription = {
-  linkText: 'WEF: AdmEntity',
-  dialogTitle: 'Administrative Entity',
+  id: 'AdmEntity',
+  linkText: i18n.admEntityLinkText,
+  description: i18n.admEntityDescription,
+  dialogTitle: i18n.admEntityDialogTitle,
   tabs: [
     {
       label: 'General',

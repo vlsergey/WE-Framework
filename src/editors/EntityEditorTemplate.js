@@ -1,4 +1,5 @@
 const editorDescription = {
+  id: 'Entity',
   linkText: 'WEF: Entity',
   dialogTitle: 'Entity',
   tabs: [
