@@ -108,7 +108,7 @@ const csrfTokenPromise = loginPromise.then( () => {
 } );
 
 const editPromise = csrfTokenPromise.then( csrftoken => {
-  const articleName = 'MediaWiki:Gadget-wefcore.js';
+  const articleName = 'MediaWiki:wef.js';
   console.log( 'Uploading app.bundle.js as ' + articleName + '...' );
 
   return fetch( 'https://ru.wikipedia.org/w/api.php', {
