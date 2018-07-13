@@ -1,6 +1,7 @@
 .animatedFateIn {
+  opacity: 1;
   animation-duration: 0.7s;
-  animation-fill-mode: forwards;
+  animation-fill-mode: initial;
   animation-name: fadeIn;
 }
 
