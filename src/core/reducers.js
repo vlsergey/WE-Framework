@@ -4,7 +4,7 @@ import expect from 'expect';
 import { newStatementClaim } from 'model/Shapes';
 import PropertyDescription from './PropertyDescription';
 
-const entityReducerF = originalEntity => ( entity = originalEntity, action ) => {
+const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   expect( entity ).toBeAn( 'object' );
 
   switch ( action.type ) {
@@ -96,12 +96,12 @@ const entityReducerF = originalEntity => ( entity = originalEntity, action ) => 
   return entity;
 };
 
-export default function buildReducers( originalEntity ) {
+export default function buildReducers( originalEntity, unsavedEntity ) {
   expect( originalEntity ).toBeAn( 'object' );
 
   return combineReducers( {
     originalEntity: () => originalEntity,
-    entity: entityReducerF( originalEntity ),
+    entity: entityReducerF( unsavedEntity || originalEntity ),
     ...cacheReducers,
   } );
 }

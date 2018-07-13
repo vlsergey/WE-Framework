@@ -8,6 +8,11 @@ describe( 'core', () => {
 
     describe( 'filterEmptyEntityStructures()', () => {
 
+      it( 'should correctly handre empty entity ', () => {
+        const filteredEntity = filterEmptyEntityStructures( {} );
+        assert.equal( JSON.stringify( filteredEntity ), '{}' );
+      } );
+
       it( 'should correctly handre cleared datavalue/value in references', () => {
 
         const q30 = {

@@ -18,6 +18,13 @@ describe( 'save.js', () => {
 
   } );
 
+  it( 'Should be able to report no changes in claims for same empty objects', () => {
+
+    const noChanges = collectClaimUpdates( {}, {} );
+    assert.deepEqual( noChanges, [] );
+
+  } );
+
   it( 'Should be able to report changes in existing description', () => {
 
     const newEntity = {

@@ -44,9 +44,10 @@ class PropertyClaimContainer extends PureComponent {
 }
 
 const EMPTY_ARRAY = [];
+const EMPTY_OBJECT = {};
 
 const mapStateToProps = ( state, ownProps ) => ( {
-  claims: state.entity.claims[ ownProps.propertyDescription.id ] || EMPTY_ARRAY,
+  claims: ( state.entity.claims || EMPTY_OBJECT )[ ownProps.propertyDescription.id ] || EMPTY_ARRAY,
 } );
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {

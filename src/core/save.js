@@ -73,12 +73,12 @@ export function collectClaimUpdates( originalEntity, entity ) {
   const checked = new Set();
 
   //calculate changed and removed claims
-  Object.keys( entity.claims ).forEach( propertyId => {
+  Object.keys( entity.claims || {} ).forEach( propertyId => {
 
     const newClaims = entity.claims[ propertyId ];
     expect( newClaims ).toBeAn( 'array' );
 
-    const oldClaims = originalEntity.claims[ propertyId ];
+    const oldClaims = ( originalEntity.claims || {} )[ propertyId ];
 
     if ( typeof oldClaims !== 'object' ) {
       newClaims.forEach( newClaim => {
@@ -117,7 +117,7 @@ export function collectClaimUpdates( originalEntity, entity ) {
     } );
   } );
 
-  Object.values( originalEntity.claims ).forEach( originalClaims => {
+  Object.values( originalEntity.claims || {} ).forEach( originalClaims => {
     originalClaims
       .filter( oldClaim => !checked.has( oldClaim.id ) )
       .forEach( oldClaim => toUpdate.push( { id: oldClaim.id, remove: '' } ) );
