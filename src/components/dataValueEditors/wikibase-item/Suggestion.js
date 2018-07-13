@@ -14,7 +14,7 @@ export default class Suggestion extends PureComponent {
   render() {
     const { entityId } = this.props;
 
-    const wikitext = '{{#if:{{#property:P18|from=' + entityId + '}}|[[File:{{#property:P18|from=' + entityId + '}}|45x45px]]}}';
+    const wikitext = '{{#if:{{#property:P18|from=' + entityId + '}}|[[File:{{#property:P18|from=' + entityId + '}}|45x45px|frameless|link=]]}}';
     return <table className={dataTypeStyles.suggestionContainer}>
       <tbody>
         <tr>

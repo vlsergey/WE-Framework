@@ -96,7 +96,7 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
     return <div className={styles.suggestionContent}>
       <div className={styles.suggestionContentPreviewOuter}>
         <div className={styles.suggestionContentPreviewInner}>
-          <MediawikiPreview spinnerSize={45} wikitext={'[[File:' + data + '|50x50px]]'} />
+          <MediawikiPreview spinnerSize={45} wikitext={'[[File:' + data + '|50x50px|frameless|link=]]'} />
         </div>
       </div>
       <span className={styles.suggestionContentText}>&nbsp;&nbsp;{data}</span>
