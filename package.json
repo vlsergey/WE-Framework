@@ -64,9 +64,8 @@
     "webpack-serve": "^2.0.2"
   },
   "scripts": {
-    "build": "webpack",
     "serve": "webpack-serve --no-clipboard",
-    "deploy": "eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js && node ./dist/deploy-to-wikipedia.out.js",
+    "deploy": "webpack -p && eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js && node ./dist/deploy-to-wikipedia.out.js",
     "test:watch": "karma start karma.conf.js --no-single-run",
     "test:watch:chrome": "karma start karma.conf.js --no-single-run --browsers Chrome"
   },
