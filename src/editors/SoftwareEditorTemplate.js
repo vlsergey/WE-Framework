@@ -1,10 +1,12 @@
+import i18n from './i18n';
+
 const editorDescription = {
   id: 'Software',
   linkText: 'WEF: Software',
   dialogTitle: 'Software',
   tabs: [
     {
-      label: 'General',
+      label: i18n.tabGeneral,
       key: 'general',
       specials: [
         { type: 'LabelsAndDescriptionArea' },

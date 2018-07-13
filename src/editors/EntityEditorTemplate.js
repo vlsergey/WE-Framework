@@ -1,10 +1,12 @@
+import i18n from './i18n';
+
 const editorDescription = {
   id: 'Entity',
   linkText: 'WEF: Entity',
   dialogTitle: 'Entity',
   tabs: [
     {
-      label: 'General',
+      label: i18n.tabGeneral,
       specials: [
         { type: 'LabelsAndDescriptionArea' },
       ],

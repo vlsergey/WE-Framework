@@ -7,7 +7,7 @@ const editorDescription = {
   dialogTitle: i18n.admEntityDialogTitle,
   tabs: [
     {
-      label: 'General',
+      label: i18n.tabGeneral,
       specials: [
         { type: 'LabelsAndDescriptionArea' },
       ],

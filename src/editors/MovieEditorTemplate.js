@@ -1,10 +1,12 @@
+import i18n from './i18n';
+
 const editorDescription = {
   id: 'Movie',
   linkText: 'WEF: Movie',
   dialogTitle: 'Movie',
   tabs: [
     {
-      label: 'General',
+      label: i18n.tabGeneral,
       specials: [
         { type: 'LabelsAndDescriptionArea' },
       ],
