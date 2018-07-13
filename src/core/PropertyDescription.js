@@ -91,6 +91,14 @@ const claimHasMainsnakValue = statement => statement.mainsnak
 
 export default class PropertyDescription {
 
+  static deserialize( json ) {
+    if ( json === undefined || json === null ) return json;
+
+    Object.setPrototypeOf( json, PropertyDescription.prototype );
+    if ( json.urlFormatters )
+      json.urlFormatters.forEach( obj => Object.setPrototypeOf( obj, UrlFormatter.prototype ) );
+  }
+
   constructor( propertyEntity ) {
     expect( propertyEntity ).toBeAn( 'object' );
     expect( propertyEntity.id ).toBeA( 'string', 'Missing ID in property entity object' );

@@ -62,7 +62,7 @@ export default class PropertyDescriptionsProvider extends PureComponent {
           languageIds,
           languageCodes,
         };
-        Object.setPrototypeOf( result, PropertyDescription.prototype );
+        PropertyDescription.deserialize( result );
 
         const perPropertyCache = this.propertyDescriptionMemoizeCache;
         const previous = perPropertyCache[ propertyId ];

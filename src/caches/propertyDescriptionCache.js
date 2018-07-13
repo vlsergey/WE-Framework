@@ -16,7 +16,7 @@ class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
   }
 
   enchanceIndexedDbResult( cachedValue ) {
-    Object.setPrototypeOf( cachedValue, PropertyDescription.prototype );
+    PropertyDescription.deserialize( cachedValue );
     return cachedValue;
   }
 
