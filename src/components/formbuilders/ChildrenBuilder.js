@@ -86,7 +86,7 @@ export default class ChildrenBuilder extends PureComponent {
     quickSearch: false,
   }
 
-  filter = defaultMemoize( ( cache, sorted, originalTerm ) => {
+  filterByTerm = defaultMemoize( ( cache, sorted, originalTerm ) => {
     if ( !originalTerm || originalTerm.trim() === '' ) return sorted;
     const term = originalTerm.trim().toLowerCase();
 
@@ -97,7 +97,7 @@ export default class ChildrenBuilder extends PureComponent {
 
     const result = [];
 
-    const filter = ( fieldF, checkF ) => {
+    const filterImpl = ( fieldF, checkF ) => {
       toFilter = toFilter.filter( item => {
         const fieldValue = fieldF( item );
         if ( typeof fieldValue === 'string' && checkF( fieldValue.toLowerCase() ) ) {
@@ -109,10 +109,10 @@ export default class ChildrenBuilder extends PureComponent {
     };
 
     // TODO: aliases? other languages?
-    filter( item => item.label, value => value.startsWith( term ) );
-    filter( item => item.description, value => value.startsWith( term ) );
-    filter( item => item.label, value => value.indexOf( term ) !== -1 );
-    filter( item => item.description, value => value.indexOf( term ) !== -1 );
+    filterImpl( item => item.label, value => value.startsWith( term ) );
+    filterImpl( item => item.description, value => value.startsWith( term ) );
+    filterImpl( item => item.label, value => value.indexOf( term ) !== -1 );
+    filterImpl( item => item.description, value => value.indexOf( term ) !== -1 );
 
     return result.map( item => ( { property: item.property } ) );
   } );
@@ -183,7 +183,7 @@ export default class ChildrenBuilder extends PureComponent {
     return <PropertyDescriptionsProvider propertyIds={fields.map( field => field.property )}>
       {cache => {
         const sorted = !!sortBy && sortBy.length > 0 ? this.sort( cache, fields, sortBy ) : fields;
-        const filtered = this.filter( cache, sorted, quickSearchTerm );
+        const filtered = this.filterByTerm( cache, sorted, quickSearchTerm );
 
         return <table className={styles.wef_table}>
           { quickSearch && <thead className={styles.quickSearch} key="quickSearch">
@@ -217,7 +217,7 @@ export default class ChildrenBuilder extends PureComponent {
           <tbody>{filtered.map( field =>
             <ErrorBoundary description={'field: ' + JSON.stringify( field )} key={field.property}>
               {this.renderField( field, cache[ field.property ], {
-                displayEmpty: true,
+                displayEmpty,
                 displayLabel: fields.length !== 1 || parentLabelEntityId !== field.property,
               } )}
             </ErrorBoundary>
