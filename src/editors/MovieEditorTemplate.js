@@ -25,10 +25,34 @@ const editorDescription = {
         { property: 'P577' },
         /* genre */
         { property: 'P136' },
+        /* based on */
+        { property: 'P144' },
+        /* filming location */
+        { property: 'P915' },
+        /* cost */
+        { property: 'P2130' },
+        /* box office */
+        { property: 'P2142' },
+        /* aspect ratio */
+        { property: 'P2061' },
+        /* duration */
+        { property: 'P2047' },
         /* follows */
         { property: 'P155' },
         /* followed by */
         { property: 'P156' },
+        /* list of episodes */
+        { property: 'P1811' },
+        /* number of episodes */
+        { property: 'P1113' },
+        /* number of seasons */
+        { property: 'P2437' },
+        /* original network */
+        { property: 'P449' },
+        /* official website */
+        { property: 'P856' },
+        /* Commons category */
+        { property: 'P373' },
       ],
     },
     {
@@ -42,10 +66,16 @@ const editorDescription = {
         { property: 'P58' },
         /* producer */
         { property: 'P162' },
-        /* production company */
-        { property: 'P272' },
+        /* executive producer */
+        { property: 'P1431' },
         /* composer */
         { property: 'P86' },
+        /* choreographer */
+        { property: 'P1809' },
+        /* production company */
+        { property: 'P272' },
+        /* distributor */
+        { property: 'P750' },
       ],
     },
     {
@@ -53,6 +83,8 @@ const editorDescription = {
       fields: [
         /* cast member */
         { property: 'P161', columns: [ 'P453' ] },
+        /* narrator */
+        { property: 'P2438' },
       ],
     },
     {
