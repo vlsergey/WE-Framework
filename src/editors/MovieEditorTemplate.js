@@ -29,6 +29,10 @@ const editorDescription = {
         { property: 'P144' },
         /* filming location */
         { property: 'P915' },
+        /* cost */
+        { property: 'P2130' },
+        /* box office */
+        { property: 'P2142' },
         /* aspect ratio */
         { property: 'P2061' },
         /* duration */
@@ -66,6 +70,8 @@ const editorDescription = {
         { property: 'P1431' },
         /* composer */
         { property: 'P86' },
+        /* choreographer */
+        { property: 'P1809' },
         /* production company */
         { property: 'P272' },
         /* distributor */
