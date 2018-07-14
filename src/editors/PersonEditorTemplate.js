@@ -124,6 +124,7 @@ const editorDescription = {
             { property: 'P184' } /* doctoral advisor */,
             { property: 'P1026' } /* doctoral thesis */,
             { property: 'P512' } /* academic degree */,
+            { property: 'P803' } /* professorship */,
             { property: 'P802' } /* student */,
             { property: 'P185' } /* doctoral student */,
           ],
