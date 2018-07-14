@@ -21,6 +21,10 @@ const en = {
   frbrWorkLinkText: 'WEF: FRBR Work',
   frbrWorkDialogTitle: 'FRBR Work data — WE-Framework',
 
+  movieLinkText: 'WEF: Movie',
+  movieDescription: 'Animations and movies',
+  movieDialogTitle: 'Animation and Movie  — WE-Framework',
+
   personLinkText: 'WEF: Person',
   personDialogTitle: 'Person data — WE-Framework',
 
@@ -58,6 +62,10 @@ const ru = {
 
   frbrWorkLinkText: 'WEF: FRBR работа',
   frbrWorkDialogTitle: 'Свойства работы (FRBR) — WE-Framework',
+
+  movieLinkText: 'WEF: Фильм',
+  movieDescription: 'Анимация и фильмы',
+  movieDialogTitle: 'Анимация и фильм  — WE-Framework',
 
   personLinkText: 'WEF: Персона',
   personDialogTitle: 'Свойства персоны — WE-Framework',
