@@ -1,4 +1,4 @@
-import { collectClaimUpdates, collectEntityUpdates } from '../../src/core/save';
+import { collectClaimUpdates, collectEntityUpdates } from 'core/save';
 import assert from 'assert';
 import Q2262932 from '../entities/Q2262932';
 
@@ -23,6 +23,29 @@ describe( 'save.js', () => {
     const noChanges = collectClaimUpdates( {}, {} );
     assert.deepEqual( noChanges, [] );
 
+  } );
+
+  it( 'Should be able to report changes in aliases', () => {k;
+    const oneChange = collectEntityUpdates( {}, {
+      aliases: {
+        en: [
+          {
+            language: 'en',
+            value: 'Test',
+          },
+        ],
+      },
+    } );
+    assert.deepEqual( oneChange, {
+      aliases: {
+        en: [
+          {
+            language: 'en',
+            value: 'Test',
+          },
+        ],
+      },
+    } );
   } );
 
   it( 'Should be able to report changes in existing description', () => {
