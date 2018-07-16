@@ -1,4 +1,5 @@
 import * as ApiUtils from './ApiUtils';
+import commitDraftAliases from './commitDraftAliases';
 import deepEqual from 'deep-equal';
 import expect from 'expect';
 import filterEmptyEntityStructures from './filterEmptyEntityStructures';
@@ -139,7 +140,7 @@ export function collectClaimUpdates( originalEntity, entity ) {
 }
 
 export function collectEntityUpdates( originalEntity, entityWithEmptyClaims ) {
-  const entity = filterEmptyEntityStructures( entityWithEmptyClaims );
+  const entity = filterEmptyEntityStructures( commitDraftAliases( entityWithEmptyClaims ) );
   let data = {};
 
   const updatedLabels = collectlLabelalikeUpdates( originalEntity, entity, 'labels',

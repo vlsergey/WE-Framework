@@ -25,7 +25,7 @@ describe( 'save.js', () => {
 
   } );
 
-  it( 'Should be able to report changes in aliases', () => {k;
+  it( 'Should be able to report changes in aliases', () => {
     const oneChange = collectEntityUpdates( {}, {
       aliases: {
         en: [

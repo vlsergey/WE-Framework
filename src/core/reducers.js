@@ -11,6 +11,7 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
 
   case 'LABELS_CHANGE':
   case 'DESCRIPTION_CHANGE':
+  case 'DRAFT_ALIAS_CHANGE':
   case 'ALIASES_CHANGE':
   {
     const { language, newValue } = action;
@@ -19,6 +20,7 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
     const elementToChange = {
       LABELS_CHANGE: 'labels',
       DESCRIPTION_CHANGE: 'descriptions',
+      DRAFT_ALIAS_CHANGE: 'draftAliases',
       ALIASES_CHANGE: 'aliases',
     }[ action.type ];
 

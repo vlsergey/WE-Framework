@@ -1,6 +1,16 @@
 import 'babel-polyfill';
 import expect from 'expect';
 
+if ( !window.localStorage ) {
+  window.localStorage = {
+    _data: {},
+    setItem( id, val ) { return this._data[ id ] = String( val ); },
+    getItem( id ) { return this._data.hasOwnProperty( id ) ? this._data[ id ] : undefined; },
+    removeItem( id ) { return delete this._data[ id ]; },
+    clear() { return this._data = {}; },
+  };
+}
+
 const mw = {};
 
 mw.config = new Map();
