@@ -1,3 +1,4 @@
+import deepEqual from 'deep-equal';
 import expect from 'expect';
 import findByKeysInObjectStore from 'utils/findByKeysInObjectStore';
 
@@ -190,14 +191,21 @@ export default class AbstractQueuedCache {
 
     return findByKeysInObjectStore( objectStore, cacheKeys )
       .then( result => {
-        const keys = Object.keys( result );
-        if ( keys.length > 0 ) {
-          const cacheUpdate = {};
-          keys.forEach( cacheKey => {
-            cacheUpdate[ cacheKey ] = this.enchanceIndexedDbResult( result[ cacheKey ] );
-            this.dbQueue.delete( cacheKey );
-          } );
+        const cache = this.getCache();
+        const cacheUpdate = {};
+        let hasUpdates = false;
 
+        Object.keys( result ).forEach( cacheKey => {
+          const actual = this.enchanceIndexedDbResult( result[ cacheKey ] );
+          const existing = cache[ cacheKey ];
+          if ( !deepEqual( actual, existing ) ) {
+            cacheUpdate[ cacheKey ] = actual;
+            hasUpdates = true;
+          }
+          this.dbQueue.delete( cacheKey );
+        } );
+
+        if ( hasUpdates ) {
           this.putToCache( cacheUpdate );
           this.onCacheUpdateFromDatabase( cacheUpdate );
         }
@@ -233,11 +241,27 @@ export default class AbstractQueuedCache {
       mw.notify( notifyMessage + '… Success.', this.notifyOptionsSuccess );
       mw.log( 'Successfully received ' + nextBatch.length + ' cache ' + this.type + ' items: ' + nextBatch );
 
-      const cacheUpdate = this.convertResultToEntities( result, nextBatch );
-      expect( cacheUpdate ).toBeAn( 'object' );
-      this.putToCache( cacheUpdate );
-      this.storeInIndexDb( cacheUpdate );
-      this.onCacheUpdateFromRequest( cacheUpdate );
+      const cacheUpdateReady = this.convertResultToEntities( result, nextBatch );
+      expect( cacheUpdateReady ).toBeAn( 'object' );
+
+      const cache = this.getCache();
+      const cacheUpdate = {};
+      let hasUpdates = false;
+
+      Object.keys( cacheUpdateReady ).forEach( cacheKey => {
+        const actual = cacheUpdateReady[ cacheKey ];
+        const existing = cache[ cacheKey ];
+        if ( !deepEqual( actual, existing ) ) {
+          cacheUpdate[ cacheKey ] = actual;
+          hasUpdates = true;
+        }
+      } );
+
+      if ( hasUpdates ) {
+        this.putToCache( cacheUpdate );
+        this.storeInIndexDb( cacheUpdate );
+        this.onCacheUpdateFromRequest( cacheUpdate );
+      }
 
       this.nextBatch = EMPTY_SET;
       this.decideNextAction( );
