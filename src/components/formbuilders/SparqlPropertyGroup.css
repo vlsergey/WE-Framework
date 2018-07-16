@@ -1,6 +1,7 @@
 .sparql_property_group {
   height: 350px;
   overflow-y: auto;
+  padding-top: .5em;
   resize: vertical;
 }
 

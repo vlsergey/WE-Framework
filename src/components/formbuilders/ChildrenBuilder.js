@@ -149,11 +149,19 @@ export default class ChildrenBuilder extends PureComponent {
   }
 
   render() {
-    return <React.Fragment>
-      {this.renderSpecials()}
-      {this.renderFields()}
-      {this.renderFieldsets()}
-    </React.Fragment>;
+    const childRenderer = type => {
+      switch ( type ) {
+      case 'fields': return this.renderFields();
+      case 'fieldsets': return this.renderFieldsets();
+      case 'specials': return this.renderSpecials();
+      default: return null;
+      }
+    };
+
+    const children = Object.keys( this.props ).map( key =>
+      <div key={key}>{childRenderer( key )}</div>
+    );
+    return children;
   }
 
   renderField( field, propertyDescription, props = {} ) {

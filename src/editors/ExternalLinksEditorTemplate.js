@@ -83,6 +83,20 @@ const editorDescription = {
       ],
     },
     {
+      labelEntityId: 'Q54919' /* VIAF */,
+      fields: [
+        { property: 'P214' } /* VIAF ID */,
+      ],
+      specials: [
+        { type: 'SparqlPropertyGroup',
+          sparql: 'SELECT DISTINCT ?property '
+                    + 'WHERE { '
+                    + '?property wdt:P31/wdt:P279* wd:Q55586529 . ' /* Wikidata property for authority control by VIAF member */
+                    + '?property wikibase:propertyType wikibase:ExternalId . '
+                    + '}' },
+      ],
+    },
+    {
       labelEntityId: 'Q36524' /* authority control */,
       specials: [
         { type: 'SparqlPropertyGroup',
@@ -98,6 +112,7 @@ const editorDescription = {
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q52425722 } . ' /* Wikidata property related to natural science */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q28147643 } . ' /* Wikidata property related to video games */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q55452870 } . ' /* Wikidata property, related to encyclopedia */
+                    + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q55586529 } . ' /* Wikidata property for authority control by VIAF member */
                     + '}' },
       ],
     },
