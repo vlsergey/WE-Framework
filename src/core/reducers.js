@@ -4,6 +4,8 @@ import expect from 'expect';
 import { newStatementClaim } from 'model/Shapes';
 import PropertyDescription from './PropertyDescription';
 
+const EMPTY_OBJECT = {};
+
 const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   expect( entity ).toBeAn( 'object' );
 
@@ -38,14 +40,15 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
     expect( propertyDescription ).toBeA( PropertyDescription );
     const propertyId = propertyDescription.id;
 
-    const existingClaims = entity.claims[ propertyDescription.id ];
+    const claims = entity.claims || EMPTY_OBJECT;
+    const existingClaims = claims[ propertyDescription.id ];
     const newClaim = newStatementClaim( propertyDescription );
 
     if ( existingClaims ) {
       return {
         ...entity,
         claims: {
-          ...entity.claims,
+          ...claims,
           [ propertyId ]: [ ...existingClaims, newClaim ],
         },
       };
@@ -53,7 +56,7 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
       return {
         ...entity,
         claims: {
-          ...entity.claims,
+          ...claims,
           [ propertyId ]: [ newClaim ],
         },
       };
@@ -64,13 +67,14 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
     const { claim } = action;
     const propertyId = claim.mainsnak.property;
 
-    const existingClaims = entity.claims[ propertyId ];
+    const claims = entity.claims || EMPTY_OBJECT;
+    const existingClaims = claims[ propertyId ];
     const claimsToSave = existingClaims.filter( original => original.id !== claim.id );
 
     return {
       ...entity,
       claims: {
-        ...entity.claims,
+        ...claims,
         [ propertyId ]: claimsToSave,
       },
     };
@@ -80,7 +84,8 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
     const { claim } = action;
     const propertyId = claim.mainsnak.property;
 
-    const existingClaims = entity.claims[ propertyId ];
+    const claims = entity.claims || EMPTY_OBJECT;
+    const existingClaims = claims[ propertyId ];
     const claimsToSave = !!existingClaims && existingClaims.length > 0
       ? existingClaims.map( original => original.id === claim.id ? claim : original )
       : [ claim ];
@@ -88,7 +93,7 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
     return {
       ...entity,
       claims: {
-        ...entity.claims,
+        ...claims,
         [ propertyId ]: claimsToSave,
       },
     };
