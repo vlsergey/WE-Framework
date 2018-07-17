@@ -1,4 +1,5 @@
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
+import expect from 'expect';
 import React from 'react';
 import SearchOnSourceWebsitesButtonCell from './SearchOnSourceWebsitesButtonCell';
 import styles from 'components/core.css';
@@ -52,21 +53,33 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
     params.value = datavalue ? datavalue.value : '';
     params.onChange = this.handleChange;
 
+    const buttons = this.renderButtonCells();
+    expect( buttons ).toBeAn( 'array' );
+
     return <React.Fragment>
       <td colSpan={5}>
         <input {...params} />
       </td>
-      <td className={styles.wef_external_links_url_cell} colSpan={6}>
+      <td className={styles.wef_external_links_url_cell} colSpan={12 - buttons.length}>
         <div className={styles.wef_external_links_url_div}>
           {url ? <a className={styles.wef_external_links_url_a} href={url} rel="noopener noreferrer" target="_blank">{url}</a> : ''}
         </div>
       </td>
-      { propertyDescription.sourceWebsites && propertyDescription.languageCodes
+      { buttons }
+    </React.Fragment>;
+  }
+
+  renderButtonCells() {
+    const { propertyDescription } = this.props;
+
+    return [
+      propertyDescription.sourceWebsites && propertyDescription.languageCodes
         ? <SearchOnSourceWebsitesButtonCell
+          key="SearchOnSourceWebsitesButtonCell"
           languageCodes={propertyDescription.languageCodes}
           sourceWebsites={propertyDescription.sourceWebsites} />
-        : <td /> }
-    </React.Fragment>;
+        : <td key="SearchOnSourceWebsitesButtonCell" />,
+    ];
   }
 
 }

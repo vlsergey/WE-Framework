@@ -1,6 +1,7 @@
 import * as Shapes from 'model/Shapes';
 import React, { PureComponent } from 'react';
 import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
+import enhancementsFactory from 'enhancements/enhancementsFactory';
 import expect from 'expect';
 import ExternalIdDataValueEditor from './dataValueEditors/ExternalIdDataValueEditor';
 import MonolingualTextDataValueEditor from './dataValueEditors/MonolingualTextDataValueEditor';
@@ -13,16 +14,18 @@ import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueE
 import UrlDataValueEditor from './dataValueEditors/UrlDataValueEditor';
 import WikibaseItemDataValueEditor from './dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
-export const SUPPORTED_DATATYPES = [
-  'external-id',
-  'commonsMedia',
-  'monolingualtext',
-  'quantity',
-  'string',
-  'time',
-  'url',
-  'wikibase-item',
-];
+const STANDARD = {
+  'external-id': ExternalIdDataValueEditor,
+  'commonsMedia': CommonsMediaDataValueEditor,
+  'monolingualtext': MonolingualTextDataValueEditor,
+  'quantity': QuantityDataValueEditor,
+  'string': StringDataValueEditor,
+  'time': TimeDataValueEditor,
+  'url': UrlDataValueEditor,
+  'wikibase-item': WikibaseItemDataValueEditor,
+};
+
+export const SUPPORTED_DATATYPES = Object.keys( STANDARD );
 
 export default class SnakValueEditorFactory extends PureComponent {
 
@@ -69,27 +72,11 @@ export default class SnakValueEditorFactory extends PureComponent {
       propertyDescription,
     };
 
-    switch ( dataType ) {
-    case 'external-id':
-      return <ExternalIdDataValueEditor {...dataValueEditorProps} />;
-    case 'commonsMedia':
-      return <CommonsMediaDataValueEditor {...dataValueEditorProps} />;
-    case 'monolingualtext':
-      return <MonolingualTextDataValueEditor {...dataValueEditorProps} />;
-    case 'quantity':
-      return <QuantityDataValueEditor {...dataValueEditorProps} />;
-    case 'string':
-      return <StringDataValueEditor {...dataValueEditorProps} />;
-    case 'time':
-      return <TimeDataValueEditor {...dataValueEditorProps} />;
-    case 'url':
-      return <UrlDataValueEditor {...dataValueEditorProps} />;
-    case 'wikibase-item':
-      return <WikibaseItemDataValueEditor {...dataValueEditorProps} />;
-      // case "wikibase-item":
-    default:
-      return <UnsupportedDataValueEditor datavalue={snak.datavalue} propertyDescription={propertyDescription} />;
-    }
+    const enhancedDataValueEditorClass = enhancementsFactory.findDataValueEditor( propertyDescription );
+    const standardDataValueEditorClass = STANDARD[ dataType ];
+    const dataValueEditorClass = enhancedDataValueEditorClass || standardDataValueEditorClass || UnsupportedDataValueEditor;
+
+    return React.createElement( dataValueEditorClass, dataValueEditorProps );
   }
 
 }
