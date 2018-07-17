@@ -1,9 +1,8 @@
-import * as ApiUtils from './ApiUtils';
-import commitDraftAliases from './commitDraftAliases';
 import deepEqual from 'deep-equal';
 import expect from 'expect';
-import filterEmptyEntityStructures from './filterEmptyEntityStructures';
-import i18n from './i18n.js';
+import { getWikidataApi } from './ApiUtils';
+import i18n from './i18n';
+import preSaveTransformations from './preSaveTransformations';
 
 const SUMMARY_PREFIX = 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ';
 const TAG = 'WE-Framework gadget';
@@ -139,8 +138,8 @@ export function collectClaimUpdates( originalEntity, entity ) {
     } );
 }
 
-export function collectEntityUpdates( originalEntity, entityWithEmptyClaims ) {
-  const entity = filterEmptyEntityStructures( commitDraftAliases( entityWithEmptyClaims ) );
+export function collectEntityUpdates( originalEntity, dirtyEntity ) {
+  const entity = preSaveTransformations( dirtyEntity );
   let data = {};
 
   const updatedLabels = collectlLabelalikeUpdates( originalEntity, entity, 'labels',
@@ -212,7 +211,7 @@ export function saveAndClose( resolve, reject ) {
       params.id = state.entity.id;
     }
 
-    ApiUtils.getWikidataApi()
+    getWikidataApi()
       .postWithEditToken( params )
       .catch( ( code, { error } ) => {
         mw.log.error( i18n.errorUpdateEntity );
@@ -250,12 +249,10 @@ export function saveAndClose( resolve, reject ) {
         console.log( '[WEF_Utils.tagRevisions] ' + text );
     }
 
-    const wikidataApi = ApiUtils.getWikidataApi();
-
     if ( displayNotifications )
       notify( 'Query last 50 Wikidata entity revisions of ' + entityId );
 
-    return wikidataApi.getPromise( {
+    return getWikidataApi().getPromise( {
       action: 'query',
       prop: 'revisions',
       titles: entityId,
@@ -289,7 +286,7 @@ export function saveAndClose( resolve, reject ) {
           return;
         }
 
-        return wikidataApi.postWithEditTokenPromise( {
+        return getWikidataApi().postWithEditTokenPromise( {
           action: 'tag',
           revid: revisions.join( '|' ),
           add: TAG,
