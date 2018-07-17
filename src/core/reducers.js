@@ -1,6 +1,7 @@
 import cacheReducers from 'caches/reducers';
 import { combineReducers } from 'redux';
 import expect from 'expect';
+import generateRandomString from 'utils/generateRandomString';
 import { newStatementClaim } from 'model/Shapes';
 import PropertyDescription from './PropertyDescription';
 
@@ -98,6 +99,74 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
       },
     };
   }
+
+  // action used by enchanced datavalue editors (like ISBN or VIAF)
+  // used to fill OTHER („sister“) properties with values canclulated from current claim
+  // (or obtained from external source using current claim, like BNF from VIAF record)
+  case 'CLAIMS_FILL': {
+    const { propertyId, normalizeF, newValue } = action;
+    expect( propertyId ).toBeA( 'string' );
+    expect( normalizeF ).toBeA( 'function' );
+    expect( newValue ).toBeA( 'string' ); // only external-id values are supported so far
+
+    const claims = entity.claims || EMPTY_OBJECT;
+    const existingClaims = claims[ propertyId ] || [];
+
+    // let's try to find existing claims that already have this new value
+    let foundAndReplaced = false;
+    const newClaims = existingClaims
+      .map( claim => {
+        if ( !claim.mainsnak
+            || !claim.mainsnak.datavalue
+            || !claim.mainsnak.datavalue.value
+            || claim.mainsnak.datatype !== 'external-id'
+            || claim.mainsnak.datavalue.type !== 'string' )
+          return claim;
+        const oldValue = claim.mainsnak.datavalue.value;
+        const normalized = normalizeF( oldValue );
+        if ( normalized !== newValue ) return claim;
+
+        foundAndReplaced = true;
+        return {
+          ...claim,
+          mainsnak: {
+            ...claim.mainsnak,
+            datavalue: {
+              ...claim.mainsnak.datavalue,
+              value: normalized,
+            },
+          },
+        };
+      } );
+
+    // need to create new claim with provided value
+    if ( !foundAndReplaced ) {
+      newClaims.push( {
+        mainsnak: {
+          snaktype: 'value',
+          property: propertyId,
+          hash: generateRandomString(),
+          datavalue: {
+            value: newValue,
+            type: 'string',
+          },
+          datatype: 'external-id',
+        },
+        type: 'statement',
+        id: generateRandomString(),
+        rank: 'normal',
+      } );
+    }
+
+    return {
+      ...entity,
+      claims: {
+        ...entity.claims,
+        [ propertyId ]: newClaims,
+      },
+    };
+  }
+
   }
 
   return entity;

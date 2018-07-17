@@ -1,11 +1,13 @@
+import { connect } from 'react-redux';
 import ExternalIdDataValueEditor from 'components/dataValueEditors/ExternalIdDataValueEditor';
+import FillSisterIsbnClaimButtonCell from './FillSisterIsbnClaimButtonCell';
 import HyphenateIsbnButtonCell from './HyphenateIsbnButtonCell';
 import React from 'react';
 
-export default class Isbn13PropertyDataValueEditor extends ExternalIdDataValueEditor {
+class Isbn13PropertyDataValueEditor extends ExternalIdDataValueEditor {
 
   renderButtonCells() {
-    const { datavalue } = this.props;
+    const { datavalue, onClaimsFill } = this.props;
     const isbn = ( datavalue || {} ).value || '';
 
     return [
@@ -14,7 +16,20 @@ export default class Isbn13PropertyDataValueEditor extends ExternalIdDataValueEd
         key="HyphenateIsbn"
         mode="Isbn13"
         onHyphenate={this.handleValueChange} />,
+      <FillSisterIsbnClaimButtonCell
+        isbn={isbn}
+        key="FillSisterIsbnClaim"
+        modeOwn="Isbn13"
+        modeSister="Isbn10"
+        onClaimsFill={onClaimsFill}
+        onHyphenate={this.handeFillIsbn10} />,
     ];
   }
-
 }
+
+const mapDispatchToProps = dispatch => ( {
+  onClaimsFill: ( normalizeF, newValue ) => dispatch( { type: 'CLAIMS_FILL', propertyId: 'P957', normalizeF, newValue } ),
+} );
+
+const Isbn13PropertyDataValueEditorConnected = connect( undefined, mapDispatchToProps )( Isbn13PropertyDataValueEditor );
+export default Isbn13PropertyDataValueEditorConnected;

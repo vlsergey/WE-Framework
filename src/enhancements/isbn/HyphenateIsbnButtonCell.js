@@ -41,7 +41,7 @@ export default class HyphenateIsbnButtonCell extends PureComponent {
     const parsed = ISBN.parse( withoutHypens );
     const isCorrect = !!parsed && parsed[ 'is' + mode ]();
     return <ButtonCell
-      disabled={!isCorrect}
+      disabled={!isCorrect || isbn !== parsed[ 'as' + mode ]()}
       icon="ui-icon-transfer-e-w"
       label={i18n.buttonLabelHyphenate}
       onClick={this.handleClick} />;
