@@ -7,6 +7,7 @@ export default class DialogWrapper extends PureComponent {
     buttons: PropTypes.arrayOf( PropTypes.object ),
     children: PropTypes.node,
     className: PropTypes.string,
+    minHeight: PropTypes.number,
     minWidth: PropTypes.number,
     onBeforeClose: PropTypes.func,
     onClose: PropTypes.func,
@@ -24,7 +25,7 @@ export default class DialogWrapper extends PureComponent {
   }
 
   componentDidMount() {
-    const { buttons, className, minWidth, onBeforeClose, onClose } = this.props;
+    const { buttons, className, minHeight, minWidth, onBeforeClose, onClose } = this.props;
 
     jQuery( this.ref.current ).dialog( {
       autoOpen: true,
@@ -33,6 +34,7 @@ export default class DialogWrapper extends PureComponent {
       buttons,
       close: onClose,
       dialogClass: className,
+      minHeight,
       minWidth,
       open: this.resizeToFit,
       resizeStart: this.handleResize,
