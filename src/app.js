@@ -1,6 +1,7 @@
 import 'babel-polyfill';
 import * as settings from './settings/index';
 import AdmEntityEditorTemplate from './editors/AdmEntityEditorTemplate';
+import ArticleEditorTemplate from './editors/ArticleEditorTemplate';
 import EntityEditorTemplate from './editors/EntityEditorTemplate';
 import expect from 'expect';
 import ExternalLinksEditorTemplate from './editors/ExternalLinksEditorTemplate';
@@ -33,6 +34,7 @@ mw.loader.using( [ //
   loadSemanticUiCss();
 
   settings.registerEditor( AdmEntityEditorTemplate );
+  settings.registerEditor( ArticleEditorTemplate );
   settings.registerEditor( EntityEditorTemplate );
   settings.registerEditor( ExternalLinksEditorTemplate );
   settings.registerEditor( FrbrEditionEditorTemplate );

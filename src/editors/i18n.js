@@ -11,6 +11,10 @@ const en = {
   admEntityDescription: 'Administrative entities: countries, states, cities',
   admEntityDialogTitle: 'Administrative entity — WE-Framework',
 
+  articleLinkText: 'WEF: Article',
+  articleDescription: 'Scientific and newspapers articles',
+  articleDialogTitle: 'Scientific or newspaper article — WE-Framework',
+
   externalLinksLinkText: 'WEF: External IDs',
   externalLinksDescription: 'External IDs and authoritive control',
   externalLinksDialogTitle: 'External IDs and links — WE-Framework',
@@ -52,6 +56,10 @@ const ru = {
   admEntityLinkText: 'WEF: Адм. единица',
   admEntityDescription: 'Административные единицы: страны, штаты, области, города',
   admEntityDialogTitle: 'Административная единица — WE-Framework',
+
+  articleLinkText: 'WEF: Статья',
+  articleDescription: 'Научные, газетные или журналные статьи',
+  articleDialogTitle: 'Статья — WE-Framework',
 
   externalLinksLinkText: 'WEF: Коды и cсылки',
   externalLinksDescription: 'Внешние ссылки, идентификаторы и нормативный контроль',
