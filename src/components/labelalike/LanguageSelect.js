@@ -50,3 +50,4 @@ const mapStateToProps = state => ( {
 
 const LanguageSelectConnected = connect( mapStateToProps )( LanguageSelect );
 export default LanguageSelectConnected;
+export { LanguageSelect as LanguageSelectImpl };

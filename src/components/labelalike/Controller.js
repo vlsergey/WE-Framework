@@ -9,6 +9,8 @@ const EMPTY_STRING = '';
 class Controller extends Component {
 
   static propTypes = {
+    language: PropTypes.string.isRequired,
+
     label: PropTypes.object,
     description: PropTypes.object,
     draftAlias: PropTypes.object,
@@ -22,10 +24,6 @@ class Controller extends Component {
 
   constructor() {
     super( ...arguments );
-    this.state = {
-      language: mw.config.get( 'wgContentLanguage' ),
-    };
-
     this.handleLabelChange = this.handleLabelChange.bind( this );
     this.handleDescriptionChange = this.handleDescriptionChange.bind( this );
     this.handleDraftAliasChange = this.handleDraftAliasChange.bind( this );
@@ -39,26 +37,26 @@ class Controller extends Component {
   handleLabelChange( newValue ) {
     this.props.onLabelChange( !newValue || newValue.length === 0
       ? undefined
-      : { language: this.state.language, value: newValue } );
+      : { language: this.props.language, value: newValue } );
   }
 
   handleDescriptionChange( newValue ) {
     this.props.onDescriptionChange( !newValue || newValue.length === 0
       ? undefined
-      : { language: this.state.language, value: newValue } );
+      : { language: this.props.language, value: newValue } );
   }
 
   handleDraftAliasChange( newValue ) {
     this.props.onDraftAliasChange( !newValue || newValue.length === 0
       ? undefined
-      : { language: this.state.language, value: newValue } );
+      : { language: this.props.language, value: newValue } );
   }
 
   handleAliasesChange( tags ) {
     const aliases = ( tags || [] ).filter( item => item.length > 0 );
     this.props.onAliasesChange( aliases.length === 0
       ? undefined
-      : aliases.map( alias => ( { language: this.state.language, value: alias } ) ) );
+      : aliases.map( alias => ( { language: this.props.language, value: alias } ) ) );
   }
 
   render() {
@@ -83,6 +81,8 @@ const EMPTY_OBJECT = {};
 const mapStateToProps = ( state, ownProps ) => {
   const entity = state.entity || EMPTY_OBJECT;
   return {
+    language: ownProps.language,
+
     label: ( entity.labels || EMPTY_OBJECT )[ ownProps.language ] || EMPTY_OBJECT,
     description: ( entity.descriptions || EMPTY_OBJECT )[ ownProps.language ] || EMPTY_OBJECT,
     draftAlias: ( entity.draftAliases || EMPTY_OBJECT )[ ownProps.language ] || EMPTY_OBJECT,
