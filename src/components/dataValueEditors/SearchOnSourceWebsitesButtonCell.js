@@ -19,7 +19,7 @@ class SearchOnSourceWebsitesButtonCell extends PureComponent {
   }
 
   memoizeUrl = defaultMemoize( ( labels, languageCodes, sourceWebsites ) => {
-    const languageSet = new Set( ...languageCodes );
+    const languageSet = new Set( languageCodes );
 
     let qLabels = Object.values( labels ).filter( ok )
       .filter( label => languageSet.has( label.language ) )
