@@ -6,6 +6,7 @@ import React from 'react';
 import ViafLookupDialog from './ViafLookupDialog';
 
 const VIAF_2_PROPERTY = {
+  viafid: 'P214',
   dnb: 'P227',
   gnd: 'P227',
   lc: 'P244',
