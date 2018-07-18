@@ -50,6 +50,17 @@ const editorDescription = {
       ],
     },
     {
+      labelEntityId: 'Q7163' /* politics */,
+      specials: [
+        { type: 'SparqlPropertyGroup',
+          sparql: 'SELECT DISTINCT ?property '
+                    + 'WHERE { '
+                    + '?property wdt:P31/wdt:P279* wd:Q22984475 . ' /* Wikidata property related to politics */
+                    + '?property wikibase:propertyType wikibase:ExternalId . '
+                    + '}' },
+      ],
+    },
+    {
       labelEntityId: 'Q349' /* sport */,
       specials: [
         { type: 'SparqlPropertyGroup',
@@ -108,6 +119,7 @@ const editorDescription = {
                     + ' MINUS { ?property wdt:P31 wd:Q30041186 } . ' /* Wikidata property related to online communities */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q22964274 } . ' /* Wikidata property for identification in the film industry */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q27525351 } . ' /* Wikidata property related to music */
+                    + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q22984475 } . ' /* Wikidata property related to politics */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q21818626 } . ' /* Wikidata property related to sport */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q52425722 } . ' /* Wikidata property related to natural science */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q28147643 } . ' /* Wikidata property related to video games */
