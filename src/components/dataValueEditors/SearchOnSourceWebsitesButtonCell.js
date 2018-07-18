@@ -36,7 +36,10 @@ class SearchOnSourceWebsitesButtonCell extends PureComponent {
 
     const qSites = sourceWebsites.filter( ok )
       .filter( value => value !== undefined && value !== null && value.trim() !== '' )
-      .map( site => 'site:' + site.trim() );
+      .map( site => site.trim() )
+      .map( site => site.startsWith( 'http://' ) ? site.substr( 'http://'.length ) : site )
+      .map( site => site.startsWith( 'https://' ) ? site.substr( 'https://'.length ) : site )
+      .map( site => 'site:' + site );
 
     if ( qSites.length === 0 || qLabels === 0 ) return null;
 

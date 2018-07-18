@@ -8,8 +8,8 @@ import PropertyDescription from 'core/PropertyDescription';
 import propertyDescriptionCache from 'caches/propertyDescriptionCache';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import { Provider } from 'react-redux';
-import Q652 from '../../entities/Q652';
 import Q2262932 from '../../entities/Q2262932';
+import Q652 from '../../entities/Q652';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import SearchOnSourceWebsitesButtonCell from 'components/dataValueEditors/SearchOnSourceWebsitesButtonCell';
@@ -52,10 +52,10 @@ describe( 'components/dataValueEditors/SearchOnSourceWebsitesButtonCell', () => 
 
   it ( 'link is correct for Q2262932 / P345', linkIsCorrectFor( Q2262932, P345,
     'http://google.com/search?sourceid=vlsergey_wef&ie=UTF-8&q='
-      + 'site%3Ahttp%3A%2F%2Fwww.imdb.com%2F%20(City%20Streets%20OR%20%D0%93%D0%BE%D1%80%D0%BE%D0%B4%D1%81%D0%BA%D0%B8%D0%B5%20%D1%83%D0%BB%D0%B8%D1%86%D1%8B)' ) );
+      + 'site%3Awww.imdb.com%2F%20(City%20Streets%20OR%20%D0%93%D0%BE%D1%80%D0%BE%D0%B4%D1%81%D0%BA%D0%B8%D0%B5%20%D1%83%D0%BB%D0%B8%D1%86%D1%8B)' ) );
 
   it ( 'link is correct for Q2262932 / P1986', linkIsCorrectFor( Q2262932, P1986,
     'http://google.com/search?sourceid=vlsergey_wef&ie=UTF-8&q='
-      + 'site%3Ahttp%3A%2F%2Fwww.treccani.it%2F%20' + encodeURIComponent( 'Le vie della citt\u00e0' ) ) );
+      + 'site%3Awww.treccani.it%2F%20' + encodeURIComponent( 'Le vie della citt\u00e0' ) ) );
 
 } );
