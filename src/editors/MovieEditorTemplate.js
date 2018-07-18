@@ -43,6 +43,7 @@ const editorDescription = {
     {
       labelEntityId: 'Q3297652' /* cast member */,
       fields: [
+        { property: 'P170' } /* creator */,
         { property: 'P57' } /* director */,
         { property: 'P344' } /* director of photography */,
         { property: 'P58' } /* screenwriter */,
