@@ -5,6 +5,8 @@ const editorDescription = {
   linkText: i18n.movieLinkText,
   description: i18n.movieDescription,
   dialogTitle: i18n.movieDialogTitle,
+  newEntityInstanceOf: 'Q11424',
+  recommendedClasses: [ 'Q2431196' ],
   tabs: [
     {
       label: i18n.tabGeneral,

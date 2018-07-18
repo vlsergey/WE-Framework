@@ -4,6 +4,8 @@ const editorDescription = {
   id: 'Taxon',
   linkText: i18n.taxonLinkText,
   dialogTitle: i18n.taxonDialogTitle,
+  newEntityInstanceOf: 'Q16521',
+  recommendedClasses: [ 'Q16521' ],
   tabs: [
     {
       label: i18n.tabGeneral,

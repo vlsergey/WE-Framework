@@ -4,6 +4,8 @@ const editorDescription = {
   id: 'Software',
   linkText: 'WEF: Software',
   dialogTitle: 'Software',
+  newEntityInstanceOf: 'Q7397',
+  recommendedClasses: [ 'Q7397' ],
   tabs: [
     {
       label: i18n.tabGeneral,

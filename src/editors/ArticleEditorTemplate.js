@@ -4,6 +4,8 @@ const editorDescription = {
   id: 'Article',
   linkText: i18n.articleLinkText,
   dialogTitle: i18n.articleDialogTitle,
+  newEntityInstanceOf: 'Q191067',
+  recommendedClasses: [ 'Q191067' ],
   tabs: [
     {
       label: i18n.tabGeneral,

@@ -4,6 +4,7 @@ const editorDescription = {
   id: 'Entity',
   linkText: 'WEF: Entity',
   dialogTitle: 'Entity',
+  newEntityInstanceOf: 'Q35120',
   tabs: [
     {
       label: i18n.tabGeneral,

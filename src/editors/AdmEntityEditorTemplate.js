@@ -5,6 +5,8 @@ const editorDescription = {
   linkText: i18n.admEntityLinkText,
   description: i18n.admEntityDescription,
   dialogTitle: i18n.admEntityDialogTitle,
+  newEntityInstanceOf: 'Q486972',
+  recommendedClasses: [ 'Q486972', 'Q1048835' ],
   tabs: [
     {
       label: i18n.tabGeneral,
