@@ -7,6 +7,7 @@ import generateRandomString from 'utils/generateRandomString';
 import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import reduxPerformanceMark from 'utils/reduxPerformanceMark';
 import thunk from 'redux-thunk';
 
 export function destroyEditor( appDiv ) {
@@ -23,7 +24,7 @@ export function renderEditor( resolve, reject, editorDescription, oldEntity, new
   document.body.appendChild( appDiv );
 
   const reducers = buildReducers( oldEntity, newEntity );
-  const store = createStore( reducers, applyMiddleware( thunk ) );
+  const store = createStore( reducers, applyMiddleware( reduxPerformanceMark, thunk ) );
 
   ReactDOM.render( <Provider store={store}>
     <EditorApp
