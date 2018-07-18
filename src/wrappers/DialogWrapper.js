@@ -60,16 +60,7 @@ export default class DialogWrapper extends PureComponent {
 
   handleResize() {
     this.setState( { manuallyResized: true } );
-    jQuery( this.ref.current )
-      .dialog( 'option', 'dialogClass', 'manuallyResized' + ( this.props.className
-        ? ' ' + this.props.className
-        : ''
-      ) );
   }
-
-  // shouldComponentUpdate() {
-  //   return false;
-  // }
 
   render() {
     const { children, title } = this.props;

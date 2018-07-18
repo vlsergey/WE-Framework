@@ -15,17 +15,6 @@
 	white-space: nowrap;
 }
 
-.wef_table {
-	width: 100%;
-	border-spacing: 0;
-	border-collapse: collapse;
-}
-
-.wef_table table {
-	border-spacing: 0;
-	border-collapse: collapse;
-}
-
 /* Labels editor */
 .wef_labels_description_area {
 	padding: 0 1em !important;

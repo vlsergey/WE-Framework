@@ -17,8 +17,10 @@ import TaxonEditorTemplate from './editors/TaxonEditorTemplate';
 function loadSemanticUiCss( ) {
   /* eslint no-undef: 0 */
   if ( process.env.NODE_ENV === 'production' ) {
+    require( 'semantic-ui-css/components/menu.min.css?global' );
     require( 'semantic-ui-css/components/popup.min.css?global' );
   } else {
+    require( 'semantic-ui-css/components/menu.css?global' );
     require( 'semantic-ui-css/components/popup.css?global' );
   }
 }

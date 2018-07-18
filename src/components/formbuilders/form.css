@@ -1,0 +1,46 @@
+
+.wef_table {
+	width: 100%;
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+.wef_table table {
+	border-spacing: 0;
+	border-collapse: collapse;
+}
+
+.quickSearchTable {
+	text-align: center;
+	white-space: nowrap;
+}
+
+table.quickSearchTable {
+	margin: .5em 0;
+	width: 100%;
+}
+
+.quickSearchTable input {
+	vertical-align: middle;
+}
+
+.quickSearchTable :global(.ui.menu) {
+	min-height: unset;
+	font-size: unset;
+}
+
+.quickSearchTable :global(.ui.menu) :global(.item) {
+	min-height: unset;
+	padding: unset;
+}
+
+.quickSearchTable :global(.ui.pagination.menu) :global(.item) {
+	min-width: unset;
+	padding: .5em .75em;
+}
+
+.quickSearchTable :global(.ui.pagination.menu) :global(.active.item) {
+	padding-top: unset;
+	min-width: unset;
+	padding: .5em .75em;
+}

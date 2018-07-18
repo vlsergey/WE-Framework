@@ -6,16 +6,19 @@ import { defaultMemoize } from 'reselect';
 import ErrorBoundary from './ErrorBoundary';
 import expect from 'expect';
 import i18n from './i18n';
+import Pagination from 'semantic-ui-react/dist/commonjs/addons/Pagination';
 import PropertyClaimContainer from 'components/claims/PropertyClaimContainer';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
 import stableSort from 'utils/stableSort';
-import styles from 'components/core.css';
+import styles from './form.css';
 
 const compareByLabel = ( a, b ) => compare( a.label, b.label );
 
 const compareByLanguageCodes = ( a, b ) => compareLanguageCodes( a.languageCodes, b.languageCodes );
+
+const FIELDS_PER_PAGE = 20;
 
 export default class FieldsBuilder extends PureComponent {
 
@@ -32,16 +35,17 @@ export default class FieldsBuilder extends PureComponent {
     quickSearch: false,
   }
 
-
   constructor() {
     super( ...arguments );
 
     this.state = {
+      activePage: 1,
       displayEmpty: true,
       quickSearchTerm: '',
     };
 
     this.handleDisplayEmptyToggle = () => this.setState( state => ( { displayEmpty: !state.displayEmpty } ) );
+    this.handlePageChange = ( e, { activePage } ) => this.setState( { activePage } );
     this.handleQuickSearchTermChange = event => this.setState( { quickSearchTerm: event.target.value || '' } );
   }
 
@@ -114,7 +118,7 @@ export default class FieldsBuilder extends PureComponent {
 
   render() {
     const { fields, parentLabelEntityId, quickSearch, sortBy } = this.props;
-    const { displayEmpty, quickSearchTerm } = this.state;
+    const { activePage, displayEmpty, quickSearchTerm } = this.state;
 
     if ( !fields || fields.length == 0 )
       return null;
@@ -123,15 +127,16 @@ export default class FieldsBuilder extends PureComponent {
       {cache => {
         const sorted = !!sortBy && sortBy.length > 0 ? this.sort( cache, fields, sortBy ) : fields;
         const filtered = this.filterByTerm( cache, sorted, quickSearchTerm );
+        const paged = filtered.slice( ( activePage - 1 ) * FIELDS_PER_PAGE, activePage * FIELDS_PER_PAGE );
 
         return <table className={styles.wef_table}>
           { quickSearch && <thead className={styles.quickSearch} key="quickSearch">
             <tr>
               <td colSpan={99}>
-                <table>
+                <table className={styles.quickSearchTable}>
                   <tbody>
                     <tr>
-                      <td>
+                      <td width="20%">
                         <label>&nbsp;&nbsp;{i18n.labelQuickSearchTerm}&nbsp;&nbsp;&nbsp;<input
                           onChange={this.handleQuickSearchTermChange}
                           type="text"
@@ -139,12 +144,24 @@ export default class FieldsBuilder extends PureComponent {
                         </label>
                       </td>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                      <td>
+                      <td width="20%">
                         <label>&nbsp;&nbsp;{i18n.labelDisplayEmpty}&nbsp;&nbsp;&nbsp;<input
                           checked={displayEmpty}
                           onChange={this.handleDisplayEmptyToggle}
                           type="checkbox" />
                         </label>
+                      </td>
+                      <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                      <td className="shortPaginationCell" width="50%">
+                        <Pagination
+                          activePage={activePage}
+                          boundaryRange={1}
+                          onPageChange={this.handlePageChange}
+                          showEllipsis
+                          showFirstAndLastNav={false}
+                          showPreviousAndNextNav
+                          siblingRange={1}
+                          totalPages={Math.ceil( filtered.length * 1.0 / 25 )} />
                       </td>
                     </tr>
                   </tbody>
@@ -153,7 +170,7 @@ export default class FieldsBuilder extends PureComponent {
             </tr>
           </thead>
           }
-          <tbody>{filtered.map( field =>
+          <tbody>{paged.map( field =>
             <ErrorBoundary description={'field: ' + JSON.stringify( field )} key={field.property}>
               {this.renderField( field, cache[ field.property ], {
                 displayEmpty,
@@ -162,9 +179,8 @@ export default class FieldsBuilder extends PureComponent {
             </ErrorBoundary>
           )}</tbody>
         </table>;
-      } }
+      }}
     </PropertyDescriptionsProvider>;
-
   }
 
 }

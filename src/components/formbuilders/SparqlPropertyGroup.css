@@ -1,12 +1,2 @@
 .sparql_property_group {
-  height: 350px;
-  overflow-y: auto;
-  padding-top: .5em;
-  resize: vertical;
-}
-
-:global(.manuallyResized) .sparql_property_group {
-  height: unset;
-  overflow-y: unset;
-  resize: unset;
 }
