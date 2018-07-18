@@ -3,6 +3,7 @@ import { applyMiddleware, createStore } from 'redux';
 import buildReducers from './reducers';
 import EditorApp from 'components/EditorApp';
 import expect from 'expect';
+import generateRandomString from 'utils/generateRandomString';
 import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -71,6 +72,30 @@ export function onEditorLinkClick( editorDescription, entityId ) {
         },
       },
     };
+
+    if ( editorDescription.newEntityInstanceOf ) {
+      newEntity.claims = {
+        P31: [ {
+          mainsnak: {
+            snaktype: 'value',
+            property: 'P31',
+            hash: generateRandomString(),
+            datavalue: {
+              value: {
+                'entity-type': 'item',
+                'numeric-id': editorDescription.newEntityInstanceOf.substr( 1 ),
+                'id': editorDescription.newEntityInstanceOf,
+              },
+              type: 'wikibase-entityid',
+            },
+            datatype: 'wikibase-item',
+          },
+          type: 'statement',
+          id: generateRandomString(),
+          rank: 'normal',
+        } ],
+      };
+    }
 
     openEditor( editorDescription, oldEntity, newEntity )
       .then( ApiUtils.purge );

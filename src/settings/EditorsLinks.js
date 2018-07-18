@@ -71,7 +71,7 @@ export default class EditorLinks extends PureComponent {
           <li key="settings">
             <a onClick={start}>{i18n.linkText}</a>
           </li>
-          { entityId && editorTemplates.map( editorTemplate => {
+          { editorTemplates.map( editorTemplate => {
             const recommended = ( editorTemplate.recommendedClasses || [] ).some( isEntityClass );
             const style = recommended ? { fontWeight: 'bolder' } : {};
 
