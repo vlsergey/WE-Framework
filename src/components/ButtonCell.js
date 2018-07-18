@@ -23,7 +23,7 @@ export default class ButtonCell extends PureComponent {
       onClick={onClick}
       text={false} />;
 
-    return <td className={styles.buttonCell}>
+    return <td className={styles.buttonCell} height={22} width={28}>
       { typeof children === 'function' ? children( child ) : child}
     </td>;
   }

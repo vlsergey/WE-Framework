@@ -1,8 +1,10 @@
 .buttonCell {
 	padding: 0;
 	margin: 0;
-	width: 24px;
-	height: 20px;
+	width: 28px;
+	height: 22px;
+	word-wrap: break-word;
+	overflow: hidden;
 }
 
 .buttonCell td {
