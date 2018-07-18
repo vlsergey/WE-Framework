@@ -1,16 +1,16 @@
 import 'babel-polyfill';
-import * as settings from './settings/index';
+import { getEnabledEditors, registerEditor } from './settings/index';
 import AdmEntityEditorTemplate from './editors/AdmEntityEditorTemplate';
 import ArticleEditorTemplate from './editors/ArticleEditorTemplate';
+import EditorsLinks from './settings/EditorsLinks';
 import EntityEditorTemplate from './editors/EntityEditorTemplate';
-import expect from 'expect';
 import ExternalLinksEditorTemplate from './editors/ExternalLinksEditorTemplate';
 import FrbrEditionEditorTemplate from './editors/FrbrEditionEditorTemplate';
 import FrbrWorkEditorTemplate from './editors/FrbrWorkEditorTemplate';
-import { getEntityIdDeferred } from './core/ApiUtils';
 import MovieEditorTemplate from './editors/MovieEditorTemplate';
-import { onEditorLinkClick } from './core/edit';
 import PersonEditorTemplate from './editors/PersonEditorTemplate';
+import React from 'react';
+import ReactDOM from 'react-dom';
 import SoftwareEditorTemplate from './editors/SoftwareEditorTemplate';
 import TaxonEditorTemplate from './editors/TaxonEditorTemplate';
 
@@ -33,43 +33,22 @@ mw.loader.using( [ //
   require( 'fetch-polyfill' );
   loadSemanticUiCss();
 
-  settings.registerEditor( AdmEntityEditorTemplate );
-  settings.registerEditor( ArticleEditorTemplate );
-  settings.registerEditor( EntityEditorTemplate );
-  settings.registerEditor( ExternalLinksEditorTemplate );
-  settings.registerEditor( FrbrEditionEditorTemplate );
-  settings.registerEditor( FrbrWorkEditorTemplate );
-  settings.registerEditor( MovieEditorTemplate );
-  settings.registerEditor( PersonEditorTemplate );
-  settings.registerEditor( SoftwareEditorTemplate );
-  settings.registerEditor( TaxonEditorTemplate );
+  registerEditor( AdmEntityEditorTemplate );
+  registerEditor( ArticleEditorTemplate );
+  registerEditor( EntityEditorTemplate );
+  registerEditor( ExternalLinksEditorTemplate );
+  registerEditor( FrbrEditionEditorTemplate );
+  registerEditor( FrbrWorkEditorTemplate );
+  registerEditor( MovieEditorTemplate );
+  registerEditor( PersonEditorTemplate );
+  registerEditor( SoftwareEditorTemplate );
+  registerEditor( TaxonEditorTemplate );
 
-  if ( mw.config.get( 'wgArticleId' ) ) {
-    getEntityIdDeferred().then( entityId => {
+  const toolsGroup = jQuery( '#p-tb' )[ 0 ];
+  const div = document.createElement( 'div' );
+  toolsGroup.parentElement.insertBefore( div, toolsGroup );
 
-      settings.getEnabledEditors().forEach( editorDescription => {
-        expect( editorDescription ).toBeAn( 'object' );
-        expect( editorDescription.linkText ).toBeA( 'string' );
-
-        const editorLeftMenuLink = $( document.createElement( 'a' ) )
-          .text( editorDescription.linkText )
-          .click( () => {
-            onEditorLinkClick( editorDescription, entityId );
-          } );
-
-        jQuery( '#p-tb div ul' ).append( jQuery( '<li class="plainlinks"></li>' ).append( editorLeftMenuLink ) );
-      } );
-
-    } );
-  }
-
-  const leftMenuLink = $( document.createElement( 'a' ) )
-    .text( settings.linkText )
-    .click( () => {
-      settings.start();
-    } );
-  jQuery( '#p-tb div ul' ).append( jQuery( '<li class="plainlinks"></li>' ).append( leftMenuLink ) );
-
+  ReactDOM.render( <EditorsLinks editorTemplates={getEnabledEditors()} />, div );
 }, function() {
   /*eslint no-console: 0*/
   console.log( '[WE-F] unable to load WE-F: ' );

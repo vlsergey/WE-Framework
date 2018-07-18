@@ -6,6 +6,8 @@ const en = {
 
   fieldSetEditors: 'Editors to enable (in left menu and dropdowns)',
 
+  portalLabel: 'Wikidata Edit',
+
   windowButtonSave: 'Save',
   windowButtonCancel: 'Cancel',
 };
@@ -15,6 +17,8 @@ const ru = {
   dialogTitle: 'Загружаемые гаджеты — WE-Framework',
 
   fieldSetEditors: 'Включить следующие редакторы (в меню и в выпадающих списках)',
+
+  portalLabel: 'Викиданные',
 
   windowButtonSave: 'Сохранить',
   windowButtonCancel: 'Отмена',
