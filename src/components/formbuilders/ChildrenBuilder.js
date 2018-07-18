@@ -6,12 +6,11 @@ import ErrorBoundary from './ErrorBoundary';
 import expect from 'expect';
 import FieldsetBuilder from './FieldsetBuilder';
 import i18n from './i18n';
-import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';
 import PropertyClaimContainer from 'components/claims/PropertyClaimContainer';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
-import SparqlPropertyGroup from './SparqlPropertyGroup';
+import SpecialBuilder from './SpecialBuilder';
 import styles from 'components/core.css';
 
 // https://medium.com/@fsufitch/is-javascript-array-sort-stable-46b90822543f
@@ -252,16 +251,9 @@ export default class ChildrenBuilder extends PureComponent {
     if ( !specials || specials.length == 0 )
       return null;
 
-    return specials.map( special => {
-      const { key, type } = special;
-      if ( type === 'LabelsAndDescriptionArea' ) {
-        return <LanguageSelectContainer key={key || type} />;
-      }
-      if ( type === 'SparqlPropertyGroup' ) {
-        return <SparqlPropertyGroup {...special} key={key || type} />;
-      }
-      return <span key={key || type}>unsupported special type: {type}</span>;
-    } );
+    return specials.map( ( { key, type, ...etc } ) =>
+      <SpecialBuilder key={key || type} type={type} {...etc} />
+    );
   }
 
 }
