@@ -60,7 +60,7 @@ export default class EditorLinks extends PureComponent {
 
   render() {
     const { editorTemplates } = this.props;
-    const { classIds, entityId } = this.state;
+    const { classIds } = this.state;
     const classIdsSet = new Set( classIds );
     const isEntityClass = classIdsSet.has.bind( classIdsSet );
 
