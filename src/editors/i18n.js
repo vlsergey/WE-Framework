@@ -15,6 +15,10 @@ const en = {
   articleDescription: 'Scientific and newspapers articles',
   articleDialogTitle: 'Scientific or newspaper article — WE-Framework',
 
+  bookLinkText: 'WEF: Book / Journal',
+  bookDescription: 'Printed and electronic books and journals',
+  bookDialogTitle: 'Book or journal — WE-Framework',
+
   externalLinksLinkText: 'WEF: External IDs',
   externalLinksDescription: 'External IDs and authoritive control',
   externalLinksDialogTitle: 'External IDs and links — WE-Framework',
@@ -60,6 +64,10 @@ const ru = {
   articleLinkText: 'WEF: Статья',
   articleDescription: 'Научные, газетные или журналные статьи',
   articleDialogTitle: 'Статья — WE-Framework',
+
+  bookLinkText: 'WEF: Книга / журнал',
+  bookDescription: 'Печатные и электронные книги, сборники и журналы',
+  bookDialogTitle: 'Книга или журнал — WE-Framework',
 
   externalLinksLinkText: 'WEF: Коды и cсылки',
   externalLinksDescription: 'Внешние ссылки, идентификаторы и нормативный контроль',

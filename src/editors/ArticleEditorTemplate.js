@@ -3,6 +3,7 @@ import i18n from './i18n';
 const editorDescription = {
   id: 'Article',
   linkText: i18n.articleLinkText,
+  description: i18n.articleDescription,
   dialogTitle: i18n.articleDialogTitle,
   newEntityInstanceOf: 'Q191067',
   recommendedClasses: [ 'Q191067' ],

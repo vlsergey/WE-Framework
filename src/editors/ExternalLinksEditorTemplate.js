@@ -3,6 +3,7 @@ import i18n from './i18n';
 const editorDescription = {
   id: 'ExternalLinks',
   linkText: i18n.externalLinksLinkText,
+  description: i18n.externalLinksDescription,
   dialogTitle: i18n.externalLinksDialogTitle,
   tabs: [
     {
