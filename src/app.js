@@ -4,6 +4,7 @@ import allEditorTemplates from './editors';
 import EditorsLinks from './settings/EditorsLinks';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import wikieditorIntegration from 'sources/wikieditorIntegration';
 
 function loadSemanticUiCss( ) {
   /* eslint no-undef: 0 */
@@ -35,6 +36,10 @@ mw.loader.using( [ //
   toolsGroup.parentElement.insertBefore( div, toolsGroup );
 
   ReactDOM.render( <EditorsLinks editorTemplates={getEnabledEditors()} />, div );
+
+  // only for ru-wiki: add source insert to edit toolbar
+  wikieditorIntegration();
+
 }, function() {
   /*eslint no-console: 0*/
   console.log( '[WE-F] unable to load WE-F: ' );

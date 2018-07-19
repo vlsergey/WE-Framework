@@ -7,10 +7,14 @@ export default class DialogWrapper extends PureComponent {
     buttons: PropTypes.arrayOf( PropTypes.object ),
     children: PropTypes.node,
     className: PropTypes.string,
+    height: PropTypes.number,
+    maxHeight: PropTypes.number,
+    maxWidth: PropTypes.number,
     minHeight: PropTypes.number,
     minWidth: PropTypes.number,
     onBeforeClose: PropTypes.func,
     onClose: PropTypes.func,
+    width: PropTypes.number,
     title: PropTypes.string,
   };
 
@@ -25,7 +29,7 @@ export default class DialogWrapper extends PureComponent {
   }
 
   componentDidMount() {
-    const { buttons, className, minHeight, minWidth, onBeforeClose, onClose } = this.props;
+    const { buttons, className, height, maxHeight, maxWidth, minHeight, minWidth, onBeforeClose, onClose, width } = this.props;
 
     jQuery( this.ref.current ).dialog( {
       autoOpen: true,
@@ -34,8 +38,12 @@ export default class DialogWrapper extends PureComponent {
       buttons,
       close: onClose,
       dialogClass: className,
+      height,
+      maxHeight,
+      maxWidth,
       minHeight,
       minWidth,
+      width,
       open: this.resizeToFit,
       resizeStart: this.handleResize,
       // workaround for content shrinking bug in jQuery

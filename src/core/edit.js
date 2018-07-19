@@ -1,5 +1,5 @@
-import * as ApiUtils from './ApiUtils';
 import { applyMiddleware, createStore } from 'redux';
+import { getWikidataApi, purge } from './ApiUtils';
 import buildReducers from './reducers';
 import EditorApp from 'components/EditorApp';
 import expect from 'expect';
@@ -42,14 +42,46 @@ export function openEditor( editorDescription, oldEntity, newEntity ) {
   return new Promise( ( resolve, reject ) => {
     appDiv = renderEditor( resolve, reject, editorDescription, oldEntity, newEntity );
   } )
-    .then( () => {
+    .then( entityId => {
       if ( appDiv ) destroyEditor( appDiv );
+      return entityId;
     } )
     .catch( reason => {
-      mw.log( reason );
+      mw.log.warn( reason );
       if ( appDiv ) destroyEditor( appDiv );
       return Promise.reject( reason );
     } );
+}
+
+export function onNewElementClick( editorDescription, classEntityId ) {
+  const oldEntity = {};
+  const newEntity = {};
+
+  if ( editorDescription.newEntityInstanceOf ) {
+    newEntity.claims = {
+      P31: [ {
+        mainsnak: {
+          snaktype: 'value',
+          property: 'P31',
+          hash: generateRandomString(),
+          datavalue: {
+            value: {
+              'entity-type': 'item',
+              'numeric-id': classEntityId.substr( 1 ),
+              'id': classEntityId,
+            },
+            type: 'wikibase-entityid',
+          },
+          datatype: 'wikibase-item',
+        },
+        type: 'statement',
+        id: generateRandomString(),
+        rank: 'normal',
+      } ],
+    };
+  }
+
+  return openEditor( editorDescription, oldEntity, newEntity );
 }
 
 export function onEditorLinkClick( editorDescription, entityId ) {
@@ -99,13 +131,13 @@ export function onEditorLinkClick( editorDescription, entityId ) {
     }
 
     openEditor( editorDescription, oldEntity, newEntity )
-      .then( ApiUtils.purge );
+      .then( purge );
 
   } else {
     expect ( entityId ).toBeA( 'string' );
 
     mw.notify( 'Get Wikidata entity content for ' + entityId + '...' );
-    ApiUtils.getWikidataApi().getPromise( {
+    getWikidataApi().getPromise( {
       action: 'wbgetentities',
       ids: entityId,
       format: 'json',
@@ -121,7 +153,7 @@ export function onEditorLinkClick( editorDescription, entityId ) {
       return result.entities[ entityId ];
     } )
       .then( entity => openEditor( editorDescription, entity, entity ) )
-      .then( ApiUtils.purge );
+      .then( purge );
 
   }
 }

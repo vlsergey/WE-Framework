@@ -1,0 +1,55 @@
+
+.sourceLookupTab {
+}
+
+.searchTermInput {
+  width: 100%;
+}
+
+.sourceItem {
+  display: block;
+  margin: 0.5em;
+  padding: 0.5em;
+  text-align: left;
+  width: 100%;
+}
+
+.sourceItem .entityId {
+  display: inline-block;
+}
+
+.sourceItem .entityClasses {
+  display: inline-block;
+}
+
+.sourceItem .sourcePreview {
+  display: block;
+}
+
+.newSourceTab table {
+  width: 100%;
+}
+
+.newSourceTab button {
+  display: block;
+  margin: 0.25em;
+  padding: 0.25em;
+}
+
+.additionalArgumentsDialog table {
+  width: 100%;
+}
+
+.additionalArgumentsDialog th {
+  text-align: left;
+  white-space: nowrap;
+  width: 1%;
+}
+
+.additionalArgumentsDialog input {
+    width: 100%;
+}
+
+.additionalArgumentsDialog input[type='checkbox'] {
+    width: unset;
+}
