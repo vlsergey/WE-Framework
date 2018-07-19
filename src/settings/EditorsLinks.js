@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import compare from 'utils/compare';
 import { EditorShape } from 'components/formbuilders/FormShapes';
 import { getEntityIdDeferred } from 'core/ApiUtils';
 import i18n from './i18n';
@@ -63,6 +64,7 @@ export default class EditorLinks extends PureComponent {
     const { classIds } = this.state;
     const classIdsSet = new Set( classIds );
     const isEntityClass = classIdsSet.has.bind( classIdsSet );
+    const sorted = [ ...editorTemplates ].sort( ( a, b ) => compare( a.linkText, b.linkText ) );
 
     return <div aria-labelledby="p-wef-label" className="portal" id="p-wef" role="navigation">
       <h3 dir="ltr" id="p-wef-label" lang="ru">{i18n.portalLabel}</h3>
@@ -71,7 +73,7 @@ export default class EditorLinks extends PureComponent {
           <li key="settings">
             <a onClick={start}>{i18n.linkText}</a>
           </li>
-          { editorTemplates.map( editorTemplate => {
+          { sorted.map( editorTemplate => {
             const recommended = ( editorTemplate.recommendedClasses || [] ).some( isEntityClass );
             const style = recommended ? { fontWeight: 'bolder' } : {};
 
