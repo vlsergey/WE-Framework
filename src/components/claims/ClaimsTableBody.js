@@ -11,7 +11,6 @@ export default class ClaimsTableBody extends PureComponent {
 
   static propTypes = {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
-    displayEmpty: PropTypes.bool,
     displayLabel: PropTypes.bool,
     onClaimAdd: PropTypes.func.isRequired,
     onClaimAddTwice: PropTypes.func.isRequired,
@@ -21,18 +20,15 @@ export default class ClaimsTableBody extends PureComponent {
   };
 
   static defaultProps = {
-    displayEmpty: true,
     displayLabel: true,
   }
 
   render() {
-    const { claims, displayEmpty, displayLabel, propertyDescription,
+    const { claims, displayLabel, propertyDescription,
       onClaimAdd, onClaimAddTwice, onClaimUpdate, onClaimDelete } = this.props;
 
     let children;
     if ( !claims || claims.length === 0 ) {
-      if ( !displayEmpty ) return null;
-
       const newClaim = newStatementClaim( propertyDescription );
       children = [ <ClaimsTableRows
         claim={newClaim}

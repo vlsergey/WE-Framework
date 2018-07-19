@@ -11,7 +11,6 @@ class PropertyClaimContainer extends PureComponent {
 
   static propTypes = {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
-    displayEmpty: PropTypes.bool,
     displayLabel: PropTypes.bool,
     onClaimAdd: PropTypes.func.isRequired,
     onClaimAddTwice: PropTypes.func.isRequired,
@@ -21,7 +20,6 @@ class PropertyClaimContainer extends PureComponent {
   };
 
   static defaultProps = {
-    displayEmpty: true,
     displayLabel: true,
   }
 
