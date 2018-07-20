@@ -74,7 +74,10 @@ export default class SnakValueEditorFactory extends PureComponent {
 
     const enhancedDataValueEditorClass = enhancementsFactory.findDataValueEditor( propertyDescription );
     const standardDataValueEditorClass = STANDARD[ dataType ];
-    const dataValueEditorClass = enhancedDataValueEditorClass || standardDataValueEditorClass || UnsupportedDataValueEditor;
+    const dataValueEditorClass = enhancedDataValueEditorClass || standardDataValueEditorClass || null;
+    if ( dataValueEditorClass === null ) {
+      return <UnsupportedDataValueEditor datavalue={snak.datavalue} propertyDescription={propertyDescription} />;
+    }
 
     return React.createElement( dataValueEditorClass, dataValueEditorProps );
   }

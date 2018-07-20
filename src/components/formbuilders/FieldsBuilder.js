@@ -19,7 +19,6 @@ export default class FieldsBuilder extends PureComponent {
 
   static propTypes = {
     ...ChildrenContainer,
-    hasPropertyIdSet: PropTypes.instanceOf( Set ).isRequired,
     // can be used to hide claim property label
     parentLabelEntityId: PropTypes.string,
     quickSearch: PropTypes.bool,
@@ -104,10 +103,8 @@ export default class FieldsBuilder extends PureComponent {
                             <Pagination
                               activePage={actualPage}
                               boundaryRange={1}
+                              ellipsisItem="…"
                               onPageChange={this.handlePageChange}
-                              showEllipsis
-                              showFirstAndLastNav={false}
-                              showPreviousAndNextNav
                               siblingRange={1}
                               totalPages={totalPages} />
                           </td>
