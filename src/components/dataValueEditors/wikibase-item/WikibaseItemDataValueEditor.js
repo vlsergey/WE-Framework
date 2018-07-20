@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import AutocompleteMode from './AutocompleteMode';
+import CreateNewButtonCell from './CreateNewButtonCell';
 import { DataValue } from 'model/Shapes';
 import EntityLabel from 'caches/EntityLabel';
 import GoToLocalButtonCell from './GoToLocalButtonCell';
@@ -32,11 +33,26 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
       selectMode: SelectMode.isCompatibleWithProps( this.props ),
     };
 
+    this.handleCreate = this.handleCreate.bind( this );
     this.handleOtherSelect = () => this.setState( { selectMode: false } );
   }
 
+  handleCreate( entityId ) {
+    const { datavalue, onDataValueChange } = this.props;
+
+    onDataValueChange( {
+      ...datavalue,
+      value: {
+        'entity-type': 'item',
+        'numeric-id': entityId.substr( 1 ),
+        'id': entityId,
+      },
+      type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
+    } );
+  }
+
   render() {
-    const { datavalue, readOnly, ...etc } = this.props;
+    const { datavalue, propertyDescription, readOnly, ...etc } = this.props;
 
     const currentValue = ( ( datavalue || {} ).value || {} ).id || '';
     const className = styles[ 'wef_datavalue_' + WikibaseItemDataValueEditor.DATATYPE ];
@@ -51,23 +67,36 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
       </td>;
     }
 
-    const buttons = this.renderButtons( currentValue );
+    const buttons = this.renderButtons( propertyDescription, currentValue );
 
     const { selectMode } = this.state;
     return <React.Fragment>
       <td className={className} colSpan={12 - buttons.length}>
         {
           selectMode
-            ? <SelectMode datavalue={datavalue} onOtherSelect={this.handleOtherSelect} {...etc} />
-            : <AutocompleteMode datavalue={datavalue} {...etc} />
+            ? <SelectMode
+              datavalue={datavalue}
+              onOtherSelect={this.handleOtherSelect}
+              propertyDescription={propertyDescription}
+              {...etc} />
+            : <AutocompleteMode
+              datavalue={datavalue}
+              propertyDescription={propertyDescription}
+              {...etc} />
         }
       </td>
       { buttons }
     </React.Fragment>;
   }
 
-  renderButtons( entityId ) {
+  renderButtons( propertyDescription, entityId ) {
     return [
+      entityId
+        ? <td key="CreateNew" />
+        : <CreateNewButtonCell
+          key="CreateNew"
+          onCreate={this.handleCreate}
+          propertyDescription={propertyDescription} />,
       <GoToLocalButtonCell entityId={entityId} key="GoToLocal" />,
       <GoToWikidataButtonCell entityId={entityId} key="GoToWikidata" />,
     ];

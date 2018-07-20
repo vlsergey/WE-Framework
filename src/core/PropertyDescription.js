@@ -89,7 +89,10 @@ const claimHasMainsnakValue = statement => statement.mainsnak
     && statement.mainsnak.datavalue
     && statement.mainsnak.datavalue.value;
 
+
 export default class PropertyDescription {
+
+  static VERSION = 2;
 
   static deserialize( json ) {
     if ( json === undefined || json === null ) return json;
@@ -105,6 +108,7 @@ export default class PropertyDescription {
     expect( propertyEntity.datatype ).toBeA( 'string', 'Missing datatype in property entity object' );
 
     this.id = propertyEntity.id;
+    this.version = PropertyDescription.VERSION;
     this.datatype = propertyEntity.datatype;
     this.pageid = propertyEntity.pageid;
     this.lastrevid = propertyEntity.lastrevid;

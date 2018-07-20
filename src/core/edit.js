@@ -54,6 +54,9 @@ export function openEditor( editorDescription, oldEntity, newEntity ) {
 }
 
 export function onNewElementClick( editorDescription, classEntityId ) {
+  expect( editorDescription ).toBeAn( 'object' );
+  expect( classEntityId ).toBeAn( 'string' );
+
   const oldEntity = {};
   const newEntity = {};
 

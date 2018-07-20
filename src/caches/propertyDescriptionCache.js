@@ -9,6 +9,7 @@ class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
 
   constructor() {
     super( TYPE, true, 50 );
+    this.currentVersion = PropertyDescription.VERSION;
   }
 
   isKeyValid( cacheKey ) {
