@@ -2,7 +2,6 @@ import expect from 'expect';
 import fs from 'fs';
 import HttpsProxyAgent from 'https-proxy-agent';
 
-//const fetch = require( 'fetch-cookie/node-fetch' )( require( 'node-fetch' ) );
 const fetchOriginal = require( 'node-fetch' );
 
 const cookieStorage = { fake: 'fake' };
