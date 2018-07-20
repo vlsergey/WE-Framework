@@ -3,21 +3,29 @@ import P1971 from '../entities/P1971';
 import P2044 from '../entities/P2044';
 import P21 from '../entities/P21';
 import P345 from '../entities/P345';
+import P85 from '../entities/P85';
 import PropertyDescription from 'core/PropertyDescription';
 
 describe( 'PropertyDescription', () => {
 
   const pd21 = new PropertyDescription( P21 );
+  const pd85 = new PropertyDescription( P85 );
   const pd345 = new PropertyDescription( P345 );
   const pd1971 = new PropertyDescription( P1971 );
   const pd2044 = new PropertyDescription( P2044 );
 
-  it( 'Label shall be parsed', () => {
-    assert.equal( pd345.label, 'IMDb ID' );
+  it( 'allowedQualifiers: should provide', () => {
+    assert.deepEqual(
+      pd345.allowedQualifiers,
+      [ 'P1932', 'P2241', 'P17', 'P1810' ] );
   } );
 
-  it( 'Countries shall be parsed', () => {
+  it( 'countries: shall provide', () => {
     assert.deepEqual( pd345.countries, [ 'Q30' ] );
+  } );
+
+  it( 'label: shall provide', () => {
+    assert.equal( pd345.label, 'IMDb ID' );
   } );
 
   it( 'oneOf is undefined if no consrain', () => {
@@ -65,10 +73,10 @@ describe( 'PropertyDescription', () => {
       'https://tools.wmflabs.org/wikidata-externalid-url/?p=345&url_prefix=http://www.imdb.com/&id=tt0068646' );
   } );
 
-  it( 'Should provide allowed qualifiers', () => {
-    assert.deepEqual(
-      pd345.allowedQualifiers,
-      [ 'P1932', 'P2241', 'P17', 'P1810' ] );
+  it( 'valueTypeConstraint: shall provide if defined', () => {
+    assert.deepEqual( pd85.valueTypeConstraint, {
+      instanceOf: [ 'Q207628' ],
+    } );
   } );
 
 } );

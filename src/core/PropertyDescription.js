@@ -190,6 +190,28 @@ export default class PropertyDescription {
       .flatMap( qualifiers => qualifiers
         .filter( qualifier => qualifier && qualifier.datavalue && qualifier.datavalue.value && qualifier.datavalue.value.id )
         .map( qualifier => qualifier.datavalue.value.id ) );
+
+
+    const valueTypeConstraint = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', 'Q21510865' );
+    if ( valueTypeConstraint ) {
+      const classes =
+        [ valueTypeConstraint.qualifiers ].filter( ok )
+          .flatMap( qualifiers => qualifiers.P2308 ).filter( ok )
+          .filter( qualifier => qualifier && qualifier.datavalue && qualifier.datavalue.value && qualifier.datavalue.value.id )
+          .map( qualifier => qualifier.datavalue.value.id );
+      const relations =
+        [ valueTypeConstraint.qualifiers ].filter( ok )
+          .flatMap( qualifiers => qualifiers.P2309 ).filter( ok )
+          .filter( qualifier => qualifier && qualifier.datavalue && qualifier.datavalue.value && qualifier.datavalue.value.id )
+          .map( qualifier => qualifier.datavalue.value.id );
+
+      // instance of
+      if ( relations.length === 1 && relations[ 0 ] === 'Q21503252' && classes.length !== 0 ) {
+        this.valueTypeConstraint = {
+          instanceOf: classes,
+        };
+      }
+    }
   }
 
   formatUrl( value ) {
