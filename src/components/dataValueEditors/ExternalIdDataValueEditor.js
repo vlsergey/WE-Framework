@@ -60,7 +60,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
       <td colSpan={5}>
         <input {...params} />
       </td>
-      <td className={styles.wef_external_links_url_cell} colSpan={12 - buttons.length}>
+      <td className={styles.wef_external_links_url_cell} colSpan={7 - buttons.length}>
         <div className={styles.wef_external_links_url_div}>
           {url ? <a className={styles.wef_external_links_url_a} href={url} rel="noopener noreferrer" target="_blank">{url}</a> : ''}
         </div>
