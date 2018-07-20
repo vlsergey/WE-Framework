@@ -4,6 +4,7 @@ import { Claim } from 'model/Shapes';
 import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import ClaimReferencesButtonCell from 'components/references/ClaimReferencesButtonCell';
+import { COLUMNS_FOR_SNAK_EDITOR } from 'components/TableColSpanConstants';
 import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
@@ -121,7 +122,7 @@ export default class ClaimsWithQualifiersTableRows extends PureComponent {
       </AnimatedTr>
       <AnimatedTr>
         <td colSpan={2} />
-        <td colSpan={1 + SnakEditorTableRowPart.TABLE_COLUMNS + 2 + columns.length * 1}>
+        <td colSpan={1 + COLUMNS_FOR_SNAK_EDITOR + 2 + columns.length * 1}>
           <ClaimQualifiersTable
             allowedQualifiers={propertyDescription.allowedQualifiers}
             claim={claim}

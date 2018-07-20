@@ -7,8 +7,6 @@ import SnakEditorTableRowPart from 'components/SnakEditorTableRowPart';
 
 export default class SnakTableRow extends PureComponent {
 
-  static TABLE_COLUMNS = 2 + SnakEditorTableRowPart.TABLE_COLUMNS;
-
   static propTypes = {
     firstCell: PropTypes.node.isRequired,
     displayLabel: PropTypes.bool,

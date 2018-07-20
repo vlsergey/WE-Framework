@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import { COLUMNS_FOR_SNAK_ROW } from 'components/TableColSpanConstants';
 import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
@@ -75,7 +76,7 @@ class PropertyIsLoadingTBody extends PureComponent {
 
     return <tbody key={propertyId}>
       <tr>
-        <td colSpan={SnaksArrayEditor.TABLE_COLUMNS}>
+        <td colSpan={COLUMNS_FOR_SNAK_ROW}>
           <i>Loading property description of {propertyId}...</i>
         </td>
       </tr>

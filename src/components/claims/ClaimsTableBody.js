@@ -7,8 +7,6 @@ import PropTypes from 'prop-types';
 
 export default class ClaimsTableBody extends PureComponent {
 
-  static TABLE_COLUMNS = ClaimsTableRows.TABLE_COLUMNS;
-
   static propTypes = {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
     displayLabel: PropTypes.bool,

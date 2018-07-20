@@ -29,8 +29,6 @@ export const SUPPORTED_DATATYPES = Object.keys( STANDARD );
 
 export default class SnakValueEditorFactory extends PureComponent {
 
-  static TABLE_COLUMNS = 12;
-
   static propTypes = {
     readOnly: PropTypes.bool,
     onSnakChange: PropTypes.func.isRequired,
