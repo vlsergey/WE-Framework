@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import AutocompleteMode from './AutocompleteMode';
 import { DataValue } from 'model/Shapes';
 import EntityLabel from 'caches/EntityLabel';
+import GoToLocalButtonCell from './GoToLocalButtonCell';
 import GoToWikidataButtonCell from './GoToWikidataButtonCell';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
@@ -50,16 +51,25 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
       </td>;
     }
 
+    const buttons = this.renderButtons( currentValue );
+
     const { selectMode } = this.state;
     return <React.Fragment>
-      <td className={className} colSpan={11}>
+      <td className={className} colSpan={12 - buttons.length}>
         {
           selectMode
             ? <SelectMode datavalue={datavalue} onOtherSelect={this.handleOtherSelect} {...etc} />
             : <AutocompleteMode datavalue={datavalue} {...etc} />
         }
       </td>
-      <GoToWikidataButtonCell entityId={currentValue} />
+      { buttons }
     </React.Fragment>;
+  }
+
+  renderButtons( entityId ) {
+    return [
+      <GoToLocalButtonCell entityId={entityId} key="GoToLocal" />,
+      <GoToWikidataButtonCell entityId={entityId} key="GoToWikidata" />,
+    ];
   }
 }
