@@ -3,7 +3,7 @@ import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import { defaultMemoize } from 'reselect';
-import i18n from 'components/core.i18n';
+import i18n from './i18n';
 import PropTypes from 'prop-types';
 
 const ok = x => x !== undefined && x !== null;

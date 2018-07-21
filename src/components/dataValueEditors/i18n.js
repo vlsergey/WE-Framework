@@ -1,13 +1,12 @@
-import * as I18nUtils from 'utils/I18nUtils';
+import { localize } from 'utils/I18nUtils';
 
 const en = {
-  buttonSearchOnWebsites: "Search for element on source websites",
+  buttonUrlNavigate: 'open specified URL',
 };
 
 const ru = {
-  buttonSearchOnWebsites: "Искать элемент на сайтах-источниках",
+  buttonUrlNavigate: 'открыть указанный URL',
 };
 
-const translations = { en, ru };
-const result = I18nUtils.localize( {}, translations );
+const result = localize( {}, { en, ru } );
 export default result;

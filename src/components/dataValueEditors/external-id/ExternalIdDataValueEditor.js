@@ -1,8 +1,9 @@
-import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
+import AbstractStringBasedDataValueEditor from '../AbstractStringBasedDataValueEditor';
+import { COLUMNS_FOR_DATA_VALUE_EDITOR } from 'components/TableColSpanConstants';
 import expect from 'expect';
 import React from 'react';
 import SearchOnSourceWebsitesButtonCell from './SearchOnSourceWebsitesButtonCell';
-import styles from 'components/core.css';
+import styles from './styles.css';
 
 export default class ExternalIdDataValueEditor extends AbstractStringBasedDataValueEditor {
 
@@ -25,7 +26,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
     if ( readOnly ) {
       if ( datavalue && datavalue.value ) {
         if ( url ) {
-          return <td colSpan={12}>
+          return <td colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR}>
             <a
               href={url}
               rel="noopener noreferrer"
@@ -34,7 +35,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
             </a>
           </td>;
         } else {
-          return <td colSpan={12}>{datavalue.value}</td>;
+          return <td colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR}>{datavalue.value}</td>;
         }
       } else {
         return null;
@@ -43,7 +44,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
 
     const params = {
       type: 'text',
-      className: styles[ 'wef_' + propertyDescription.datatype ],
+      className: styles.externalIdInput,
     };
 
     if ( propertyDescription.regexp ) {
@@ -57,12 +58,10 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
     expect( buttons ).toBeAn( 'array' );
 
     return <React.Fragment>
-      <td colSpan={5}>
-        <input {...params} />
-      </td>
-      <td className={styles.wef_external_links_url_cell} colSpan={7 - buttons.length}>
-        <div className={styles.wef_external_links_url_div}>
-          {url ? <a className={styles.wef_external_links_url_a} href={url} rel="noopener noreferrer" target="_blank">{url}</a> : ''}
+      <td className={styles.externalIdTableCell} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - buttons.length}>
+        <div className={styles.container}>
+          <input {...params} />
+          {url ? <a className={styles.urlLink} href={url} rel="noopener noreferrer" target="_blank">{url}</a> : ''}
         </div>
       </td>
       { buttons }

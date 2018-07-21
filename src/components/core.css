@@ -11,10 +11,6 @@
 	box-sizing: border-box;
 }
 
-.wef_progress_item {
-	white-space: nowrap;
-}
-
 /* Labels editor */
 .wef_labels_description_area {
 	padding: 0 1em !important;
@@ -80,41 +76,6 @@
 /* Snak value level -- per types */
 .wef_string, .wef_url {
 	width: 99%;
-}
-
-.wef_snak_replacement_label_time, .wef_snak_replacement_label_time_days,
-	.wef_snak_replacement_label_time_months,
-	.wef_snak_replacement_label_time_years {
-	white-space: nowrap;
-	cursor: pointer;
-}
-
-.wef_external-id {
-	min-width: 10em;
-}
-
-.wef_external_links_before_url_cell {
-	min-width: 17em;
-	width: initial !important;
-}
-
-.wef_external_links_url_cell {
-	padding-left: 0.5em !important;
-	width: 100%;
-}
-
-.wef_external_links_url_div {
-	position: relative;
-}
-
-.wef_external_links_url_a {
-	text-overflow: ellipsis;
-	left: 0;
-	right: 0;
-	top: -0.5em;
-	overflow: hidden;
-	position: absolute;
-	white-space: nowrap;
 }
 
 /*Snak value level -- per types: GLOBE-COORDINATE */

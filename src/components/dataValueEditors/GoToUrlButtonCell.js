@@ -1,9 +1,7 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
-import i18n from 'components/core.i18n';
+import i18n from './i18n';
 import PropTypes from 'prop-types';
-
-const NOOP = () => {};
 
 export default class GoToUrlButtonCell extends PureComponent {
 
@@ -23,8 +21,7 @@ export default class GoToUrlButtonCell extends PureComponent {
     return <ButtonCell
       disabled={disabled || !href}
       icon="ui-icon-extlink"
-      label={i18n.buttonUrlNavigate}
-      onClick={NOOP}>
+      label={i18n.buttonUrlNavigate}>
       { children => <a href={href ? href : '#'}
         rel="noopener noreferrer"
         target="_blank">{children}</a>}

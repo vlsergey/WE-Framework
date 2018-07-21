@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import ExternalIdDataValueEditor from 'components/dataValueEditors/ExternalIdDataValueEditor';
+import ExternalIdDataValueEditor from 'components/dataValueEditors/external-id/ExternalIdDataValueEditor';
 import FillSisterIsbnClaimButtonCell from './FillSisterIsbnClaimButtonCell';
 import HyphenateIsbnButtonCell from './HyphenateIsbnButtonCell';
 import React from 'react';

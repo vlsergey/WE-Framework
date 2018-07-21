@@ -4,7 +4,6 @@ const en = {
 
   buttonAddClaim: 'add claim',
   buttonRemoveClaim: 'remove claim',
-  buttonUrlNavigate: 'open specified URL',
   buttonCreateOrEdit: 'create or edit wikidata item',
   buttonCreateOrEditPrefixCreate: 'create as: ',
   buttonCreateOrEditPrefixEdit: 'edit as: ',
@@ -114,7 +113,6 @@ const ru = {
 
   buttonAddClaim: 'добавить утверждение',
   buttonRemoveClaim: 'удалить утверждение',
-  buttonUrlNavigate: 'открыть указанный URL',
   buttonCreateOrEdit: 'создать или редактировать элемент Викиданных',
   buttonCreateOrEditPrefixCreate: 'создать: ',
   buttonCreateOrEditPrefixEdit: 'редактировать: ',

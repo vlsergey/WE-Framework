@@ -3,7 +3,7 @@ import React, { PureComponent } from 'react';
 import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
 import enhancementsFactory from 'enhancements/enhancementsFactory';
 import expect from 'expect';
-import ExternalIdDataValueEditor from './dataValueEditors/ExternalIdDataValueEditor';
+import ExternalIdDataValueEditor from './dataValueEditors/external-id/ExternalIdDataValueEditor';
 import MonolingualTextDataValueEditor from './dataValueEditors/MonolingualTextDataValueEditor';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';

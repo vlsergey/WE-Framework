@@ -12,6 +12,7 @@ import styles from './CreateNewButtonCell.css';
 export default class CreateNewButtonCell extends PureComponent {
 
   static propTypes = {
+    disabled: PropTypes.bool.isRequired,
     onCreate: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
   };
@@ -21,8 +22,15 @@ export default class CreateNewButtonCell extends PureComponent {
   }
 
   render() {
-    const { propertyDescription } = this.props;
+    const { disabled, propertyDescription } = this.props;
     const instanceOf = ( propertyDescription.valueTypeConstraint || {} ).instanceOf || null;
+
+    if ( disabled ) {
+      return <ButtonCell
+        disabled
+        icon={'ui-icon-pencil'}
+        label={i18n.buttonLabelCreateNew} />;
+    }
 
     return <ButtonCell
       icon={'ui-icon-pencil'}

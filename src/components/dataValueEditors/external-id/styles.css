@@ -1,0 +1,25 @@
+.externalIdTableCell {
+	position: relative;
+}
+
+.externalIdInput {
+	width: 12em;
+}
+
+.urlTableCell {
+	padding-left: 0.5em !important;
+}
+
+.container {
+	left: 0;
+	overflow: hidden;
+	position: absolute;
+	right: 0;
+	text-overflow: ellipsis;
+	top: 0em;
+	white-space: nowrap;
+}
+
+.urlLink {
+	padding-left: 0.5em;
+}

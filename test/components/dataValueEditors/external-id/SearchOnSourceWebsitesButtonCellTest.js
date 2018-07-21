@@ -2,18 +2,18 @@ import { applyMiddleware, createStore } from 'redux';
 import stringPropertyValuesCache, { buildStringCacheValuesFromEntity } from 'caches/stringPropertyValuesCache';
 import assert from 'assert';
 import buildReducers from 'core/reducers';
-import P1986 from '../../entities/P1986';
-import P345 from '../../entities/P345';
+import P1986 from '../../../entities/P1986';
+import P345 from '../../../entities/P345';
 import PropertyDescription from 'core/PropertyDescription';
 import propertyDescriptionCache from 'caches/propertyDescriptionCache';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import { Provider } from 'react-redux';
-import Q2262932 from '../../entities/Q2262932';
-import Q652 from '../../entities/Q652';
+import Q2262932 from '../../../entities/Q2262932';
+import Q652 from '../../../entities/Q652';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
-import SearchOnSourceWebsitesButtonCell from 'components/dataValueEditors/SearchOnSourceWebsitesButtonCell';
-import TableTBodyTr from './TableTBodyTr';
+import SearchOnSourceWebsitesButtonCell from 'components/dataValueEditors/external-id/SearchOnSourceWebsitesButtonCell';
+import TableTBodyTr from '../TableTBodyTr';
 import thunk from 'redux-thunk';
 
 describe( 'components/dataValueEditors/SearchOnSourceWebsitesButtonCell', () => {

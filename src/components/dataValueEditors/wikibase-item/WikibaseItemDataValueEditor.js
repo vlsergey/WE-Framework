@@ -91,12 +91,11 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
 
   renderButtons( propertyDescription, entityId ) {
     return [
-      entityId
-        ? <td key="CreateNew" />
-        : <CreateNewButtonCell
-          key="CreateNew"
-          onCreate={this.handleCreate}
-          propertyDescription={propertyDescription} />,
+      <CreateNewButtonCell
+        disbled={!!entityId}
+        key="CreateNew"
+        onCreate={this.handleCreate}
+        propertyDescription={propertyDescription} />,
       <GoToLocalButtonCell entityId={entityId} key="GoToLocal" />,
       <GoToWikidataButtonCell entityId={entityId} key="GoToWikidata" />,
     ];

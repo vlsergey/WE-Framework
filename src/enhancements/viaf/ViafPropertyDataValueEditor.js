@@ -1,6 +1,6 @@
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
-import ExternalIdDataValueEditor from 'components/dataValueEditors/ExternalIdDataValueEditor';
+import ExternalIdDataValueEditor from 'components/dataValueEditors/external-id/ExternalIdDataValueEditor';
 import i18n from './i18n';
 import React from 'react';
 import ViafLookupDialog from './ViafLookupDialog';
