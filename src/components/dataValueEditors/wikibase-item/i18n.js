@@ -1,10 +1,12 @@
-import * as I18nUtils from 'utils/I18nUtils';
+import { localize } from 'utils/I18nUtils';
 
 const en = {
   buttonLabelCreateNew: 'Create new element',
   buttonLabelGoToLocal: 'Open item page on current wiki',
 
   optionOther: 'Select other value…',
+
+  paragraphTextSelectEditorForCreate: 'Select editor for new item creation',
 };
 
 const ru = {
@@ -12,8 +14,9 @@ const ru = {
   buttonLabelGoToLocal: 'Открыть страницу элемента на текущей вики',
 
   optionOther: 'Указать другое значение…',
+
+  paragraphTextSelectEditorForCreate: 'Выберите редактор для создания нового элемента',
 };
 
-const translations = { en, ru };
-const result = I18nUtils.localize( {}, translations );
+const result = localize( {}, { en, ru } );
 export default result;

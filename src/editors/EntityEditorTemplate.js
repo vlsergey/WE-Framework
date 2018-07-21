@@ -2,8 +2,9 @@ import i18n from './i18n';
 
 const editorDescription = {
   id: 'Entity',
-  linkText: 'WEF: Entity',
-  dialogTitle: 'Entity',
+  linkText: i18n.entityLinkText,
+  description: i18n.entityDescription,
+  dialogTitle: i18n.entityDialogTitle,
   newEntityInstanceOf: 'Q35120',
   tabs: [
     {

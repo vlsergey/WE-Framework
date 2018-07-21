@@ -2,8 +2,9 @@ import i18n from './i18n';
 
 const editorDescription = {
   id: 'Software',
-  linkText: 'WEF: Software',
-  dialogTitle: 'Software',
+  linkText: i18n.softwareLinkText,
+  description: i18n.softwareDescription,
+  dialogTitle: i18n.softwareDialogTitle,
   newEntityInstanceOf: 'Q7397',
   recommendedClasses: [ 'Q7397' ],
   tabs: [

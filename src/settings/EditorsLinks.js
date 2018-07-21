@@ -78,8 +78,8 @@ export default class EditorLinks extends PureComponent {
             const style = recommended ? { fontWeight: 'bolder' } : {};
 
             return <li key={editorTemplate.id} style={style}>
-              <a onClick={this.handleEditorLinkClick( editorTemplate )}>
-                {editorTemplate.linkText}
+              <a onClick={this.handleEditorLinkClick( editorTemplate )} title={editorTemplate.description}>
+                {'WEF: ' + editorTemplate.linkText}
               </a>
             </li>;
           }

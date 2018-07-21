@@ -60,11 +60,14 @@ class PopupContent extends PureComponent {
     const editorTemplates = allEditorTemplates
       .filter( template => !!template.newEntityInstanceOf );
 
-    return <ParentTypesProvider typeIds={instanceOf || []}>{ typeIds => <EditorButtons
-      editorTemplates={editorTemplates}
-      onCreate={this.props.onCreate}
-      typeIds={new Set( Object.values( typeIds || {} ).flatMap( array => array ) )} />}
-    </ParentTypesProvider>;
+    return <React.Fragment>
+      {i18n.paragraphTextSelectEditorForCreate}
+      <ParentTypesProvider typeIds={instanceOf || []}>{ typeIds => <EditorButtons
+        editorTemplates={editorTemplates}
+        onCreate={this.props.onCreate}
+        typeIds={new Set( Object.values( typeIds || {} ).flatMap( array => array ) )} />}
+      </ParentTypesProvider>
+    </React.Fragment>;
   }
 }
 
@@ -93,7 +96,8 @@ class EditorButtons extends PureComponent {
         ? styles.button + ' ' + styles.buttonRecommend
         : styles.button + ' ' + styles.buttonUsual}
       key={editorTemplate.id}
-      onClick={handleClickF( editorTemplate )}>
+      onClick={handleClickF( editorTemplate )}
+      title={editorTemplate.description}>
         {editorTemplate.linkText}
       </button>;
     } );
