@@ -31,17 +31,12 @@ const editorDescription = {
             { property: 'P1680' } /* subtitle */,
             { property: 'P407' } /* language */,
             { property: 'P571' } /* date of foundation or creation */,
+            { property: 'P921' } /* main subject */,
           ],
         },
         {
-          labelEntityId: 'P1433' /* published in */,
           fields: [
             { property: 'P1433' } /* published in */,
-          ],
-        },
-        {
-          labelEntityId: 'P953' /* URL */,
-          fields: [
             { property: 'P953' } /* URL */,
           ],
         },
