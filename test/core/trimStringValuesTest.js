@@ -14,4 +14,53 @@ describe( 'core/trimStringValues', () => {
 
   } );
 
+
+  describe( 'shall correct trim external-id values', () => {
+
+    const newEntity = {
+      claims: {
+        P1: [
+          {
+            mainsnak: {
+              snaktype: 'value',
+              property: 'P1',
+              hash: 'somehash',
+              datavalue: {
+                value: '\tsome value  \r\n ',
+                type: 'string',
+              },
+              datatype: 'external-id',
+            },
+            type: 'statement',
+            id: 'someid',
+            rank: 'normal',
+          },
+        ],
+      },
+    };
+
+    it( 'correctly trim spaces, carriage returns and tabs in external-id', () => assert.deepEqual( trimStringValues( newEntity ), {
+      claims: {
+        P1: [
+          {
+            mainsnak: {
+              snaktype: 'value',
+              property: 'P1',
+              hash: 'somehash',
+              datavalue: {
+                value: 'some value',
+                type: 'string',
+              },
+              datatype: 'external-id',
+            },
+            type: 'statement',
+            id: 'someid',
+            rank: 'normal',
+          },
+        ],
+      },
+    } ) );
+
+  } );
+
 } );
