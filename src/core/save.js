@@ -194,6 +194,7 @@ export function saveAndClose( resolve, reject ) {
 
     if ( Object.keys( data ).length === 0 ) {
       notify( 'No changes' );
+      reject( 'No changes' );
       return;
     }
 
@@ -218,7 +219,6 @@ export function saveAndClose( resolve, reject ) {
         mw.log.error( error );
         notify( i18n.actionUpdateEntityFail );
         alert( i18n.errorUpdateEntity + ': ' + error.info );
-        reject();
       } )
       .then( result => {
         notify( i18n.actionUpdateEntityDone );
@@ -232,7 +232,6 @@ export function saveAndClose( resolve, reject ) {
         mw.log.error( error );
         notify( i18n.actionUpdateEntityFail );
         alert( i18n.errorUpdateEntity + ': ' + JSON.stringify( error ) );
-        reject();
       } );
   };
 
