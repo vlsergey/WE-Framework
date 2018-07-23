@@ -26,7 +26,7 @@ export default function trimStringValues( entity ) {
 function trimValuesImpl( obj ) {
   expect( obj ).toExist();
 
-  const result = {};
+  const result = Array.isArray( obj ) ? [ ...obj ] : { ...obj };
   let hasChanges = false;
   Object.keys( obj ).forEach( key => {
     const oldValue = obj[ key ];

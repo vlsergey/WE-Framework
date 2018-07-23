@@ -15,7 +15,7 @@ describe( 'core/trimStringValues', () => {
   } );
 
 
-  describe( 'shall correct trim external-id values', () => {
+  it( 'correctly trim spaces, carriage returns and tabs in external-id', () => {
 
     const newEntity = {
       claims: {
@@ -38,8 +38,13 @@ describe( 'core/trimStringValues', () => {
         ],
       },
     };
+    const trimmed = trimStringValues( newEntity );
 
-    it( 'correctly trim spaces, carriage returns and tabs in external-id', () => assert.deepEqual( trimStringValues( newEntity ), {
+    // array is still array
+    Object.values( trimmed.claims )
+      .forEach( claims => assert( Array.isArray( claims ), 'Claims shall be an array: ' + JSON.stringify( claims ) ) );
+
+    const expected = {
       claims: {
         P1: [
           {
@@ -59,8 +64,9 @@ describe( 'core/trimStringValues', () => {
           },
         ],
       },
-    } ) );
+    };
 
+    assert.deepEqual( trimmed, expected );
   } );
 
 } );
