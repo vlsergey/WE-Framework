@@ -66,27 +66,21 @@ export default class EditorLinks extends PureComponent {
     const isEntityClass = classIdsSet.has.bind( classIdsSet );
     const sorted = [ ...editorTemplates ].sort( ( a, b ) => compare( a.linkText, b.linkText ) );
 
-    return <div aria-labelledby="p-wef-label" className="portal" id="p-wef" role="navigation">
-      <h3 dir="ltr" id="p-wef-label" lang="ru">{i18n.portalLabel}</h3>
-      <div className="body plainlinks">
-        <ul>
-          <li key="settings">
-            <a onClick={start}>{i18n.linkText}</a>
-          </li>
-          { sorted.map( editorTemplate => {
-            const recommended = ( editorTemplate.recommendedClasses || [] ).some( isEntityClass );
-            const style = recommended ? { fontWeight: 'bolder' } : {};
+    return <React.Fragment>
+      <li key="settings">
+        <a onClick={start}>{i18n.linkText}</a>
+      </li>
+      { sorted.map( editorTemplate => {
+        const recommended = ( editorTemplate.recommendedClasses || [] ).some( isEntityClass );
+        const style = recommended ? { fontWeight: 'bolder' } : {};
 
-            return <li key={editorTemplate.id} style={style}>
-              <a onClick={this.handleEditorLinkClick( editorTemplate )} title={editorTemplate.description}>
-                {'WEF: ' + editorTemplate.linkText}
-              </a>
-            </li>;
-          }
-          )}
-        </ul>
-      </div>
-    </div>;
+        return <li key={editorTemplate.id} style={style}>
+          <a onClick={this.handleEditorLinkClick( editorTemplate )} title={editorTemplate.description}>
+            {'WEF: ' + editorTemplate.linkText}
+          </a>
+        </li>;
+      } )}
+    </React.Fragment>;
   }
 
 }

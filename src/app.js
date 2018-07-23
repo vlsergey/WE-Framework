@@ -2,6 +2,7 @@ import 'babel-polyfill';
 import { getEnabledEditors, registerEditor } from './settings/index';
 import allEditorTemplates from './editors';
 import EditorsLinks from './settings/EditorsLinks';
+import i18n from 'settings/i18n';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import wikieditorIntegration from 'sources/wikieditorIntegration';
@@ -32,10 +33,18 @@ mw.loader.using( [ //
   } );
 
   const toolsGroup = jQuery( '#p-tb' )[ 0 ];
-  const div = document.createElement( 'div' );
-  toolsGroup.parentElement.insertBefore( div, toolsGroup );
 
-  ReactDOM.render( <EditorsLinks editorTemplates={getEnabledEditors()} />, div );
+  const wefGroup = toolsGroup.cloneNode( true );
+  wefGroup.setAttribute( 'id', 'p-wef' );
+
+  const h3Title = wefGroup.getElementsByTagName( 'h3' )[ 0 ];
+  h3Title.setAttribute( 'id', 'p-wef-label' );
+  h3Title.textContent = i18n.portalLabel;
+  toolsGroup.parentElement.insertBefore( wefGroup, toolsGroup );
+
+  const ul = jQuery( wefGroup ).find( 'ul' )[ 0 ];
+  while ( ul.firstChild ) ul.removeChild( ul.firstChild );
+  ReactDOM.render( <EditorsLinks editorTemplates={getEnabledEditors()} />, ul );
 
   // only for ru-wiki: add source insert to edit toolbar
   wikieditorIntegration();
