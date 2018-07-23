@@ -1,4 +1,5 @@
 .externalIdTableCell {
+	min-width: 14em;
 	position: relative;
 }
 
