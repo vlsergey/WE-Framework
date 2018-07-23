@@ -6,7 +6,7 @@ const editorDescription = {
   description: i18n.bookDescription,
   dialogTitle: i18n.bookDialogTitle,
   newEntityInstanceOf: 'Q571',
-  recommendedClasses: [ 'Q571' ],
+  recommendedClasses: [ 'Q571', 'Q41298' ],
   tabs: [
     {
       label: i18n.tabGeneral,
