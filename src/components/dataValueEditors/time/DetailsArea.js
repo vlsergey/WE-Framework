@@ -1,10 +1,10 @@
 import { DEFAULT_CALENDAR_MODEL, DEFAULT_PRECISION } from './model';
 import React, { PureComponent } from 'react';
 import CalendarModelSelect from './CalendarModelSelect';
-import { ClipLoader } from 'react-spinners';
 import i18n from './i18n';
 import PrecisionSelect from './PrecisionSelect';
 import PropTypes from 'prop-types';
+import Spinner from 'components/Spinner';
 import styles from './Time.css';
 
 export default class DetailsArea extends PureComponent {
@@ -44,7 +44,7 @@ export default class DetailsArea extends PureComponent {
         <tr>
           <td className={styles.timeRendered} colSpan={3}>{
             spinner
-              ? <ClipLoader size={15} />
+              ? <Spinner size={15} />
               : error
                 ? <span className={styles.timeError}>{error}</span>
                 : <span dangerouslySetInnerHTML={{ __html: preview }} />

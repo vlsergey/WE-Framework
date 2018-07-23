@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { ClipLoader } from 'react-spinners';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import Spinner from 'components/Spinner';
 
-export default class MediawikiPreview extends Component {
+export default class MediawikiPreview extends PureComponent {
 
   static propTypes = {
     spinnerSize: PropTypes.number,
@@ -63,7 +63,7 @@ export default class MediawikiPreview extends Component {
       return <div dangerouslySetInnerHTML={{ __html: this.state.html }} {...other} />;
     }
 
-    return <ClipLoader size={spinnerSize / 1.4} {...other} />;
+    return <Spinner size={spinnerSize} {...other} />;
   }
 
 }
