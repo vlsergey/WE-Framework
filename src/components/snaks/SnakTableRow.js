@@ -14,7 +14,7 @@ export default class SnakTableRow extends PureComponent {
     onSnakChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     readOnly: PropTypes.bool,
-    snak: PropTypes.object.isRequired,
+    snak: PropTypes.object,
   }
 
   static defaultProps = {

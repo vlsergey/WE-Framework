@@ -4,6 +4,7 @@ import ClaimAddButtonCell from './ClaimAddButtonCell';
 import ClaimsTableRows from './ClaimsTableRows';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
+import SortClaimsButtonCell from './SortClaimsButtonCell';
 
 export default class ClaimsTableBody extends PureComponent {
 
@@ -14,6 +15,7 @@ export default class ClaimsTableBody extends PureComponent {
     onClaimAddTwice: PropTypes.func.isRequired,
     onClaimDelete: PropTypes.func.isRequired,
     onClaimUpdate: PropTypes.func.isRequired,
+    onClaimsReorder: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   };
 
@@ -23,7 +25,7 @@ export default class ClaimsTableBody extends PureComponent {
 
   render() {
     const { claims, displayLabel, propertyDescription,
-      onClaimAdd, onClaimAddTwice, onClaimUpdate, onClaimDelete } = this.props;
+      onClaimAdd, onClaimAddTwice, onClaimUpdate, onClaimDelete, onClaimsReorder } = this.props;
 
     let children;
     if ( !claims || claims.length === 0 ) {
@@ -41,7 +43,11 @@ export default class ClaimsTableBody extends PureComponent {
       children = claims.map( ( claim, i ) => <ClaimsTableRows
         claim={claim}
         displayLabel={displayLabel}
-        firstCell={i == 0 ? <ClaimAddButtonCell onClick={onClaimAdd} /> : <td />}
+        firstCell={i === 0
+          ? <ClaimAddButtonCell onClick={onClaimAdd} />
+          : i === 1
+            ? <SortClaimsButtonCell claims={claims} onClaimsReorder={onClaimsReorder} />
+            : <td />}
         hasClaimDelete
         key={claim.id}
         onClaimDelete={onClaimDelete}

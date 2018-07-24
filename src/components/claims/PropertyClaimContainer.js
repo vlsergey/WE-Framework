@@ -17,6 +17,7 @@ class PropertyClaimContainer extends PureComponent {
     onClaimAddTwice: PropTypes.func.isRequired,
     onClaimDelete: PropTypes.func.isRequired,
     onClaimUpdate: PropTypes.func.isRequired,
+    onClaimsReorder: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   };
 
@@ -57,6 +58,7 @@ const mapDispatchToProps = ( dispatch, ownProps ) => ( {
   },
   onClaimUpdate: claim => dispatch( { type: 'CLAIM_UPDATE', claim } ),
   onClaimDelete: claim => dispatch( { type: 'CLAIM_DELETE', claim } ),
+  onClaimsReorder: claimIds => dispatch( { type: 'CLAIMS_REORDER', propertyId: ownProps.propertyDescription.id, claimIds } ),
 } );
 
 const PropertyClaimContainerConnected = connect( mapStateToProps, mapDispatchToProps )( PropertyClaimContainer );

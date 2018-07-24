@@ -7,14 +7,14 @@ export default class DialogWrapper extends PureComponent {
     buttons: PropTypes.arrayOf( PropTypes.object ),
     children: PropTypes.node,
     className: PropTypes.string,
-    height: PropTypes.number,
+    height: PropTypes.oneOfType( [ PropTypes.number, PropTypes.string ] ),
     maxHeight: PropTypes.number,
     maxWidth: PropTypes.number,
     minHeight: PropTypes.number,
     minWidth: PropTypes.number,
     onBeforeClose: PropTypes.func,
     onClose: PropTypes.func,
-    width: PropTypes.number,
+    width: PropTypes.oneOfType( [ PropTypes.number, PropTypes.string ] ),
     title: PropTypes.string,
   };
 

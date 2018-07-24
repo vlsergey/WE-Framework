@@ -46,6 +46,7 @@ export default class SingleQualifierEditor extends PureComponent {
       displayLabels={false}
       onSnaksArrayUpdate={this.handleSnaksArrayUpdate}
       propertyDescription={qualifierPropertyDescription}
+      readOnly={false}
       removeButtonConfirmMessage={this.confirmRemoveQualifierMessage}
       removeButtonLabel={i18n.buttonLabelRemoveQualifier}
       snaksArray={( claim.qualifiers || {} )[ propertyId ]} />;

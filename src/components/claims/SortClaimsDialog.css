@@ -1,0 +1,8 @@
+.dialogTable th {
+  text-align: left;
+  white-space: nowrap;
+}
+
+.dialogTable select {
+  width: 100%;
+}

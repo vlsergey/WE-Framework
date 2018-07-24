@@ -1,4 +1,3 @@
-import * as Shapes from 'model/Shapes';
 import React, { PureComponent } from 'react';
 import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
 import enhancementsFactory from 'enhancements/enhancementsFactory';
@@ -8,6 +7,7 @@ import MonolingualTextDataValueEditor from './dataValueEditors/MonolingualTextDa
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import QuantityDataValueEditor from './dataValueEditors/quantity/QuantityDataValueEditor';
+import { Snak } from 'model/Shapes';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 import TimeDataValueEditor from './dataValueEditors/time/TimeDataValueEditor';
 import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueEditor';
@@ -33,7 +33,7 @@ export default class SnakValueEditorFactory extends PureComponent {
     readOnly: PropTypes.bool,
     onSnakChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-    snak: PropTypes.shape( Shapes.Snak ),
+    snak: PropTypes.shape( Snak ),
   }
 
   static defaultProps = {

@@ -167,6 +167,54 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
     };
   }
 
+  case 'CLAIMS_REORDER': {
+    const { propertyId, claimIds } = action;
+    expect( propertyId ).toBeA( 'string', 'Action argument \'propertyId\' is not a string but ' + typeof propertyId );
+    expect( claimIds ).toBeAn( 'array', 'Action argument \'propertyId\' is not a string but ' + typeof claimIds );
+
+    const oldClaims = entity.claims[ propertyId ];
+    expect( oldClaims ).toBeAn( 'array' );
+    expect( claimIds.length ).toBe( oldClaims.length,
+      'Supplied ordered claimIds must have the same length as entity claims array for ' + propertyId );
+
+    let toReorderStartsFrom = null;
+    for ( let i = 0; i < claimIds.length; i++ ) {
+      if ( claimIds[ i ] !== oldClaims[ i ].id ) {
+        toReorderStartsFrom = i;
+        break;
+      }
+    }
+
+    if ( toReorderStartsFrom === null ) {
+      // no changes
+      return entity;
+    }
+
+    let newClaims = null;
+    if ( toReorderStartsFrom !== 0 ) {
+      newClaims = oldClaims.slice( 0, toReorderStartsFrom );
+    } else {
+      newClaims = [];
+    }
+    for ( let i = toReorderStartsFrom; i < claimIds.length; i++ ) {
+      const claim = oldClaims.find( claim => claim.id === claimIds[ i ] );
+      expect( claim ).toBeAn( 'object' );
+      newClaims.push( {
+        ...claim,
+        id: generateRandomString(),
+      } );
+    }
+
+    return {
+      ...entity,
+      claims: {
+        ...entity.claims,
+        [ propertyId ]: newClaims,
+      },
+    };
+  }
+
+
   }
 
   return entity;

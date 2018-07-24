@@ -106,7 +106,9 @@ export default class ClaimsWithQualifiersTableRows extends PureComponent {
           { cache => columns.map( propertyId => {
             const propertyDescription = cache[ propertyId ];
             if ( typeof propertyDescription === 'undefined' ) {
-              return <td><i>Loading property description of {propertyId}...</i></td>;
+              return <td key={propertyId}>
+                <i>Loading property description of {propertyId}...</i>
+              </td>;
             }
             return <td className={styles.qualifier_cell} key={propertyId}>
               <table className={styles.qualifier_table}>

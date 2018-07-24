@@ -15,7 +15,7 @@ export default class ClaimQualifiersTable extends PureComponent {
 
   static propTypes = {
     allowedQualifiers: PropTypes.arrayOf( PropTypes.string ),
-    defaultAddQuailifier: PropTypes.bool.isRequired,
+    defaultAddQuailifier: PropTypes.bool,
     disabledQualifiers: PropTypes.arrayOf( PropTypes.string ),
     claim: PropTypes.shape( Claim ).isRequired,
     claimPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
@@ -24,6 +24,7 @@ export default class ClaimQualifiersTable extends PureComponent {
 
   static defaultProps = {
     allowedQualifiers: [],
+    defaultAddQuailifier: false,
     disabledQualifiers: [],
   }
 
