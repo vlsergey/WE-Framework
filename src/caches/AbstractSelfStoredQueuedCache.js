@@ -9,10 +9,6 @@ export default class AbstractSelfStoredQueuedCache {
     this.type = type;
     this.maxBatch = maxBatch;
 
-    this.notifyOptionsInProgress = { autoHide: false, tag: 'WE-F Cache: ' + type };
-    this.notifyOptionsSuccess = { autoHide: true, tag: 'WE-F Cache: ' + type };
-    this.notifyOptionsFailure = { autoHide: true, tag: 'WE-F Cache: ' + type };
-
     this.queue = new Set();
     this.queueState = 'WAITING';
     this.queueHasNewElements = false;
@@ -93,11 +89,11 @@ export default class AbstractSelfStoredQueuedCache {
     }
 
     const notifyMessage = this.notifyMessage( nextBatch );
-    mw.notify( notifyMessage + '…', this.notifyOptionsInProgress );
+    console.debug( notifyMessage + '…', this.notifyOptionsInProgress );
 
     return this.buildRequestPromice( nextBatch ).then( result => {
-      mw.notify( notifyMessage + '… Success.', this.notifyOptionsSuccess );
-      mw.log( 'Successfully received ' + nextBatch.length + ' cache ' + this.type + ' items: ' + nextBatch );
+      console.info( notifyMessage + '… Success.', this.notifyOptionsSuccess );
+      console.debug( 'Successfully received ' + nextBatch.length + ' cache ' + this.type + ' items: ' + nextBatch );
 
       const cacheUpdate = this.convertResultToEntities( result, nextBatch );
       expect( cacheUpdate ).toBeAn( 'object' );
@@ -112,7 +108,7 @@ export default class AbstractSelfStoredQueuedCache {
 
     } ).catch( error => {
       mw.notify( notifyMessage + '… Failure. See console log output for details.',
-        this.notifyOptionsFailure );
+        { autoHide: true, tag: 'WE-F Cache: ' + type } );
       mw.log.error( 'Unable to batch request following items: ' + nextBatch );
       mw.log.error( error );
 
