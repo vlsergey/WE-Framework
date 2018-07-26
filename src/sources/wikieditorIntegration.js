@@ -67,7 +67,7 @@ export default function wikieditorIntegration() {
       'Добавить источник с Викиданных',
       'Найти (или создать) источник на Викиданных и вставить ссылку в статью',
       '//upload.wikimedia.org/wikipedia/commons/b/b8/Bouton_Faut_sourcer.png',
-      '//upload.wikimedia.org/wikipedia/commons/b/b8/Bouton_Faut_sourcer.png',
+      '//upload.wikimedia.org/wikipedia/commons/c/cf/Toolbar_insert_reference.png',
       showWikidataSourceDialog
     );
   }
