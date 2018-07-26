@@ -64,8 +64,14 @@ export default class ViafLookupDialog extends PureComponent {
     const { onSelect } = this.props;
     const { autoSuggestResult, selected } = this.state;
 
-    onSelect( autoSuggestResult
-      .filter( entry => selected.indexOf( entry.viafid ) !== -1 ) );
+    const arr = autoSuggestResult
+      .map( entry => entry.viafid )
+      .filter( viafid => typeof viafid === 'string' )
+      .map( viafid => viafid.trim() )
+      .filter( viafid => viafid !== '' )
+      .filter( viafid => selected.indexOf( viafid ) !== -1 );
+    const unique = [ ...new Set( arr ) ];
+    onSelect( unique );
   }
 
   handleTrigger( viafid ) {
