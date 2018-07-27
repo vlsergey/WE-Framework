@@ -59,16 +59,17 @@ const editorDescription = {
         },
         {
           fields: [
-            { property: 'P570' } /* noble family */,
+            { property: 'P1317' } /* floruit */,
+          ],
+        },
+        {
+          fields: [
+            { property: 'P570' } /* death date */,
             { property: 'P20' } /* Death place */,
             { property: 'P509' } /* Death cause */,
             { property: 'P1196' } /* manner of death */,
             { property: 'P157' } /* killed by */,
             { property: 'P119' } /* place of burial */,
-          ],
-        },
-        {
-          fields: [
             { property: 'P535' } /* Find a Grave grave ID */,
           ],
         },
@@ -236,16 +237,37 @@ const editorDescription = {
         { property: 'P468' } /* dan/kyu rank */,
         { property: 'P2415' } /* personal best */,
       ],
+      fieldsets: [
+        {
+          fields: [
+            { property: 'P1317' } /* floruit */,
+            { property: 'P2031' } /* work period (start) */,
+            { property: 'P2032' } /* work period (end) */,
+            { property: 'P937' } /* work location */,
+          ],
+        },
+      ],
     },
 
     {
       labelEntityId: 'Q11042' /* culture */,
       fields: [
         { property: 'P135' } /* movement */,
+        { property: 'P136' } /* genre */,
         { property: 'P412' } /* voice type */,
         { property: 'P1303' } /* instrument */,
         { property: 'P800' } /* notable works */,
         { property: 'P358' } /* discography */,
+      ],
+      fieldsets: [
+        {
+          fields: [
+            { property: 'P1317' } /* floruit */,
+            { property: 'P2031' } /* work period (start) */,
+            { property: 'P2032' } /* work period (end) */,
+            { property: 'P937' } /* work location */,
+          ],
+        },
       ],
     },
 
