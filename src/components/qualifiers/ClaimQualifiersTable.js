@@ -3,6 +3,7 @@ import AnimatedTr from 'components/AnimatedTr';
 import { Claim } from 'model/Shapes';
 import expect from 'expect';
 import generateRandomString from 'utils/generateRandomString';
+import getDefaultQualifierSnak from 'enhancements/getDefaultQualifierSnak';
 import i18n from './i18n';
 import NewQualifierAutosuggest from './NewQualifierAutosuggest';
 import NewQualifierSelect from './NewQualifierSelect';
@@ -66,17 +67,18 @@ export default class ClaimQualifiersTable extends PureComponent {
       addQualifierMode: 'HIDDEN',
     } );
 
+    const defaultSnak = getDefaultQualifierSnak( propertyId );
+    const snak = defaultSnak
+      ? { hash: generateRandomString(), property: propertyId, snaktype: 'value', ...defaultSnak }
+      : { hash: generateRandomString(), property: propertyId, snaktype: 'value' };
+
     this.props.onClaimUpdate( {
       ...claim,
       qualifiers: {
         ...qualifiers,
         [ propertyId ]: [
           ...propertyQualifiers,
-          {
-            snaktype: 'value',
-            property: propertyId,
-            hash: generateRandomString(),
-          },
+          snak,
         ],
       },
     } );
