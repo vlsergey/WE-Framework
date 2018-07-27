@@ -1,4 +1,5 @@
 .queryInput {
+  margin-bottom: 1em;
   width: 100%;
 }
 
@@ -8,4 +9,8 @@
 
 .entryTerm {
   margin-left: 2em;
+}
+
+.queryStateDiv {
+  margin-top: 1em;
 }

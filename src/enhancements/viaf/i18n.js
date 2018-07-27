@@ -6,6 +6,11 @@ const en = {
   buttonLabelSelect: 'Select',
 
   dialogTitle: 'Find and download VIAF data',
+
+  queryState: {
+    SCHEDULED: 'Quering VIAF for „$1“…',
+    WAITING: 'Query complete. Show top results for „$1“',
+  },
 };
 
 const fr = {
@@ -20,6 +25,11 @@ const ru = {
   buttonLabelSelect: 'Выбрать',
 
   dialogTitle: 'Найти и загрузить данные с сервера VIAF',
+
+  queryState: {
+    SCHEDULED: 'Поиск на сайте VIAF по строке «$1»…',
+    WAITING: 'Поиск закочнен. Показаны результаты для «$1»',
+  },
 };
 
 const result = localize( {}, { en, fr, ru } );

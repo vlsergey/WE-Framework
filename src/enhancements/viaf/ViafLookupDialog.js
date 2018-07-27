@@ -22,6 +22,7 @@ export default class ViafLookupDialog extends PureComponent {
     this.state = {
       query: this.props.defaultQuery,
       queryScheduled: '',
+      queryState: 'WAITING',
       autoSuggestResult: [],
       selected: [],
     };
@@ -41,6 +42,7 @@ export default class ViafLookupDialog extends PureComponent {
       return;
     }
 
+    this.setState( { queryState: 'SCHEDULED' } );
     const url = '//viaf.org/viaf/AutoSuggest?query=' + encodeURIComponent( query );
     fetchJsonp( url, {
       jsonpCallback: 'callback',
@@ -49,7 +51,20 @@ export default class ViafLookupDialog extends PureComponent {
       .then( data => {
         if ( this.state.queryScheduled !== query ) return;
 
-        this.setState( { autoSuggestResult: data.result || [] } );
+        const grouped = ( data.result || [] )
+          .filter( entity => typeof entity.viafid === 'string' )
+          .filter( entity => entity.viafid.trim() !== '' )
+          .reduce( ( acc, cur ) => ( {
+            ...acc,
+            [ cur.viafid ]: acc[ cur.viafid ]
+              ? [ ...acc[ cur.viafid ], cur ]
+              : [ cur ],
+          } ), {} );
+
+        this.setState( {
+          autoSuggestResult: grouped,
+          queryState: 'WAITING',
+        } );
       } );
   }
 
@@ -64,14 +79,9 @@ export default class ViafLookupDialog extends PureComponent {
     const { onSelect } = this.props;
     const { autoSuggestResult, selected } = this.state;
 
-    const arr = autoSuggestResult
-      .map( entry => entry.viafid )
-      .filter( viafid => typeof viafid === 'string' )
-      .map( viafid => viafid.trim() )
-      .filter( viafid => viafid !== '' )
-      .filter( viafid => selected.indexOf( viafid ) !== -1 );
-    const unique = [ ...new Set( arr ) ];
-    onSelect( unique );
+    const viafIds = Object.keys( autoSuggestResult )
+      .filter( viafId => selected.indexOf( viafId ) !== -1 );
+    onSelect( viafIds );
   }
 
   handleTrigger( viafid ) {
@@ -83,7 +93,7 @@ export default class ViafLookupDialog extends PureComponent {
   }
 
   render() {
-    const { autoSuggestResult, query } = this.state;
+    const { autoSuggestResult, query, queryScheduled, queryState } = this.state;
 
     const buttons = [];
 
@@ -105,20 +115,22 @@ export default class ViafLookupDialog extends PureComponent {
         onChange={this.handleChange}
         type="text"
         value={query} />
-      { autoSuggestResult.map( entry => <div className={styles.entry} key={entry.viafid}>
+      { Object.keys( autoSuggestResult ).map( viafid => <div className={styles.entry} key={viafid}>
         <label>
           <input
-            checked={this.state.selected.indexOf( entry.viafid ) !== -1}
-            onChange={this.handleTrigger( entry.viafid )}
+            checked={this.state.selected.indexOf( viafid ) !== -1}
+            onChange={this.handleTrigger( viafid )}
             type="checkbox" />
-          { entry.nametype && <i>{entry.nametype + ': '}</i>}
-          <a href={'http://www.viaf.org/viaf/' + entry.viafid}>VIAF: {entry.viafid}</a>
-          <br />
-          <span className={styles.entryTerm}>
+          <a href={'http://www.viaf.org/viaf/' + viafid}>VIAF: {viafid}</a>
+          { autoSuggestResult[ viafid ].map( entry => <div className={styles.entryTerm} key={entry.term}>
+            { entry.nametype && <i>{entry.nametype + ': '}</i>}
             {entry.term}
-          </span>
+          </div> ) }
         </label>
       </div> ) }
+      <div className={styles.queryStateDiv}>
+        {( i18n.queryState[ queryState ] || '' ).replace( '$1', queryScheduled )}
+      </div>
     </DialogWrapper>;
   }
 
