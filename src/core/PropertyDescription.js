@@ -80,7 +80,7 @@ class UrlFormatter {
   }
 
   format( value ) {
-    return this._format.replace( '$1', value );
+    return this._format.replace( /\$1/g, value );
   }
 
 }

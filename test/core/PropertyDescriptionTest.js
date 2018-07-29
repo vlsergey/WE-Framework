@@ -1,5 +1,6 @@
 import assert from 'assert';
 import P1971 from '../entities/P1971';
+import P1670 from '../entities/P1670';
 import P2044 from '../entities/P2044';
 import P21 from '../entities/P21';
 import P345 from '../entities/P345';
@@ -11,6 +12,7 @@ describe( 'PropertyDescription', () => {
   const pd21 = new PropertyDescription( P21 );
   const pd85 = new PropertyDescription( P85 );
   const pd345 = new PropertyDescription( P345 );
+  const pd1670 = new PropertyDescription( P1670 );
   const pd1971 = new PropertyDescription( P1971 );
   const pd2044 = new PropertyDescription( P2044 );
 
@@ -22,6 +24,20 @@ describe( 'PropertyDescription', () => {
 
   it( 'countries: shall provide', () => {
     assert.deepEqual( pd345.countries, [ 'Q30' ] );
+  } );
+
+  it( 'formatUrl: P345 Correctly format URLs', () => {
+    assert.equal( pd345.formatUrl( null ), '' );
+    assert.equal( pd345.formatUrl( '' ), '' );
+    assert.equal( pd345.formatUrl( 'tt0068646' ),
+      'https://tools.wmflabs.org/wikidata-externalid-url/?p=345&url_prefix=http://www.imdb.com/&id=tt0068646' );
+  } );
+
+  it( 'formatUrl: P1670 Correctly format URLs', () => {
+    assert.equal( pd1670.formatUrl( null ), '' );
+    assert.equal( pd1670.formatUrl( '' ), '' );
+    assert.equal( pd1670.formatUrl( 'abc' ),
+      'https://www.collectionscanada.gc.ca/canadiana-authorities/index/view?index_name=cdnAutNbr&search_text=abc&page=1&cdnAutNbr=abc' );
   } );
 
   it( 'label: shall provide', () => {
@@ -64,13 +80,6 @@ describe( 'PropertyDescription', () => {
 
   it( 'Source Websites parsed ', () => {
     assert.deepEqual( pd345.sourceWebsites, [ 'http://www.imdb.com/' ] );
-  } );
-
-  it( 'Correctly format URLs', () => {
-    assert.equal( pd345.formatUrl( null ), '' );
-    assert.equal( pd345.formatUrl( '' ), '' );
-    assert.equal( pd345.formatUrl( 'tt0068646' ),
-      'https://tools.wmflabs.org/wikidata-externalid-url/?p=345&url_prefix=http://www.imdb.com/&id=tt0068646' );
   } );
 
   it( 'valueTypeConstraint: shall provide if defined', () => {
