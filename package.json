@@ -33,7 +33,7 @@
     "isbn": "git+https://github.com/AV-Forlaget/isbnjs.git#master",
     "isomorphic-fetch": "^2.2.1",
     "jsdom": "11.11.0",
-    "karma": "^2.0.4",
+    "karma": "^2.0.5",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jsdom-launcher": "^6.1.3",
     "karma-mocha": "^1.3.0",
@@ -60,7 +60,7 @@
     "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.7",
     "url-loader": "^1.0.1",
-    "webpack": "^4.16.1",
+    "webpack": "^4.16.3",
     "webpack-cli": "^2.1.5",
     "webpack-serve": "^2.0.2"
   },
