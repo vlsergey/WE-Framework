@@ -4,6 +4,15 @@ import expect from 'expect';
 import i18n from './i18n';
 import LabelDescriptionsProvider from 'caches/LabelDescriptionsProvider';
 import PropTypes from 'prop-types';
+import stableSort from 'utils/stableSort';
+
+function sort( cache, oneOf ) {
+  return stableSort( [ ...oneOf ], ( o1, o2 ) => {
+    const v1 = ( ( cache[ o1 ] || {} ).label || '' ).toLowerCase();
+    const v2 = ( ( cache[ o2 ] || {} ).label || '' ).toLowerCase();
+    return v1 === v2 ? 0 : v1 > v2 ? +1 : -1;
+  } );
+}
 
 export default class SelectMode extends PureComponent {
 
@@ -44,7 +53,7 @@ export default class SelectMode extends PureComponent {
     return <select onChange={this.handleChange} value={currentValue}>
       <option key="_empty" value="" />
       <LabelDescriptionsProvider entityIds={oneOf}>
-        { cache => oneOf.map( entityId => {
+        { cache => sort( cache, oneOf ).map( entityId => {
           expect( cache ).toBeAn( 'object', 'LabelDescriptionsProvider didn\'t return cache object (' + cache + ')' );
 
           const labelDescription = cache[ entityId ];
