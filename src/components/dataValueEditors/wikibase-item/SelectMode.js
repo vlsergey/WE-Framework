@@ -3,20 +3,18 @@ import { DataValue } from 'model/Shapes';
 import expect from 'expect';
 import i18n from './i18n';
 import LabelDescriptionsProvider from 'caches/LabelDescriptionsProvider';
-import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
-import WikibaseItemDataValueEditor from './WikibaseItemDataValueEditor';
 
 export default class SelectMode extends PureComponent {
 
   static propTypes = {
     datavalue: PropTypes.shape( DataValue ),
-    onDataValueChange: PropTypes.func.isRequired,
+    oneOf: PropTypes.arrayOf( PropTypes.string ).isRequired,
     onOtherSelect: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
+    onSelect: PropTypes.func.isRequired,
   }
 
-  static isCompatibleWithProps( props ) {
+  static hasCompatibleOneOfRestriction( props ) {
     const currentValue = ( ( props.datavalue || {} ).value || {} ).id || '';
     const hasOneOfConstrain = !!props.propertyDescription.oneOf;
     return hasOneOfConstrain &&
@@ -36,30 +34,11 @@ export default class SelectMode extends PureComponent {
       return;
     }
 
-    const { datavalue, onDataValueChange } = this.props;
-    if ( selectedValue === null || selectedValue.trim() === '' ) {
-      onDataValueChange( {
-        ...datavalue,
-        value: null,
-        type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
-      } );
-    } else {
-      onDataValueChange( {
-        ...datavalue,
-        value: {
-          'entity-type': 'item',
-          'numeric-id': selectedValue.substr( 1 ),
-          'id': selectedValue,
-        },
-        type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
-      } );
-    }
+    this.props.onSelect( selectedValue );
   }
 
   render() {
-    const { datavalue, propertyDescription } = this.props;
-
-    const oneOf = propertyDescription.oneOf;
+    const { datavalue, oneOf } = this.props;
     const currentValue = ( ( datavalue || {} ).value || {} ).id || '';
 
     return <select onChange={this.handleChange} value={currentValue}>

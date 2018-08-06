@@ -10,7 +10,6 @@ import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import styles from './WikibaseItem.css';
 import Suggestion from './Suggestion';
-import WikibaseItemDataValueEditor from './WikibaseItemDataValueEditor';
 
 const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
 
@@ -19,7 +18,7 @@ class AutocompleteMode extends Component {
   static propTypes = {
     cache: PropTypes.object.isRequired,
     datavalue: PropTypes.shape( Shapes.DataValue ),
-    onDataValueChange: PropTypes.func.isRequired,
+    onSelect: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
     readOnly: PropTypes.bool,
     testSuggestionsProvider: PropTypes.func,
@@ -84,17 +83,13 @@ class AutocompleteMode extends Component {
   }
 
   handleChange( event, { method, newValue } ) {
-    const { cache, datavalue, onDataValueChange } = this.props;
+    const { cache, datavalue, onSelect } = this.props;
 
     switch ( method ) {
     case 'type': {
       // the only thing we can do by typing -- is to clear data
       if ( newValue === null || newValue.trim() === '' ) {
-        onDataValueChange( {
-          ...datavalue,
-          value: null,
-          type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
-        } );
+        onSelect( null );
       }
       this.setState( {
         textValue: newValue,
@@ -102,22 +97,11 @@ class AutocompleteMode extends Component {
       break;
     }
     default: {
-
-      onDataValueChange( {
-        ...datavalue,
-        value: {
-          'entity-type': 'item',
-          'numeric-id': newValue.substr( 1 ),
-          'id': newValue,
-        },
-        type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
-      } );
-
+      onSelect( newValue );
       this.setState( {
         textValue: cache[ newValue ] && cache[ newValue ].label ? cache[ newValue ].label : newValue,
       } );
       this.wikibaseItemInputRef.current.clearDirtyState();
-
       break;
     }
     }

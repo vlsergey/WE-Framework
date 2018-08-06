@@ -1,3 +1,4 @@
+import { addLastRecentlyUsed, findLastRecentlyUsed } from './LruCache';
 import React, { PureComponent } from 'react';
 import AutocompleteMode from './AutocompleteMode';
 import CreateNewButtonCell from './CreateNewButtonCell';
@@ -30,11 +31,28 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
     super( ...arguments );
 
     this.state = {
-      selectMode: SelectMode.isCompatibleWithProps( this.props ),
+      selectMode: SelectMode.hasCompatibleOneOfRestriction( this.props ),
     };
+
+    if ( !this.state.selectMode ) {
+      findLastRecentlyUsed( this.props.propertyDescription.id )
+        .then( arr => {
+          if ( typeof arr === 'object' && Array.isArray( arr ) && arr.length !== 0 ) {
+            const { datavalue } = this.props;
+            const currentValue = ( ( datavalue || {} ).value || {} ).id || '';
+            if ( currentValue === '' || arr.indexOf( currentValue ) !== -1 ) {
+              this.oneOf = arr;
+              this.setState( { selectMode: true } );
+            }
+          }
+        } );
+    } else {
+      this.oneOf = this.props.propertyDescription.oneOf;
+    }
 
     this.handleCreate = this.handleCreate.bind( this );
     this.handleOtherSelect = () => this.setState( { selectMode: false } );
+    this.handleSelect = this.handleSelect.bind( this );
   }
 
   handleCreate( entityId ) {
@@ -51,8 +69,31 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
     } );
   }
 
+  handleSelect( entityId ) {
+    const { datavalue, onDataValueChange, propertyDescription } = this.props;
+    if ( entityId === null || entityId.trim() === '' ) {
+      onDataValueChange( {
+        ...datavalue,
+        value: null,
+        type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
+      } );
+    } else {
+      addLastRecentlyUsed( propertyDescription.id, entityId );
+      onDataValueChange( {
+        ...datavalue,
+        value: {
+          'entity-type': 'item',
+          'numeric-id': entityId.substr( 1 ),
+          'id': entityId,
+        },
+        type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
+      } );
+    }
+  }
+
   render() {
-    const { datavalue, propertyDescription, readOnly, ...etc } = this.props;
+    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onDataValueChange" }] */
+    const { datavalue, onDataValueChange, propertyDescription, readOnly, ...etc } = this.props;
 
     const currentValue = ( ( datavalue || {} ).value || {} ).id || '';
     const className = styles[ 'wef_datavalue_' + WikibaseItemDataValueEditor.DATATYPE ];
@@ -77,10 +118,13 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
             ? <SelectMode
               datavalue={datavalue}
               onOtherSelect={this.handleOtherSelect}
+              onSelect={this.handleSelect}
+              oneOf={this.oneOf}
               propertyDescription={propertyDescription}
               {...etc} />
             : <AutocompleteMode
               datavalue={datavalue}
+              onSelect={this.handleSelect}
               propertyDescription={propertyDescription}
               {...etc} />
         }
