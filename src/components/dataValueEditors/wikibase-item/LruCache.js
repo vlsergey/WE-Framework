@@ -1,5 +1,7 @@
 import expect from 'expect';
 
+const MAX_ITEMS_TO_REMEMBER = 10;
+
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 let dbConnection = null;
 
@@ -45,7 +47,11 @@ export function addLastRecentlyUsed( propertyId, value ) {
       const previous = readRequest.result;
       let newValue;
       if ( typeof previous === 'object' && Array.isArray( previous ) ) {
-        newValue = [ ...new Set( [ ...previous, value ] ) ];
+        if ( previous.indexOf( value ) === -1 ) {
+          newValue = [ value, ...previous ].slice( 0, MAX_ITEMS_TO_REMEMBER );
+        } else {
+          newValue = [ value, ...previous.filter( item => item !== value ) ];
+        }
       } else {
         newValue = [ value ];
       }
