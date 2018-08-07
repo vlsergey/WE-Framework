@@ -42,8 +42,10 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
             const currentValue = ( ( datavalue || {} ).value || {} ).id || '';
             if ( currentValue === '' || arr.indexOf( currentValue ) !== -1 ) {
               this.oneOf = arr;
-              this.setState( { selectMode: true } );
+            } else {
+              this.oneOf = [ ...arr, currentValue ];
             }
+            this.setState( { selectMode: true } );
           }
         } );
     } else {
