@@ -62,6 +62,7 @@ class AutocompleteMode extends Component {
     }
 
     const resultSet = new Set();
+    this.requestedValue = value;
     DEFAULT_LANGUAGES.forEach( language => {
       this.wikidataApi.get( {
         action: 'wbsearchentities',
@@ -70,6 +71,9 @@ class AutocompleteMode extends Component {
         search: value,
         type: 'item',
       } ).then( result => {
+        // may be out of sync, another string already required
+        if ( this.requestedValue !== value ) return;
+
         result.search.forEach( item => resultSet.add( item.id ) );
         this.setState( {
           suggestions: [ ...resultSet ],
