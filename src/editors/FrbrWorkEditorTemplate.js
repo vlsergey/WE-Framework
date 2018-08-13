@@ -30,7 +30,7 @@ const editorDescription = {
           fields: [
             { property: 'P1476' } /* title */,
             { property: 'P1680' } /* subtitle */,
-            { property: 'P364' } /* original language */,
+            { property: 'P407' } /* language of work or name */,
             { property: 'P571' } /* date of foundation or creation */,
             { property: 'P577' } /* date of publication */,
           ],
