@@ -61,6 +61,7 @@ const editorDescription = {
         {
           fields: [
             { property: 'P1104' } /* movement */,
+            { property: 'P1922' } /* first line */,
             { property: 'P996' } /* scan file */,
             { property: 'P953' } /* full text available at */,
           ],

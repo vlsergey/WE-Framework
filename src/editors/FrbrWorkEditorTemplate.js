@@ -45,6 +45,7 @@ const editorDescription = {
             { property: 'P135' } /* movement */,
             { property: 'P136' } /* genre */,
             { property: 'P921' } /* subject heading */,
+            { property: 'P1922' } /* first line */,
           ],
         },
         {
