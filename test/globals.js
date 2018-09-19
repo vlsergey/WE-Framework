@@ -37,8 +37,10 @@ const jQuery = () => ( {
 jQuery.uls = {
   data: {
     languages: {
-      en: [ 'Latn', [ 'EU', 'AM', 'AF', 'ME', 'AS', 'PA', 'WW' ], 'English' ],
-      ru: [ 'Cyrl', [ 'EU', 'AS', 'ME' ], 'русский' ],
+      'en': [ 'Latn', [ 'EU', 'AM', 'AF', 'ME', 'AS', 'PA', 'WW' ], 'English' ],
+      'kk': [ 'kk-cyrl' ],
+      'kk-cyrl': [ 'Cyrl', [ 'EU', 'AS' ], 'қазақша' ],
+      'ru': [ 'Cyrl', [ 'EU', 'AS', 'ME' ], 'русский' ],
     },
   },
 };

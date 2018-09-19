@@ -5,11 +5,27 @@ export const DEFAULT_LANGUAGES = [];
 
 export const API_PARAMETER_LANGUAGES = DEFAULT_LANGUAGES.join( '|' );
 
+function getTitleFromOptions( allLanguagesData, languageCode ) {
+  const languageOptions = allLanguagesData[ languageCode ];
+
+  if ( languageOptions.length === 1 ) {
+    // it's alias
+    const actualLanguageCode = languageOptions[ 0 ];
+    return getTitleFromOptions( allLanguagesData, actualLanguageCode );
+  }
+
+  if ( languageOptions.length == 3 ) {
+    return languageOptions[ 2 ];
+  }
+
+  throw new Error( 'Unable to get language title for code \'' + languageCode + '\': '
+     + JSON.stringify( languageOptions ) );
+}
+
 export const LANGUAGE_TITLES = ( () => {
   const result = {};
   for ( const languageCode in jQuery.uls.data.languages ) {
-    const languageOptions = jQuery.uls.data.languages[ languageCode ];
-    const languageTitle = languageOptions[ 2 ];
+    const languageTitle = getTitleFromOptions( jQuery.uls.data.languages, languageCode );
     result[ languageCode ] = languageTitle;
   }
   return result;
