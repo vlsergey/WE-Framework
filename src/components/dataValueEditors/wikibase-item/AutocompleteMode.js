@@ -91,21 +91,25 @@ class AutocompleteMode extends Component {
 
     switch ( method ) {
     case 'type': {
-      // the only thing we can do by typing -- is to clear data
       if ( newValue === null || newValue.trim() === '' ) {
         onSelect( null );
+        break;
       }
       this.setState( {
         textValue: newValue,
       } );
+      if ( /Q\d+/.test( newValue.trim() ) ) {
+        onSelect( newValue.trim() );
+      }
       break;
     }
     default: {
       onSelect( newValue );
+      const newTextValue = cache[ newValue ] && cache[ newValue ].label ? cache[ newValue ].label : newValue;
       this.setState( {
-        textValue: cache[ newValue ] && cache[ newValue ].label ? cache[ newValue ].label : newValue,
+        textValue: newTextValue,
       } );
-      this.wikibaseItemInputRef.current.clearDirtyState();
+      this.wikibaseItemInputRef.current.setValue( newTextValue );
       break;
     }
     }

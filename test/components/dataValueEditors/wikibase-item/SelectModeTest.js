@@ -9,9 +9,8 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
 
   describe( 'SelectMode', () => {
 
-    it( 'Correctly calculate isCompatibleWithProps()', () => {
-
-      assert.equal( SelectMode.isCompatibleWithProps( {
+    it( 'Correctly calculate hasCompatibleOneOfRestriction()', () => {
+      assert.equal( SelectMode.hasCompatibleOneOfRestriction( {
         propertyDescription: p21Description,
         datavalue: {
           value: {
@@ -22,8 +21,8 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
           type: 'wikibase-entityid',
         },
       } ), true );
-
     } );
+
   } );
 
 } );

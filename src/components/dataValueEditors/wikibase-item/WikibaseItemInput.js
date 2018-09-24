@@ -24,7 +24,6 @@ export default class WikibaseItemInput extends PureComponent {
   constructor() {
     super( ...arguments );
     this.state = {
-      dirty: false,
       focused: false,
       value: this.props.entityLabel || this.props.entityId || '',
     };
@@ -34,15 +33,8 @@ export default class WikibaseItemInput extends PureComponent {
     this.handleFocus = this.handleFocus.bind( this );
   }
 
-  clearDirtyState() {
-    this.setState( {
-      dirty: false,
-    } );
-  }
-
   handleChange( event ) {
     this.setState( {
-      dirty: true,
       focused: true,
       value: event.target.value,
     } );
@@ -66,13 +58,11 @@ export default class WikibaseItemInput extends PureComponent {
   render() {
     const { entityId, entityLabel, inputRef } = this.props;
     const etc = WikibaseItemInput.getEtcProps( this.props );
-    const { dirty, focused, value } = this.state;
+    const { focused, value } = this.state;
 
     let inputValue;
-    if ( dirty ) {
+    if ( focused ) {
       inputValue = value;
-    } else if ( focused ) {
-      inputValue = entityLabel || entityId || '';
     } else if ( entityId && entityLabel ) {
       inputValue = entityLabel + ' (' + entityId + ')';
     } else if ( entityId ) {
@@ -88,5 +78,9 @@ export default class WikibaseItemInput extends PureComponent {
       onFocus={this.handleFocus}
       ref={inputRef}
       value={inputValue} />;
+  }
+
+  setValue( value ) {
+    this.setState( { value } );
   }
 }
