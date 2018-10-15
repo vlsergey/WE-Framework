@@ -30,7 +30,9 @@ export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCach
       const pageid = entity.pageid;
       const dbLastRevisionId = entity.lastrevid;
       const dbVersion = entity.version;
-      if ( !pageid || !dbLastRevisionId || dbVersion !== this.currentVersion ) {
+      if ( !pageid || !Number.isInteger( pageid )
+          || !dbLastRevisionId || !Number.isInteger( dbLastRevisionId )
+          || dbVersion !== this.currentVersion ) {
         this.requestQueue.add( cacheKey );
         return;
       }

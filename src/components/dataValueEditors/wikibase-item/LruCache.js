@@ -28,13 +28,16 @@ export function findLastRecentlyUsed( propertyId ) {
     const transaction = dbConnection.transaction( [ 'LRU' ], 'readonly' );
     const objectStore = transaction.objectStore( 'LRU' );
     const request = objectStore.get( propertyId );
-    request.onsuccess = () => resolve( request.result );
+    request.onsuccess = () => resolve( Array.isArray( request.result )
+      ? request.result.filter( item => item.match( /^Q\d+$/ ) )
+      : null );
     request.onerror = () => reject( request.error );
   } );
 }
 
 export function addLastRecentlyUsed( propertyId, value ) {
   expect( value ).toBeA( 'string' );
+  expect( value ).toMatch( /^Q\d+$/ );
   if ( !indexedDB || !dbConnection ) return;
 
   const transaction = dbConnection.transaction( [ 'LRU' ], 'readwrite' );

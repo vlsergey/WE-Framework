@@ -10,7 +10,7 @@ class LastRevisionCache extends AbstractSelfStoredQueuedCache {
   }
 
   isKeyValid( pageId ) {
-    return Number.isInteger( pageId );
+    return typeof pageId === 'number' && Number.isInteger( pageId );
   }
 
   notifyMessage( cacheKeys ) {

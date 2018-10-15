@@ -9,12 +9,13 @@ class CacheValueProvider extends PureComponent {
     cacheData: PropTypes.object.isRequired,
     cacheKey: PropTypes.string,
     children: PropTypes.func.isRequired,
+    isKeyValid: PropTypes.func.isRequired,
     queue: PropTypes.func.isRequired,
   }
 
   componentDidMount() {
-    const { cacheData, cacheKey, queue } = this.props;
-    if ( !!cacheKey && typeof cacheData[ cacheKey ] === 'undefined' ) {
+    const { cacheData, cacheKey, isKeyValid, queue } = this.props;
+    if ( isKeyValid( cacheKey ) && typeof cacheData[ cacheKey ] === 'undefined' ) {
       queue( cacheKey );
     }
   }
@@ -23,8 +24,8 @@ class CacheValueProvider extends PureComponent {
     const child = this.props.children;
     expect( child ).toBeA( 'function' );
 
-    const { cacheKey, cacheData } = this.props;
-    const result = cacheKey
+    const { cacheKey, cacheData, isKeyValid } = this.props;
+    const result = isKeyValid( cacheKey )
       ? child( cacheData[ cacheKey ] )
       : child( null );
 
@@ -32,10 +33,10 @@ class CacheValueProvider extends PureComponent {
   }
 
   componentDidUpdate( prevProps ) {
-    const { cacheData, cacheKey, queue } = this.props;
+    const { cacheData, cacheKey, isKeyValid, queue } = this.props;
 
     if ( prevProps.cacheKey !== cacheKey
-        && !!cacheKey
+        && isKeyValid( cacheKey )
         && typeof cacheData[ cacheKey ] === 'undefined' ) {
       queue( cacheKey );
     }
@@ -47,6 +48,7 @@ const mapStateToProps = ( state, ownProps ) => ( {
 } );
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {
+  isKeyValid: cacheKey => ownProps.cache.isKeyValid( cacheKey ),
   queue: cacheKey => dispatch( ownProps.cache.actionQueue( [ cacheKey ] ) ),
 } );
 

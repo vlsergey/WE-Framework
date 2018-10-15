@@ -13,7 +13,7 @@ class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
   }
 
   isKeyValid( cacheKey ) {
-    return cacheKey.match( /^P(\d+)$/i );
+    return typeof cacheKey === 'string' && cacheKey.match( /^P(\d+)$/i );
   }
 
   enchanceIndexedDbResult( cachedValue ) {
