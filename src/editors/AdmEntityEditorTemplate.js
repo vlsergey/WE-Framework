@@ -68,12 +68,10 @@ const editorDescription = {
         },
       ],
       fields: [
-        /* Image */
-        { property: 'P18' },
-        /* song */
-        { property: 'P85' },
-        /* commons */
-        { property: 'P373' },
+        { property: 'P18' } /* image (image of relevant illustration of the subject) */,
+        { property: 'P85' } /* anthem (subject's official anthem) */,
+        { property: 'P242' } /* locator map image (geographic map image which highlights the location of the subject within some larger entity) */,
+        { property: 'P373' } /* Commons category (name of the Wikimedia Commons category containing files related to this item (without the prefix "Category:")) */,
       ],
     },
     {
@@ -106,7 +104,15 @@ const editorDescription = {
         {
           fields: [
             { property: 'P625' } /* coordinate location */,
+            { property: 'P242' } /* locator map image (geographic map image which highlights the location of the subject within some larger entity) */,
             { property: 'P30' } /* continent */,
+            { property: 'P206' } /* located next to body of water */,
+            { property: 'P610' } /* highest point */,
+            { property: 'P2046' } /* area (area occupied by an object) */,
+          ],
+        },
+        {
+          fields: [
             { property: 'P36' } /* capital */,
             { property: 'P1376' } /* capital of */,
             { property: 'P421' } /* time zone */,
@@ -116,12 +122,6 @@ const editorDescription = {
           labelEntityId: 'P47',
           fields: [
             { property: 'P47' } /* shares border with */,
-          ],
-        },
-        {
-          fields: [
-            { property: 'P206' } /* located next to body of water */,
-            { property: 'P610' } /* highest point */,
           ],
         },
       ],
