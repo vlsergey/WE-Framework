@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import BoundariesValueEditor from './BoundariesValueEditor';
 import { DataValue } from 'model/Shapes';
-import EntityLabel from 'caches/EntityLabel';
 import ExactValueEditor from './ExactValueEditor';
 import expect from 'expect';
 import ModeSelect from './ModeSelect';
@@ -9,6 +8,7 @@ import PlusMinusValueEditor from './PlusMinusValueEditor';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 import styles from './Quantity.css';
+import UnitSelect from './UnitSelect';
 
 export const MODES = {
   exact: ExactValueEditor,
@@ -93,8 +93,10 @@ export default class QuantityDataValueEditor extends PureComponent {
             href={unit}
             rel="noopener noreferrer"
             target="_blank">
-            <EntityLabel
-              entityId={unit.substr( 'http://www.wikidata.org/entity/'.length )} />
+            <UnitSelect
+              propertyDescription={propertyDescription}
+              readOnly
+              value={value} />
           </a>
         </td>
       </React.Fragment>;
@@ -113,8 +115,15 @@ export default class QuantityDataValueEditor extends PureComponent {
               onValueChange: this.handleValueChange,
               value,
             } )}
+            { propertyDescription.quantityUnitEnabled &&
+              <td className={styles.unitselect}>
+                <UnitSelect
+                  onValueChange={this.handleValueChange}
+                  propertyDescription={propertyDescription}
+                  value={value} />
+              </td>
+            }
           </tr>
-          { propertyDescription.quantityUnitEnabled && <td className={styles.unitselect} /> }
         </tbody>
       </table>
     </td>;

@@ -1,14 +1,12 @@
 import * as ApiUtils from 'core/ApiUtils';
-import * as Shapes from 'model/Shapes';
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { connect } from 'react-redux';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import expect from 'expect';
 import LocalizedWikibaseItemInput from './LocalizedWikibaseItemInput';
-import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
-import styles from './WikibaseItem.css';
+import styles from './styles.css';
 import Suggestion from './Suggestion';
 
 const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
@@ -17,9 +15,8 @@ class AutocompleteMode extends Component {
 
   static propTypes = {
     cache: PropTypes.object.isRequired,
-    datavalue: PropTypes.shape( Shapes.DataValue ),
+    value: PropTypes.string,
     onSelect: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
     readOnly: PropTypes.bool,
     testSuggestionsProvider: PropTypes.func,
   }
@@ -31,7 +28,7 @@ class AutocompleteMode extends Component {
   constructor() {
     super( ...arguments );
 
-    const value = ( ( this.props.datavalue || {} ).value || {} ).id || null;
+    const value = this.props.value || null;
     this.state = {
       suggestions: value ? [ value ] : [],
       textValue: value || '',
@@ -87,7 +84,7 @@ class AutocompleteMode extends Component {
   }
 
   handleChange( event, { method, newValue } ) {
-    const { cache, datavalue, onSelect } = this.props;
+    const { cache, value, onSelect } = this.props;
 
     switch ( method ) {
     case 'type': {
@@ -116,14 +113,9 @@ class AutocompleteMode extends Component {
   }
 
   render() {
-    const { datavalue, propertyDescription } = this.props;
     const params = {
       type: 'text',
     };
-
-    if ( propertyDescription.regexp ) {
-      params.pattern = propertyDescription.regexp;
-    }
 
     params.onChange = this.handleChange;
     params.value = this.state.textValue;
@@ -140,26 +132,16 @@ class AutocompleteMode extends Component {
   }
 
   renderInput( inputProps ) {
-    const { datavalue } = this.props;
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "value" }] */
     const { value, onChange, ref, ...etc } = inputProps;
 
-    if ( datavalue && datavalue.value && datavalue.value.id ) {
-      return <LocalizedWikibaseItemInput
-        {...etc}
-        entityId={datavalue.value.id}
-        inputRef={ref}
-        onChange={onChange}
-        value={this.state.textValue}
-        wikibaseItemInputRef={this.wikibaseItemInputRef} />;
-    } else {
-      return <LocalizedWikibaseItemInput
-        {...etc}
-        inputRef={ref}
-        onChange={onChange}
-        value={this.state.textValue}
-        wikibaseItemInputRef={this.wikibaseItemInputRef} />;
-    }
+    return <LocalizedWikibaseItemInput
+      {...etc}
+      entityId={this.props.value}
+      inputRef={ref}
+      onChange={onChange}
+      value={this.state.textValue}
+      wikibaseItemInputRef={this.wikibaseItemInputRef} />;
   }
 
   renderSuggestion( data ) {

@@ -12,6 +12,7 @@ td.modeselect {
 
 td.unitselect {
   width: 1%;
+  min-width: 10em;
 }
 
 .wef_datavalue_quantity input {

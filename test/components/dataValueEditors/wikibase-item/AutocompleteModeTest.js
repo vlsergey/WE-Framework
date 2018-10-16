@@ -1,6 +1,6 @@
 import { applyMiddleware, createStore } from 'redux';
 import assert from 'assert';
-import AutocompleteMode from 'components/dataValueEditors/wikibase-item/AutocompleteMode';
+import AutocompleteMode from 'components/entityField/AutocompleteMode';
 import buildReducers from 'core/reducers';
 import LabelDescription from 'caches/LabelDescription';
 import P21 from '../../../entities/P21';
@@ -10,10 +10,10 @@ import Q1367759 from '../../../entities/Q1367759';
 import Q752285 from '../../../entities/Q752285';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
-import Suggestion from 'components/dataValueEditors/wikibase-item/Suggestion';
+import Suggestion from 'components/entityField/Suggestion';
 import thunk from 'redux-thunk';
 import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
-import WikibaseItemInput from 'components/dataValueEditors/wikibase-item/WikibaseItemInput';
+import WikibaseItemInput from 'components/entityField/WikibaseItemInput';
 
 describe( 'components/dataValueEditors/wikibase-item', () => {
 

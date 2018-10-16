@@ -1,14 +1,12 @@
-import { addLastRecentlyUsed, findLastRecentlyUsed } from './LruCache';
 import React, { PureComponent } from 'react';
-import AutocompleteMode from './AutocompleteMode';
 import CreateNewButtonCell from './CreateNewButtonCell';
 import { DataValue } from 'model/Shapes';
+import EntityField from 'components/entityField';
 import EntityLabel from 'caches/EntityLabel';
 import GoToLocalButtonCell from './GoToLocalButtonCell';
 import GoToWikidataButtonCell from './GoToWikidataButtonCell';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
-import SelectMode from './SelectMode';
 import styles from './WikibaseItem.css';
 
 export default class WikibaseItemDataValueEditor extends PureComponent {
@@ -30,31 +28,8 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
   constructor() {
     super( ...arguments );
 
-    this.state = {
-      selectMode: SelectMode.hasCompatibleOneOfRestriction( this.props ),
-    };
-
-    if ( !this.state.selectMode ) {
-      findLastRecentlyUsed( this.props.propertyDescription.id )
-        .then( arr => {
-          if ( typeof arr === 'object' && Array.isArray( arr ) && arr.length !== 0 ) {
-            const { datavalue } = this.props;
-            const currentValue = ( ( datavalue || {} ).value || {} ).id || '';
-            if ( currentValue === '' || arr.indexOf( currentValue ) !== -1 ) {
-              this.oneOf = arr;
-            } else {
-              this.oneOf = [ ...arr, currentValue ];
-            }
-            this.setState( { selectMode: true } );
-          }
-        } );
-    } else {
-      this.oneOf = this.props.propertyDescription.oneOf;
-    }
-
+    this.handleChange = this.handleChange.bind( this );
     this.handleCreate = this.handleCreate.bind( this );
-    this.handleOtherSelect = () => this.setState( { selectMode: false } );
-    this.handleSelect = this.handleSelect.bind( this );
   }
 
   handleCreate( entityId ) {
@@ -71,8 +46,8 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
     } );
   }
 
-  handleSelect( entityId ) {
-    const { datavalue, onDataValueChange, propertyDescription } = this.props;
+  handleChange( entityId ) {
+    const { datavalue, onDataValueChange } = this.props;
     if ( entityId === null || entityId.trim() === '' ) {
       onDataValueChange( {
         ...datavalue,
@@ -80,7 +55,6 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
         type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
       } );
     } else {
-      addLastRecentlyUsed( propertyDescription.id, entityId );
       onDataValueChange( {
         ...datavalue,
         value: {
@@ -112,24 +86,14 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
 
     const buttons = this.renderButtons( propertyDescription, currentValue );
 
-    const { selectMode } = this.state;
     return <React.Fragment>
       <td className={className} colSpan={12 - buttons.length}>
-        {
-          selectMode
-            ? <SelectMode
-              datavalue={datavalue}
-              onOtherSelect={this.handleOtherSelect}
-              onSelect={this.handleSelect}
-              oneOf={this.oneOf}
-              propertyDescription={propertyDescription}
-              {...etc} />
-            : <AutocompleteMode
-              datavalue={datavalue}
-              onSelect={this.handleSelect}
-              propertyDescription={propertyDescription}
-              {...etc} />
-        }
+        <EntityField
+          {...etc}
+          lruKey={propertyDescription.id}
+          onChange={this.handleChange}
+          oneOf={propertyDescription.oneOf}
+          value={currentValue} />
       </td>
       { buttons }
     </React.Fragment>;

@@ -9,7 +9,7 @@ import Q1367759 from '../../../entities/Q1367759';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
-import Suggestion from 'components/dataValueEditors/wikibase-item/Suggestion';
+import Suggestion from 'components/entityField/Suggestion';
 import TableTBodyTr from '../TableTBodyTr';
 import thunk from 'redux-thunk';
 import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';

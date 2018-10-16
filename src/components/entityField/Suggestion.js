@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react';
-import dataTypeStyles from './WikibaseItem.css';
 import EntityDescription from 'caches/EntityDescription';
 import EntityLabel from 'caches/EntityLabel';
 import MediawikiPreview from 'components/MediawikiPreview';
 import PropTypes from 'prop-types';
+import styles from './styles.css';
 
 export default class Suggestion extends PureComponent {
 
@@ -15,16 +15,16 @@ export default class Suggestion extends PureComponent {
     const { entityId } = this.props;
 
     const wikitext = '{{#if:{{#property:P18|from=' + entityId + '}}|[[File:{{#property:P18|from=' + entityId + '}}|45x45px|frameless|link=]]}}';
-    return <table className={dataTypeStyles.suggestionContainer}>
+    return <table className={styles.suggestionContainer}>
       <tbody>
         <tr>
-          <td className={dataTypeStyles.suggestionImage}>
+          <td className={styles.suggestionImage}>
             <MediawikiPreview spinnerSize={35} wikitext={wikitext} />
           </td>
-          <td className={dataTypeStyles.suggestionText}>
-            <span className={dataTypeStyles.suggestionLabel}>&nbsp;&nbsp;<EntityLabel entityId={entityId} /></span>
+          <td className={styles.suggestionText}>
+            <span className={styles.suggestionLabel}>&nbsp;&nbsp;<EntityLabel entityId={entityId} /></span>
             <br />
-            <span className={dataTypeStyles.suggestionDescription}>&nbsp;&nbsp;<EntityDescription entityId={entityId} /></span>
+            <span className={styles.suggestionDescription}>&nbsp;&nbsp;<EntityDescription entityId={entityId} /></span>
           </td>
         </tr>
       </tbody>
