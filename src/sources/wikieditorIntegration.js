@@ -1,9 +1,9 @@
 import { add } from './LruStore';
 import AdditionalArgumentsDialog from './AdditionalArgumentsDialog';
-import addToolbarButton from 'utils/addToolbarButton';
 import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import registerTool from 'utils/registerTool';
 import WikidataSourceDialog from './WikidataSourceDialog';
 
 function showWikidataSourceDialog() {
@@ -62,14 +62,20 @@ function encapsulateSelection( textToInsert ) {
 export default function wikieditorIntegration() {
 
   if ( mw.config.get( 'wgDBname' ) === 'ruwiki' ) {
-    addToolbarButton(
-      'addWikidataSourceRef',
-      'Добавить источник с Викиданных',
-      'Найти (или создать) источник на Викиданных и вставить ссылку в статью',
-      '//upload.wikimedia.org/wikipedia/commons/b/b8/Bouton_Faut_sourcer.png',
-      '//upload.wikimedia.org/wikipedia/commons/c/cf/Toolbar_insert_reference.png',
-      showWikidataSourceDialog
-    );
+    registerTool( {
+      name: 'addWikidataSourceRef',
+      position: 200,
+      title: 'Добавить источник с Викиданных',
+      label: 'Найти (или создать) источник на Викиданных и вставить ссылку в статью',
+      callback: showWikidataSourceDialog,
+      classic: {
+        icon: '//upload.wikimedia.org/wikipedia/commons/c/cf/Toolbar_insert_reference.png',
+      },
+      visual: {
+        icon: '//upload.wikimedia.org/wikipedia/commons/b/b8/Bouton_Faut_sourcer.png',
+        modes: [ 'source' ],
+      },
+    } );
   }
 
 

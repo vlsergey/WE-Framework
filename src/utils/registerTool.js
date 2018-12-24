@@ -1,0 +1,189 @@
+/*
+* Source code: https://ru.wikipedia.org/w/index.php?title=MediaWiki:Gadget-registerTool.js&oldid=96997778
+* License: GFDL & CC-BY-SA 3.0 (used as included library without any changes)
+*/
+/* eslint no-undef: 0 */
+const toolsToAdd = {};
+let addClassicToolbarToolsHooked = false;
+
+export default function registerTool( tool ) {
+  function moveProperties( tool, mode ) {
+    function generalPropertyToParticular( property ) {
+      if ( tool[ property ] && !tool[ mode ][ property ] ) {
+        tool[ mode ][ property ] = tool[ property ];
+      }
+    }
+
+    if ( tool[ mode ] ) {
+      [ 'name', 'position', 'title', 'label', 'icon', 'callback', 'addCallback' ]
+        .forEach( item => {
+          generalPropertyToParticular( item );
+        } );
+      return tool[ mode ];
+    }
+  }
+
+  function sortTools( mode ) {
+    return Object.keys( toolsToAdd ).sort().reduce( ( result, key ) => {
+      if ( toolsToAdd[ key ][ mode ] ) {
+        result.push( moveProperties( toolsToAdd[ key ], mode ) );
+      }
+      return result;
+    }, [] );
+  }
+
+  function addClassicToolbarTools() {
+    function addClassicToolbarTool( tool ) {
+      const toolObj = {
+        section: 'main',
+        group: tool.group || 'gadgets',
+        tools: {},
+      };
+      toolObj.tools[ tool.name ] = {
+        label: tool.label,
+        type: 'button',
+        icon: tool.icon,
+        action: {
+          type: 'callback',
+          execute() {
+            tool.callback();
+          },
+        },
+      };
+      $( '#wpTextbox1' ).wikiEditor( 'addToToolbar', toolObj );
+      if ( tool.addCallback ) {
+        tool.addCallback();
+      }
+
+      // Для совместимости со скриптами, которые опираются на событие добавления иконки Викификатора
+      mw.hook( 'wikieditor.toolbar.' + tool.name ).fire();
+
+      delete toolsToAdd[ tool.position ].classic;
+    }
+
+    const tools = sortTools( 'classic' );
+
+    for ( let i = 0; i < tools.length; i++ ) {
+      addClassicToolbarTool( tools[ i ] );
+    }
+
+    addClassicToolbarToolsHooked = false;
+  }
+
+  function addVeTool( tool ) {
+    // Create and register a command
+    function Command() {
+      Command.parent.call( this, tool.name );
+    }
+    OO.inheritClass( Command, ve.ui.Command );
+
+    // Forbid the command from being executed in the visual mode
+    Command.prototype.isExecutable = function() {
+      const surface = ve.init.target.getSurface();
+      const mode = surface.getMode();
+      return surface && tool.modes && ( tool.modes === mode || tool.modes.indexOf( mode ) !== -1 );
+    };
+
+    Command.prototype.execute = function( ) {
+      tool.callback();
+      return true;
+    };
+
+    if ( ve.ui.wikitextCommandRegistry ) {
+      ve.ui.wikitextCommandRegistry.register( new Command() );
+    }
+
+    // Create and register a tool
+    function Tool() {
+      Tool.parent.apply( this, arguments );
+    }
+    OO.inheritClass( Tool, ve.ui.Tool );
+
+    Tool.static.name = tool.name;
+    Tool.static.group = tool.group || 'gadgets';
+    Tool.static.title = tool.title;
+    Tool.static.icon = tool.name;
+    Tool.static.commandName = tool.name;
+    Tool.static.autoAddToCatchall = false;
+    Tool.static.deactivateOnSelect = false;
+
+    Tool.prototype.onUpdateState = function() {
+      Tool.parent.prototype.onUpdateState.apply( this, arguments );
+      this.setActive( false );
+    };
+
+    ve.ui.toolFactory.register( Tool );
+
+    ve.init.mw.DesktopArticleTarget.static.actionGroups[ 1 ].include.push( tool.name );
+
+    mw.util.addCSS( '\
+      .oo-ui-icon-' + tool.name + ' {\
+        background-image: url(' + tool.icon + ');\
+      }\
+    ' );
+
+    if ( tool.addCallback ) {
+      tool.addCallback();
+    }
+  }
+
+  function registerVeTools() {
+    function registerVeTool( tool ) {
+      mw.libs.ve.addPlugin( () => mw.loader.using( [
+        'ext.visualEditor.core',
+        'ext.visualEditor.mwwikitext',
+        'ext.visualEditor.mwtransclusion',
+      ] ).then( () => {
+        addVeTool( tool );
+      } ) );
+
+      delete toolsToAdd[ tool.position ].visual;
+    }
+
+    const tools = sortTools( 'visual' );
+
+    for ( let i = 0; i < tools.length; i++ ) {
+      registerVeTool( tools[ i ] );
+    }
+  }
+
+  // Чтобы в случае совпадений индексов гаджеты не перезаписывали друг друга
+  while ( toolsToAdd[ tool.position ] ) {
+    tool.position++;
+  }
+
+  toolsToAdd[ tool.position ] = tool;
+
+  if ( tool.classic &&
+    ( [ 'edit', 'submit' ].indexOf( mw.config.get( 'wgAction' ) ) !== -1 &&
+      mw.user.options.get( 'visualeditor-newwikitext' ) != 1 &&
+      mw.user.options.get( 'usebetatoolbar' ) == 1
+    ) &&
+    !addClassicToolbarToolsHooked
+  ) {
+    $.when(
+      mw.loader.using( [ 'ext.wikiEditor' ] ),
+      $.ready
+    ).then( () => {
+      mw.hook( 'wikieditor.toolbar.gadgetsgroup' ).add( addClassicToolbarTools );
+    } );
+
+    addClassicToolbarToolsHooked = true;
+  }
+
+  if ( tool.visual && mw.config.get( 'wgIsArticle' ) ) {
+    if ( tool.visual.addRightAway ) {
+      // Если гаджет загружается в момент подгрузки визреда, например из [[MediaWiki:Common.js]]
+      mw.loader.using( [
+        'ext.visualEditor.desktopArticleTarget.init',
+        'ext.visualEditor.core',
+        'ext.visualEditor.mwwikitext',
+        'ext.visualEditor.mwtransclusion',
+      ] ).then( () => {
+        addVeTool( moveProperties( tool, 'visual' ) );
+      } );
+    } else {
+      mw.loader.using( [ 'ext.visualEditor.desktopArticleTarget.init' ] ).done( registerVeTools );
+    }
+  }
+}
