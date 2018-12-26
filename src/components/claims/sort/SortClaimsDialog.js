@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Claim } from 'model/Shapes';
+import ComparatorSelect from './ComparatorSelect';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import expect from 'expect';
 import i18n from './i18n';
@@ -16,19 +17,33 @@ export default class SortClaimsDialog extends PureComponent {
     claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ).isRequired,
     onClaimsReorder: PropTypes.func.isRequired,
     onCloseClick: PropTypes.func.isRequired,
-    propertyIds: PropTypes.arrayOf( PropTypes.string ).isRequired,
+    propertyIdToComparators: PropTypes.instanceOf( Map ).isRequired,
   }
 
   constructor() {
     super( ...arguments );
 
-    this.state = {
-      sortBy: this.props.propertyIds[ 0 ] || '',
-      sortOrder: 'asc',
-      sortEmptyAs: 'asLast',
-    };
+    if ( this.props.propertyIdToComparators.size === 0 ) {
+      this.state = {
+        emptyAs: 'asLast',
+        comparator: null,
+        order: 'asc',
+        propertyId: null,
+      };
+    } else {
+      const propertyId = this.props.propertyIdToComparators.keys().next().value;
+      const comparator = this.props.propertyIdToComparators.get( propertyId )[ 0 ];
+
+      this.state = {
+        emptyAs: 'asLast',
+        comparator,
+        order: 'asc',
+        propertyId,
+      };
+    }
 
     this.handleChange = this.handleChange.bind( this );
+    this.handleComparatorChange = this.handleComparatorChange.bind( this );
     this.handleSortClick = this.handleSortClick.bind( this );
   }
 
@@ -38,32 +53,39 @@ export default class SortClaimsDialog extends PureComponent {
     this.setState( { [ name ]: value } );
   }
 
+  handleComparatorChange( newComparator ) {
+    expect( newComparator ).toBeAn( 'object' );
+    this.setState( { comparator: newComparator } );
+  }
+
   handleSortClick() {
     this.props.onCloseClick();
 
     const { claims, onClaimsReorder } = this.props;
-    const { sortBy, sortOrder, sortEmptyAs } = this.state;
-    const sortEmptyCompareConstant = sortEmptyAs === 'asLast' ? +1 : -1;
-    const sortOrderCompareConstant = sortOrder === 'asc' ? +1 : -1;
+    const { comparator, emptyAs, order, propertyId } = this.state;
+    const sortEmptyCompareConstant = emptyAs === 'asLast' ? +1 : -1;
+    const sortOrderCompareConstant = order === 'asc' ? +1 : -1;
     const claimIds = claims.map( claim => claim.id );
+
     stableSort( claimIds, ( c1Id, c2Id ) => {
       const c1 = claims.find( claim => claim.id === c1Id ) || {};
       const c2 = claims.find( claim => claim.id === c2Id ) || {};
-      let v1 = ( ( ( ( ( c1.qualifiers || {} )[ sortBy ] || [] )[ 0 ] || {} ).datavalue || {} ).value || {} ).time || '';
-      let v2 = ( ( ( ( ( c2.qualifiers || {} )[ sortBy ] || [] )[ 0 ] || {} ).datavalue || {} ).value || {} ).time || '';
-      if ( v1 === '' && v2 === '' ) return 0;
-      if ( v1 === '' && v2 !== '' ) return sortEmptyCompareConstant;
-      if ( v1 !== '' && v2 === '' ) return -sortEmptyCompareConstant;
-      v1 = v1.replace( /^[+-]\d+-/, s => s.padStart( 15, '0' ) );
-      v2 = v2.replace( /^[+-]\d+-/, s => s.padStart( 15, '0' ) );
-      return v1 === v2 ? 0 : v1 > v2 ? sortOrderCompareConstant : -sortOrderCompareConstant;
+
+      const dataValue1 = ( ( ( c1.qualifiers || {} )[ propertyId ] || [] )[ 0 ] || {} ).datavalue || null;
+      const dataValue2 = ( ( ( c2.qualifiers || {} )[ propertyId ] || [] )[ 0 ] || {} ).datavalue || null;
+
+      if ( dataValue1 === null && dataValue2 === null ) return 0;
+      return comparator.compare( dataValue1, dataValue2, sortEmptyCompareConstant, sortOrderCompareConstant );
     } );
     onClaimsReorder( claimIds );
   }
 
   render() {
-    const { propertyIds } = this.props;
-    expect( propertyIds ).toBeAn( 'array' );
+    const { propertyIdToComparators } = this.props;
+    const propertyIds = [ ...propertyIdToComparators.keys() ];
+    const { comparator, propertyId } = this.state;
+    const comparatorOptions = propertyIdToComparators.get( propertyId );
+    expect( comparatorOptions ).toBeAn( 'array' );
 
     return <DialogWrapper
       buttons={[
@@ -86,10 +108,9 @@ export default class SortClaimsDialog extends PureComponent {
             <th>{i18n.fieldLabelSortBy}</th>
             <td>
               <PropertyDescriptionsProvider propertyIds={propertyIds}>
-                { cache => <select name="sortBy" onChange={this.handleChange} value={this.state.sortBy} >
+                { cache => <select name="propertyId" onChange={this.handleChange} value={this.state.propertyId} >
                   {propertyIds.map( propertyId =>
                     <option
-                      disabled={( cache[ propertyId ] || EMPTY_OBJECT ).datatype !== 'time'}
                       key={propertyId}
                       title={( cache[ propertyId ] || EMPTY_OBJECT ).description}
                       value={propertyId}>
@@ -101,9 +122,18 @@ export default class SortClaimsDialog extends PureComponent {
             </td>
           </tr>
           <tr>
+            <th>{i18n.fieldLabelComparator}</th>
+            <td>
+              <ComparatorSelect
+                onChange={this.handleComparatorChange}
+                options={comparatorOptions}
+                value={comparator} />
+            </td>
+          </tr>
+          <tr>
             <th>{i18n.fieldLabelSortOrder}</th>
             <td>
-              <select name="sortOrder" onChange={this.handleChange} value={this.state.sortOrder}>
+              <select name="order" onChange={this.handleChange} value={this.state.sortOrder}>
                 <option value="asc">{i18n.optionSortOrderAsc}</option>
                 <option value="desc">{i18n.optionSortOrderDesc}</option>
               </select>
@@ -112,7 +142,7 @@ export default class SortClaimsDialog extends PureComponent {
           <tr>
             <th>{i18n.fieldLabelEmptyValuesSort}</th>
             <td>
-              <select name="sortEmptyAs" onChange={this.handleChange} value={this.state.sortEmptyAs}>
+              <select name="emptyAs" onChange={this.handleChange} value={this.state.sortEmptyAs}>
                 <option value="asFirst">{i18n.optionSortAsFirst}</option>
                 <option value="asLast">{i18n.optionSortAsLast}</option>
               </select>

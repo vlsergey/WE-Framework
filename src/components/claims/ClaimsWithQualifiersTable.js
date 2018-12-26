@@ -5,7 +5,7 @@ import ClaimsWithQualifiersTableRows from './ClaimsWithQualifiersTableRows';
 import EntityLabel from 'caches/EntityLabel';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
-import SortClaimsButtonCell from './SortClaimsButtonCell';
+import SortClaimsButtonCell from './sort/SortClaimsButtonCell';
 import styles from './ClaimsWithQualifiers.css';
 
 const QUALIFIER_COLUMNS_WIDTH = [ '0%', '33%', '25%', '20%', '17%' ];

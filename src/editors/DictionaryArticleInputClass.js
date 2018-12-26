@@ -49,100 +49,100 @@ function createDictinaryArticleItem( options, pageTitle, articleTitle ) {
   data.claims = {
 
     // type
-    'P31': [ {
-      'mainsnak': {
-        'snaktype': 'value',
-        'property': 'P31',
-        'datatype': 'wikibase-item',
-        'datavalue': {
-          'value': {
+    P31: [ {
+      mainsnak: {
+        snaktype: 'value',
+        property: 'P31',
+        datatype: 'wikibase-item',
+        datavalue: {
+          value: {
             'entity-type': 'item',
-            'numeric-id': 17329259
+            'numeric-id': 17329259,
           },
-          'type': 'wikibase-entityid'
-        }
+          type: 'wikibase-entityid',
+        },
       },
-      'type': 'statement',
-      'rank': 'normal'
+      type: 'statement',
+      rank: 'normal',
     } ],
 
     // part from
-    'P361': [ {
-      'mainsnak': {
-        'snaktype': 'value',
-        'property': 'P361',
-        'datatype': 'wikibase-item',
-        'datavalue': {
-          'value': {
+    P361: [ {
+      mainsnak: {
+        snaktype: 'value',
+        property: 'P361',
+        datatype: 'wikibase-item',
+        datavalue: {
+          value: {
             'entity-type': 'item',
-            'numeric-id': Number( options.dictionaryEntityId.substring( 1 ) )
+            'numeric-id': Number( options.dictionaryEntityId.substring( 1 ) ),
           },
-          'type': 'wikibase-entityid'
-        }
+          type: 'wikibase-entityid',
+        },
       },
-      'type': 'statement',
-      'rank': 'normal'
+      type: 'statement',
+      rank: 'normal',
     } ],
 
     // published in
-    'P1433': [ {
-      'mainsnak': {
-        'snaktype': 'value',
-        'property': 'P1433',
-        'datatype': 'wikibase-item',
-        'datavalue': {
-          'value': {
+    P1433: [ {
+      mainsnak: {
+        snaktype: 'value',
+        property: 'P1433',
+        datatype: 'wikibase-item',
+        datavalue: {
+          value: {
             'entity-type': 'item',
-            'numeric-id': Number( options.dictionaryEntityId.substring( 1 ) )
+            'numeric-id': Number( options.dictionaryEntityId.substring( 1 ) ),
           },
-          'type': 'wikibase-entityid'
-        }
+          type: 'wikibase-entityid',
+        },
       },
-      'type': 'statement',
-      'rank': 'normal'
+      type: 'statement',
+      rank: 'normal',
     } ],
 
     // main topic
-    'P921': [ {
-      'mainsnak': {
-        'snaktype': 'value',
-        'property': 'P921',
-        'datatype': 'wikibase-item',
-        'datavalue': {
-          'value': {
+    P921: [ {
+      mainsnak: {
+        snaktype: 'value',
+        property: 'P921',
+        datatype: 'wikibase-item',
+        datavalue: {
+          value: {
             'entity-type': 'item',
-            'numeric-id': Number( options.mainTopicEntityId.substring( 1 ) )
+            'numeric-id': Number( options.mainTopicEntityId.substring( 1 ) ),
           },
-          'type': 'wikibase-entityid'
-        }
+          type: 'wikibase-entityid',
+        },
       },
-      'type': 'statement',
-      'rank': 'normal'
+      type: 'statement',
+      rank: 'normal',
     } ],
 
     // title
-    'P1476': [ {
-      'mainsnak': {
-        'snaktype': 'value',
-        'property': 'P1476',
-        'datatype': 'monolingualtext',
-        'datavalue': {
-          'value': {
-            'language': options.contentLanguage,
-            'text': articleTitle,
+    P1476: [ {
+      mainsnak: {
+        snaktype: 'value',
+        property: 'P1476',
+        datatype: 'monolingualtext',
+        datavalue: {
+          value: {
+            language: options.contentLanguage,
+            text: articleTitle,
           },
-          'type': 'monolingualtext'
-        }
+          type: 'monolingualtext',
+        },
       },
-      'type': 'statement',
-      'rank': 'normal'
+      type: 'statement',
+      rank: 'normal',
     } ],
   };
 
   data.sitelinks = {};
   data.sitelinks[ options.project ] = {
-    'site': options.project,
-    'title': pageTitle,
+    site: options.project,
+    title: pageTitle,
   };
 
   return WEF_Utils.createWikidataItem( data );
@@ -161,16 +161,16 @@ class DictionaryArticleInputClass {
     const dictinaryArticleInput = this;
 
     input.autocomplete( {
-      source: function( request, response ) {
+      source( request, response ) {
         const term = request.term;
         $.ajax( {
           dataType: 'json',
           url: options.projectApiPrefix //
                 + '&action=query&list=search&swhat=text&srnamespace=0&srlimit=15' //
                 + '&srsearch=' + encodeURIComponent( options.pageTitlePrefix + ' ' + term ),
-        } ).then( ( result ) => {
+        } ).then( result => {
           const list = [];
-          $.each( result.query.search, function( index, entity ) {
+          $.each( result.query.search, ( index, entity ) => {
             if ( entity.title.substring( 0, options.pageTitlePrefixLength ) !== options.pageTitlePrefix + options.pageTitleSplitChar )
               return;
 
@@ -186,7 +186,7 @@ class DictionaryArticleInputClass {
             }
 
             const item = {
-              articleTitle: articleTitle,
+              articleTitle,
               pageTitle: entity.title,
               snippet: entity.snippet,
             };
@@ -195,7 +195,7 @@ class DictionaryArticleInputClass {
           response( list );
         } );
       },
-      select: function( event, ui ) {
+      select( event, ui ) {
         const item = ui.item;
         const input = $( event.target );
 
@@ -216,7 +216,7 @@ class DictionaryArticleInputClass {
           redirects: 'yes',
           props: 'info',
           normalize: 'yes',
-        } ).then( ( entities ) => {
+        } ).then( entities => {
 
           if ( !$.isEmptyObject( entities ) ) {
             entityId = WEF_Utils.getFirstObjectKey( entities );
@@ -230,7 +230,7 @@ class DictionaryArticleInputClass {
           if ( confirm( 'There is no Wikidata item linked to page «' + item.pageTitle + '» of ' + options.project
                     + '\nDo you want to automatically create such item?' ) ) {
             createDictinaryArticleItem( options, item.pageTitle, item.articleTitle ).then(
-              ( newEntityId ) => dictinaryArticleInput.val( newEntityId ) );
+              newEntityId => dictinaryArticleInput.val( newEntityId ) );
           }
 
         } );
@@ -245,7 +245,7 @@ class DictionaryArticleInputClass {
       return $( document.createElement( 'li' ) ).append( a ).data( 'item.autocomplete', item ).appendTo( ul );
     };
 
-    input.focus( function() {
+    input.focus( () => {
       const label = input.data( DATA_ENTITY_LABEL );
 
       if ( typeof id === 'undefined' || typeof label === 'undefined' ) {
@@ -259,7 +259,7 @@ class DictionaryArticleInputClass {
       input.change();
     } );
 
-    input.blur( function() {
+    input.blur( () => {
       const id = input.data( DATA_ENTITY_ID );
       const label = input.data( DATA_ENTITY_LABEL );
       const currentVal = input.val();
@@ -323,7 +323,7 @@ export default function createDictinaryArticleInputClass( originalOptions ) {
   const options = {
     ...originalOptions,
     pageTitlePrefixLength: originalOptions.pageTitlePrefix.length + originalOptions.pageTitleSplitChar.length,
-    projectApiPrefix : prefixes[ originalOptions.project ],
+    projectApiPrefix: prefixes[ originalOptions.project ],
   };
 
   return new DictionaryArticleInputClass( options );

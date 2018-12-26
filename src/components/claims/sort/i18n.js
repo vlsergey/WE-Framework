@@ -3,6 +3,12 @@ import { localize } from 'utils/I18nUtils';
 const en = {
   buttonLabelSortClaims: 'Sort claims',
 
+  comparators: {
+    alphabetical: 'alphabetical',
+    time: 'as time',
+    naturalSort: 'natural sort',
+  },
+
   dialogButtonLabelCancel: 'Cancel',
   dialogButtonTextCancel: 'Cancel',
   dialogButtonLabelSortClaims: 'Sort',
@@ -10,8 +16,9 @@ const en = {
 
   dialogTitleSortClaims: 'Sort exising claims',
 
+  fieldLabelComparator: 'Sort rule',
   fieldLabelEmptyValuesSort: 'Put empty and non-existing values...',
-  fieldLabelSortBy: 'Sort by qualifier value',
+  fieldLabelSortBy: 'Qualifier to sort by',
   fieldLabelSortOrder: 'Sort order',
 
   optionSortAsFirst: 'to the top',
@@ -24,6 +31,12 @@ const en = {
 const ru = {
   buttonLabelSortClaims: 'Сортировать элементы',
 
+  comparators: {
+    alphabetical: 'по алвавиту',
+    time: 'как время',
+    naturalSort: 'естественная',
+  },
+
   dialogButtonLabelCancel: 'Отменить',
   dialogButtonTextCancel: 'Отменить',
   dialogButtonLabelSortClaims: 'Сортировать',
@@ -31,8 +44,9 @@ const ru = {
 
   dialogTitleSortClaims: 'Сортировать существующие значения',
 
+  fieldLabelComparator: 'Правило сортировки',
   fieldLabelEmptyValuesSort: 'Поместить пустые и отсутствующие значения...',
-  fieldLabelSortBy: 'Сортировать по значению квалификатора',
+  fieldLabelSortBy: 'Квалификатор для сортировки',
   fieldLabelSortOrder: 'Порядок сортировки',
 
   optionSortAsFirst: 'в начало',

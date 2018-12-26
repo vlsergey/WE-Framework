@@ -4,7 +4,7 @@ import ClaimAddButtonCell from './ClaimAddButtonCell';
 import ClaimsTableRows from './ClaimsTableRows';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
-import SortClaimsButtonCell from './SortClaimsButtonCell';
+import SortClaimsButtonCell from './sort/SortClaimsButtonCell';
 
 export default class ClaimsTableBody extends PureComponent {
 
