@@ -1,8 +1,8 @@
-const path = require('path');
-const StringReplacePlugin = require("string-replace-webpack-plugin");
+const path = require( 'path' );
+const StringReplacePlugin = require( 'string-replace-webpack-plugin' );
 
 module.exports = {
-  mode: "none", // no defaults
+  mode: 'none', // no defaults
 
   entry: './src/app.js',
 
@@ -16,50 +16,50 @@ module.exports = {
         test: /\.css$/,
         include: /semantic\-ui\-css/,
         // exclude: /node_modules/,
-        use: [ 'style-loader', 'css-loader', 'postcss-loader' ]
+        use: [ 'style-loader', 'css-loader', 'postcss-loader' ],
       },
       {
         test: /\.css$/,
         // include: /src/,
         exclude: /node_modules/,
-        loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
+        loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader',
       },
       {
         test: /\.js$/,
         include: /src/,
         exclude: /node_modules/,
-        loader: "babel-loader",
+        loader: 'babel-loader',
       },
       {
         // enforce: "pre",
         test: /\.js$/,
         include: /src/,
         exclude: /node_modules/,
-        loader: "eslint-loader",
+        loader: 'eslint-loader',
         options: {
           fix: true,
-        }
+        },
       },
       // configure replacements for file patterns
       {
-        test : /\.js$/,
-        loader : StringReplacePlugin.replace({
-          replacements : [ {
-            pattern : /\/\/fb\.me\//ig,
-            replacement : function(match, p1, offset, string) {
-              return "//fb-removeme.me/";
-            }
+        test: /\.js$/,
+        loader: StringReplacePlugin.replace( {
+          replacements: [ {
+            pattern: /\/\/fb\.me\//ig,
+            replacement( match, p1, offset, string ) {
+              return '//fb-removeme.me/';
+            },
           },
-         ]
-        })
-      }
-    ]
+          ],
+        } ),
+      },
+    ],
   },
 
   resolve: {
     modules: [
-      path.resolve(__dirname, "src"),
-      "node_modules"
+      path.resolve( __dirname, 'src' ),
+      'node_modules',
     ],
   },
 
@@ -68,13 +68,13 @@ module.exports = {
   },
 
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'app.bundle.js'
+    path: path.resolve( __dirname, 'dist' ),
+    filename: 'app.bundle.js',
   },
 
   plugins: [
-      // an instance of the plugin must be present
-      new StringReplacePlugin()
-   ]
+    // an instance of the plugin must be present
+    new StringReplacePlugin(),
+  ],
 
 };

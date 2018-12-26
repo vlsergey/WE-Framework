@@ -1,6 +1,6 @@
 module.exports = {
   plugins: [
-    require('autoprefixer-core'),
-    require('postcss-color-rebeccapurple'),
-  ]
-}
+    require( 'autoprefixer-core' ),
+    require( 'postcss-color-rebeccapurple' ),
+  ],
+};

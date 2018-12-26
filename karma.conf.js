@@ -1,8 +1,8 @@
-const path = require('path');
-const webpack = require('webpack')
+const path = require( 'path' );
+const webpack = require( 'webpack' );
 
-module.exports = function (config) {
-  config.set({
+module.exports = function( config ) {
+  config.set( {
     browsers: [ 'jsdom' ],
     browserNoActivityTimeout: 60000,
     frameworks: [ 'mocha' ],
@@ -22,8 +22,8 @@ module.exports = function (config) {
     ],
 
     preprocessors: {
-      'src/**/*.js': ['webpack', 'sourcemap'],
-      'test/**/*.js': ['webpack', 'sourcemap'],
+      'src/**/*.js': [ 'webpack', 'sourcemap' ],
+      'test/**/*.js': [ 'webpack', 'sourcemap' ],
     },
 
     reporters: [
@@ -31,11 +31,11 @@ module.exports = function (config) {
     ],
 
     mochaReporter: {
-      output: 'autowatch'
+      output: 'autowatch',
     },
 
     webpack: {
-      mode: "development",
+      mode: 'development',
       module: {
         rules: [
           {
@@ -47,31 +47,31 @@ module.exports = function (config) {
             test: /\.css$/,
             include: /src/,
             exclude: /node_modules/,
-            loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader'
+            loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader',
           },
           {
             test: /\.js$/,
             exclude: /node_modules/,
-            loader: "babel-loader",
+            loader: 'babel-loader',
           },
           {
             // enforce: "pre",
             test: /\.js$/,
             include: /test/,
             exclude: /node_modules/,
-            loader: "eslint-loader",
+            loader: 'eslint-loader',
             options: {
               fix: true,
-            }
+            },
           },
-         ]
+        ],
       },
       resolve: {
         modules: [
-          path.resolve(__dirname, "src"),
-          "node_modules"
+          path.resolve( __dirname, 'src' ),
+          'node_modules',
         ],
       },
     },
-  });
+  } );
 };
