@@ -28,7 +28,7 @@ class CacheValuesProvider extends PureComponent {
     let hasChanges = false;
     const newResult = {};
     cacheKeys.forEach( key => {
-      newResult[ key ] = cacheData[ key ];
+      newResult[ key ] = cacheData[ key ] || null;
       if ( this.previousResult[ key ] !== newResult[ key ] ) {
         hasChanges = true;
       }
@@ -44,7 +44,7 @@ class CacheValuesProvider extends PureComponent {
     expect( child ).toBeA( 'function' );
 
     const { cacheKeys, cacheData } = this.props;
-    if ( !cacheKeys )
+    if ( !cacheKeys || cacheKeys.length === 0 )
       return child( EMPTY_OBJECT );
 
     // limit cache return and memoize result for react speed-up

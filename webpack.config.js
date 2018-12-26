@@ -22,7 +22,24 @@ module.exports = {
         test: /\.css$/,
         // include: /src/,
         exclude: /node_modules/,
-        loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader',
+        loader: 'style-loader',
+      },
+      {
+        test: /\.css$/,
+        // include: /src/,
+        exclude: /node_modules/,
+        loader: 'css-loader',
+        options: {
+          modules: true,
+          importLoaders: 1,
+          localIdentName: '[name]__[local]___[hash:base64:5]',
+        },
+      },
+      {
+        test: /\.css$/,
+        // include: /src/,
+        exclude: /node_modules/,
+        loader: 'postcss-loader',
       },
       {
         test: /\.js$/,

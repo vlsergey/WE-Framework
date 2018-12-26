@@ -174,7 +174,7 @@ class DictionaryArticleInputClass {
             if ( entity.title.substring( 0, options.pageTitlePrefixLength ) !== options.pageTitlePrefix + options.pageTitleSplitChar )
               return;
 
-              /* Convert page name to article title */
+            /* Convert page name to article title */
             let articleTitle = entity.title.substring( options.pageTitlePrefixLength );
 
             /* remove special ruwikisource prefixes */

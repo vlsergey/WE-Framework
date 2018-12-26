@@ -1,14 +1,12 @@
 {
   "plugins": [
-    "transform-class-properties",
-    "transform-object-rest-spread",
-    ["transform-runtime", {
-      "polyfill": false,
-    }],
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-object-rest-spread",
+    "@babel/plugin-transform-runtime",
   ],
   "presets": [
-  	"react",
-    ["env", {
+  	"@babel/preset-react",
+    ["@babel/preset-env", {
       "targets": {
         "browsers": [">0.1%", "safari >= 10", "ie >= 11"]
       }

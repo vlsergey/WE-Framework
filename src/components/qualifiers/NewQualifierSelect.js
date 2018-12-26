@@ -41,10 +41,11 @@ export default class NewQualifierSelect extends PureComponent {
   render() {
     const { allowedQualifiers, alreadyPresent } = this.props;
 
-    return <select defaultValue="_placeholder" onChange={this.handleChange}>
-      <option disabled hidden key="_placeholder" value="_placeholder">{i18n.placehoderSelect}</option>
-      <PropertyDescriptionsProvider propertyIds={allowedQualifiers}>
-        { cache => sort( cache, allowedQualifiers ).map( propertyId => {
+    // include SELECT into PDP, becase rerendering only options leads to lost current option in SELECT
+    return <PropertyDescriptionsProvider propertyIds={allowedQualifiers}>
+      { cache => <select defaultValue="_placeholder" onChange={this.handleChange}>
+        <option disabled hidden key="_placeholder" value="_placeholder">{i18n.placehoderSelect}</option>
+        {sort( cache, allowedQualifiers ).map( propertyId => {
           const propertyDescription = cache[ propertyId ];
           if ( !propertyDescription || !propertyDescription.label ) {
             return <option key={propertyId} value={propertyId}>{propertyId}</option>;
@@ -58,9 +59,9 @@ export default class NewQualifierSelect extends PureComponent {
             propertyId={propertyId}
             unsupported={SUPPORTED_DATATYPES.indexOf( propertyDescription.datatype ) === -1} />;
         } )}
-      </PropertyDescriptionsProvider>
-      <option key="OTHER" value="OTHER">{i18n.optionOther}</option>
-    </select>;
+        <option key="OTHER" value="OTHER">{i18n.optionOther}</option>
+      </select>}
+    </PropertyDescriptionsProvider>;
   }
 }
 

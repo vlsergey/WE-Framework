@@ -44,10 +44,11 @@ export default class SelectMode extends PureComponent {
   render() {
     const { value, oneOf } = this.props;
 
-    return <select onChange={this.handleChange} value={value || ''}>
-      <option key="_empty" value="" />
-      <LabelDescriptionsProvider entityIds={oneOf}>
-        { cache => sort( cache, oneOf ).map( entityId => {
+    // include SELECT into LDP, becase rerendering only options leads to lost current option in SELECT
+    return <LabelDescriptionsProvider entityIds={oneOf}>
+      { cache => <select onChange={this.handleChange} value={value || ''}>
+        <option key="_empty" value="" />
+        {sort( cache, oneOf ).map( entityId => {
           expect( cache ).toBeAn( 'object', 'LabelDescriptionsProvider didn\'t return cache object (' + cache + ')' );
 
           const labelDescription = cache[ entityId ];
@@ -61,9 +62,9 @@ export default class SelectMode extends PureComponent {
             key={entityId}
             label={labelDescription.label} />;
         } )}
-      </LabelDescriptionsProvider>
-      <option key="OTHER" value="OTHER">{i18n.optionOther}</option>
-    </select>;
+        <option key="OTHER" value="OTHER">{i18n.optionOther}</option>
+      </select>}
+    </LabelDescriptionsProvider>;
   }
 
 }
