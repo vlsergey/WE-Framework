@@ -1,0 +1,23 @@
+.entry {
+
+}
+
+.entryTerm {
+  margin-left: 2em;
+}
+
+.queryStateDiv {
+  margin-top: 1em;
+}
+
+.resultTableRow {
+  cursor: pointer;
+}
+
+.cellYear {
+  text-align: right;
+}
+
+.cellPopulation {
+  text-align: right;
+}

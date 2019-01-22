@@ -3,6 +3,10 @@
 	height: 20px;
 }
 
+.referencesButtonCell :global(.ui-button-text) {
+  padding: 0;
+}
+
 .referencesButton {
   min-width: 24px;
   width: 24px;
@@ -46,5 +50,4 @@ table.claimReferenceEditor {
 }
 
 .lruButton {
-  padding: 0.5em 1em;
 }

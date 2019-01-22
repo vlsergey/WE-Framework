@@ -37,13 +37,14 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   }
 
   case 'CLAIM_ADD': {
-    const { propertyDescription } = action;
+    const { claim, propertyDescription } = action;
     expect( propertyDescription ).toBeA( PropertyDescription );
     const propertyId = propertyDescription.id;
 
     const claims = entity.claims || EMPTY_OBJECT;
     const existingClaims = claims[ propertyDescription.id ];
-    const newClaim = newStatementClaim( propertyDescription );
+    let newClaim = newStatementClaim( propertyDescription );
+    newClaim = claim ? { ...newClaim, ...claim } : newClaim;
 
     if ( existingClaims ) {
       return {

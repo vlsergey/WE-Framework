@@ -20,6 +20,7 @@ export default class JQueryButton extends PureComponent {
     const cn = [ 'ui-button', 'ui-widget', 'ui-state-default', 'ui-corner-all' ];
     if ( disabled ) { cn.push( 'ui-button-disabled' ); cn.push( 'ui-state-disabled' ); }
     if ( !text ) cn.push( 'ui-button-icon-only' );
+    if ( !icon ) cn.push( 'ui-button-text-only' );
     if ( className ) cn.push( className );
 
     return <button

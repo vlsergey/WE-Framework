@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import BoundariesValueEditor from './BoundariesValueEditor';
+import { COLUMNS_FOR_DATA_VALUE_EDITOR } from 'components/TableColSpanConstants';
 import { DataValue } from 'model/Shapes';
 import ExactValueEditor from './ExactValueEditor';
 import expect from 'expect';
@@ -104,28 +105,39 @@ export default class QuantityDataValueEditor extends PureComponent {
 
     expect( propertyDescription.quantityUnitEnabled ).toBeA( 'boolean' );
 
-    return <td className={classNames.join( ' ' )} colSpan={12}>
-      <table>
-        <tbody>
-          <tr>
-            <td className={styles.modeselect}>
-              <ModeSelect mode={mode} onSelect={this.handleModeChange} value={value} />
-            </td>
-            {React.createElement( editor, {
-              onValueChange: this.handleValueChange,
-              value,
-            } )}
-            { propertyDescription.quantityUnitEnabled &&
-              <td className={styles.unitselect}>
-                <UnitSelect
-                  onValueChange={this.handleValueChange}
-                  propertyDescription={propertyDescription}
-                  value={value} />
+    const buttons = this.renderButtonCells();
+    expect( buttons ).toBeAn( 'array' );
+
+    return <React.Fragment>
+      <td className={classNames.join( ' ' )} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - buttons.length}>
+        <table>
+          <tbody>
+            <tr>
+              <td className={styles.modeselect}>
+                <ModeSelect mode={mode} onSelect={this.handleModeChange} value={value} />
               </td>
-            }
-          </tr>
-        </tbody>
-      </table>
-    </td>;
+              {React.createElement( editor, {
+                onValueChange: this.handleValueChange,
+                value,
+              } )}
+              { propertyDescription.quantityUnitEnabled &&
+                <td className={styles.unitselect}>
+                  <UnitSelect
+                    onValueChange={this.handleValueChange}
+                    propertyDescription={propertyDescription}
+                    value={value} />
+                </td>
+              }
+            </tr>
+          </tbody>
+        </table>
+      </td>
+      { buttons }
+    </React.Fragment>;
   }
+
+  renderButtonCells() {
+    return [];
+  }
+
 }
