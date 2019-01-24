@@ -50,13 +50,11 @@ export default class PopulationLookupDialog extends PureComponent {
         this.setState( { queryState: 'WAITING', queryScheduled: 'TIMELINES' } );
         const newResult = dom.getChildByClass( Extension )
           .filter( ext => ext.getNameAsString() === 'timeline' )
-          .map( tl => tl.getInnerAsString() )
-          .filter( inner => !!inner )
-          .flatMap( inner => inner.split( '\n' ) )
-          .map( line => line.trim() )
-          .map( line => /^bar\:[ ]*(\d+) from\:[ ]*0 till:[ ]*([\d\.]+)$/.exec( line ) )
-          .filter( g => g != null )
-          .map( g => ( { year: Number( g[ 1 ] ), population: Number( g[ 2 ].replace( /[\. ]/g, '' ) ) } ) );
+          .map( tl => tl.findPlotDataBarsAttributes() )
+          .filter( data => !!data )
+          .flatMap( data => Object.values( data ) )
+          .filter( attr => /^\d+$/.exec( attr.bar ) && "0" === attr.from && /^\d+$/.exec( attr.till ) )
+          .map( attr => ( { year: Number( attr.bar ), population: Number( attr.till ) } ) );
         this.setState( { queryState: 'WAITING', queryScheduled: 'TIMELINES', result: newResult } );
       } )
       .catch( err => {
