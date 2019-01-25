@@ -1,6 +1,6 @@
 import assert from 'assert';
-import P1971 from '../entities/P1971';
 import P1670 from '../entities/P1670';
+import P1971 from '../entities/P1971';
 import P2044 from '../entities/P2044';
 import P21 from '../entities/P21';
 import P345 from '../entities/P345';

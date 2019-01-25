@@ -13,6 +13,9 @@ const en = {
     SCHEDULED: 'Quering data from „$1“…',
     WAITING: 'Query complete. Show results from „$1“',
   },
+
+  sourceButtonLabel_articleTimelines: 'Data from article timeline graphs',
+  sourceButtonLabel_usCensusPopTemplate: 'Data from USCensusPop template',
 };
 
 const ru = {
@@ -29,7 +32,8 @@ const ru = {
     WAITING: 'Поиск закочнен. Показаны результаты источника «$1»',
   },
 
-  tableHeaderYear: 'год',
+  sourceButtonLabel_articleTimelines: 'Данные из timelines-графиков',
+  sourceButtonLabel_usCensusPopTemplate: 'Данные из шаблона USCensusPop',
 };
 
 const result = localize( {}, { en, ru } );
