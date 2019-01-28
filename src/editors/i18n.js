@@ -47,6 +47,10 @@ const en = {
   taxonLinkText: 'Taxon',
   taxonDialogTitle: 'Taxon data — WE-Framework',
 
+  transInfraLinkText: 'Trans. Infra',
+  transInfraDescription: 'Transport Infrastructure',
+  transInfraDialogTitle: 'Transport Infrastructure — WE-Framework',
+
 };
 
 const fr = {
@@ -104,6 +108,10 @@ const ru = {
 
   taxonLinkText: 'Таксон',
   taxonDialogTitle: 'Свойства таксона — WE-Framework',
+
+  transInfraLinkText: 'Трансп. инфр.',
+  transInfraDescription: 'Транспортная инфраструктура',
+  transInfraDialogTitle: 'Транспортная инфраструктура — WE-Framework',
 
 };
 

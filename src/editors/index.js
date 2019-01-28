@@ -9,6 +9,7 @@ import MovieEditorTemplate from './MovieEditorTemplate';
 import PersonEditorTemplate from './PersonEditorTemplate';
 import SoftwareEditorTemplate from './SoftwareEditorTemplate';
 import TaxonEditorTemplate from './TaxonEditorTemplate';
+import TransInfraEditorTemplate from './TransInfraEditorTemplate';
 
 const allEditorTemplates = [];
 
@@ -23,5 +24,6 @@ allEditorTemplates.push( MovieEditorTemplate );
 allEditorTemplates.push( PersonEditorTemplate );
 allEditorTemplates.push( SoftwareEditorTemplate );
 allEditorTemplates.push( TaxonEditorTemplate );
+allEditorTemplates.push( TransInfraEditorTemplate );
 
 export default allEditorTemplates;
