@@ -45,18 +45,15 @@ module.exports = function( config ) {
           {
             test: /\.css$/,
             include: /semantic\-ui\-css/,
-            // exclude: /node_modules/,
             use: [ 'style-loader', 'css-loader', 'postcss-loader' ],
           },
           {
             test: /\.css$/,
-            // include: /src/,
             exclude: /node_modules/,
             loader: 'style-loader',
           },
           {
             test: /\.css$/,
-            // include: /src/,
             exclude: /node_modules/,
             loader: 'css-loader',
             options: {
@@ -67,25 +64,14 @@ module.exports = function( config ) {
           },
           {
             test: /\.css$/,
-            // include: /src/,
             exclude: /node_modules/,
             loader: 'postcss-loader',
           },
           {
             test: /\.js$/,
-            include: /src/,
+            include: /(src|test)/,
             exclude: /node_modules/,
             loader: 'babel-loader',
-          },
-          {
-            // enforce: "pre",
-            test: /\.js$/,
-            include: /src/,
-            exclude: /node_modules/,
-            loader: 'eslint-loader',
-            options: {
-              fix: true,
-            },
           },
         ],
       },
