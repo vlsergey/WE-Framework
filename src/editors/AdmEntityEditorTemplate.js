@@ -224,9 +224,8 @@ const editorDescription = {
         { type: 'SparqlPropertyGroup',
           sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
-                    + '?property wdt:P31/wdt:P279* wd:Q55977691 . '
-                    + 'MINUS { ?property wdt:P31 wd:Q24041622 } . ' /* Wikidata property for bodies of water */
-                    + '?property wikibase:propertyType wikibase:ExternalId . '
+                    + '?property wdt:P31/wdt:P279* wd:Q55977691 . ' /* Wikidata property for authority control for administrative subdivisions */
+                    + '{?property wikibase:propertyType wikibase:ExternalId} UNION {?property wikibase:propertyType wikibase:String} . '
                     + '}' },
       ],
     },
