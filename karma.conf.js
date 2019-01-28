@@ -39,25 +39,48 @@ module.exports = function( config ) {
       module: {
         rules: [
           {
-            test: /\.(png|jpg)$/,
+            test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
             loader: 'url-loader',
-            include: /src/,
           },
           {
             test: /\.css$/,
-            include: /src/,
+            include: /semantic\-ui\-css/,
+            // exclude: /node_modules/,
+            use: [ 'style-loader', 'css-loader', 'postcss-loader' ],
+          },
+          {
+            test: /\.css$/,
+            // include: /src/,
             exclude: /node_modules/,
-            loader: 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader',
+            loader: 'style-loader',
+          },
+          {
+            test: /\.css$/,
+            // include: /src/,
+            exclude: /node_modules/,
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: '[name]__[local]___[hash:base64:5]',
+            },
+          },
+          {
+            test: /\.css$/,
+            // include: /src/,
+            exclude: /node_modules/,
+            loader: 'postcss-loader',
           },
           {
             test: /\.js$/,
+            include: /src/,
             exclude: /node_modules/,
             loader: 'babel-loader',
           },
           {
             // enforce: "pre",
             test: /\.js$/,
-            include: /test/,
+            include: /src/,
             exclude: /node_modules/,
             loader: 'eslint-loader',
             options: {
