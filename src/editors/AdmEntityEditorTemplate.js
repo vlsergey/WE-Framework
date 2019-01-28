@@ -107,8 +107,9 @@ const editorDescription = {
             { property: 'P242' } /* locator map image (geographic map image which highlights the location of the subject within some larger entity) */,
             { property: 'P30' } /* continent */,
             { property: 'P206' } /* located next to body of water */,
-            { property: 'P610' } /* highest point */,
             { property: 'P2046' } /* area (area occupied by an object) */,
+            { property: 'P2044' } /* elevation above sea level (height of the item (geographical object) as measured relative to sea level) */,
+            { property: 'P610' } /* highest point (point with highest elevation in a region, on a path, of a race) */,
           ],
         },
         {
