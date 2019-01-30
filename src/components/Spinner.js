@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import ClipLoader from 'react-spinners/dist/spinners/ClipLoader';
+import ClipLoader from 'react-spinners/ClipLoader';
 import PropTypes from 'prop-types';
 
 export default class Spinner extends PureComponent {
