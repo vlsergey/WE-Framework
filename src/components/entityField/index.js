@@ -23,35 +23,42 @@ export default class EntityField extends PureComponent {
     super( ...arguments );
 
     this.state = {
+      lruFromCache: null,
       selectMode: !!this.props.oneOf,
+      selectOptions: null,
     };
 
-    if ( !this.state.selectMode ) {
-      if ( this.props.lruKey ) {
-        findLastRecentlyUsed( this.props.lruKey )
-          .then( arr => {
-            if ( Array.isArray( arr ) && arr.length !== 0 ) {
-              const currentValue = this.props.value || '';
-              if ( currentValue === '' || arr.indexOf( currentValue ) !== -1 ) {
-                this.oneOf = arr;
-              } else {
-                this.oneOf = [ ...arr, currentValue ];
-              }
-              this.setState( { selectMode: true } );
-            }
-          } );
-      }
-    } else {
-      const currentValue = this.props.value;
-      if ( !!currentValue && this.props.oneOf.indexOf( currentValue ) === -1 ) {
-        this.oneOf = [ ...this.props.oneOf, currentValue ];
-      } else {
-        this.oneOf = this.props.oneOf;
-      }
+    if ( !this.props.oneOf && this.props.lruKey ) {
+      findLastRecentlyUsed( this.props.lruKey ).then( arr => {
+        if ( Array.isArray( arr ) && arr.length !== 0 ) {
+          this.setState( { lruFromCache: arr, selectMode: true } );
+        }
+      } );
     }
 
     this.handleOtherSelect = () => this.setState( { selectMode: false } );
     this.handleSelect = this.handleSelect.bind( this );
+  }
+
+  static getDerivedStateFromProps( props, state ) {
+    if ( state.selectMode ) {
+      const currentValue = props.value;
+      if ( props.oneOf ) {
+        if ( !!currentValue && props.oneOf.indexOf( currentValue ) === -1 ) {
+          return { selectOptions: [ ...props.oneOf, currentValue ] };
+        } else {
+          return { selectOptions: props.oneOf };
+        }
+      } else if ( state.lruFromCache ) {
+        if ( !!currentValue && state.lruFromCache.indexOf( currentValue ) === -1 ) {
+          return { selectOptions: [ ...state.lruFromCache, currentValue ] };
+        } else {
+          return { selectOptions: state.lruFromCache };
+        }
+      } else {
+        throw new Error( 'Unsupported state: both oneOf and lruFromCache are null or empty' );
+      }
+    }
   }
 
   handleSelect( entityId ) {
@@ -81,7 +88,7 @@ export default class EntityField extends PureComponent {
         {...etc}
         onOtherSelect={this.handleOtherSelect}
         onSelect={this.handleSelect}
-        oneOf={this.oneOf}
+        oneOf={this.state.selectOptions}
         value={value} />
       : <AutocompleteMode
         {...etc}
