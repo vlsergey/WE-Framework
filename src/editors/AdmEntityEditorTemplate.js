@@ -80,8 +80,8 @@ const editorDescription = {
         {
           fields: [
             { property: 'P571' } /* est. date */,
-            { property: 'P155' } /* previous */,
-            { property: 'P156' } /* next */,
+            { property: 'P1365' } /* replaces */,
+            { property: 'P1366' } /* replaced by */,
           ],
         },
         {
