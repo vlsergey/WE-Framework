@@ -38,6 +38,10 @@ export function renderEditor( resolve, reject, editorDescription, oldEntity, new
 }
 
 export function openEditor( editorDescription, oldEntity, newEntity ) {
+  expect( editorDescription ).toBeAn( 'object' );
+  expect( oldEntity ).toBeAn( 'object' );
+  expect( newEntity ).toBeAn( 'object' );
+
   let appDiv;
   return new Promise( ( resolve, reject ) => {
     appDiv = renderEditor( resolve, reject, editorDescription, oldEntity, newEntity );
@@ -60,7 +64,7 @@ export function onNewElementClick( editorDescription, classEntityId ) {
   const oldEntity = {};
   const newEntity = {};
 
-  if ( editorDescription.newEntityInstanceOf ) {
+  if ( classEntityId ) {
     newEntity.claims = {
       P31: [ {
         mainsnak: {
