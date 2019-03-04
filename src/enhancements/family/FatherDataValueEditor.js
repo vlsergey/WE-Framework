@@ -12,7 +12,7 @@ export default class FatherDataValueEditor extends PureComponent {
       {...this.props}
       newEntityGenderEntityId="Q6581097"
       propertyIdSelfInto="P40"
-      propertiesMapping={{ P22: "P26" }}
+      propertiesMapping={{ P25: "P26" }}
       />;
   }
 }

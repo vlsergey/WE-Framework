@@ -10,12 +10,27 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
+export function oppositeGender( entity ) {
+  return ( ( entity.claims || {} ).P21 || [] )
+    .filter( claim => claim.rank === 'normal' || claim.rank === 'preferred' )
+    .map( claim => ( ( ( claim.mainsnak || {} ).datavalue || {} ).value || {} ).id )
+    .filter( id => !!id )
+    .map( id => {
+      switch(id) {
+        case 'Q6581097': return 'Q6581072';
+        case 'Q6581072': return 'Q6581097';
+        default: return null;
+      }
+    } )
+    .filter( id => !!id )[0] || null;
+}
+
 class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
 
   static propTypes = {
     ...WikibaseItemDataValueEditor.propTypes,
     entity: PropTypes.object.isRequired,
-    newEntityGenderEntityId: PropTypes.string.isRequired,
+    newEntityGenderEntityId: PropTypes.oneOfType( PropTypes.func, PropTypes.string ).isRequired,
     propertyIdSelfInto: PropTypes.string.isRequired,
     propertiesMapping: PropTypes.object.isRequired,
   }
@@ -27,7 +42,17 @@ class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
   }
 
   handleCreateFamilyMember() {
-    const { entity, newEntityGenderEntityId, propertiesMapping, propertyIdSelfInto } = this.props;
+    const { entity, propertiesMapping, propertyIdSelfInto } = this.props;
+    let { newEntityGenderEntityId } = this.props;
+
+    // calculate newEntityGenderEntityId if function
+    if ( newEntityGenderEntityId instanceof Function ) {
+      if (!!entity) {
+        newEntityGenderEntityId = newEntityGenderEntityId( entity );
+      } else {
+        newEntityGenderEntityId = null;
+      }
+    }
 
     const newEntity = {
       claims: {},
