@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom';
 import SettingsDialog from './SettingsDialog';
 
 export const { linkText } = i18n;
-const localStorage = window.localStorage;
+const { localStorage } = window;
 
 const editors = [];
 

@@ -12,7 +12,7 @@ export default function stableSort( arr, cmp ) {
   };
   stabilizedThis.sort( stableCmp );
   for ( let i = 0; i < arr.length; i++ ) {
-    arr[ i ] = stabilizedThis[ i ][ 0 ];
+    [ arr[ i ] ] = stabilizedThis[ i ];
   }
   return arr;
 }

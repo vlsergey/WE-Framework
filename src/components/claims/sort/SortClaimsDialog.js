@@ -32,7 +32,7 @@ export default class SortClaimsDialog extends PureComponent {
       };
     } else {
       const propertyId = this.props.propertyIdToComparators.keys().next().value;
-      const comparator = this.props.propertyIdToComparators.get( propertyId )[ 0 ];
+      const [ comparator ] = this.props.propertyIdToComparators.get( propertyId );
 
       this.state = {
         emptyAs: 'asLast',
@@ -48,8 +48,7 @@ export default class SortClaimsDialog extends PureComponent {
   }
 
   handleChange( event ) {
-    const name = event.target.name;
-    const value = event.target.value;
+    const { name, value } = event.target;
     this.setState( { [ name ]: value } );
   }
 

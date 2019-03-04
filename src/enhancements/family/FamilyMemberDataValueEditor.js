@@ -16,13 +16,13 @@ export function oppositeGender( entity ) {
     .map( claim => ( ( ( claim.mainsnak || {} ).datavalue || {} ).value || {} ).id )
     .filter( id => !!id )
     .map( id => {
-      switch(id) {
-        case 'Q6581097': return 'Q6581072';
-        case 'Q6581072': return 'Q6581097';
-        default: return null;
+      switch ( id ) {
+      case 'Q6581097': return 'Q6581072';
+      case 'Q6581072': return 'Q6581097';
+      default: return null;
       }
     } )
-    .filter( id => !!id )[0] || null;
+    .filter( id => !!id )[ 0 ] || null;
 }
 
 class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
@@ -47,7 +47,7 @@ class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
 
     // calculate newEntityGenderEntityId if function
     if ( newEntityGenderEntityId instanceof Function ) {
-      if (!!entity) {
+      if ( entity ) {
         newEntityGenderEntityId = newEntityGenderEntityId( entity );
       } else {
         newEntityGenderEntityId = null;
@@ -74,16 +74,16 @@ class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
       rank: 'normal',
     } ];
 
-    if (newEntityGenderEntityId) {
-      newEntity.claims.P21 = [{
+    if ( newEntityGenderEntityId ) {
+      newEntity.claims.P21 = [ {
         mainsnak: {
           snaktype: 'value',
           property: 'P21',
           hash: generateRandomString(),
           datavalue: {
-              // male
-              value: { 'entity-type': 'item',
-              'numeric-id': newEntityGenderEntityId.substr(1),
+            // male
+            value: { 'entity-type': 'item',
+              'numeric-id': newEntityGenderEntityId.substr( 1 ),
               'id': newEntityGenderEntityId,
             },
             type: 'wikibase-entityid',
@@ -93,12 +93,12 @@ class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
         type: 'statement',
         id: generateRandomString(),
         rank: 'normal',
-      }]
+      } ];
     }
 
     // self into something
     if ( !!propertyIdSelfInto && !!entity.id ) {
-      newEntity.claims[propertyIdSelfInto] = [ {
+      newEntity.claims[ propertyIdSelfInto ] = [ {
         mainsnak: {
           snaktype: 'value',
           property: propertyIdSelfInto,
@@ -115,10 +115,10 @@ class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
       } ];
     }
 
-    Object.keys(propertiesMapping).forEach( sourcePropertyId => {
-      const targetPropertyId = propertiesMapping[sourcePropertyId];
+    Object.keys( propertiesMapping ).forEach( sourcePropertyId => {
+      const targetPropertyId = propertiesMapping[ sourcePropertyId ];
 
-      newEntity.claims[targetPropertyId] = ( ( entity.claims || {} )[sourcePropertyId] || [] )
+      newEntity.claims[ targetPropertyId ] = ( ( entity.claims || {} )[ sourcePropertyId ] || [] )
         .filter( claim => claim.rank === 'normal' || claim.rank === 'preferred' )
         .map( claim => ( ( ( claim.mainsnak || {} ).datavalue || {} ).value || {} ).id )
         .filter( id => !!id )

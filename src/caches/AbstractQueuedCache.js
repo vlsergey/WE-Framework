@@ -74,7 +74,7 @@ export default class AbstractQueuedCache {
     const data = this.getState()[ this.type ];
     expect( data ).toBeAn( 'object', 'Cache not found: ' + this.type );
 
-    const cache = data.cache;
+    const { cache } = data;
     expect( cache ).toBeAn( 'object', 'Cache not found: ' + this.type );
 
     return cache;

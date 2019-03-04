@@ -24,14 +24,14 @@ class PropertiesBySparqlCache extends AbstractQueuedCacheWithPostcheck {
   }
 
   convertResultToEntities( result, [ sparql ] ) {
-    const columnName = result.head.vars[ 0 ];
+    const [ columnName ] = result.head.vars;
 
     const propertyIds = result.results.bindings.map( binding => {
-      const type = binding[ columnName ].type;
+      const { type } = binding[ columnName ];
       if ( type != 'uri' ) {
         throw new Error( 'SPARQL result column type must be \'uri\'' );
       }
-      const value = binding[ columnName ].value;
+      const { value } = binding[ columnName ];
       if ( !value.startsWith( 'http://www.wikidata.org/entity/P' ) ) {
         throw new Error( 'SPARQL result column value must start \'http://www.wikidata.org/entity/P\'' );
       }

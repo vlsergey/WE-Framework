@@ -58,11 +58,14 @@ module.exports = {
     "no-console": 0,
     /* Disallow duplicate imports */
     "no-duplicate-imports": 1,
+    /* disallow unnecessary parentheses */
     "no-extra-parens": 1,
     "no-invalid-this": 2,
     "no-multi-spaces": 1,
     "no-multiple-empty-lines": 1,
     "no-trailing-spaces": 1,
+    /* Disallow unnecessary catch clauses */
+    "no-useless-catch": 1,
     /* Disallow unnecessary computed property keys on objects */
     "no-useless-computed-key": 1,
     /* Disallow renaming import, export, and destructured assignments to the same name */
@@ -79,6 +82,8 @@ module.exports = {
     /* Require using arrow functions for callbacks */
     "prefer-arrow-callback": 1,
     "prefer-const": 1,
+    /* Prefer destructuring from arrays and objects */
+    "prefer-destructuring": 1,
     /* Suggest using the spread operator instead of .apply() */
     "prefer-spread": 1,
 

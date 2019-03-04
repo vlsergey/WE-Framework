@@ -56,8 +56,7 @@ export default class AdditionalArgumentsDialog extends PureComponent {
   }
 
   handleChange( event ) {
-    const name = event.target.name;
-    const value = event.target.value;
+    const { name, value } = event.target;
     this.setState( { [ name ]: value } );
   }
 

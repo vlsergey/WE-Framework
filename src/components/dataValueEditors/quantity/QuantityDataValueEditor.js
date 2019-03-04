@@ -23,7 +23,7 @@ function detectAppropriateMode( datavalue ) {
     return 'exact';
   }
 
-  const value = datavalue.value;
+  const { value } = datavalue;
   return Object.keys( MODES ).find( mode => MODES[ mode ].canBeUsedForValue( value ) );
 }
 

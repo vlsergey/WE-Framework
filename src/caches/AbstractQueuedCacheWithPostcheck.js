@@ -27,7 +27,7 @@ export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCach
     const pageidsToQueue = [];
     Object.keys( cacheUpdate ).forEach( cacheKey => {
       const entity = cacheUpdate[ cacheKey ];
-      const pageid = entity.pageid;
+      const { pageid } = entity;
       const dbLastRevisionId = entity.lastrevid;
       const dbVersion = entity.version;
       if ( !pageid || !Number.isInteger( pageid )

@@ -43,10 +43,10 @@ export default class EditorLinks extends PureComponent {
     } )
       .then( body => body.json() )
       .then( result => {
-        const columnName = result.head.vars[ 0 ];
+        const [ columnName ] = result.head.vars;
 
         const classIds = result.results.bindings.map( binding => {
-          const value = binding[ columnName ].value;
+          const { value } = binding[ columnName ];
           return value.substr( 'http://www.wikidata.org/entity/'.length );
         } );
         return classIds;

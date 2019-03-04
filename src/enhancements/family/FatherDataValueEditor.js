@@ -1,5 +1,5 @@
-import React, {PureComponent} from 'react';
-import FamilyMemberDataValueEditor from "./FamilyMemberDataValueEditor";
+import React, { PureComponent } from 'react';
+import FamilyMemberDataValueEditor from './FamilyMemberDataValueEditor';
 
 export default class FatherDataValueEditor extends PureComponent {
 
@@ -11,8 +11,7 @@ export default class FatherDataValueEditor extends PureComponent {
     return <FamilyMemberDataValueEditor
       {...this.props}
       newEntityGenderEntityId="Q6581097"
-      propertyIdSelfInto="P40"
-      propertiesMapping={{ P25: "P26" }}
-      />;
+      propertiesMapping={{ P25: 'P26' }}
+      propertyIdSelfInto="P40" />;
   }
 }

@@ -66,7 +66,7 @@ export default class TimeDataValueEditor extends PureComponent {
   }
 
   handleTextChange( event ) {
-    const value = event.target.value;
+    const { value } = event.target;
 
     this.setState( { text: value } );
     this.requestParsing( );
@@ -118,7 +118,7 @@ export default class TimeDataValueEditor extends PureComponent {
   }
 
   requestRenderImpl( renderToText ) {
-    const datavalue = this.props.datavalue;
+    const { datavalue } = this.props;
     if ( !this.props.datavalue ) {
       this.setState( { rendering: false, renderedAsHtml: '' } );
       return;

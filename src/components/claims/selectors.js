@@ -40,7 +40,7 @@ export const claimColumnsF = () => {
     const columns = [];
     while ( columns.length < MAX_COLUMNS && Object.keys( qualifierStats ).length !== 0 ) {
       const allValues = [ ...Object.values( qualifierStats ) ].sort( ( a, b ) => b - a );
-      const max = allValues[ 0 ];
+      const [ max ] = allValues;
       if ( max < claims.length / 5.0 ) break;
 
       const countOfMax = allValues.filter( item => item === max ).length;

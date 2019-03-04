@@ -37,7 +37,7 @@ export function onReferenceUpdate( reference ) {
     .map( value => value.id ).filter( ok );
   if ( entityIds.length !== 1 ) return;
 
-  const entityId = entityIds[ 0 ];
+  const [ entityId ] = entityIds;
 
   const oldStorage = get();
   set( [

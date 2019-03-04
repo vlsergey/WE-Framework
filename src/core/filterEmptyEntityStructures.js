@@ -135,7 +135,7 @@ function isSnakEmtpy( snak ) {
   if ( snak.snaktype !== 'value' )
     return false;
 
-  const datavalue = snak.datavalue;
+  const { datavalue } = snak;
   if ( typeof datavalue === 'undefined' || datavalue === null
       || typeof datavalue.value === 'undefined' || datavalue.value === null )
     return true;

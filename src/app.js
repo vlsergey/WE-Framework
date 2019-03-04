@@ -35,17 +35,17 @@ mw.loader.using( [ //
     registerEditor( editorTemplate );
   } );
 
-  const toolsGroup = jQuery( '#p-tb' )[ 0 ];
+  const [ toolsGroup ] = jQuery( '#p-tb' );
 
   const wefGroup = toolsGroup.cloneNode( true );
   wefGroup.setAttribute( 'id', 'p-wef' );
 
-  const h3Title = wefGroup.getElementsByTagName( 'h3' )[ 0 ];
+  const [ h3Title ] = wefGroup.getElementsByTagName( 'h3' );
   h3Title.setAttribute( 'id', 'p-wef-label' );
   h3Title.textContent = i18n.portalLabel;
   toolsGroup.parentElement.insertBefore( wefGroup, toolsGroup );
 
-  const ul = jQuery( wefGroup ).find( 'ul' )[ 0 ];
+  const [ ul ] = jQuery( wefGroup ).find( 'ul' );
   while ( ul.firstChild ) ul.removeChild( ul.firstChild );
   ReactDOM.render( <EditorsLinks editorTemplates={getEnabledEditors()} />, ul );
 

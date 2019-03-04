@@ -10,7 +10,7 @@ function getTitleFromOptions( allLanguagesData, languageCode ) {
 
   if ( languageOptions.length === 1 ) {
     // it's alias
-    const actualLanguageCode = languageOptions[ 0 ];
+    const [ actualLanguageCode ] = languageOptions;
     return getTitleFromOptions( allLanguagesData, actualLanguageCode );
   }
 

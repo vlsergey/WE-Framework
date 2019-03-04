@@ -33,7 +33,7 @@ export default class MediawikiPreview extends PureComponent {
     if ( !this.props.wikitext )
       return;
 
-    const wikitext = this.props.wikitext;
+    const { wikitext } = this.props;
     new mw.Api().post( {
       action: 'parse',
       contentmodel: 'wikitext',

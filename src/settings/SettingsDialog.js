@@ -4,7 +4,7 @@ import i18n from './i18n';
 import PropTypes from 'prop-types';
 import styles from './SettingsDialog.css';
 
-const localStorage = window.localStorage;
+const { localStorage } = window;
 
 export default class SettingsDialog extends PureComponent {
 

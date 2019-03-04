@@ -18,7 +18,7 @@ describe( 'components/qualifiers/ClaimQualifiersTable', () => {
     const reducers = buildReducers( Q30 );
     const store = createStore( reducers, applyMiddleware( thunk ) );
 
-    const claim = Q30.claims.P85[ 0 ];
+    const [ claim ] = Q30.claims.P85;
     const onClaimUpdate = newClaim => {
       Object.keys( claim ).forEach( key => claim[ key ] = newClaim[ key ] );
       Object.keys( newClaim ).forEach( key => claim[ key ] = newClaim[ key ] );
