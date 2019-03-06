@@ -87,7 +87,7 @@ const loginPromise = loginTokenPromise.then( logintoken => {
       format: 'json',
     } ),
   } ).then( res => res.json() )
-    .then( json => { const login = json.login;
+    .then( json => { const { login } = json;
       console.log( 'Login result is ' + login.result );
       if ( login.result !== 'Success' ) {
         console.log( login );

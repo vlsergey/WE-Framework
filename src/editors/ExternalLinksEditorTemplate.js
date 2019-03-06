@@ -29,6 +29,17 @@ const editorDescription = {
       ],
     },
     {
+      labelEntityId: 'Q47307' /* genealogy */,
+      specials: [
+        { type: 'SparqlPropertyGroup',
+          sparql: 'SELECT DISTINCT ?property '
+                    + 'WHERE { '
+                    + '?property wdt:P31/wdt:P279* wd:Q56249073 . ' /* Wikidata property related to genealogy */
+                    + '?property wikibase:propertyType wikibase:ExternalId . '
+                    + '}' },
+      ],
+    },
+    {
       labelEntityId: 'Q638' /* music */,
       specials: [
         { type: 'SparqlPropertyGroup',
@@ -119,6 +130,7 @@ const editorDescription = {
                     /* properties from previous tabs */
                     + ' MINUS { ?property wdt:P31 wd:Q30041186 } . ' /* Wikidata property related to online communities */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q22964274 } . ' /* Wikidata property for identification in the film industry */
+                    + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q56249073 } . ' /* Wikidata property related to genealogy */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q27525351 } . ' /* Wikidata property related to music */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q22984475 } . ' /* Wikidata property related to politics */
                     + ' MINUS { ?property wdt:P31/wdt:P279* wd:Q21818626 } . ' /* Wikidata property related to sport */
