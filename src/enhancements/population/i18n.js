@@ -16,6 +16,7 @@ const en = {
 
   sourceButtonLabel_articleTimelines: 'Data from article timeline graphs',
   sourceButtonLabel_usCensusPopTemplate: 'Data from USCensusPop template',
+  sourceButtonLabel_Численность_населенияTemplate: 'Data from «Численность населения» template',
 };
 
 const ru = {
@@ -34,6 +35,7 @@ const ru = {
 
   sourceButtonLabel_articleTimelines: 'Данные из timelines-графиков',
   sourceButtonLabel_usCensusPopTemplate: 'Данные из шаблона USCensusPop',
+  sourceButtonLabel_Численность_населенияTemplate: 'Данные из шаблона «Численность населения»',
 };
 
 const result = localize( {}, { en, ru } );

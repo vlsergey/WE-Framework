@@ -59,9 +59,29 @@ const fromUsCensusPopTemplate = () => getArticleDom()
     } )
   );
 
+const fromЧисленность_населенияTemplate = () => getArticleDom()
+  .then( dom => dom.getChildByClass( Template )
+    .filter( tpl => ( tpl.getTitleAsString() || '' ).trim() === 'Численность населения' )
+    .flatMap( tpl => {
+      const result = [];
+
+      tpl.findPartNamesAsStrings()
+        .filter( name => isNumeric( name.trim() ) )
+        .filter( name => isNumeric( tpl.getValueByNameAsString( name ) ) )
+        .map( name => ( {
+          population: Number( tpl.getValueByNameAsString( name ) ),
+          year: Number( name ),
+        } ) )
+        .forEach( r => result.push( r ) );
+
+      return result;
+    } )
+  );
+
 const allSources = {
   articleTimelines: fromArticleTimelines,
   usCensusPopTemplate: fromUsCensusPopTemplate,
+  Численность_населенияTemplate: fromЧисленность_населенияTemplate,
 };
 
 export default allSources;
