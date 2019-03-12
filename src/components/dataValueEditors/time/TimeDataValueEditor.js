@@ -89,7 +89,7 @@ export default class TimeDataValueEditor extends PureComponent {
       options: JSON.stringify( {
         lang: mw.config.get( 'wgUserLanguage' ),
         precision: this.state.precision || undefined,
-        calendarmodel: this.state.calendarModel || undefined,
+        calendar: this.state.calendarModel || undefined,
       } ),
     } ).catch( ( code, { error } ) => {
       // are still in sync?
