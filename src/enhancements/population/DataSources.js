@@ -27,7 +27,8 @@ const fromArticleTimelines = () => getArticleDom()
     .filter( attr => /^\d+$/.exec( attr.bar ) && '0' === attr.from && /^\d+$/.exec( attr.till ) )
     .map( attr => ( { year: Number( attr.bar ), population: Number( attr.till ) } ) ) );
 
-const isNumeric = str => /^\s*\d+\s*$/.exec( str );
+const isNumeric = str => !isNaN( toNumber( str ) );
+const toNumber = str => Number( str.replace( /[\s\r\n\t]+/g, '' ) );
 
 const fromUsCensusPopTemplate = () => getArticleDom()
   .then( dom => dom.getChildByClass( Template )
@@ -40,8 +41,8 @@ const fromUsCensusPopTemplate = () => getArticleDom()
         .filter( name => isNumeric( tpl.getValueByNameAsString( name ) ) )
         .map( name => ( {
           determinationMethod: 'census',
-          population: Number( tpl.getValueByNameAsString( name ) ),
-          year: Number( name ),
+          population: toNumber( tpl.getValueByNameAsString( name ) ),
+          year: toNumber( name ),
         } ) )
         .forEach( r => result.push( r ) );
 
@@ -50,8 +51,8 @@ const fromUsCensusPopTemplate = () => getArticleDom()
       if ( isNumeric( estPop ) && isNumeric( estYear ) ) {
         result.push( {
           determinationMethod: 'estimating',
-          population: Number( estPop ),
-          year: Number( estYear ),
+          population: toNumber( estPop ),
+          year: toNumber( estYear ),
         } );
       }
 
@@ -69,8 +70,8 @@ const fromЧисленность_населенияTemplate = () => getArticleDo
         .filter( name => isNumeric( name.trim() ) )
         .filter( name => isNumeric( tpl.getValueByNameAsString( name ) ) )
         .map( name => ( {
-          population: Number( tpl.getValueByNameAsString( name ) ),
-          year: Number( name ),
+          population: toNumber( tpl.getValueByNameAsString( name ) ),
+          year: toNumber( name ),
         } ) )
         .forEach( r => result.push( r ) );
 
