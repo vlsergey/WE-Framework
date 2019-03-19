@@ -6,6 +6,7 @@ import Q30 from '../../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import SortClaimsDialog from 'components/claims/sort/SortClaimsDialog';
+import TimeComparator from 'components/claims/sort/TimeComparator';
 import thunk from 'redux-thunk';
 
 const NOOP = () => {};
@@ -16,13 +17,16 @@ describe( 'components/claims/sort/SortClaimsDialog', () => {
     const reducers = buildReducers( Q30 );
     const store = createStore( reducers, applyMiddleware( thunk ) );
 
+    const comparators = new Map();
+    comparators.set( 'P580', [ new TimeComparator() ] );
+
     const rendered = ReactTestUtils.renderIntoDocument(
       <Provider store={store}>
         <SortClaimsDialog
           claims={[]}
           onClaimsReorder={NOOP}
           onCloseClick={NOOP}
-          propertyIds={[ 'P580' ]} />
+          propertyIdToComparators={ comparators } />
       </Provider>
     );
     assert.ok( rendered );
