@@ -30,8 +30,9 @@ export default class ExactValueEditor extends PureComponent {
   }
 
   handleChange( event ) {
+    const { lowerBound, amount, upperBound, ...etc } = this.props.value;
     this.props.onValueChange( {
-      ...this.props.value,
+      ...etc,
       amount: event.target.value || '',
     } );
   }

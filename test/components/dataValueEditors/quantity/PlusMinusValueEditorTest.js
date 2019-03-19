@@ -3,6 +3,7 @@ import PlusMinusValueEditor from 'components/dataValueEditors/quantity/PlusMinus
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from '../TableTBodyTr';
+import ValueHolder from "../../../ValueHolder";
 
 const NOOP = () => {};
 
@@ -26,37 +27,35 @@ describe( 'components/dataValueEditors/quantity', () => {
     } );
 
     it( 'can be changed', () => {
-      const value = {};
-      const onValueChange = newValue => {
-        Object.keys( value ).forEach( key => delete value[ key ] );
-        Object.keys( newValue ).forEach( key => value[ key ] = newValue[ key ] );
-      };
       const rendered = ReactTestUtils.renderIntoDocument(
-        <TableTBodyTr>
-          <PlusMinusValueEditor onValueChange={onValueChange} value={value} />
-        </TableTBodyTr>
+        <ValueHolder initialValue={{}}>{ (value, onChange) =>
+          <TableTBodyTr>
+            <PlusMinusValueEditor onValueChange={onChange} value={value} />
+          </TableTBodyTr>
+        }</ValueHolder>
       );
       assert.ok( rendered );
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );
 
       const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( rendered, 'input' );
       assert.equal( inputs.length, 2 );
 
       inputs[ 0 ].value = '1'; ReactTestUtils.Simulate.change( inputs[ 0 ] );
-      assert.deepEqual( value, { amount: '1' } );
+      assert.deepEqual( valueHolder.getValue(), { amount: '1' } );
       inputs[ 1 ].value = '2'; ReactTestUtils.Simulate.change( inputs[ 1 ] );
-      assert.deepEqual( value, { lowerBound: '-1', amount: '1', upperBound: '3' } );
+      assert.deepEqual( valueHolder.getValue(), { lowerBound: '-1', amount: '1', upperBound: '3' } );
 
       inputs[ 0 ].value = '1'; ReactTestUtils.Simulate.change( inputs[ 0 ] );
       inputs[ 1 ].value = ''; ReactTestUtils.Simulate.change( inputs[ 1 ] );
-      assert.deepEqual( value, { amount: '1' } );
+      assert.deepEqual( valueHolder.getValue(), { amount: '1' } );
 
       inputs[ 0 ].value = ''; ReactTestUtils.Simulate.change( inputs[ 0 ] );
       inputs[ 1 ].value = '1'; ReactTestUtils.Simulate.change( inputs[ 1 ] );
-      assert.deepEqual( value, { lowerBound: '-1', amount: '', upperBound: '1' } );
+      assert.deepEqual( valueHolder.getValue(), { lowerBound: '-1', amount: '', upperBound: '1' } );
 
       inputs[ 1 ].value = ''; ReactTestUtils.Simulate.change( inputs[ 1 ] );
       inputs[ 0 ].value = ''; ReactTestUtils.Simulate.change( inputs[ 0 ] );
-      assert.deepEqual( value, { amount: '' } );
+      assert.deepEqual( valueHolder.getValue(), { amount: '' } );
     } );
 
   } );
