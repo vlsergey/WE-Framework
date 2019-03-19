@@ -1,35 +1,23 @@
-import FatherDataValueEditor from './family/FatherDataValueEditor';
-import Isbn10PropertyDataValueEditor from './isbn/Isbn10PropertyDataValueEditor';
-import Isbn13PropertyDataValueEditor from './isbn/Isbn13PropertyDataValueEditor';
-import MotherDataValueEditor from './family/MotherDataValueEditor';
-import PartnerDataValueEditor from './family/PartnerDataValueEditor';
-import PopulationDataValueEditor from './population/PopulationDataValueEditor';
-import SpouseDataValueEditor from './family/SpouseDataValueEditor';
-import ViafPropertyDataValueEditor from './viaf/ViafPropertyDataValueEditor';
-
 class EnhancementsFactory {
 
-  constructor() {
-    this.dataValueEditorsByProperty = {};
-
-    // family
-    this.dataValueEditorsByProperty.P22 = FatherDataValueEditor;
-    this.dataValueEditorsByProperty.P25 = MotherDataValueEditor;
-    this.dataValueEditorsByProperty.P26 = SpouseDataValueEditor;
-    this.dataValueEditorsByProperty.P451 = PartnerDataValueEditor;
-
-    this.dataValueEditorsByProperty.P212 = Isbn13PropertyDataValueEditor;
-    this.dataValueEditorsByProperty.P957 = Isbn10PropertyDataValueEditor;
-
-    this.dataValueEditorsByProperty.P1082 = PopulationDataValueEditor;
-
-    this.dataValueEditorsByProperty.P214 = ViafPropertyDataValueEditor;
-  }
-
   findDataValueEditor( propertyDescription ) {
-    return this.dataValueEditorsByProperty[ propertyDescription.id ] || null;
-  }
+    switch ( propertyDescription.id ) {
 
+    case 'P22': return require( './family/FatherDataValueEditor' ).default;
+    case 'P25': return require( './family/MotherDataValueEditor' ).default;
+    case 'P26': return require( './family/SpouseDataValueEditor' ).default;
+    case 'P451': return require( './family/PartnerDataValueEditor' ).default;
+
+    case 'P212': return require( './isbn/Isbn13PropertyDataValueEditor' ).default;
+    case 'P957': return require( './isbn/Isbn10PropertyDataValueEditor' ).default;
+
+    case 'P1082': return require( './population/PopulationDataValueEditor' ).default;
+
+    case 'P214': return require( './viaf/ViafPropertyDataValueEditor' ).default;
+
+    default: return null;
+    }
+  }
 }
 
 const instance = new EnhancementsFactory();
