@@ -5,7 +5,7 @@ import PropertyDescription from 'core/PropertyDescription';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from './TableTBodyTr';
-import ValueHolder from "../../ValueHolder";
+import ValueHolder from '../../ValueHolder';
 
 const NOOP = () => {};
 
@@ -41,7 +41,7 @@ describe( 'components/dataValueEditors', () => {
 
     it ( 'non-existing can be changed via keyboard', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <ValueHolder>{ (value, onChange) =>
+        <ValueHolder>{ ( value, onChange ) =>
           <TableTBodyTr>
             <MonolingualTextDataValueEditor
               datavalue={value}
@@ -74,14 +74,14 @@ describe( 'components/dataValueEditors', () => {
             text: 'TestText',
           },
           type: 'monolingualtext',
-        }}>{ (value, onChange) =>
-          <TableTBodyTr>
-            <MonolingualTextDataValueEditor
-              datavalue={value}
-              onDataValueChange={onChange}
-              propertyDescription={p18Description} />
-          </TableTBodyTr>
-        }</ValueHolder>
+        }}>{ ( value, onChange ) =>
+            <TableTBodyTr>
+              <MonolingualTextDataValueEditor
+                datavalue={value}
+                onDataValueChange={onChange}
+                propertyDescription={p18Description} />
+            </TableTBodyTr>
+          }</ValueHolder>
       );
       assert.ok( rendered );
       const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );

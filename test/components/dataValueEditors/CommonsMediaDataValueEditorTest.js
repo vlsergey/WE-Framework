@@ -5,7 +5,7 @@ import PropertyDescription from 'core/PropertyDescription';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from './TableTBodyTr';
-import ValueHolder from "../../ValueHolder";
+import ValueHolder from '../../ValueHolder';
 
 const NOOP = () => {};
 
@@ -32,7 +32,7 @@ describe( 'components/dataValueEditors', () => {
 
     it ( 'can be changed via keyboard', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <ValueHolder initialValue={{ value: 'Image.jpg', type: 'string' }}>{ (value, onChange) =>
+        <ValueHolder initialValue={{ value: 'Image.jpg', type: 'string' }}>{ ( value, onChange ) =>
           <TableTBodyTr>
             <CommonsMediaDataValueEditor
               datavalue={value}

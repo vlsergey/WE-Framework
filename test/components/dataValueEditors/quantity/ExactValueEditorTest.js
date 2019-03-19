@@ -3,7 +3,7 @@ import ExactValueEditor from 'components/dataValueEditors/quantity/ExactValueEdi
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from '../TableTBodyTr';
-import ValueHolder from "../../../ValueHolder";
+import ValueHolder from '../../../ValueHolder';
 
 describe( 'components/dataValueEditors/quantity', () => {
   describe( 'ExactValueEditor', () => {
@@ -19,7 +19,7 @@ describe( 'components/dataValueEditors/quantity', () => {
 
     it( 'correctly updates equal boundaries', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <ValueHolder initialValue={{ lowerBound: '1.0', amount: '1.00', upperBound: '1.000'}}>{ (value, onChange) =>
+        <ValueHolder initialValue={{ lowerBound: '1.0', amount: '1.00', upperBound: '1.000' }}>{ ( value, onChange ) =>
           <TableTBodyTr>
             <ExactValueEditor onValueChange={onChange} value={value} />
           </TableTBodyTr>

@@ -6,8 +6,8 @@ import Q30 from '../../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import SortClaimsDialog from 'components/claims/sort/SortClaimsDialog';
-import TimeComparator from 'components/claims/sort/TimeComparator';
 import thunk from 'redux-thunk';
+import TimeComparator from 'components/claims/sort/TimeComparator';
 
 const NOOP = () => {};
 
@@ -26,7 +26,7 @@ describe( 'components/claims/sort/SortClaimsDialog', () => {
           claims={[]}
           onClaimsReorder={NOOP}
           onCloseClick={NOOP}
-          propertyIdToComparators={ comparators } />
+          propertyIdToComparators={comparators} />
       </Provider>
     );
     assert.ok( rendered );

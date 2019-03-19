@@ -11,7 +11,7 @@ import Q30 from '../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import thunk from 'redux-thunk';
-import ValueHolder from "../../ValueHolder";
+import ValueHolder from '../../ValueHolder';
 
 describe( 'components/qualifiers/ClaimQualifiersTable', () => {
 
@@ -21,7 +21,7 @@ describe( 'components/qualifiers/ClaimQualifiersTable', () => {
 
     const rendered = ReactTestUtils.renderIntoDocument(
       <Provider store={store}>
-        <ValueHolder initialValue={ Q30.claims.P85[0] }>{ (value, onChange) =>
+        <ValueHolder initialValue={Q30.claims.P85[ 0 ]}>{ ( value, onChange ) =>
           <ClaimQualifiersTable
             claim={value}
             claimPropertyDescription={new PropertyDescription( P85 )}

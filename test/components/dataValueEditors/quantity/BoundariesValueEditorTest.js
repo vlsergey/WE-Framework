@@ -3,7 +3,7 @@ import BoundariesValueEditor from 'components/dataValueEditors/quantity/Boundari
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from '../TableTBodyTr';
-import ValueHolder from "../../../ValueHolder";
+import ValueHolder from '../../../ValueHolder';
 
 const NOOP = () => {};
 
@@ -28,7 +28,7 @@ describe( 'components/dataValueEditors/quantity', () => {
 
     it( 'can be changed', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <ValueHolder initialValue={{}}>{ (value, onChange) =>
+        <ValueHolder initialValue={{}}>{ ( value, onChange ) =>
           <TableTBodyTr>
             <BoundariesValueEditor onValueChange={onChange} value={value} />
           </TableTBodyTr>

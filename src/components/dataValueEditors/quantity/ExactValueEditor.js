@@ -30,6 +30,7 @@ export default class ExactValueEditor extends PureComponent {
   }
 
   handleChange( event ) {
+    /* eslint no-unused-vars: 0 */
     const { lowerBound, amount, upperBound, ...etc } = this.props.value;
     this.props.onValueChange( {
       ...etc,

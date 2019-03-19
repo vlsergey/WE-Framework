@@ -1,25 +1,19 @@
 import { applyMiddleware, createStore } from 'redux';
-import React, { Component } from 'react';
 import assert from 'assert';
 import AutocompleteMode from 'components/entityField/AutocompleteMode';
 import buildReducers from 'core/reducers';
-import expect from "expect";
 import LabelDescription from 'caches/LabelDescription';
-import P21 from '../../entities/P21';
-import PropertyDescription from 'core/PropertyDescription';
 import { Provider } from 'react-redux';
 import Q1367759 from '../../entities/Q1367759';
 import Q752285 from '../../entities/Q752285';
+import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import Suggestion from 'components/entityField/Suggestion';
 import thunk from 'redux-thunk';
-import ValueHolder from "../../ValueHolder";
-import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
+import ValueHolder from '../../ValueHolder';
 import WikibaseItemInput from 'components/entityField/WikibaseItemInput';
 
 describe( 'components/dataValueEditors/wikibase-item', () => {
-
-  const p21Description = new PropertyDescription( P21 );
 
   const reducers = buildReducers( Q1367759 );
   const store = createStore( reducers, applyMiddleware( thunk ) );
@@ -36,11 +30,11 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
 
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <ValueHolder>{ (value, onChange) =>
+          <ValueHolder>{ ( value, onChange ) =>
             <AutocompleteMode
-              value={value}
               onSelect={onChange}
-              testSuggestionsProvider={testSuggestionsProvider} />
+              testSuggestionsProvider={testSuggestionsProvider}
+              value={value} />
           }</ValueHolder>
         </Provider>
       );
@@ -79,7 +73,7 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
       assert.equal( wikibaseItemInput.state.focused, true );
 
       // leaving input: must be with label
-      console.log( "TEST: leaving input: must be with label");
+      console.log( 'TEST: leaving input: must be with label' );
       input.blur();
       ReactTestUtils.Simulate.blur( input );
       assert.equal( wikibaseItemInput.state.focused, false );

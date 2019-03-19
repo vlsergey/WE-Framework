@@ -12,7 +12,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 import Suggestion from 'components/entityField/Suggestion';
 import TableTBodyTr from '../TableTBodyTr';
 import thunk from 'redux-thunk';
-import ValueHolder from "../../../ValueHolder";
+import ValueHolder from '../../../ValueHolder';
 import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
 const NOOP = () => {};
@@ -32,10 +32,10 @@ describe( 'components/dataValueEditors', () => {
         <Provider store={store}>
           <ValueHolder initialValue={{}}>{( value, onChange ) =>
             <TableTBodyTr>
-                <WikibaseItemDataValueEditor
-                  datavalue={value}
-                  onDataValueChange={onChange}
-                  propertyDescription={p21Description} />
+              <WikibaseItemDataValueEditor
+                datavalue={value}
+                onDataValueChange={onChange}
+                propertyDescription={p21Description} />
             </TableTBodyTr>
           }</ValueHolder>
         </Provider>

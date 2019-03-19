@@ -1,26 +1,27 @@
-import React, {Component} from "react";
-import expect from "expect";
+import expect from 'expect';
 import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
 
-export default class ValueHolder extends Component {
+export default class ValueHolder extends PureComponent {
 
   static propTypes = {
+    children: PropTypes.func.isRequired,
     initialValue: PropTypes.any,
   };
 
   constructor() {
-    super(...arguments);
+    super( ...arguments );
     this.state = {
       value: this.props.initialValue,
-    }
-    this.handleChange = this.handleChange.bind(this);
+    };
+    this.handleChange = this.handleChange.bind( this );
   }
 
   handleChange( newValue ) {
-    console.log( 'ValueHolder::handleChange( «' + this.state.value + '» => «' + newValue + '» )' )
-    this.setState({
+    console.log( 'ValueHolder::handleChange( «' + this.state.value + '» => «' + newValue + '» )' );
+    this.setState( {
       value: newValue,
-    });
+    } );
   }
 
   getValue() {

@@ -13,7 +13,7 @@ import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from '../TableTBodyTr';
 import thunk from 'redux-thunk';
-import ValueHolder from "../../../ValueHolder";
+import ValueHolder from '../../../ValueHolder';
 
 const NOOP = () => {};
 
@@ -135,7 +135,7 @@ describe( 'components/dataValueEditors/quantity', () => {
 
     it ( 'with compatible values can be changed between plusMinus and boundaries', () => {
       const rendered = ReactTestUtils.renderIntoDocument( <Provider store={store}>
-        <ValueHolder initialValue={{ type: 'quantity', value: {} }}>{ (value, onChange) =>
+        <ValueHolder initialValue={{ type: 'quantity', value: {} }}>{ ( value, onChange ) =>
           <TableTBodyTr>
             <QuantityDataValueEditor
               datavalue={value}
