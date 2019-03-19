@@ -51,9 +51,20 @@ module.exports = {
 
     "indent": [1, 2, { "ignoreComments": false }],
 
+    /* Enforce the location of arrow function bodies with implicit returns */
+    "implicit-arrow-linebreak": 0,
+
+    /* enforce the consistent use of either double or single quotes in JSX attributes */
+    "jsx-quotes": [1, "prefer-double"],
+
     "keyword-spacing": 1,
     "key-spacing": 1,
 
+    /* require or disallow an empty line between class members  */
+    "lines-between-class-members": [1, "always", { exceptAfterSingleLine: true }],
+
+    /* require parentheses when invoking a constructor with no arguments */
+    "new-parens": 1,
     "newline-per-chained-call": 0,
     "no-console": 0,
     /* Disallow duplicate imports */
@@ -75,12 +86,20 @@ module.exports = {
     /* disallow whitespace before properties */
     "no-whitespace-before-property": 1,
 
+    /* require or disallow assignment operator shorthand where possible */
+    "operator-assignment": 1,
+    /* enforce consistent linebreak style for operators */
+    "operator-linebreak": [1, "after", { "overrides": { "+": "before", "?": "before", ":": "before", "&&": "before", "||": "before" } } ],
+    /* enforce consistent spacing inside braces */
     "object-curly-spacing": [1, "always"],
     /* require or disallow method and property shorthand syntax for object literals */
     "object-shorthand": 1,
 
+    /* require or disallow padding within blocks */
+    "padded-blocks": [0, { "classes": "always"}],
     /* Require using arrow functions for callbacks */
     "prefer-arrow-callback": 1,
+    /* require const declarations for variables that are never reassigned after declared */
     "prefer-const": 1,
     /* Prefer destructuring from arrays and objects */
     "prefer-destructuring": 1,
@@ -149,14 +168,25 @@ module.exports = {
     /* Enforce spacing between rest and spread operators and their expressions */
     "rest-spread-spacing": 1,
 
+    /* require or disallow semicolons instead of ASI */
     "semi": [1, "always"],
+    /* Enforce location of semicolons */
+    "semi-style": [1, "last"],
+    /* enforce consistent spacing before and after semicolons */
     "semi-spacing": 1,
     /* Import Sorting */
     "sort-imports": [1, {"ignoreCase" : true}],
+    /* enforce consistent spacing before function definition opening parenthesis */
     "space-before-function-paren": [1, "never"],
+    /* enforce consistent spacing inside parentheses */
     "space-in-parens": [1, "always"],
+    /* require spacing around infix operators */
     "space-infix-ops": [1, {"int32Hint": false} ],
+    /* enforce spacing around colons of switch statements */
+    "switch-colon-spacing": 1,
     "strict": [1, "never"],
+    /* require or disallow Unicode byte order mark (BOM) */
+    "unicode-bom": [1, "never"],
   },
   settings: {
     "import/resolver": {

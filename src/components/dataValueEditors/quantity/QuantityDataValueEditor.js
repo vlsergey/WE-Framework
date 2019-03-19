@@ -120,8 +120,8 @@ export default class QuantityDataValueEditor extends PureComponent {
                 onValueChange: this.handleValueChange,
                 value,
               } )}
-              { propertyDescription.quantityUnitEnabled &&
-                <td className={styles.unitselect}>
+              { propertyDescription.quantityUnitEnabled
+                && <td className={styles.unitselect}>
                   <UnitSelect
                     onValueChange={this.handleValueChange}
                     propertyDescription={propertyDescription}

@@ -42,13 +42,13 @@ export default class SnakTypeSelect extends PureComponent {
       {...other}>
       <option
         title={i18n.snakTypeTitle.value}
-        value='value'>{i18n.snakType.value}</option>
+        value="value">{i18n.snakType.value}</option>
       <option
         title={i18n.snakTypeTitle.somevalue}
-        value='somevalue'>{i18n.snakType.somevalue}</option>
+        value="somevalue">{i18n.snakType.somevalue}</option>
       <option
         title={i18n.snakTypeTitle.novalue}
-        value='novalue'>{i18n.snakType.novalue}</option>
+        value="novalue">{i18n.snakType.novalue}</option>
     </select>;
   }
 }

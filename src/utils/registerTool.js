@@ -154,12 +154,12 @@ export default function registerTool( tool ) {
 
   toolsToAdd[ tool.position ] = tool;
 
-  if ( tool.classic &&
-    ( [ 'edit', 'submit' ].indexOf( mw.config.get( 'wgAction' ) ) !== -1 &&
-      mw.user.options.get( 'visualeditor-newwikitext' ) != 1 &&
-      mw.user.options.get( 'usebetatoolbar' ) == 1
-    ) &&
-    !addClassicToolbarToolsHooked
+  if ( tool.classic
+    && ( [ 'edit', 'submit' ].indexOf( mw.config.get( 'wgAction' ) ) !== -1
+      && mw.user.options.get( 'visualeditor-newwikitext' ) != 1
+      && mw.user.options.get( 'usebetatoolbar' ) == 1
+    )
+    && !addClassicToolbarToolsHooked
   ) {
     $.when(
       mw.loader.using( [ 'ext.wikiEditor' ] ),

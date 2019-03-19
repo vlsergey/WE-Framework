@@ -5,7 +5,7 @@ export function regexpGetHtmlPattern( regexp ) {
     source = '.*' + source;
   }
   if ( source.substr( source.length - 1, 1 ) !== '$' ) {
-    source = source + '.*';
+    source += '.*';
   }
   return source;
 }

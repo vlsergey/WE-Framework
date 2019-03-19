@@ -133,8 +133,8 @@ export default class ClaimQualifiersTable extends PureComponent {
         removeButtonConfirmMessageF={this.removeButtonConfirmMessageF}
         removeButtonLabel={i18n.buttonLabelRemoveQualifier}
         snaksMap={qualifiers} />
-      { addQualifierMode === 'SELECT' &&
-        <tbody className={styles.wef_claim_new_qualifier}>
+      { addQualifierMode === 'SELECT'
+        && <tbody className={styles.wef_claim_new_qualifier}>
           <AnimatedTr>
             <th colSpan={2}>
               <NewQualifierSelect
@@ -145,8 +145,8 @@ export default class ClaimQualifiersTable extends PureComponent {
             <td />
           </AnimatedTr>
         </tbody>}
-      { addQualifierMode === 'AUTOSUGGEST' &&
-        <tbody className={styles.wef_claim_new_qualifier}>
+      { addQualifierMode === 'AUTOSUGGEST'
+        && <tbody className={styles.wef_claim_new_qualifier}>
           <AnimatedTr>
             <th colSpan={2}>
               <NewQualifierAutosuggest onSelect={this.handleQualifierAdd} />

@@ -36,9 +36,11 @@ export default class BoundariesValueEditor extends PureComponent {
   handleAmountChange( event ) {
     this.handleFieldChange( 'amount', event );
   }
+
   handleLowerBoundChange( event ) {
     this.handleFieldChange( 'lowerBound', event );
   }
+
   handleUpperBoundChange( event ) {
     this.handleFieldChange( 'upperBound', event );
   }
