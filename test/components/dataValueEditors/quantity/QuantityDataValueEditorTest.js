@@ -13,6 +13,7 @@ import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from '../TableTBodyTr';
 import thunk from 'redux-thunk';
+import ValueHolder from "../../../ValueHolder";
 
 const NOOP = () => {};
 
@@ -133,21 +134,18 @@ describe( 'components/dataValueEditors/quantity', () => {
     } );
 
     it ( 'with compatible values can be changed between plusMinus and boundaries', () => {
-      const datavalue = { datatype: 'quantity', value: {} };
-      const onDataValueChange = newDataValue => {
-        Object.keys( datavalue.value ).forEach( key => delete datavalue.value[ key ] );
-        Object.keys( newDataValue.value ).forEach( key => datavalue.value[ key ] = newDataValue.value[ key ] );
-      };
-
       const rendered = ReactTestUtils.renderIntoDocument( <Provider store={store}>
-        <TableTBodyTr>
-          <QuantityDataValueEditor
-            datavalue={datavalue}
-            onDataValueChange={onDataValueChange}
-            propertyDescription={p1971Description} />
-        </TableTBodyTr>
+        <ValueHolder initialValue={{ type: 'quantity', value: {} }}>{ (value, onChange) =>
+          <TableTBodyTr>
+            <QuantityDataValueEditor
+              datavalue={value}
+              onDataValueChange={onChange}
+              propertyDescription={p1971Description} />
+          </TableTBodyTr>
+        }</ValueHolder>
       </Provider> );
       assert.ok( rendered );
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );
 
       // switch to plus-minus
       const modeSelect = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'select' );
@@ -158,12 +156,12 @@ describe( 'components/dataValueEditors/quantity', () => {
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( rendered, 'input' );
         assert.equal( inputs.length, 2 );
         inputs[ 0 ].value = '1'; ReactTestUtils.Simulate.change( inputs[ 0 ] );
-        assert.deepEqual( datavalue,
-          { datatype: 'quantity', value: { amount: '1', unit: '1' } } );
+        assert.deepEqual( valueHolder.getValue(),
+          { type: 'quantity', value: { amount: '1', unit: '1' } } );
 
         inputs[ 1 ].value = '2'; ReactTestUtils.Simulate.change( inputs[ 1 ] );
-        assert.deepEqual( datavalue,
-          { datatype: 'quantity', value: { lowerBound: '-1', amount: '1', upperBound: '3', unit: '1' } } );
+        assert.deepEqual( valueHolder.getValue(),
+          { type: 'quantity', value: { lowerBound: '-1', amount: '1', upperBound: '3', unit: '1' } } );
       }
 
       // change to boundaries
@@ -173,16 +171,16 @@ describe( 'components/dataValueEditors/quantity', () => {
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( rendered, 'input' );
         assert.equal( inputs.length, 3 );
         inputs.forEach( input => ReactTestUtils.Simulate.change( input ) );
-        assert.deepEqual( datavalue,
-          { datatype: 'quantity', value: { lowerBound: '-1', amount: '1', upperBound: '3', unit: '1' } } );
+        assert.deepEqual( valueHolder.getValue(),
+          { type: 'quantity', value: { lowerBound: '-1', amount: '1', upperBound: '3', unit: '1' } } );
 
         // increase boundaries, thus allowing to switch back
         inputs[ 0 ].value = '-2'; ReactTestUtils.Simulate.change( inputs[ 0 ] );
-        assert.deepEqual( datavalue,
-          { datatype: 'quantity', value: { lowerBound: '-2', amount: '1', upperBound: '3', unit: '1' } } );
+        assert.deepEqual( valueHolder.getValue(),
+          { type: 'quantity', value: { lowerBound: '-2', amount: '1', upperBound: '3', unit: '1' } } );
         inputs[ 2 ].value = '+4'; ReactTestUtils.Simulate.change( inputs[ 2 ] );
-        assert.deepEqual( datavalue,
-          { datatype: 'quantity', value: { lowerBound: '-2', amount: '1', upperBound: '+4', unit: '1' } } );
+        assert.deepEqual( valueHolder.getValue(),
+          { type: 'quantity', value: { lowerBound: '-2', amount: '1', upperBound: '+4', unit: '1' } } );
       }
 
     } );

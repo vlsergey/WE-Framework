@@ -3,6 +3,7 @@ import BoundariesValueEditor from 'components/dataValueEditors/quantity/Boundari
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from '../TableTBodyTr';
+import ValueHolder from "../../../ValueHolder";
 
 const NOOP = () => {};
 
@@ -26,17 +27,15 @@ describe( 'components/dataValueEditors/quantity', () => {
     } );
 
     it( 'can be changed', () => {
-      const value = {};
-      const onValueChange = newValue => {
-        Object.keys( value ).forEach( key => delete value[ key ] );
-        Object.keys( newValue ).forEach( key => value[ key ] = newValue[ key ] );
-      };
       const rendered = ReactTestUtils.renderIntoDocument(
-        <TableTBodyTr>
-          <BoundariesValueEditor onValueChange={onValueChange} value={value} />
-        </TableTBodyTr>
+        <ValueHolder initialValue={{}}>{ (value, onChange) =>
+          <TableTBodyTr>
+            <BoundariesValueEditor onValueChange={onChange} value={value} />
+          </TableTBodyTr>
+        }</ValueHolder>
       );
       assert.ok( rendered );
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );
 
       const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( rendered, 'input' );
       assert.equal( inputs.length, 3 );
@@ -48,7 +47,7 @@ describe( 'components/dataValueEditors/quantity', () => {
       inputs[ 2 ].value = '3';
       ReactTestUtils.Simulate.change( inputs[ 2 ] );
 
-      assert.deepEqual( value, { lowerBound: '1', amount: '2', upperBound: '3' } );
+      assert.deepEqual( valueHolder.getValue(), { lowerBound: '1', amount: '2', upperBound: '3' } );
     } );
 
   } );

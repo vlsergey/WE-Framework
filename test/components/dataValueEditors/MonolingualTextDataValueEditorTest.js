@@ -5,6 +5,7 @@ import PropertyDescription from 'core/PropertyDescription';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from './TableTBodyTr';
+import ValueHolder from "../../ValueHolder";
 
 const NOOP = () => {};
 
@@ -39,18 +40,18 @@ describe( 'components/dataValueEditors', () => {
     } );
 
     it ( 'non-existing can be changed via keyboard', () => {
-      let datavalue = undefined;
-      const onDataValueChange = newDataValue => { datavalue = newDataValue; };
-
       const rendered = ReactTestUtils.renderIntoDocument(
-        <TableTBodyTr>
-          <MonolingualTextDataValueEditor
-            datavalue={datavalue}
-            onDataValueChange={onDataValueChange}
-            propertyDescription={p18Description} />
-        </TableTBodyTr>
+        <ValueHolder>{ (value, onChange) =>
+          <TableTBodyTr>
+            <MonolingualTextDataValueEditor
+              datavalue={value}
+              onDataValueChange={onChange}
+              propertyDescription={p18Description} />
+          </TableTBodyTr>
+        }</ValueHolder>
       );
       assert.ok( rendered );
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );
 
       const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( rendered, 'input' );
       assert.ok( inputs );
@@ -58,32 +59,32 @@ describe( 'components/dataValueEditors', () => {
 
       inputs[ 0 ].value = 'ru';
       ReactTestUtils.Simulate.change( inputs[ 0 ] );
-      assert.equal( datavalue.value.language, 'ru' );
+      assert.equal( valueHolder.getValue().value.language, 'ru' );
 
       inputs[ 1 ].value = 'NewTestText';
       ReactTestUtils.Simulate.change( inputs[ 1 ] );
-      assert.equal( datavalue.value.text, 'NewTestText' );
+      assert.equal( valueHolder.getValue().value.text, 'NewTestText' );
     } );
 
     it ( 'existing value can be changed via keyboard', () => {
-      let datavalue = {
-        value: {
-          language: 'en',
-          text: 'TestText',
-        },
-        type: 'monolingualtext',
-      };
-      const onDataValueChange = newDataValue => { datavalue = newDataValue; };
-
       const rendered = ReactTestUtils.renderIntoDocument(
-        <TableTBodyTr>
-          <MonolingualTextDataValueEditor
-            datavalue={datavalue}
-            onDataValueChange={onDataValueChange}
-            propertyDescription={p18Description} />
-        </TableTBodyTr>
+        <ValueHolder initialValue={{
+          value: {
+            language: 'en',
+            text: 'TestText',
+          },
+          type: 'monolingualtext',
+        }}>{ (value, onChange) =>
+          <TableTBodyTr>
+            <MonolingualTextDataValueEditor
+              datavalue={value}
+              onDataValueChange={onChange}
+              propertyDescription={p18Description} />
+          </TableTBodyTr>
+        }</ValueHolder>
       );
       assert.ok( rendered );
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );
 
       const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( rendered, 'input' );
       assert.ok( inputs );
@@ -91,11 +92,11 @@ describe( 'components/dataValueEditors', () => {
 
       inputs[ 0 ].value = 'ru';
       ReactTestUtils.Simulate.change( inputs[ 0 ] );
-      assert.equal( datavalue.value.language, 'ru' );
+      assert.equal( valueHolder.getValue().value.language, 'ru' );
 
       inputs[ 1 ].value = 'NewTestText';
       ReactTestUtils.Simulate.change( inputs[ 1 ] );
-      assert.equal( datavalue.value.text, 'NewTestText' );
+      assert.equal( valueHolder.getValue().value.text, 'NewTestText' );
     } );
 
   } );

@@ -12,6 +12,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 import Suggestion from 'components/entityField/Suggestion';
 import TableTBodyTr from '../TableTBodyTr';
 import thunk from 'redux-thunk';
+import ValueHolder from "../../../ValueHolder";
 import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
 const NOOP = () => {};
@@ -27,23 +28,20 @@ describe( 'components/dataValueEditors', () => {
     const p31Description = new PropertyDescription( P31 );
 
     it ( 'can be rendered with empty datavalue for property with limited options and can be changed', () => {
-      const datavalue = {};
-      const onDataValueChange = newDataValue => {
-        Object.keys( datavalue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
-        Object.keys( newDataValue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
-      };
-
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <TableTBodyTr>
-            <WikibaseItemDataValueEditor
-              datavalue={datavalue}
-              onDataValueChange={onDataValueChange}
-              propertyDescription={p21Description} />
-          </TableTBodyTr>
+          <ValueHolder initialValue={{}}>{( value, onChange ) =>
+            <TableTBodyTr>
+                <WikibaseItemDataValueEditor
+                  datavalue={value}
+                  onDataValueChange={onChange}
+                  propertyDescription={p21Description} />
+            </TableTBodyTr>
+          }</ValueHolder>
         </Provider>
       );
       assert.ok( rendered );
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );
 
       const select = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'select' );
       assert.ok( select );
@@ -51,11 +49,11 @@ describe( 'components/dataValueEditors', () => {
 
       select.value = 'Q6581072';
       ReactTestUtils.Simulate.change( select );
-      assert( datavalue.value.id, 'Q6581072' );
+      assert( valueHolder.getValue().value.id, 'Q6581072' );
     } );
 
     it ( 'can be rendered with non-empty datavalue for property with limited options and can be changed', () => {
-      const datavalue = {
+      const initialDataValue = {
         value: {
           'entity-type': 'item',
           'numeric-id': 6581072,
@@ -63,22 +61,21 @@ describe( 'components/dataValueEditors', () => {
         },
         type: 'wikibase-entityid',
       };
-      const onDataValueChange = newDataValue => {
-        Object.keys( datavalue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
-        Object.keys( newDataValue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
-      };
 
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <TableTBodyTr>
-            <WikibaseItemDataValueEditor
-              datavalue={datavalue}
-              onDataValueChange={onDataValueChange}
-              propertyDescription={p21Description} />
-          </TableTBodyTr>
+          <ValueHolder initialValue={initialDataValue}>{( value, onChange ) =>
+            <TableTBodyTr>
+              <WikibaseItemDataValueEditor
+                datavalue={value}
+                onDataValueChange={onChange}
+                propertyDescription={p21Description} />
+            </TableTBodyTr>
+          }</ValueHolder>
         </Provider>
       );
       assert.ok( rendered );
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );
 
       const select = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'select' );
       assert.ok( select );
@@ -86,7 +83,7 @@ describe( 'components/dataValueEditors', () => {
 
       select.value = 'Q6581097';
       ReactTestUtils.Simulate.change( select );
-      assert( datavalue.value.id, 'Q6581097' );
+      assert( valueHolder.getValue().value.id, 'Q6581097' );
     } );
 
     it ( 'can be rendered with empty datavalue for generic property', () => {

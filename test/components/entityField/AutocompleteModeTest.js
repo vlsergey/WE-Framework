@@ -1,17 +1,19 @@
 import { applyMiddleware, createStore } from 'redux';
+import React, { Component } from 'react';
 import assert from 'assert';
 import AutocompleteMode from 'components/entityField/AutocompleteMode';
 import buildReducers from 'core/reducers';
+import expect from "expect";
 import LabelDescription from 'caches/LabelDescription';
-import P21 from '../../../entities/P21';
+import P21 from '../../entities/P21';
 import PropertyDescription from 'core/PropertyDescription';
 import { Provider } from 'react-redux';
-import Q1367759 from '../../../entities/Q1367759';
-import Q752285 from '../../../entities/Q752285';
-import React from 'react';
+import Q1367759 from '../../entities/Q1367759';
+import Q752285 from '../../entities/Q752285';
 import ReactTestUtils from 'react-dom/test-utils';
 import Suggestion from 'components/entityField/Suggestion';
 import thunk from 'redux-thunk';
+import ValueHolder from "../../ValueHolder";
 import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 import WikibaseItemInput from 'components/entityField/WikibaseItemInput';
 
@@ -25,23 +27,6 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
   describe( 'AutocompleteMode', () => {
 
     it ( 'Correctly handles click on item after copy-paste', () => {
-      const datavalue = {};
-      const onDataValueChange = newDataValue => {
-        Object.keys( datavalue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
-        Object.keys( newDataValue ).forEach( key => datavalue[ key ] = newDataValue[ key ] );
-      };
-      const onSelect = entityId => {
-        onDataValueChange( {
-          ...datavalue,
-          value: {
-            'entity-type': 'item',
-            'numeric-id': entityId.substr( 1 ),
-            'id': entityId,
-          },
-          type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
-        } );
-      };
-
       function testSuggestionsProvider( value ) {
         if ( value == 'Q752285' ) {
           return [ 'Q752285' ];
@@ -51,15 +36,16 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
 
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <AutocompleteMode
-            datavalue={datavalue}
-            onSelect={onSelect}
-            oneOf={[]}
-            propertyDescription={p21Description}
-            testSuggestionsProvider={testSuggestionsProvider} />
+          <ValueHolder>{ (value, onChange) =>
+            <AutocompleteMode
+              value={value}
+              onSelect={onChange}
+              testSuggestionsProvider={testSuggestionsProvider} />
+          }</ValueHolder>
         </Provider>
       );
       assert.ok( rendered );
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );
 
       const input = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'input' );
       assert.ok( input );
@@ -67,16 +53,17 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
       input.focus();
       ReactTestUtils.Simulate.focus( input );
 
+      // manual enter
       input.value = 'Q752285';
       ReactTestUtils.Simulate.change( input );
-      assert.equal( datavalue.value.id, 'Q752285' );
+      assert.equal( valueHolder.getValue(), 'Q752285' );
 
       const suggestion = ReactTestUtils.findRenderedComponentWithType( rendered, Suggestion );
       assert.equal( suggestion.props.entityId, 'Q752285' );
 
       const suggestionTable = ReactTestUtils.findRenderedDOMComponentWithTag( suggestion, 'table' );
       ReactTestUtils.Simulate.click( suggestionTable );
-      assert.equal( datavalue.value.id, 'Q752285' );
+      assert.equal( valueHolder.getValue(), 'Q752285' );
 
       const wikibaseItemInput = ReactTestUtils.findRenderedComponentWithType( rendered, WikibaseItemInput );
 
@@ -87,12 +74,12 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
         },
       } );
 
-      // dirty value without label
+      // cursor inside input: dirty value without label
       assert.equal( input.value, 'Q752285' );
       assert.equal( wikibaseItemInput.state.focused, true );
 
-
-      // must be with label
+      // leaving input: must be with label
+      console.log( "TEST: leaving input: must be with label");
       input.blur();
       ReactTestUtils.Simulate.blur( input );
       assert.equal( wikibaseItemInput.state.focused, false );

@@ -113,16 +113,17 @@ class AutocompleteMode extends Component {
   }
 
   render() {
-    const params = {
+    const inputProps = {
       type: 'text',
     };
 
-    params.onChange = this.handleChange;
-    params.value = this.state.textValue;
+    inputProps.entityId = this.props.value || null;
+    inputProps.onChange = this.handleChange;
+    inputProps.value = this.state.textValue;
 
     return <Autosuggest
       getSuggestionValue={this.getSuggestionValue}
-      inputProps={params}
+      inputProps={inputProps}
       onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
       onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
       renderInputComponent={this.renderInput}
@@ -137,7 +138,6 @@ class AutocompleteMode extends Component {
 
     return <LocalizedWikibaseItemInput
       {...etc}
-      entityId={this.props.value}
       inputRef={ref}
       onChange={onChange}
       value={this.state.textValue}
