@@ -86,6 +86,35 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
       assert.equal( input.value, 'Q752285' );
 
     } );
-  } );
 
+    it ( 'Correctly handles copypaste of Wikidata URL', () => {
+      function testSuggestionsProvider() {
+        return [];
+      }
+
+      const rendered = ReactTestUtils.renderIntoDocument(
+        <Provider store={store}>
+          <ValueHolder initialValue="">{ ( value, onChange ) =>
+            <AutocompleteMode
+              onSelect={onChange}
+              testSuggestionsProvider={testSuggestionsProvider}
+              value={value} />
+          }</ValueHolder>
+        </Provider>
+      );
+      assert.ok( rendered );
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder );
+
+      const input = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'input' );
+      assert.ok( input );
+
+      input.focus();
+      ReactTestUtils.Simulate.focus( input );
+
+      // copypaste
+      input.value = 'http://www.wikidata.org/wiki/Q752285';
+      ReactTestUtils.Simulate.change( input );
+      assert.equal( valueHolder.getValue(), '' );
+    } );
+  } );
 } );

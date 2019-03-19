@@ -95,7 +95,7 @@ class AutocompleteMode extends Component {
       this.setState( {
         textValue: newValue,
       } );
-      if ( /Q\d+/.test( newValue.trim() ) ) {
+      if ( /^Q\d+$/.test( newValue.trim() ) ) {
         onSelect( newValue.trim() );
       }
       break;
