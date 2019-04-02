@@ -28,8 +28,7 @@ export default class EditorLinks extends PureComponent {
         if ( entityId ) {
           this.queryClassHierarchy( entityId );
         }
-      }
-      );
+      } );
     }
   }
 

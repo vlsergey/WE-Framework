@@ -1,15 +1,3 @@
-/*Form level*/
-
-/* table are used for layout*/
-.wef_dialog table, .wef_dialog tbody, .wef_dialog tr,  .wef_dialog th, .wef_dialog td {
-	padding: 0;
-	margin: 0;
-	border: 0;
-}
-
-.wef_dialog input {
-	box-sizing: border-box;
-}
 
 /* Labels editor */
 .wef_labels_description_area {

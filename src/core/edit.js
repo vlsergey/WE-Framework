@@ -113,7 +113,8 @@ export function onEditorLinkClick( editorDescription, entityId ) {
       },
     };
 
-    if ( editorDescription.newEntityInstanceOf ) {
+    const instanceOf = editorDescription.newEntityInstanceOf;
+    if ( instanceOf ) {
       newEntity.claims = {
         P31: [ {
           mainsnak: {
@@ -123,8 +124,8 @@ export function onEditorLinkClick( editorDescription, entityId ) {
             datavalue: {
               value: {
                 'entity-type': 'item',
-                'numeric-id': editorDescription.newEntityInstanceOf.substr( 1 ),
-                'id': editorDescription.newEntityInstanceOf,
+                'numeric-id': instanceOf.substr( 1 ),
+                'id': instanceOf,
               },
               type: 'wikibase-entityid',
             },

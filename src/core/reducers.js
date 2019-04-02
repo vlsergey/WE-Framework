@@ -1,9 +1,9 @@
 import cacheReducers from 'caches/reducers';
 import { combineReducers } from 'redux';
+import deepEqual from 'deep-equal';
 import expect from 'expect';
 import generateRandomString from 'utils/generateRandomString';
 import { newStatementClaim } from 'model/Shapes';
-import PropertyDescription from './PropertyDescription';
 
 const EMPTY_OBJECT = {};
 
@@ -37,13 +37,13 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   }
 
   case 'CLAIM_ADD': {
-    const { claim, propertyDescription } = action;
-    expect( propertyDescription ).toBeA( PropertyDescription );
-    const propertyId = propertyDescription.id;
+    const { claim, propertyId, datatype } = action;
+    expect( propertyId ).toBeA( 'string' );
+    expect( datatype ).toBeA( 'string' );
 
     const claims = entity.claims || EMPTY_OBJECT;
-    const existingClaims = claims[ propertyDescription.id ];
-    let newClaim = newStatementClaim( propertyDescription );
+    const existingClaims = claims[ propertyId ];
+    let newClaim = newStatementClaim( propertyId, datatype );
     newClaim = claim ? { ...newClaim, ...claim } : newClaim;
 
     if ( existingClaims ) {
@@ -104,14 +104,26 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   // action used by enchanced datavalue editors (like ISBN or VIAF)
   // used to fill OTHER („sister“) properties with values canclulated from current claim
   // (or obtained from external source using current claim, like BNF from VIAF record)
+  // also can be used by importers
+  // normalization prevents duplication of values
   case 'CLAIMS_FILL': {
-    const { propertyId, normalizeF, newValue } = action;
-    expect( propertyId ).toBeA( 'string' );
+    const { property, datatype, datavalue, normalizeF } = action;
+    expect( property ).toBeA( 'string' );
+    expect( datatype ).toBeA( 'string' );
+    expect( datavalue ).toBeA( 'object' );
+    expect( datavalue.type ).toBeA( 'string' );
     expect( normalizeF ).toBeA( 'function' );
-    expect( newValue ).toBeA( 'string' ); // only external-id values are supported so far
+
+    if ( datavalue.type === 'string' ) {
+      expect( datavalue.value ).toBeA( 'string' );
+    } else if ( datavalue.type === 'monolingualtext' ) {
+      expect( datavalue.value ).toBeA( 'object' );
+      expect( datavalue.value.language ).toBeA( 'string' );
+      expect( datavalue.value.text ).toBeA( 'string' );
+    }
 
     const claims = entity.claims || EMPTY_OBJECT;
-    const existingClaims = claims[ propertyId ] || [];
+    const existingClaims = claims[ property ] || [];
 
     // let's try to find existing claims that already have this new value
     let foundAndReplaced = false;
@@ -120,12 +132,12 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
         if ( !claim.mainsnak
             || !claim.mainsnak.datavalue
             || !claim.mainsnak.datavalue.value
-            || claim.mainsnak.datatype !== 'external-id'
-            || claim.mainsnak.datavalue.type !== 'string' )
+            || claim.mainsnak.datatype !== datatype
+            || claim.mainsnak.datavalue.type !== datavalue.type )
           return claim;
         const oldValue = claim.mainsnak.datavalue.value;
         const normalized = normalizeF( oldValue );
-        if ( normalized !== newValue ) return claim;
+        if ( !deepEqual( normalized, datavalue.value ) ) return claim;
 
         foundAndReplaced = true;
         return {
@@ -145,13 +157,10 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
       newClaims.push( {
         mainsnak: {
           snaktype: 'value',
-          property: propertyId,
+          property,
           hash: generateRandomString(),
-          datavalue: {
-            value: newValue,
-            type: 'string',
-          },
-          datatype: 'external-id',
+          datavalue,
+          datatype,
         },
         type: 'statement',
         id: generateRandomString(),
@@ -163,7 +172,7 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
       ...entity,
       claims: {
         ...entity.claims,
-        [ propertyId ]: newClaims,
+        [ property ]: newClaims,
       },
     };
   }

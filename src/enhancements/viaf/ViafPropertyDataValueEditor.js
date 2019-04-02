@@ -145,7 +145,13 @@ class ViafPropertyDataValueEditor extends ExternalIdDataValueEditor {
 }
 
 const mapDispatchToProps = dispatch => ( {
-  onClaimsFill: ( propertyId, normalizeF, newValue ) => dispatch( { type: 'CLAIMS_FILL', propertyId, normalizeF, newValue } ),
+  onClaimsFill: ( property, normalizeF, newValue ) => dispatch( {
+    type: 'CLAIMS_FILL',
+    property,
+    datatype: 'external-id',
+    datavalue: { type: 'string', value: newValue },
+    normalizeF,
+  } ),
 } );
 
 const ViafPropertyDataValueEditorConnected = connect( undefined, mapDispatchToProps )( ViafPropertyDataValueEditor );

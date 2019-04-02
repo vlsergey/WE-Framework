@@ -1,5 +1,4 @@
 import expect from 'expect';
-import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 
 export const Claim = {
@@ -8,16 +7,17 @@ export const Claim = {
 
 let claimIdCounters = 0;
 
-export function newStatementClaim( propertyDescription ) {
-  expect( propertyDescription ).toBeA( PropertyDescription );
+export function newStatementClaim( propertyId, datatype ) {
+  expect( propertyId ).toBeA( 'string' );
+  expect( datatype ).toBeA( 'string' );
 
   return {
     id: 'new#' + claimIdCounters++,
     mainsnak: {
       ...emptySnak(),
       snaktype: 'value',
-      property: propertyDescription.id,
-      datatype: propertyDescription.datatype,
+      property: propertyId,
+      datatype,
     },
     rank: 'normal',
     type: 'statement',

@@ -28,7 +28,13 @@ class Isbn13PropertyDataValueEditor extends ExternalIdDataValueEditor {
 }
 
 const mapDispatchToProps = dispatch => ( {
-  onClaimsFill: ( normalizeF, newValue ) => dispatch( { type: 'CLAIMS_FILL', propertyId: 'P957', normalizeF, newValue } ),
+  onClaimsFill: ( normalizeF, newValue ) => dispatch( {
+    type: 'CLAIMS_FILL',
+    property: 'P957',
+    datatype: 'external-id',
+    datavalue: { type: 'string', value: newValue },
+    normalizeF,
+  } ),
 } );
 
 const Isbn13PropertyDataValueEditorConnected = connect( undefined, mapDispatchToProps )( Isbn13PropertyDataValueEditor );

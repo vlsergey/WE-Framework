@@ -15,11 +15,13 @@ const en = {
   confirmDeleteClaim: 'Remove the value of property «{label}»?',
 
   dialogButtonUpdateLabelsText: 'Update labels',
-  dialogButtonUpdateLabelsLabel: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
+  dialogButtonUpdateLabelsTitle: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
+  dialogButtonImportDataText: 'Import data…',
+  dialogButtonImportDataTitle: 'Try different utils to load data from article text or external sources',
   dialogButtonSaveText: 'Save',
-  dialogButtonSaveLabel: 'Close the dialog and save all changes to Wikidata',
+  dialogButtonSaveTitle: 'Close the dialog and save all changes to Wikidata',
   dialogButtonCancelText: 'Cancel',
-  dialogButtonCancelLabel: 'Close the dialog and discard all changes (do not save)',
+  dialogButtonCancelTitle: 'Close the dialog and discard all changes (do not save)',
 
   dialogAnalyzeChangesTitle: 'Analyze changes...',
   dialogSaveChangesTitle: 'Saving changes to Wikidata...',
@@ -124,11 +126,13 @@ const ru = {
   confirmDeleteClaim: 'Удалить значение свойства «{label}»?',
 
   dialogButtonUpdateLabelsText: 'Обновить названия',
-  dialogButtonUpdateLabelsLabel: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
+  dialogButtonUpdateLabelsTitle: 'Заново загрузить названия полей, квалификаторов и объектов с Викиданных',
+  dialogButtonImportDataText: 'Импортировать…',
+  dialogButtonImportDataTitle: 'Попробовать различные утилиты для импортирования данных из текста статьи или из внешних источников',
   dialogButtonSaveText: 'Сохранить',
-  dialogButtonSaveLabel: 'Закрыть окно и сохранить все изменения в Викиданных',
+  dialogButtonSaveTitle: 'Закрыть окно и сохранить все изменения в Викиданных',
   dialogButtonCancelText: 'Отмена',
-  dialogButtonCancelLabel: 'Закрыть окно и отменить все изменения (не сохранять)',
+  dialogButtonCancelTitle: 'Закрыть окно и отменить все изменения (не сохранять)',
 
   dialogAnalyzeChangesTitle: 'Анализ изменений...',
   dialogSaveChangesTitle: 'Сохранение изменений на Викиданных',

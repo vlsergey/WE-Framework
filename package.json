@@ -61,13 +61,13 @@
     "url-loader": "^1.1.2",
     "webpack": "^4.29.0",
     "webpack-cli": "^3.3.0",
-    "webpack-serve": "^3.0.0-beta.3",
+    "webpack-dev-server": "^3.2.1",
     "wikitext-dom": "0.0.7"
   },
   "scripts": {
     "eslint:check": "eslint webpack.config.js src/**/*.js test/**/*.js",
     "eslint:fix": "eslint --fix webpack.config.js src/**/*.js test/**/*.js",
-    "serve": "webpack-serve --no-clipboard",
+    "serve": "webpack-dev-server",
     "deploy": "webpack -p && eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js && node ./dist/deploy-to-wikipedia.out.js",
     "test": "karma start karma.conf.js --single-run",
     "test:watch": "karma start karma.conf.js --no-single-run",

@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import DialogWithTabs from 'components/formbuilders/DialogWithTabs';
 import { EditorShape } from 'components/formbuilders/FormShapes';
 import i18n from './core.i18n';
+import ImportDataDialog from 'enhancements/importers/ImportDataDialog';
 import PropTypes from 'prop-types';
-import styles from './core.css';
+import styles from './EditorApp.css';
 
 class EditorApp extends Component {
 
@@ -20,8 +21,14 @@ class EditorApp extends Component {
   constructor() {
     super( ...arguments );
 
+    this.state = {
+      ...this.state,
+      dialogOpen: false,
+    };
+
     this.dialogRef = React.createRef();
     this.handleCloseClick = this.handleCloseClick.bind( this );
+    this.triggerImportDataDialogOpen = this.triggerImportDataDialogOpen.bind( this );
   }
 
   handleCloseClick() {
@@ -32,14 +39,25 @@ class EditorApp extends Component {
     return false;
   }
 
+  triggerImportDataDialogOpen() {
+    this.setState( state => ( { ...state, dialogOpen: !state.dialogOpen } ) );
+  }
+
   render() {
     const { description, closeWithoutSave, saveAndClose, resolve, reject } = this.props;
 
     const buttons = [];
 
     buttons.push( {
+      class: styles.importDataButton,
+      text: i18n.dialogButtonImportDataText,
+      title: i18n.dialogButtonImportDataTitle,
+      click: this.triggerImportDataDialogOpen,
+    } );
+
+    buttons.push( {
       text: i18n.dialogButtonSaveText,
-      label: i18n.dialogButtonSaveLabel,
+      title: i18n.dialogButtonSaveTitle,
       click: () => {
         saveAndClose( resolve, reject );
       },
@@ -47,20 +65,25 @@ class EditorApp extends Component {
 
     buttons.push( {
       text: i18n.dialogButtonCancelText,
-      label: i18n.dialogButtonCancelLabel,
+      title: i18n.dialogButtonCancelTitle,
       click() {
         closeWithoutSave( reject );
       },
     } );
 
-    return <DialogWithTabs
-      buttons={buttons}
-      className={styles.wef_dialog}
-      minWidth={950}
-      onBeforeClose={this.handleCloseClick}
-      ref={this.dialogRef}
-      tabs={description.tabs}
-      title={description.dialogTitle} />;
+    return [
+      <DialogWithTabs
+        buttons={buttons}
+        className={styles.wef_dialog}
+        key="editorDialog"
+        minWidth={950}
+        onBeforeClose={this.handleCloseClick}
+        ref={this.dialogRef}
+        tabs={description.tabs}
+        title={description.dialogTitle} />,
+      this.state.dialogOpen
+        && <ImportDataDialog key="importDataDialog" onClose={this.triggerImportDataDialogOpen} />,
+    ];
   }
 
 }
