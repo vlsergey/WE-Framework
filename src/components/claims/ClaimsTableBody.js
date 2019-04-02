@@ -29,7 +29,7 @@ export default class ClaimsTableBody extends PureComponent {
 
     let children;
     if ( !claims || claims.length === 0 ) {
-      const newClaim = newStatementClaim( propertyDescription );
+      const newClaim = newStatementClaim( propertyDescription.id, propertyDescription.datatype );
       children = [ <ClaimsTableRows
         claim={newClaim}
         displayLabel={displayLabel}

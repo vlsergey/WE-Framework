@@ -51,10 +51,10 @@ const mapStateToProps = ( state, ownProps ) => ( {
 } );
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {
-  onClaimAdd: () => dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription } ),
+  onClaimAdd: () => dispatch( { type: 'CLAIM_ADD', propertyId: ownProps.propertyDescription.id, datatype: ownProps.propertyDescription.datatype } ),
   onClaimAddTwice: () => {
-    dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription } );
-    dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription } );
+    dispatch( { type: 'CLAIM_ADD', propertyId: ownProps.propertyDescription.id, datatype: ownProps.propertyDescription.datatype } );
+    dispatch( { type: 'CLAIM_ADD', propertyId: ownProps.propertyDescription.id, datatype: ownProps.propertyDescription.datatype } );
   },
   onClaimUpdate: claim => dispatch( { type: 'CLAIM_UPDATE', claim } ),
   onClaimDelete: claim => dispatch( { type: 'CLAIM_DELETE', claim } ),

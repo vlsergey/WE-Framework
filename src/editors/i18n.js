@@ -33,6 +33,10 @@ const en = {
   frbrWorkLinkText: 'FRBR Work',
   frbrWorkDialogTitle: 'FRBR Work data — WE-Framework',
 
+  legalInstrumentLinkText: 'Legal Act',
+  legalInstrumentDescription: 'Legan Instrument: executive orders, laws, court acts, etc.',
+  legalInstrumentDialogTitle: 'Legan Instrument — WE-Framework',
+
   movieLinkText: 'Movie',
   movieDescription: 'Animations and movies',
   movieDialogTitle: 'Animation and Movie  — WE-Framework',
@@ -95,6 +99,10 @@ const ru = {
   frbrWorkLinkText: 'FRBR работа',
   frbrWorkDialogTitle: 'Свойства работы (FRBR) — WE-Framework',
 
+  legalInstrumentLinkText: 'Норм. акт',
+  legalInstrumentDescription: 'Нормативные акты: указы, законы, постановления, судебные решения и пр.',
+  legalInstrumentDialogTitle: 'Нормативный акт — WE-Framework',
+
   movieLinkText: 'Фильм',
   movieDescription: 'Анимация и фильмы',
   movieDialogTitle: 'Анимация и фильм  — WE-Framework',
@@ -110,7 +118,7 @@ const ru = {
   taxonDialogTitle: 'Свойства таксона — WE-Framework',
 
   transInfraLinkText: 'Трансп. инфр.',
-  transInfraDescription: 'Транспортная инфраструктура',
+  transInfraDescription: 'Транспортная инфраструктура (аэропорты, вокзалы)',
   transInfraDialogTitle: 'Транспортная инфраструктура — WE-Framework',
 
 };

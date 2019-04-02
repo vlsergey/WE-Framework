@@ -32,7 +32,7 @@ export default class ClaimsWithQualifiersTable extends PureComponent {
     if ( !claims || claims.length === 0 ) {
       if ( !displayEmpty ) return null;
 
-      const newClaim = newStatementClaim( propertyDescription );
+      const newClaim = newStatementClaim( propertyDescription.id, propertyDescription.datatype );
       children = [ <ClaimsWithQualifiersTableRows
         claim={newClaim}
         columns={columns}
