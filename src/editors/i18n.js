@@ -15,6 +15,10 @@ const en = {
   articleDescription: 'Scientific and newspapers articles',
   articleDialogTitle: 'Scientific or newspaper article — WE-Framework',
 
+  awardLinkText: 'Award',
+  awardDescription: 'Awards',
+  awardDialogTitle: 'Scientific or newspaper article — WE-Framework',
+
   bookLinkText: 'Book / Journal',
   bookDescription: 'Printed and electronic books and journals',
   bookDialogTitle: 'Book or journal — WE-Framework',
@@ -80,6 +84,10 @@ const ru = {
   articleLinkText: 'Статья',
   articleDescription: 'Научные, газетные или журналные статьи',
   articleDialogTitle: 'Статья — WE-Framework',
+
+  awardLinkText: 'Награда',
+  awardDescription: 'Награды, звания, титулы',
+  awardDialogTitle: 'Награда или звание — WE-Framework',
 
   bookLinkText: 'Книга / журнал',
   bookDescription: 'Печатные и электронные книги, сборники и журналы',

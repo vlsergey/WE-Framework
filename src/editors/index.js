@@ -1,5 +1,6 @@
 import AdmEntityEditorTemplate from './AdmEntityEditorTemplate';
 import ArticleEditorTemplate from './ArticleEditorTemplate';
+import AwardEditorTemplate from './AwardEditorTemplate';
 import BookEditorTemplate from './BookEditorTemplate';
 import EntityEditorTemplate from './EntityEditorTemplate';
 import ExternalLinksEditorTemplate from './ExternalLinksEditorTemplate';
@@ -16,6 +17,7 @@ const allEditorTemplates = [];
 
 allEditorTemplates.push( AdmEntityEditorTemplate );
 allEditorTemplates.push( ArticleEditorTemplate );
+allEditorTemplates.push( AwardEditorTemplate );
 allEditorTemplates.push( BookEditorTemplate );
 allEditorTemplates.push( EntityEditorTemplate );
 allEditorTemplates.push( ExternalLinksEditorTemplate );
