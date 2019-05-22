@@ -1,43 +1,35 @@
+import doFillUtils from './doFillUtils';
 import { Template } from 'wikitext-dom';
 
-class Importer {
+const ITEM_ID_LEGAL_INSTRUMENT = 'Q1428955';
 
-  key = 'ExecutiveOrderofthePresidentofRussia';
+const SUPPORTED_TEMPLATE_NAME = 'Указ Президента РФ';
+
+const isTemplateSupported = tpl =>
+  ( tpl.getTitleAsString() || '' ).trim() === SUPPORTED_TEMPLATE_NAME;
+
+class Importer {
+  key = 'УказПрезидентаРФ';
+  label = '{{' + SUPPORTED_TEMPLATE_NAME + '}}';
 
   canImport( dom ) {
     return dom.getChildByClass( Template )
-      .filter( tpl => ( tpl.getTitleAsString() || '' ).trim() === 'Указ Президента РФ' )
+      .filter( isTemplateSupported )
       .length !== 0;
   }
 
   process( dispatch, dom ) {
 
-    const identityF = x => x;
     const itemValue = numericId => ( { 'entity-type': 'item', 'numeric-id': '' + numericId, 'id': 'Q' + numericId } );
-
-    const doFillClaim = ( property, datatype, datavalue, normalizeF ) =>
-      dispatch( { type: 'CLAIMS_FILL', property, datatype, datavalue, normalizeF } );
-
-    const doFillItemClaim = ( property, numericId, normilizeF ) =>
-      doFillClaim( property, 'wikibase-item', { type: 'wikibase-entityid', value: itemValue( numericId ) }, normilizeF || identityF );
-    const doFillMonolingualTextClaim = ( property, language, text ) =>
-      doFillClaim( property, 'monolingualtext', { type: 'monolingualtext', value: { language, text } }, identityF );
-    const doFillTimeClaim = ( property, time ) =>
-      doFillClaim( property, 'time', { type: 'time', value: {
-        time, timezone: 0, before: 0, after: 0, precision: 11,
-        calendarmodel: 'http://www.wikidata.org/entity/Q1985727',
-      } }, identityF );
-    const doFillStringClaim = ( property, value ) =>
-      doFillClaim( property, 'string', { type: 'string', value }, identityF );
-    const doFillUrlClaim = ( property, value ) =>
-      doFillClaim( property, 'url', { type: 'string', value }, identityF );
+    const { doFillItemClaim, doFillMonolingualTextClaim, doFillStringClaim, doFillTimeClaim, doFillUrlClaim } = doFillUtils( dispatch );
 
     dom.getChildByClass( Template )
-      .filter( tpl => ( tpl.getTitleAsString() || '' ).trim() === 'Указ Президента РФ' )
+      .filter( isTemplateSupported )
       .forEach( tpl => {
 
-        // type <= Executive Order of the President of Russia
-        doFillItemClaim( 'P31', 2061228, oldValue => oldValue && oldValue.id === 'Q1428955' ? itemValue( 2061228 ) : oldValue );
+        doFillItemClaim( 'P31', 2061228, oldValue =>
+          oldValue && oldValue.id === ITEM_ID_LEGAL_INSTRUMENT ? itemValue( 2061228 ) : oldValue );
+
         // language <= Russian
         doFillItemClaim( 'P407', 7737 );
         // author <= President of Russia
@@ -64,10 +56,8 @@ class Importer {
 
         const source = ( tpl.getValueByNameAsString( 'ИСТОЧНИК' ) || '' ).trim();
         if ( source && source.startsWith( 'http' ) ) doFillUrlClaim( 'P953', source );
-
       } );
   }
-
 }
 
 const instance = new Importer();

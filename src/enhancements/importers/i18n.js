@@ -6,8 +6,6 @@ const en = {
 
   dialogTitle: 'Importing data',
 
-  importers_ExecutiveOrderofthePresidentofRussia_text: 'Import data from „Указ Президента РФ“ template',
-
   state_LOADING: 'Page XML tree is loading…',
   state_ERROR: 'Error occured during XML loading or analyzing. Please check browser console and contact gadget developer.',
   state_HAS_SUPPORTED_IMPORTERS: 'Page XML tree was successfully laoded and analyzed. The following data import techniques are available:',
@@ -19,8 +17,6 @@ const ru = {
   buttonCloseTitle: 'Закрыть окно диалога',
 
   dialogTitle: 'Импорт данных',
-
-  importers_ExecutiveOrderofthePresidentofRussia_text: 'Импорт данных из шаблона «Указ Президента РФ»',
 
   state_LOADING: 'Идёт загрузка содержания страницы в виде XML-дерева…',
   state_ERROR: 'При загрузке или анализе данных произошла ошибка. Проверьте содержимое консоли браузера и обратитесь к разработчику',

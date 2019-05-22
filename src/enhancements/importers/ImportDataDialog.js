@@ -8,7 +8,9 @@ import { Parser } from 'wikitext-dom';
 import PropTypes from 'prop-types';
 
 const allImporters = [
-  require( './ExecutiveOrderofthePresidentofRussia' ).default,
+  require( './ПостановлениеПравительстваРФ' ).default,
+  require( './РаспоряжениеПрезидентаРФ' ).default,
+  require( './УказПрезидентаРФ' ).default,
 ];
 
 class ImportDataDialog extends PureComponent {
@@ -90,7 +92,7 @@ class ImportDataDialog extends PureComponent {
       <ul>
         { importers.map( importer => <li key={importer.key}>
           <JQueryButton
-            label={i18n[ 'importers_' + importer.key + '_text' ]}
+            label={importer.label || 'importers_' + importer.key + '_text'}
             onClick={this.handleImporterSelect( importer )}
             text />
         </li> ) }
