@@ -4,8 +4,9 @@ const editorDescription = {
   id: 'FrbrEdition',
   linkText: i18n.frbrEditionLinkText,
   dialogTitle: i18n.frbrEditionDialogTitle,
-  newEntityInstanceOf: 'Q732577',
-  recommendedClasses: [ 'Q732577' ],
+  // version, edition, or translation
+  newEntityInstanceOf: 'Q3331189',
+  recommendedClasses: [ 'Q3331189' ],
   tabs: [
     {
       label: i18n.tabGeneral,
