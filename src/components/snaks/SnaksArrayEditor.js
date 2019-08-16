@@ -99,7 +99,7 @@ export default class SnaksArrayEditor extends PureComponent {
     const { displayEmpty, displayLabels, propertyDescription, readOnly,
       removeButtonLabel, removeButtonConfirmMessage, snaksArray } = this.props;
 
-    if ( !snaksArray || snaksArray.length == 0 ) {
+    if ( !snaksArray || snaksArray.length === 0 ) {
       if ( !displayEmpty )
         return null;
 

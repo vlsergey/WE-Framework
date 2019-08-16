@@ -8,7 +8,7 @@ const en = {
   dialogTitle: 'Find and download VIAF data',
 
   queryState: {
-    SCHEDULED: 'Quering VIAF for „$1“…',
+    SCHEDULED: 'Querying VIAF for „$1“…',
     WAITING: 'Query complete. Show top results for „$1“',
   },
 };

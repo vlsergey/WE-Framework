@@ -20,6 +20,4 @@ export default function getDefaultQualifierSnak( propertyId ) {
       },
     };
   }
-
-  return;
 }

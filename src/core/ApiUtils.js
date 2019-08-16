@@ -58,7 +58,7 @@ export function getEntityIdDeferred() {
         let resolved = false;
         if ( data.query && data.query.pages ) {
           jQuery.each( data.query.pages, ( pageId, page ) => {
-            if ( page.pageid && page.pageprops && page.pageprops.wikibase_item && page.pageid == WG_ARTICLE_ID ) {
+            if ( page.pageid && page.pageprops && page.pageprops.wikibase_item && page.pageid === WG_ARTICLE_ID ) {
               resolve( page.pageprops.wikibase_item );
               resolved = true;
             }

@@ -43,13 +43,12 @@ class SearchOnSourceWebsitesButtonCell extends PureComponent {
 
     if ( qSites.length === 0 || qLabels === 0 ) return null;
 
-    const result = '//google.com/search?sourceid=vlsergey_wef&ie=UTF-8&q='
+    return '//google.com/search?sourceid=vlsergey_wef&ie=UTF-8&q='
       + encodeURIComponent(
         ( qSites.length > 1 ? '(' + qSites.join( ' OR ' ) + ')' : qSites )
         + ' '
         + ( qLabels.length > 1 ? '(' + qLabels.join( ' OR ' ) + ')' : qLabels )
       );
-    return result;
   } );
 
   render() {

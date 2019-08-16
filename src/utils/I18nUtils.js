@@ -14,7 +14,7 @@ function getTitleFromOptions( allLanguagesData, languageCode ) {
     return getTitleFromOptions( allLanguagesData, actualLanguageCode );
   }
 
-  if ( languageOptions.length == 3 ) {
+  if ( languageOptions.length === 3 ) {
     return languageOptions[ 2 ];
   }
 

@@ -37,7 +37,7 @@ const editorDescription = {
       ],
     },
     {
-      labelEntityId: 'Q420' /* bilogy */,
+      labelEntityId: 'Q420' /* biology */,
       fieldsets: [
         {
           fields: [

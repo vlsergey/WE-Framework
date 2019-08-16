@@ -27,6 +27,7 @@ export default class AbstractStringBasedDataValueEditor extends PureComponent {
   handleValueChange( value ) {
     const { datavalue, onDataValueChange } = this.props;
 
+    // FIXME: !value.length != !0  --- this seems wrong. What was the intention?
     if ( !typeof value !== 'string' && !value.length != !0 ) {
       onDataValueChange( {
         ...datavalue,

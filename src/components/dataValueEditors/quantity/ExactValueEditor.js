@@ -20,7 +20,7 @@ export default class ExactValueEditor extends PureComponent {
     const { amount, lowerBound, upperBound } = value;
 
     return !ok( lowerBound ) && !ok( upperBound )
-      || Number( lowerBound ) == Number( amount ) && Number( upperBound ) == Number( amount );
+      || Number( lowerBound ) === Number( amount ) && Number( upperBound ) === Number( amount );
   }
 
   constructor() {
