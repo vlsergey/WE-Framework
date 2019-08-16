@@ -195,4 +195,4 @@ module.exports = {
       }
     }
   }
-}
+};

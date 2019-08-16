@@ -831,8 +831,9 @@ window.ISBN._isbn.prototype = {
 	_merge: function( lobj, robj ) {
 		if ( !lobj || !robj )
 			return null;
-		for ( var key in robj )
-			lobj[key] = robj[key];
+		Object.keys( robj ).forEach( function( key ) {
+			lobj[ key ] = robj[ key ];
+		} );
 		return lobj;
 	},
 
@@ -842,7 +843,7 @@ window.ISBN._isbn.prototype = {
 			isValid: true,
 			isIsbn10: true,
 			isIsbn13: false
-		}, this._split( val ) ) ) : val.length == 13 && val.match( /^(\d+)-(\d+)-(\d+)-([\dX])$/ ) ? this._fill( {
+		}, this._split( val ) ) ) : val.length === 13 && val.match( /^(\d+)-(\d+)-(\d+)-([\dX])$/ ) ? this._fill( {
 			source: val,
 			isValid: true,
 			isIsbn10: true,
@@ -857,7 +858,7 @@ window.ISBN._isbn.prototype = {
 			isIsbn10: false,
 			isIsbn13: true,
 			prefix: RegExp.$1
-		}, this._split( RegExp.$2 ) ) ) : val.length == 17 && val.match( /^(978|979)-(\d+)-(\d+)-(\d+)-([\dX])$/ ) ? this._fill( {
+		}, this._split( RegExp.$2 ) ) ) : val.length === 17 && val.match( /^(978|979)-(\d+)-(\d+)-(\d+)-([\dX])$/ ) ? this._fill( {
 			source: val,
 			isValid: true,
 			isIsbn10: false,
@@ -875,9 +876,11 @@ window.ISBN._isbn.prototype = {
 	},
 
 	_split: function( isbn ) {
-		return ( !isbn ? null : isbn.length == 13 ? this._merge( this._split( isbn.substr( 3 ) ), {
-			prefix: isbn.substr( 0, 3 )
-		} ) : isbn.length == 10 ? this._splitToObject( isbn ) : null );
+		return !isbn
+			? null
+			: isbn.length === 13
+				? this._merge( this._split( isbn.substr( 3 ) ), { prefix: isbn.substr( 0, 3 ) } )
+				: isbn.length === 10 ? this._splitToObject( isbn ) : null;
 	},
 
 	_splitToArray: function( isbn10 ) {
@@ -886,8 +889,8 @@ window.ISBN._isbn.prototype = {
 			return null;
 
 		for ( var key, i = 0, m = rec.record.ranges.length; i < m; ++i ) {
-			key = rec.rest.substr( 0, rec.record.ranges[i][0].length );
-			if ( rec.record.ranges[i][0] <= key && rec.record.ranges[i][1] >= key ) {
+			key = rec.rest.substr( 0, rec.record.ranges[ i ][ 0 ].length );
+			if ( rec.record.ranges[ i ][ 0 ] <= key && rec.record.ranges[ i ][ 1 ] >= key ) {
 				var rest = rec.rest.substr( key.length );
 				return [ rec.group, key, rest.substr( 0, rest.length - 1 ), rest.charAt( rest.length - 1 ) ];
 			}
@@ -897,13 +900,13 @@ window.ISBN._isbn.prototype = {
 
 	_splitToObject: function( isbn10 ) {
 		var a = this._splitToArray( isbn10 );
-		if ( !a || a.length != 4 )
+		if ( !a || a.length !== 4 )
 			return null;
 		return {
-			group: a[0],
-			publisher: a[1],
-			article: a[2],
-			check: a[3]
+			group: a[ 0 ],
+			publisher: a[ 1 ],
+			article: a[ 2 ],
+			check: a[ 3 ]
 		};
 	},
 
@@ -911,7 +914,7 @@ window.ISBN._isbn.prototype = {
 		if ( !codes )
 			return null;
 
-		var rec = this.groups[codes.group];
+		var rec = this.groups[ codes.group ];
 		if ( !rec )
 			return null;
 
@@ -933,7 +936,7 @@ window.ISBN._isbn.prototype = {
 			groupname: rec.name
 		} );
 
-		if ( prefix == '978' ) {
+		if ( prefix === '978' ) {
 			var parts10 = [ codes.group, codes.publisher, codes.article, ck10 ];
 			this._merge( codes, {
 				isbn10: parts10.join( '' ),
@@ -945,14 +948,15 @@ window.ISBN._isbn.prototype = {
 	},
 
 	_getGroupRecord: function( isbn10 ) {
-		for ( var key in this.groups ) {
+		var groups = this.groups;
+		Object.keys( groups ).forEach( function( key ) {
 			if ( isbn10.match( '^' + key + '(.+)' ) )
 				return {
 					group: key,
-					record: this.groups[key],
+					record: groups[ key ],
 					rest: RegExp.$1
 				};
-		}
+		} );
 		return null;
 	},
 
@@ -962,7 +966,7 @@ window.ISBN._isbn.prototype = {
 			for ( var n = 0; n < 9; ++n )
 				c += ( 10 - n ) * isbn.charAt( n );
 			c = ( 11 - c % 11 ) % 11;
-			return c == 10 ? 'X' : String( c );
+			return c === 10 ? 'X' : String( c );
 
 		} else if ( isbn.match( /(?:978|979)\d{9}[\dX]?/ ) ) {
 			var c = 0;
