@@ -8,7 +8,7 @@ export default class PropertyLabelCellById extends PureComponent {
 
   static propTypes = {
     propertyId: PropTypes.string.isRequired,
-  }
+  };
 
   render() {
     const { propertyId } = this.props;

@@ -8,7 +8,7 @@ export default class FieldsetBuilder extends PureComponent {
 
   static propTypes = {
     fieldset: PropTypes.shape( FieldsetShape ).isRequired,
-  }
+  };
 
   render() {
     const { fieldset } = this.props;

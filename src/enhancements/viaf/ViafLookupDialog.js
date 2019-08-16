@@ -10,11 +10,11 @@ export default class ViafLookupDialog extends PureComponent {
   static propTypes = {
     defaultQuery: PropTypes.string,
     onSelect: PropTypes.func.isRequired,
-  }
+  };
 
   static defaultProps = {
     defaultQuery: '',
-  }
+  };
 
   constructor() {
     super( ...arguments );

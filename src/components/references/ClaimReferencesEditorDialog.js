@@ -12,7 +12,7 @@ export default class ClaimReferencesEditorDialog extends PureComponent {
     claim: PropTypes.shape( Claim ).isRequired,
     onClaimUpdate: PropTypes.func.isRequired,
     onCloseClick: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );

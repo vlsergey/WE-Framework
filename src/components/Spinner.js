@@ -6,11 +6,11 @@ export default class Spinner extends PureComponent {
 
   static propTypes = {
     size: PropTypes.number,
-  }
+  };
 
   static defaultProps = {
     size: 50,
-  }
+  };
 
   render() {
     const { size, ...other } = this.props;

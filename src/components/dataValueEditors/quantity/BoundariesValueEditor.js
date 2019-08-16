@@ -7,12 +7,12 @@ export default class BoundariesValueEditor extends PureComponent {
     onValueChange: PropTypes.func.isRequired,
     readOnly: PropTypes.bool,
     value: PropTypes.object,
-  }
+  };
 
   static defaultProps = {
     value: null,
     readOnly: false,
-  }
+  };
 
   static canBeUsedForValue() {
     return true;

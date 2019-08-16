@@ -13,11 +13,11 @@ export default class EntityField extends PureComponent {
     onChange: PropTypes.func.isRequired,
     readOnly: PropTypes.bool,
     value: PropTypes.string,
-  }
+  };
 
   static defaultProps = {
     readOnly: false,
-  }
+  };
 
   constructor() {
     super( ...arguments );

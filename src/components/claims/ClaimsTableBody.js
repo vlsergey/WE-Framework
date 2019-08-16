@@ -21,7 +21,7 @@ export default class ClaimsTableBody extends PureComponent {
 
   static defaultProps = {
     displayLabel: true,
-  }
+  };
 
   render() {
     const { claims, displayLabel, propertyDescription,

@@ -33,7 +33,7 @@ class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
     newEntityGenderEntityId: PropTypes.oneOfType( PropTypes.func, PropTypes.string ).isRequired,
     propertyIdSelfInto: PropTypes.string.isRequired,
     propertiesMapping: PropTypes.object.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );

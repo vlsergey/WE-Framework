@@ -11,7 +11,7 @@ export default class ReferencePropertySelect extends PureComponent {
   static propTypes = {
     alreadyPresent: PropTypes.arrayOf( PropTypes.string ).isRequired,
     onSelect: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );
@@ -76,7 +76,7 @@ class SelectOption extends PureComponent {
     propertyId: PropTypes.string.isRequired,
     description: PropTypes.string,
     label: PropTypes.string,
-  }
+  };
 
   render() {
     const { alreadyPresent, unsupported, propertyId, description, label } = this.props;

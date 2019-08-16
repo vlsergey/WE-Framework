@@ -16,7 +16,7 @@ class SearchOnSourceWebsitesButtonCell extends PureComponent {
     labels: PropTypes.object,
     languageCodes: PropTypes.arrayOf( PropTypes.string ).isRequired,
     sourceWebsites: PropTypes.arrayOf( PropTypes.string ).isRequired,
-  }
+  };
 
   memoizeUrl = defaultMemoize( ( labels, languageCodes, sourceWebsites ) => {
     const languageSet = new Set( languageCodes );

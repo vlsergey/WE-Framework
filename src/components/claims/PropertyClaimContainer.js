@@ -23,7 +23,7 @@ class PropertyClaimContainer extends PureComponent {
 
   static defaultProps = {
     displayLabel: true,
-  }
+  };
 
   columnsMemoization = claimColumnsF();
 

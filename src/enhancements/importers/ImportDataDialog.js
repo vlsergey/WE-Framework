@@ -19,7 +19,7 @@ class ImportDataDialog extends PureComponent {
   static propTypes = {
     dispatch: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );

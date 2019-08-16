@@ -15,12 +15,12 @@ export default class SnakTableRow extends PureComponent {
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     readOnly: PropTypes.bool,
     snak: PropTypes.object,
-  }
+  };
 
   static defaultProps = {
     displayLabel: true,
     readOnly: false,
-  }
+  };
 
   render() {
     const { firstCell, displayLabel, lastCell, onSnakChange, propertyDescription, snak, readOnly } = this.props;

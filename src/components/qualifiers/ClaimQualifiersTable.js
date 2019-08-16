@@ -21,13 +21,13 @@ export default class ClaimQualifiersTable extends PureComponent {
     claim: PropTypes.shape( Claim ).isRequired,
     claimPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     onClaimUpdate: PropTypes.func.isRequired,
-  }
+  };
 
   static defaultProps = {
     allowedQualifiers: [],
     defaultAddQuailifier: false,
     disabledQualifiers: [],
-  }
+  };
 
   constructor() {
     super( ...arguments );

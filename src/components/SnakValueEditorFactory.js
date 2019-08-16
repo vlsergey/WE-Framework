@@ -34,11 +34,11 @@ export default class SnakValueEditorFactory extends PureComponent {
     onSnakChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     snak: PropTypes.shape( Snak ),
-  }
+  };
 
   static defaultProps = {
     readOnly: false,
-  }
+  };
 
   constructor() {
     super( ...arguments );

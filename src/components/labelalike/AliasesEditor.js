@@ -23,12 +23,12 @@ export default class AliasesEditor extends PureComponent {
     onChange: PropTypes.func.isRequired,
     onChangeDraft: PropTypes.func.isRequired,
     values: PropTypes.arrayOf( PropTypes.string ),
-  }
+  };
 
   static defaultProps = {
     draft: '',
     values: EMPTY_ARRAY,
-  }
+  };
 
   render() {
     const { draft, values, onChange, onChangeDraft } = this.props;

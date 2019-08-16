@@ -12,7 +12,7 @@ export default class SingleQualifierEditor extends PureComponent {
     claimPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
     onClaimUpdate: PropTypes.func.isRequired,
     qualifierPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );

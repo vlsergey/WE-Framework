@@ -10,7 +10,7 @@ export default class SettingsDialog extends PureComponent {
 
   static propTypes = {
     editors: PropTypes.arrayOf( PropTypes.object ).isRequired,
-  }
+  };
 
   handleTrigger( editor ) {
     return () => {

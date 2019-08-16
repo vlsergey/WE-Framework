@@ -19,11 +19,11 @@ class AutocompleteMode extends Component {
     onSelect: PropTypes.func.isRequired,
     readOnly: PropTypes.bool,
     testSuggestionsProvider: PropTypes.func,
-  }
+  };
 
   static defaultProps = {
     readOnly: false,
-  }
+  };
 
   constructor() {
     super( ...arguments );

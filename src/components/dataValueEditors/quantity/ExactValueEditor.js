@@ -9,12 +9,12 @@ export default class ExactValueEditor extends PureComponent {
     onValueChange: PropTypes.func.isRequired,
     readOnly: PropTypes.bool,
     value: PropTypes.object,
-  }
+  };
 
   static defaultProps = {
     value: {},
     readOnly: false,
-  }
+  };
 
   static canBeUsedForValue( value ) {
     const { amount, lowerBound, upperBound } = value;

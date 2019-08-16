@@ -41,7 +41,7 @@ export default class FieldsFilterByTerm extends PureComponent {
     fields: PropTypes.arrayOf( PropTypes.shape( FieldShape ) ).isRequired,
     term: PropTypes.string.isRequired,
     propertyDescriptionCache: PropTypes.object.isRequired,
-  }
+  };
 
   render() {
     const { children, fields, propertyDescriptionCache, term } = this.props;

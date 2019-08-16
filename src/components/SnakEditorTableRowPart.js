@@ -22,7 +22,7 @@ export default class SnakEditorTableRowPart extends PureComponent {
       snaktype: 'value',
     },
     readOnly: false,
-  }
+  };
 
   constructor() {
     super( ...arguments );

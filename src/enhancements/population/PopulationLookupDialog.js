@@ -12,7 +12,7 @@ export default class PopulationLookupDialog extends PureComponent {
   static propTypes = {
     onClaimAdd: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );

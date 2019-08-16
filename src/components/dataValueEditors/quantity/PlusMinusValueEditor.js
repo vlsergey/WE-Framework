@@ -10,12 +10,12 @@ export default class PlusMinusValueEditor extends PureComponent {
     onValueChange: PropTypes.func.isRequired,
     readOnly: PropTypes.bool,
     value: PropTypes.object,
-  }
+  };
 
   static defaultProps = {
     value: null,
     readOnly: false,
-  }
+  };
 
   static canBeUsedForValue( value ) {
     const { amount, lowerBound, upperBound } = value || {};

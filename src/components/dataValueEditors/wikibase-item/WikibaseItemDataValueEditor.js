@@ -19,11 +19,11 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
     onDataValueChange: PropTypes.func.isRequired,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
     readOnly: PropTypes.bool,
-  }
+  };
 
   static defaultProps = {
     readOnly: false,
-  }
+  };
 
   constructor() {
     super( ...arguments );

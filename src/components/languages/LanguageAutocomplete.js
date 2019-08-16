@@ -12,12 +12,12 @@ export default class LanguageAutocomplete extends Component {
     provided: PropTypes.arrayOf( PropTypes.string ),
     onChange: PropTypes.func.isRequired,
     value: PropTypes.string,
-  }
+  };
 
   static defaultProps = {
     provided: [],
     value: DEFAULT_LANGUAGES[ 0 ],
-  }
+  };
 
   constructor() {
     super( ...arguments );

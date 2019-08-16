@@ -18,7 +18,7 @@ export default class ClaimReferencesEditorContent extends PureComponent {
   static propTypes = {
     claim: PropTypes.shape( Claim ).isRequired,
     onClaimUpdate: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );
