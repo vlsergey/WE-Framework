@@ -18,7 +18,7 @@ function findSingleStatementByEntityIdValue( entity, property, entityId ) {
         && statement.mainsnak.datavalue.value
         && statement.mainsnak.datavalue.value.id === entityId );
 
-  if ( candidates.length == 1 ) {
+  if ( candidates.length === 1 ) {
     return candidates[ 0 ];
   }
 

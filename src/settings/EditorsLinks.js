@@ -44,11 +44,10 @@ export default class EditorLinks extends PureComponent {
       .then( result => {
         const [ columnName ] = result.head.vars;
 
-        const classIds = result.results.bindings.map( binding => {
+        return result.results.bindings.map( binding => {
           const { value } = binding[ columnName ];
           return value.substr( 'http://www.wikidata.org/entity/'.length );
         } );
-        return classIds;
       } ).then( classIds => {
         this.setState( { classIds } );
       } );

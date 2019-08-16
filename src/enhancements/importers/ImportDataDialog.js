@@ -44,8 +44,7 @@ class ImportDataDialog extends PureComponent {
       .then( json => {
         const xmlContent = json.parse.parsetree[ '*' ];
         const wikidoc = new DOMParser().parseFromString( xmlContent, 'application/xml' );
-        const dom = new Parser().parseDocument( wikidoc );
-        return dom;
+        return new Parser().parseDocument( wikidoc );
       } )
       .then( dom => {
         const importers = allImporters.filter( candidate => candidate.canImport( dom ) );

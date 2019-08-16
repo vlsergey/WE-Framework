@@ -19,10 +19,9 @@ export default class ChildrenBuilder extends PureComponent {
       }
     };
 
-    const children = Object.keys( this.props ).map( key =>
+    return Object.keys( this.props ).map( key =>
       <div key={key}>{childRenderer( key )}</div>
     );
-    return children;
   }
 
   renderFieldsets() {
@@ -39,7 +38,7 @@ export default class ChildrenBuilder extends PureComponent {
 
   renderSpecials() {
     const { specials } = this.props;
-    if ( !specials || specials.length == 0 )
+    if ( !specials || specials.length === 0 )
       return null;
 
     return specials.map( ( { key, type, ...etc } ) =>

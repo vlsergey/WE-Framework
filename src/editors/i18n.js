@@ -28,7 +28,7 @@ const en = {
   entityDialogTitle: 'Entity — WE-Framework',
 
   externalLinksLinkText: 'External IDs',
-  externalLinksDescription: 'External IDs and authoritive control',
+  externalLinksDescription: 'External IDs and authoritative control',
   externalLinksDialogTitle: 'External IDs and links — WE-Framework',
 
   frbrEditionLinkText: 'FRBR Edition',
@@ -38,8 +38,8 @@ const en = {
   frbrWorkDialogTitle: 'FRBR Work data — WE-Framework',
 
   legalInstrumentLinkText: 'Legal Act',
-  legalInstrumentDescription: 'Legan Instrument: executive orders, laws, court acts, etc.',
-  legalInstrumentDialogTitle: 'Legan Instrument — WE-Framework',
+  legalInstrumentDescription: 'Legal Instrument: executive orders, laws, court acts, etc.',
+  legalInstrumentDialogTitle: 'Legal Instrument — WE-Framework',
 
   movieLinkText: 'Movie',
   movieDescription: 'Animations and movies',
@@ -97,7 +97,7 @@ const ru = {
   entityDescription: 'Простой редактор',
   entityDialogTitle: 'Сущность — WE-Framework',
 
-  externalLinksLinkText: 'Коды и cсылки',
+  externalLinksLinkText: 'Коды и ссылки',
   externalLinksDescription: 'Внешние ссылки, идентификаторы и нормативный контроль',
   externalLinksDialogTitle: 'Внешние идентификаторы и ссылки — WE-Framework',
 

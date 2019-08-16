@@ -7,6 +7,7 @@ const ENABLED = window.localStorage !== undefined && window.localStorage !== nul
 const MAX_ENTRIES = 10;
 
 export function add( entityId ) {
+  // FIXME: bug?
   if ( !ENABLED );
 
   const existing = get();

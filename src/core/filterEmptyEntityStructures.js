@@ -32,7 +32,7 @@ function filterEmptyClaims( claims ) {
           return claim;
 
         const newQualifiers = filterSnaksMap( claim.qualifiers );
-        if ( typeof newQualifiers !== 'object' || Object.keys( newQualifiers ) === 0 ) {
+        if ( typeof newQualifiers !== 'object' || Object.keys( newQualifiers ).length === 0 ) {
           const newClaim = { ...claim };
           delete newClaim.qualifiers;
           return newClaim;
@@ -126,9 +126,7 @@ function isStringBlank( str ) {
 }
 
 function isNumberDefined( number ) {
-  if ( typeof number === 'undefined' || number === null )
-    return false;
-  return true;
+  return typeof number !== 'undefined' && number !== null;
 }
 
 function isSnakEmtpy( snak ) {

@@ -36,27 +36,17 @@ export function collectlLabelalikeUpdates( originalEntity, entity, labelalikeTyp
 
     if ( oldValue === null && newValue === null ) {
       console.warn( 'Something strage goes here with ' + labelalikeType + '...' );
-      return;
-    }
-
-    if ( oldValue === null && newValue !== null ) {
+    } else if ( oldValue === null && newValue !== null ) {
       console.log( 'Found change new entry of ' + labelalikeType + ' with key ' + key );
       changes.push( { key, value: newValue } );
-      return;
-    }
-
-    if ( oldValue !== null && newValue === null ) {
+    } else if ( oldValue !== null && newValue === null ) {
       console.log( 'Found removing of entry of ' + labelalikeType + ' with key ' + key );
       changes.push( { key, value: removedPlaceholderF( key ) } );
-      return;
-    }
-
-    if ( oldValue !== null && newValue !== null ) {
+    } else if ( oldValue !== null && newValue !== null ) {
       if ( !deepEqual( oldValue, newValue ) ) {
         console.log( 'Found change in existing entry of ' + labelalikeType + ' for key ' + key );
         changes.push( { key, value: newValue } );
       }
-      return;
     }
 
   } );
@@ -177,11 +167,8 @@ export function closeWithoutSave( reject ) {
 
     if ( !hasChanges ) {
       reject( 'User closed dialog window while no changes were made' );
-      return;
-    }
-    if ( confirm( i18n.confirmCloseWithoutSave ) ) {
+    } else if ( confirm( i18n.confirmCloseWithoutSave ) ) {
       reject( 'User closed dialog window and confirmed discardind changes' );
-      return;
     }
   };
 }
@@ -280,7 +267,7 @@ export function saveAndClose( resolve, reject ) {
 
       .then( revisions => {
 
-        if ( revisions.length == 0 ) {
+        if ( revisions.length === 0 ) {
           notify( 'Nothing to update in revisions history of ' + entityId );
           return;
         }

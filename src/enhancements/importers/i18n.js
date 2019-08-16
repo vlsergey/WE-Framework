@@ -7,9 +7,9 @@ const en = {
   dialogTitle: 'Importing data',
 
   state_LOADING: 'Page XML tree is loading…',
-  state_ERROR: 'Error occured during XML loading or analyzing. Please check browser console and contact gadget developer.',
-  state_HAS_SUPPORTED_IMPORTERS: 'Page XML tree was successfully laoded and analyzed. The following data import techniques are available:',
-  state_NO_SUPPORTED_IMPORTERS: 'Page XML tree was successfully laoded and analyzed. Sadly there is no supported data import techniques.',
+  state_ERROR: 'Error occurred during XML loading or analyzing. Please check browser console and contact gadget developer.',
+  state_HAS_SUPPORTED_IMPORTERS: 'Page XML tree was successfully loaded and analyzed. The following data import techniques are available:',
+  state_NO_SUPPORTED_IMPORTERS: 'Page XML tree was successfully loaded and analyzed. Sadly there is no supported data import techniques.',
 };
 
 const ru = {
