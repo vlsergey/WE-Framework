@@ -10,7 +10,7 @@ export default class MonolingualTextDataValueEditor extends PureComponent {
     datavalue: PropTypes.shape( Shapes.DataValue ),
     onDataValueChange: PropTypes.func.isRequired,
     readOnly: PropTypes.bool,
-  }
+  };
 
   constructor() {
     super( ...arguments );

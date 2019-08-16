@@ -11,7 +11,7 @@ export default class EditorLinks extends PureComponent {
 
   static propTypes = {
     editorTemplates: PropTypes.arrayOf( PropTypes.shape( EditorShape ) ),
-  }
+  };
 
   constructor() {
     super( ...arguments );

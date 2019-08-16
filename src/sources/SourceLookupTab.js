@@ -11,7 +11,7 @@ export default class SourceLookupTab extends PureComponent {
 
   static propTypes = {
     onInsert: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );

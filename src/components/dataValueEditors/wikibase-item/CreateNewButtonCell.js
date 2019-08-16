@@ -57,7 +57,7 @@ class PopupContent extends PureComponent {
   static propTypes = {
     onCreate: PropTypes.func.isRequired,
     instanceOf: PropTypes.arrayOf( PropTypes.string ),
-  }
+  };
 
   constructor() {
     super( ...arguments );
@@ -85,7 +85,7 @@ class EditorButtons extends PureComponent {
     onCreate: PropTypes.func.isRequired,
     editorTemplates: PropTypes.arrayOf( PropTypes.object ),
     typeIds: PropTypes.instanceOf( Set ),
-  }
+  };
 
   handleClickF( editorTemplate ) {
     return () => onNewElementClick( editorTemplate, editorTemplate.newEntityInstanceOf )

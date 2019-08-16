@@ -18,12 +18,12 @@ export default class SnaksArrayEditor extends PureComponent {
     readOnly: PropTypes.bool.isRequired,
     removeButtonLabel: PropTypes.string.isRequired,
     removeButtonConfirmMessage: PropTypes.string.isRequired,
-  }
+  };
 
   static defaultProps = {
     displayEmpty: false,
     displayLabels: true,
-  }
+  };
 
   constructor() {
     super( ...arguments );

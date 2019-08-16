@@ -12,7 +12,7 @@ export default class UnitSelect extends PureComponent {
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
     onValueChange: PropTypes.func.isRequired,
     readOnly: PropTypes.bool,
-  }
+  };
 
   static defaultProps = {
     value: {
@@ -20,7 +20,7 @@ export default class UnitSelect extends PureComponent {
       unit: '',
     },
     readOnly: false,
-  }
+  };
 
   constructor() {
     super( ...arguments );

@@ -28,7 +28,7 @@ export default class ClaimsTableRows extends PureComponent {
 
   static defaultProps = {
     displayLabel: true,
-  }
+  };
 
   constructor() {
     super( ...arguments );

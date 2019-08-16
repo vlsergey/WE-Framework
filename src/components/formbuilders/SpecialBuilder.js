@@ -7,7 +7,7 @@ export default class SpecialBuilder extends PureComponent {
 
   static propTypes = {
     type: PropTypes.string.isRequired,
-  }
+  };
 
   render() {
     const { type, ...etc } = this.props;

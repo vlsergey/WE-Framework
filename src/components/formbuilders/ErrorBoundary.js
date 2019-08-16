@@ -6,11 +6,11 @@ export default class ErrorBoundary extends PureComponent {
   static propTypes = {
     children: PropTypes.node,
     description: PropTypes.string,
-  }
+  };
 
   state = {
     hasError: false,
-  }
+  };
 
   componentDidCatch( error, info ) {
     this.setState( { hasError: true } );

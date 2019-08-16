@@ -23,7 +23,7 @@ export default class NewQualifierSelect extends PureComponent {
     allowedQualifiers: PropTypes.arrayOf( PropTypes.string ).isRequired,
     alreadyPresent: PropTypes.arrayOf( PropTypes.string ).isRequired,
     onSelect: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );
@@ -74,7 +74,7 @@ class NewQualifierSelectOption extends PureComponent {
     propertyId: PropTypes.string.isRequired,
     description: PropTypes.string,
     label: PropTypes.string,
-  }
+  };
 
   render() {
     const { alreadyPresent, unsupported, propertyId, description, label } = this.props;

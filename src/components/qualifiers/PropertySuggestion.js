@@ -8,7 +8,7 @@ export default class PropertySuggestion extends PureComponent {
 
   static propTypes = {
     propertyId: PropTypes.string.isRequired,
-  }
+  };
 
   render() {
     const { propertyId } = this.props;

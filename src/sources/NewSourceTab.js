@@ -11,7 +11,7 @@ export default class NewSourceTab extends PureComponent {
 
   static propTypes = {
     onInsert: PropTypes.func.isRequired,
-  }
+  };
 
   handleClickF( editorDescription, classId ) {
     return () => {

@@ -10,7 +10,7 @@ export default class UnsupportedDataValueEditor extends Component {
   static propTypes = {
     datavalue: PropTypes.shape( Shapes.DataValue ),
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-  }
+  };
 
   constructor() {
     super( ...arguments );

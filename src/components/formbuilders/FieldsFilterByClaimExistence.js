@@ -16,7 +16,7 @@ class FieldsFilterByClaimExistence extends PureComponent {
     children: PropTypes.func.isRequired,
     claims: PropTypes.object.isRequired,
     fields: PropTypes.arrayOf( PropTypes.shape( FieldShape ) ).isRequired,
-  }
+  };
 
   render() {
     const { children, claims, fields } = this.props;
@@ -40,7 +40,7 @@ export default class Filter extends PureComponent {
     children: PropTypes.func.isRequired,
     enabled: PropTypes.bool.isRequired,
     fields: PropTypes.arrayOf( PropTypes.shape( FieldShape ) ).isRequired,
-  }
+  };
 
   render() {
     const { children, enabled, fields } = this.props;

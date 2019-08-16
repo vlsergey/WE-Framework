@@ -13,7 +13,7 @@ export default class WikibaseItemInput extends PureComponent {
     onBlur: PropTypes.func,
     onChange: PropTypes.func.isRequired,
     onFocus: PropTypes.func,
-  }
+  };
 
   static getEtcProps( props ) {
     /* eslint no-unused-vars: 0 */

@@ -11,7 +11,7 @@ export default class ModeSelect extends PureComponent {
     mode: PropTypes.string.isRequired,
     onSelect: PropTypes.func.isRequired,
     value: PropTypes.object,
-  }
+  };
 
   constructor() {
     super( ...arguments );

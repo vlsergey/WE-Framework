@@ -11,7 +11,7 @@ export default class ClaimReferenceEditor extends PureComponent {
   static propTypes = {
     onReferenceChange: PropTypes.func.isRequired,
     reference: PropTypes.object.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );

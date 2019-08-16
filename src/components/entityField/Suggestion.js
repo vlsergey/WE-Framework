@@ -9,7 +9,7 @@ export default class Suggestion extends PureComponent {
 
   static propTypes = {
     entityId: PropTypes.string.isRequired,
-  }
+  };
 
   render() {
     const { entityId } = this.props;

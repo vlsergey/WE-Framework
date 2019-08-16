@@ -7,7 +7,7 @@ export default class PropertyLabelCell extends PureComponent {
 
   static propTypes = {
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-  }
+  };
 
   render() {
     const { label, description, id } = this.props.propertyDescription;

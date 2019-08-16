@@ -23,7 +23,7 @@ export default class DetailsArea extends PureComponent {
     manualPrecision: PropTypes.number,
     onManualPrecisionToggle: PropTypes.func.isRequired,
     onManualPrecisionChange: PropTypes.func.isRequired,
-  }
+  };
 
   render() {
     const { spinner, error, preview,

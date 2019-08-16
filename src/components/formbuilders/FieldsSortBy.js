@@ -35,7 +35,7 @@ export default class FieldsSortBy extends PureComponent {
     children: PropTypes.func.isRequired,
     fields: PropTypes.arrayOf( PropTypes.shape( FieldShape ) ).isRequired,
     sortBy: PropTypes.arrayOf( PropTypes.string ),
-  }
+  };
 
   render() {
     const { children, fields, propertyDescriptionCache, sortBy } = this.props;

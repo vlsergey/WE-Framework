@@ -13,7 +13,7 @@ export default class NewQualifierAutosuggest extends PureComponent {
 
     static propTypes = {
       onSelect: PropTypes.func.isRequired,
-    }
+    };
 
     constructor() {
       super( ...arguments );

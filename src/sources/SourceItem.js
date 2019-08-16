@@ -7,7 +7,7 @@ export default class SourceItem extends PureComponent {
 
   static propTypes = {
     entityId: PropTypes.string.isRequired,
-  }
+  };
 
   render() {
     const { entityId, ...etc } = this.props;

@@ -14,7 +14,7 @@ export default class TimeDataValueEditor extends PureComponent {
     datavalue: PropTypes.shape( Shapes.DataValue ),
     onDataValueChange: PropTypes.func.isRequired,
     readOnly: PropTypes.bool,
-  }
+  };
 
   constructor() {
     super( ...arguments );

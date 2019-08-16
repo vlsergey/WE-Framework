@@ -16,14 +16,14 @@ export default class SingleLanguageEditor extends PureComponent {
     onDescriptionChange: PropTypes.func.isRequired,
     onAliasesChange: PropTypes.func.isRequired,
     onDraftAliasChange: PropTypes.func.isRequired,
-  }
+  };
 
   static defaultProps = {
     label: '',
     description: '',
     aliases: [],
     draftAlias: '',
-  }
+  };
 
   constructor() {
     super( ...arguments );

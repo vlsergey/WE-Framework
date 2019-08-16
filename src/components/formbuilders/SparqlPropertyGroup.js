@@ -10,11 +10,11 @@ export default class SparqlPropertyGroup extends PureComponent {
   static propTypes = {
     sparql: PropTypes.string.isRequired,
     sortBy: PropTypes.string,
-  }
+  };
 
   static defaultProps = {
     sortBy: 'language, label',
-  }
+  };
 
   render() {
     const { sortBy, sparql } = this.props;

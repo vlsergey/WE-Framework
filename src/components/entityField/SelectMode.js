@@ -23,7 +23,7 @@ export default class SelectMode extends PureComponent {
     oneOf: PropTypes.arrayOf( PropTypes.string ).isRequired,
     onOtherSelect: PropTypes.func.isRequired,
     onSelect: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );
@@ -76,7 +76,7 @@ class SelectOption extends PureComponent {
     entityId: PropTypes.string.isRequired,
     description: PropTypes.string,
     label: PropTypes.string,
-  }
+  };
 
   render() {
     const { entityId, description, label } = this.props;

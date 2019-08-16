@@ -8,7 +8,7 @@ export default class LruTab extends PureComponent {
 
   static propTypes = {
     onInsert: PropTypes.func.isRequired,
-  }
+  };
 
   constructor() {
     super( ...arguments );

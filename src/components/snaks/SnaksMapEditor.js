@@ -15,12 +15,12 @@ export default class SnaksMapEditor extends PureComponent {
     readOnly: PropTypes.bool,
     removeButtonLabel: PropTypes.string.isRequired,
     removeButtonConfirmMessageF: PropTypes.func.isRequired,
-  }
+  };
 
   static defaultProps = {
     ignorePropertyIds: [],
     readOnly: false,
-  }
+  };
 
   handleSnaksArrayUpdateF( propertyDescription ) {
     return snaksArray => {
@@ -69,7 +69,7 @@ class PropertyIsLoadingTBody extends PureComponent {
 
   static propTypes = {
     propertyId: PropTypes.string.isRequired,
-  }
+  };
 
   render() {
     const { propertyId } = this.props;
