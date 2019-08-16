@@ -44,7 +44,7 @@
 	/* Some utils functions */
 
 	function getFirstObjectValue( obj ) {
-		return obj[Object.keys( obj )[0]];
+		return obj[ Object.keys( obj )[ 0 ] ];
 	}
 
 	function getWikidataApiPrefix() {
@@ -127,9 +127,9 @@
 		/**/.text( i18n.buttonUpdateCache )
 		/**/.button()
 		/**/.click( function() {
-			dialog.dialog( 'close' );
-			updateCache();
-		} )
+				dialog.dialog( 'close' );
+				updateCache();
+			} )
 		/**/.appendTo( dialog );
 		$( document.createElement( "br" ) ).appendTo( dialog );
 
@@ -161,8 +161,8 @@
 			url: getWikidataApiPrefix() + '&action=wbgetentities&ids=' + entityId,
 			dataType: 'json',
 			success: function( result ) {
-				var entity = result.entities[entityId];
-				var api = ( new mw.Api() );
+				var entity = result.entities[ entityId ];
+				var api = new mw.Api();
 
 				jsMsg( i18n.statusGenerateLua );
 				var lua = generateLua( entity );
@@ -170,27 +170,27 @@
 				jsMsg( i18n.statusUpdatingCache );
 				$.when(
 
-				api.postWithEditToken( {
-					action: 'edit',
-					format: 'json',
-					title: PREFIX + entityId.toUpperCase(),
-					summary: i18n.summary,
-					text: lua,
-				}, function() {
-					// ok
-				}, function( text, data ) {
-					// error
-					alert( i18n.errorUpdatingCache + ': ' + text );
-				} ),
+					api.postWithEditToken( {
+						action: 'edit',
+						format: 'json',
+						title: PREFIX + entityId.toUpperCase(),
+						summary: i18n.summary,
+						text: lua,
+					}, function() {
+						// ok
+					}, function( text /*, data */ ) {
+						// error
+						alert( i18n.errorUpdatingCache + ': ' + text );
+					} ),
 
-				api.postWithEditToken( {
-					action: 'edit',
-					format: 'json',
-					title: PREFIX + entityId + '/doc',
-					summary: i18n.summary,
-					createonly: 1,
-					text: MODULE_DOC,
-				} )
+					api.postWithEditToken( {
+						action: 'edit',
+						format: 'json',
+						title: PREFIX + entityId + '/doc',
+						summary: i18n.summary,
+						createonly: 1,
+						text: MODULE_DOC,
+					} )
 
 				).done( function() {
 					jsMsg( i18n.statusUpdateDonePurge );
@@ -212,7 +212,7 @@
 	function repeat( str, count ) {
 		var result = "";
 		for ( var i = 0; i < count; i++ ) {
-			result = result + str;
+			result += str;
 		}
 		return result;
 	}
@@ -239,20 +239,19 @@
 			return result + '}';
 		} else if ( typeof value === 'object' ) {
 			var result = '{';
-			for ( var key in value ) {
-				var subvalue = value[key];
+			Object.keys( value ).forEach( function( key ) {
+				var subvalue = value[ key ];
 				var subResult = generateLuaImpl( subvalue, level + 1 );
 				if ( subResult ) {
 					result = result + '\n' + repeat( '\t', level ) + generateLuaLabel( key ) + " = " + subResult + ',';
 				}
-			}
+			} );
 			return result + '\n' + repeat( '\t', level - 1 ) + '}';
 		}
-		return;
 	}
 
 	function generateLuaLabel( key ) {
-		if ( /^[a-zA-Z][a-zA-Z0-9\_]*$/.exec( key ) ) {
+		if ( /^[a-zA-Z][a-zA-Z0-9_]*$/.exec( key ) ) {
 			return key;
 		}
 		return "['" + escapeForLua( key ) + "']";
@@ -263,19 +262,19 @@
 		jsMsg( i18n.statusRemovingCache );
 
 		var entityId = mw.config.get( 'wgWikibaseItemId' ).toUpperCase();
-		var api = ( new mw.Api() );
+		var api = new mw.Api();
 
 		$.when(
 
-		api.postWithToken( 'delete', {
-			action: 'delete',
-			title: PREFIX + entityId,
-		} ),
+			api.postWithToken( 'delete', {
+				action: 'delete',
+				title: PREFIX + entityId,
+			} ),
 
-		api.postWithToken( 'delete', {
-			action: 'delete',
-			title: PREFIX + entityId + '/doc',
-		} )
+			api.postWithToken( 'delete', {
+				action: 'delete',
+				title: PREFIX + entityId + '/doc',
+			} )
 
 		).done( function() {
 			jsMsg( i18n.statusDeleteDonePurge );
@@ -305,14 +304,14 @@
 			url: '/w/api.php?format=json&action=query&prop=revisions&titles=Module:WikidataCache/' + entityId.toUpperCase() + '&rvprop=' + encodeURIComponent( 'content|ids' ),
 			dataType: 'json',
 		} ) ).done( function( wikidataResponse, wikipediaResponse ) {
-			var wikidataPage = getFirstObjectValue( wikidataResponse[0].query.pages );
+			var wikidataPage = getFirstObjectValue( wikidataResponse[ 0 ].query.pages );
 
 			if ( typeof wikidataPage.missing !== "undefined" ) {
 				mw.log.warn( 'Entity is missing on Wikidata: ' + entityId );
 				return;
 			}
 
-			var wikipediaPage = getFirstObjectValue( wikipediaResponse[0].query.pages );
+			var wikipediaPage = getFirstObjectValue( wikipediaResponse[ 0 ].query.pages );
 			if ( typeof wikipediaPage.missing !== "undefined" ) {
 
 				// cache is missed
@@ -324,9 +323,9 @@
 
 			} else {
 				// check revision
-				var content = wikipediaPage.revisions[0]["*"];
-				var storedRevision = Number( content.match( /lastrevid\s*\=\s*\s*([0-9]+),/ )[1] );
-				var existedRevision = Number( wikidataPage.revisions[0].revid );
+				var content = wikipediaPage.revisions[ 0 ][ "*" ];
+				var storedRevision = Number( content.match( /lastrevid\s*=\s*\s*([0-9]+),/ )[ 1 ] );
+				var existedRevision = Number( wikidataPage.revisions[ 0 ].revid );
 
 				if ( storedRevision === existedRevision ) {
 

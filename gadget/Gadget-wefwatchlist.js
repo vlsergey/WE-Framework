@@ -52,10 +52,10 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 				mw.log.warn( "List to get from Wikidata: " + titles.join( '|' ) );
 
 				var newWRcontinue = false;
-				if ( typeof result["continue"] !== 'undefined' //
-						&& typeof result["continue"] !== 'undefined' //
-						&& typeof result["continue"].wrcontinue !== 'undefined' ) {
-					newWRcontinue = result["continue"].wrcontinue;
+				if ( typeof result[ "continue" ] !== 'undefined' //
+						&& typeof result[ "continue" ] !== 'undefined' //
+						&& typeof result[ "continue" ].wrcontinue !== 'undefined' ) {
+					newWRcontinue = result[ "continue" ].wrcontinue;
 				}
 				if ( newWRcontinue ) {
 					asyncGetWatchlistRaw( newWRcontinue );
@@ -77,7 +77,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 				props: 'info',
 				titles: titles.join( '|' ),
 			} ).done( function( result ) {
-				$.each( result.entities, function( key, item ) {
+				$.each( result.entities, function( key /* , item */ ) {
 					if ( /^Q[0-9]+$/.test( key ) ) {
 						qIds.push( key );
 					}
@@ -153,7 +153,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 				$.each( changeList.children( 'h4' ), function( i, h4 ) {
 					var jH4 = $( h4 );
 					var firstDiv = jH4.find( '~ div' ).first();
-					headers[jH4.text()] = {
+					headers[ jH4.text() ] = {
 						header: jH4,
 						firstDiv: firstDiv,
 						firstDivChildren: firstDiv.children(),
@@ -185,12 +185,12 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 			"use strict";
 
 			var updatedString = jEntry.children( 'updated' ).text();
-			var tzOffset = parseInt( mw.user.options.get( 'timecorrection' ).split( '|' )[1], 10 ) + new Date().getTimezoneOffset();
+			var tzOffset = parseInt( mw.user.options.get( 'timecorrection' ).split( '|' )[ 1 ], 10 ) + new Date().getTimezoneOffset();
 			var updated = new Date( Date.parse( updatedString ) + tzOffset * 60 * 1000 );
-			var date = updated.getDate() + ' ' + i18n.monthes[updated.getMonth()] + ' ' + updated.getFullYear();
+			var date = updated.getDate() + ' ' + i18n.monthes[ updated.getMonth() ] + ' ' + updated.getFullYear();
 
-			if ( typeof headers[date] !== 'undefined' ) {
-				var pregenerated = headers[date];
+			if ( typeof headers[ date ] !== 'undefined' ) {
+				var pregenerated = headers[ date ];
 				var firstDiv = pregenerated.firstDiv;
 				var firstDivChildren = pregenerated.firstDivChildren;
 
@@ -206,7 +206,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 
 					var timeOfElement = jChild.data( 'wef-parsed-time' );
 					if ( typeof timeOfElement === 'undefined' ) {
-						timeOfElement = $( jChild.find( 'td.mw-enhanced-rc' )[0] ).text().substring( 6 ).trim();
+						timeOfElement = $( jChild.find( 'td.mw-enhanced-rc' )[ 0 ] ).text().substring( 6 ).trim();
 						jChild.data( 'wef-parsed-time', timeOfElement );
 					}
 
@@ -238,12 +238,12 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 			var firstLine = $( document.createElement( 'tr' ) ).appendTo( table );
 
 			var toggleIcon = $( document.createElement( 'span' ) ).addClass( 'mw-collapsible-toggle' ).addClass( 'mw-collapsible-arrow' ).addClass( 'mw-enhancedchanges-arrow' )
-					.addClass( 'mw-enhancedchanges-arrow-space' ).addClass( 'mw-collapsible-toggle-collapsed' );
+				.addClass( 'mw-enhancedchanges-arrow-space' ).addClass( 'mw-collapsible-toggle-collapsed' );
 			var toggle = $( document.createElement( 'td' ) ).append( toggleIcon ).appendTo( firstLine );
 
 			$( document.createElement( 'td' ) ).addClass( 'mw-enhanced-rc' ).html(
-					"<abbr class=\'wikidata\' title=\'" + i18n.linePartTooltip + "\'>" + i18n.linePartLetter + "</abbr>&#160;&#160;&#160;&#160;&#160;" + time + "&#160;" )
-					.appendTo( firstLine );
+				"<abbr class='wikidata' title='" + i18n.linePartTooltip + "'>" + i18n.linePartLetter + "</abbr>&#160;&#160;&#160;&#160;&#160;" + time + "&#160;" )
+				.appendTo( firstLine );
 
 			var title = $( document.createElement( 'a' ) ).addClass( 'mw-changeslist-title' ).attr( 'href', '//www.wikidata.org/wiki/' + id ).text( id );
 			window.wef_LabelsCache.localizeLabel( title, id );
@@ -254,11 +254,11 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 			mainLine.append( $( document.createElement( 'a' ) ).text( i18n.linePartChange ).attr( 'href', changeUrl ) );
 			mainLine.append( " | " );
 			mainLine.append( $( document.createElement( 'a' ) ).text( i18n.linePartHistory ).attr( 'href',
-					'//www.wikidata.org/w/index.php?action=history&title=' + encodeURIComponent( id ) ) );
+				'//www.wikidata.org/w/index.php?action=history&title=' + encodeURIComponent( id ) ) );
 			mainLine.append( ")" );
 			mainLine.append( $( document.createElement( 'span' ) ).addClass( 'mw-changeslist-separator' ).text( '. .' ) );
 			mainLine.append( $( document.createElement( 'a' ) ).addClass( 'mw-userlink' ).addClass( 'userlink' ).text( author ).attr( 'href',
-					'//www.wikidata.org/wiki/User:' + author ) );
+				'//www.wikidata.org/wiki/User:' + author ) );
 			mainLine.append( $( document.createElement( 'span' ) ).addClass( 'mw-changeslist-separator' ).text( '. .' ) );
 			mainLine.appendTo( firstLine );
 
@@ -268,7 +268,7 @@ if ( mw.config.get( 'wgCanonicalSpecialPageName' ) === 'Watchlist' ) {
 			secondLine.append( $( document.createElement( 'td' ) ).addClass( 'mw-enhanced-rc-nested' ).html( jEntry.children( 'summary' ).text() ) );
 			secondLine.appendTo( table );
 
-			var summaryElement = $( secondLine.children( 'td' )[2] );
+			var summaryElement = $( secondLine.children( 'td' )[ 2 ] );
 			localizeSummary( summaryElement );
 
 			var firstPOfSummary = summaryElement.children( 'p' ).first();

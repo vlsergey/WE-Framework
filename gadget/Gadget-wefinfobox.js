@@ -17,9 +17,9 @@ mediaWiki.loader.using( [ 'ext.gadget.wefcore', 'jquery.ui.button', 'wikibase.fo
 			 * Valueview expert for wb.datamodel.EntityId. This is a simple
 			 * expert, only handling the input, based on the StringValue input
 			 * but with the jQuery.wikibase.entityselector for convenience.
-			 * 
+			 *
 			 * @since 0.4
-			 * 
+			 *
 			 * @constructor
 			 * @extends jQuery.valueview.experts.StringValue
 			 */
@@ -45,9 +45,9 @@ mediaWiki.loader.using( [ 'ext.gadget.wefcore', 'jquery.ui.button', 'wikibase.fo
 					var entityId = value && value.getPrefixedId( WB_ENTITIES_PREFIXMAP );
 
 					this.$input.data( 'entityselector' ).selectedEntity( entityId );
-					$input.on( 'eachchange.' + this.uiBaseClass, function( e ) {
+					$input.on( 'eachchange.' + this.uiBaseClass, function( /* e */ ) {
 						$( this ).data( 'entityselector' ).repositionMenu();
-					} ).on( 'entityselectorselected.' + this.uiBaseClass, function( e ) {
+					} ).on( 'entityselectorselected.' + this.uiBaseClass, function( /* e */ ) {
 						self._resizeInput();
 						notifier.notify( 'change' );
 					} );
@@ -72,7 +72,7 @@ mediaWiki.loader.using( [ 'ext.gadget.wefcore', 'jquery.ui.button', 'wikibase.fo
 
 				/**
 				 * @see jQuery.valueview.Expert.rawValue
-				 * 
+				 *
 				 * @return string
 				 */
 				rawValue: function() {
@@ -83,7 +83,7 @@ mediaWiki.loader.using( [ 'ext.gadget.wefcore', 'jquery.ui.button', 'wikibase.fo
 
 				/**
 				 * @see jQuery.valueview.Expert.valueCharacteristics
-				 * 
+				 *
 				 * TODO: remove this once the parsing is done via API
 				 */
 				valueCharacteristics: function() {
