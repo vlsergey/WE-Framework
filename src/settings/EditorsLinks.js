@@ -13,6 +13,12 @@ export default class EditorLinks extends PureComponent {
     editorTemplates: PropTypes.arrayOf( PropTypes.shape( EditorShape ) ),
   };
 
+  SPARQL_ENDPOINT = 'https://query.wikidata.org/sparql';
+  ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';
+  ENTITY_PREFIX = 'wd:';
+  INSTANCEOF_PROP = 'wdt:P31';
+  SUBCLASS_PROP = 'wdt:P279';
+
   constructor() {
     super( ...arguments );
     this.state = {
@@ -33,8 +39,8 @@ export default class EditorLinks extends PureComponent {
   }
 
   queryClassHierarchy( entityId ) {
-    const url = 'https://query.wikidata.org/sparql?query='
-      + encodeURIComponent( 'SELECT DISTINCT ?type WHERE { wd:' + entityId + ' wdt:P31 ?childClass . ?childClass wdt:P279* ?type }' );
+    const url = this.SPARQL_ENDPOINT + '?query='
+      + encodeURIComponent( `SELECT DISTINCT ?type WHERE { ${this.ENTITY_PREFIX}${entityId} ${this.INSTANCEOF_PROP} ?childClass . ?childClass ${this.SUBCLASS_PROP}* ?type }` );
     return fetch( url, {
       headers: {
         Accept: 'application/sparql-results+json',
@@ -46,7 +52,7 @@ export default class EditorLinks extends PureComponent {
 
         return result.results.bindings.map( binding => {
           const { value } = binding[ columnName ];
-          return value.substr( 'http://www.wikidata.org/entity/'.length );
+          return value.substr( this.ENTITY_URL_PREFIX.length );
         } );
       } ).then( classIds => {
         this.setState( { classIds } );
