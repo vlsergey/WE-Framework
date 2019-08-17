@@ -9,11 +9,13 @@ export default class PropertyLabelCell extends PureComponent {
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   };
 
+  WIKIDATA_LINK_URL = '//www.wikidata.org/wiki/';
+
   render() {
     const { label, description, id } = this.props.propertyDescription;
     return <th className={styles.wef_property_label}>
       <a
-        href={'//www.wikidata.org/wiki/Property:' + id}
+        href={`${this.WIKIDATA_LINK_URL}Property:${id}`}
         rel="noopener noreferrer"
         target="_blank"
         title={description}>

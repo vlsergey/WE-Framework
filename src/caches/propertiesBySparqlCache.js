@@ -4,6 +4,9 @@ const TYPE = 'PROPERTIESBYSPARQL';
 
 class PropertiesBySparqlCache extends AbstractQueuedCacheWithPostcheck {
 
+  SPARQL_ENDPOINT = 'https://query.wikidata.org/sparql';
+  ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';
+
   constructor() {
     super( TYPE, true, 1 );
   }
@@ -13,7 +16,7 @@ class PropertiesBySparqlCache extends AbstractQueuedCacheWithPostcheck {
   }
 
   buildRequestPromice( cacheKeys ) {
-    const url = 'https://query.wikidata.org/sparql?query='
+    const url = this.SPARQL_ENDPOINT + '?query='
       + encodeURIComponent( cacheKeys[ 0 ] );
     return fetch( url, {
       headers: {
@@ -32,10 +35,10 @@ class PropertiesBySparqlCache extends AbstractQueuedCacheWithPostcheck {
         throw new Error( 'SPARQL result column type must be \'uri\'' );
       }
       const { value } = binding[ columnName ];
-      if ( !value.startsWith( 'http://www.wikidata.org/entity/P' ) ) {
-        throw new Error( 'SPARQL result column value must start \'http://www.wikidata.org/entity/P\'' );
+      if ( !value.startsWith( `${this.ENTITY_URL_PREFIX}P` ) ) {
+        throw new Error( `SPARQL result column value must start '${this.ENTITY_URL_PREFIX}P'` );
       }
-      return value.substr( 'http://www.wikidata.org/entity/'.length );
+      return value.substr( this.ENTITY_URL_PREFIX.length );
     } );
 
     /* eslint no-undef: 0 */

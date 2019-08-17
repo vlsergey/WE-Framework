@@ -12,6 +12,8 @@ export default class UnsupportedDataValueEditor extends Component {
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
   };
 
+  WIKIDATA_ROOT = '//www.wikidata.org/';
+
   constructor() {
     super( ...arguments );
 
@@ -46,7 +48,7 @@ export default class UnsupportedDataValueEditor extends Component {
       generate: 'text/html',
     } ).then( result => {
       let html = result.result;
-      html = html.replace( 'href="/', 'href="//www.wikidata.org/' );
+      html = html.replace( 'href="/', 'href="' + this.WIKIDATA_ROOT );
       this.setState( { html } );
     } );
   }

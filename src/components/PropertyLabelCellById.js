@@ -10,6 +10,8 @@ export default class PropertyLabelCellById extends PureComponent {
     propertyId: PropTypes.string.isRequired,
   };
 
+  WIKIDATA_LINK_URL = '//www.wikidata.org/wiki/';
+
   render() {
     const { propertyId } = this.props;
 
@@ -18,7 +20,7 @@ export default class PropertyLabelCellById extends PureComponent {
         ? <PropertyLabelCell propertyDescription={cache[ propertyId ]} />
         : <th className={styles.wef_property_label}>
           <a
-            href={'//www.wikidata.org/wiki/Property:' + propertyId}
+            href={`${this.WIKIDATA_LINK_URL}Property:${propertyId}`}
             rel="noopener noreferrer"
             target="_blank">
             {propertyId}

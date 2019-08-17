@@ -25,6 +25,8 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
     readOnly: false,
   };
 
+  WIKIDATA_LINK_URL = 'https://www.wikidata.org/wiki/';
+
   constructor() {
     super( ...arguments );
 
@@ -78,7 +80,7 @@ export default class WikibaseItemDataValueEditor extends PureComponent {
       return <td
         className={className + ' ' + styles[ 'wef_datavalue_' + WikibaseItemDataValueEditor.DATATYPE + '_readonly' ]}
         colSpan={12}>
-        { currentValue && <a href={'https://www.wikidata.org/wiki/' + currentValue}>
+        { currentValue && <a href={this.WIKIDATA_LINK_URL + currentValue}>
           <EntityLabel entityId={currentValue} />
         </a> }
       </td>;

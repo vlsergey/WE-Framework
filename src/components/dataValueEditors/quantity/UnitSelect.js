@@ -3,9 +3,9 @@ import EntityField from 'components/entityField';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';
 
-const PREFIX = 'http://www.wikidata.org/entity/';
-
 export default class UnitSelect extends PureComponent {
+
+  ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';
 
   static propTypes = {
     value: PropTypes.object,
@@ -22,6 +22,8 @@ export default class UnitSelect extends PureComponent {
     readOnly: false,
   };
 
+  ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';
+
   constructor() {
     super( ...arguments );
 
@@ -33,7 +35,7 @@ export default class UnitSelect extends PureComponent {
       ...this.props.value,
       unit: !/^Q\d+$/.test( entityId )
         ? ''
-        : PREFIX + entityId,
+        : this.ENTITY_URL_PREFIX + entityId,
     } );
   }
 
@@ -41,8 +43,8 @@ export default class UnitSelect extends PureComponent {
     const { value, propertyDescription, readOnly } = this.props;
 
     const currentUnitStr = ( value || {} ).unit || '';
-    const currentEntityId = currentUnitStr && currentUnitStr.startsWith( PREFIX )
-      ? currentUnitStr.substr( PREFIX.length )
+    const currentEntityId = currentUnitStr && currentUnitStr.startsWith( this.ENTITY_URL_PREFIX )
+      ? currentUnitStr.substr( this.ENTITY_URL_PREFIX.length )
       : null;
 
     return <EntityField

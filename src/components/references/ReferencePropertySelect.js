@@ -13,6 +13,9 @@ export default class ReferencePropertySelect extends PureComponent {
     onSelect: PropTypes.func.isRequired,
   };
 
+  INSTANCE_OF = 'wdt:P31';
+  SOURCE_TYPE = 'wd:Q18608359';
+
   constructor() {
     super( ...arguments );
 
@@ -32,7 +35,7 @@ export default class ReferencePropertySelect extends PureComponent {
     // see https://www.wikidata.org/wiki/Q18608359
     return <PropertiesBySparqlProvider sparql={'SELECT DISTINCT ?property '
               + 'WHERE { '
-              + '?property wdt:P31 wd:Q18608359 . '
+              + `?property ${this.INSTANCE_OF} ${this.SOURCE_TYPE} . `
               + '}'}>
       { propertyIds => {
         if ( !propertyIds ) return <i>Loading possible reference properties...</i>;

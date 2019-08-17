@@ -19,6 +19,8 @@ export default class EntityField extends PureComponent {
     readOnly: false,
   };
 
+  WIKIDATA_LINK_URL = 'https://www.wikidata.org/wiki/';
+
   constructor() {
     super( ...arguments );
 
@@ -75,7 +77,7 @@ export default class EntityField extends PureComponent {
 
     if ( readOnly ) {
       if ( value ) {
-        return <a href={'https://www.wikidata.org/wiki/' + value}>
+        return <a href={this.WIKIDATA_LINK_URL + value}>
           <EntityLabel entityId={value} />
         </a>;
       } else {

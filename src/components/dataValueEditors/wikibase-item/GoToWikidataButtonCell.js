@@ -17,6 +17,8 @@ export default class GoToWikidataButtonCell extends PureComponent {
     entityId: null,
   };
 
+  WIKIDATA_LINK_URL = '//www.wikidata.org/wiki/';
+
   render() {
     const { disabled, entityId } = this.props;
 
@@ -24,7 +26,7 @@ export default class GoToWikidataButtonCell extends PureComponent {
       disabled={disabled || !entityId}
       icon="ui-icon-extlink"
       label={i18n.buttonOnWikidata}
-      onClick={NOOP}>{ children => <a href={entityId ? '//www.wikidata.org/wiki/' + entityId : '#'}
+      onClick={NOOP}>{ children => <a href={entityId ? this.WIKIDATA_LINK_URL + entityId : '#'}
         rel="noopener noreferrer"
         target="_blank">{children}</a> }</ButtonCell>;
   }
