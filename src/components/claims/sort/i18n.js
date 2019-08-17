@@ -14,7 +14,7 @@ const en = {
   dialogButtonLabelSortClaims: 'Sort',
   dialogButtonTextSortClaims: 'Sort',
 
-  dialogTitleSortClaims: 'Sort exising claims',
+  dialogTitleSortClaims: 'Sort existing claims',
 
   fieldLabelComparator: 'Sort rule',
   fieldLabelEmptyValuesSort: 'Put empty and non-existing values...',
