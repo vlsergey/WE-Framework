@@ -68,7 +68,8 @@
     "eslint:check": "eslint webpack.config.js src/**/*.js test/**/*.js",
     "eslint:fix": "eslint --fix karma.conf.js postcss.config.js webpack.config.js src/**/*.js test/**/*.js",
     "serve": "webpack-dev-server",
-    "deploy": "webpack -p && eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js && node ./dist/deploy-to-wikipedia.out.js",
+    "build": "webpack -p && eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js",
+    "deploy": "npm run build && node ./dist/deploy-to-wikipedia.out.js",
     "test": "karma start karma.conf.js --single-run",
     "test:watch": "karma start karma.conf.js --no-single-run",
     "test:watch:chrome": "karma start karma.conf.js --no-single-run --browsers Chrome"
