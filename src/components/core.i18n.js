@@ -15,7 +15,7 @@ const en = {
   confirmDeleteClaim: 'Remove the value of property «{label}»?',
 
   dialogButtonUpdateLabelsText: 'Update labels',
-  dialogButtonUpdateLabelsTitle: 'Redownload properties, qualificator and objects labels and descriptions from Wikidata',
+  dialogButtonUpdateLabelsTitle: 'Re-download properties, qualifiers, and object labels and descriptions from Wikidata',
   dialogButtonImportDataText: 'Import data…',
   dialogButtonImportDataTitle: 'Try different utils to load data from article text or external sources',
   dialogButtonSaveText: 'Save',

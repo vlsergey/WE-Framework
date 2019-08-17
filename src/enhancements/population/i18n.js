@@ -9,8 +9,8 @@ const en = {
   dialogTitle: 'Import population data',
 
   queryState: {
-    ERROR: 'Quering data from „$1“ completes with error (details are in browser console log)',
-    SCHEDULED: 'Quering data from „$1“…',
+    ERROR: 'Querying data from „$1“ completes with error (details are in browser console log)',
+    SCHEDULED: 'Querying data from „$1“…',
     WAITING: 'Query complete. Show results from „$1“',
   },
 
