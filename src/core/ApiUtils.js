@@ -109,10 +109,12 @@ export function isCommons() {
   return WG_SITE_NAME === 'Wikimedia Commons';
 }
 
+const WIKIDATA_ROOT = '//www.wikidata.org/';
+
 function getWikidataApiImpl() {
   let api;
   if ( !isWikidata() ) {
-    api = new mw.ForeignApi( '//www.wikidata.org/w/api.php' );
+    api = new mw.ForeignApi( WIKIDATA_ROOT + 'w/api.php' );
   } else {
     api = new mw.Api();
   }
