@@ -93,7 +93,6 @@ const loginPromise = loginTokenPromise.then( logintoken => {
         console.log( login );
         throw new Error( 'Unable to login as ' + lgname );
       }
-      return;
     } );
 } );
 
@@ -106,7 +105,7 @@ const csrfTokenPromise = loginPromise.then( () => {
     .then( json => json.query.tokens.csrftoken );
 } );
 
-const editPromise = csrfTokenPromise.then( csrftoken => {
+csrfTokenPromise.then( csrftoken => {
   const articleName = 'User:Vlsergey/wef.js';
   console.log( 'Uploading app.bundle.js as ' + articleName + '...' );
 
