@@ -38,13 +38,13 @@ export function getEntityIdDeferred() {
       return;
     }
 
-    if ( isWikidata() ) {
-      resolve( WG_TITLE );
+    if ( WG_WIKIBASE_ITEM_ID ) {
+      resolve( WG_WIKIBASE_ITEM_ID );
       return;
     }
 
-    if ( WG_WIKIBASE_ITEM_ID ) {
-      resolve( WG_WIKIBASE_ITEM_ID );
+    if ( isWikidata() ) {
+      resolve( WG_TITLE );
       return;
     }
 
