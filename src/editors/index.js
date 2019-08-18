@@ -13,21 +13,19 @@ import SoftwareEditorTemplate from './SoftwareEditorTemplate';
 import TaxonEditorTemplate from './TaxonEditorTemplate';
 import TransInfraEditorTemplate from './TransInfraEditorTemplate';
 
-const allEditorTemplates = [];
-
-allEditorTemplates.push( AdmEntityEditorTemplate );
-allEditorTemplates.push( ArticleEditorTemplate );
-allEditorTemplates.push( AwardEditorTemplate );
-allEditorTemplates.push( BookEditorTemplate );
-allEditorTemplates.push( EntityEditorTemplate );
-allEditorTemplates.push( ExternalLinksEditorTemplate );
-allEditorTemplates.push( FrbrEditionEditorTemplate );
-allEditorTemplates.push( FrbrWorkEditorTemplate );
-allEditorTemplates.push( LegalInstrumentEditorTemplate );
-allEditorTemplates.push( MovieEditorTemplate );
-allEditorTemplates.push( PersonEditorTemplate );
-allEditorTemplates.push( SoftwareEditorTemplate );
-allEditorTemplates.push( TaxonEditorTemplate );
-allEditorTemplates.push( TransInfraEditorTemplate );
-
-export default allEditorTemplates;
+export default [
+  AdmEntityEditorTemplate,
+  ArticleEditorTemplate,
+  AwardEditorTemplate,
+  BookEditorTemplate,
+  EntityEditorTemplate,
+  ExternalLinksEditorTemplate,
+  FrbrEditionEditorTemplate,
+  FrbrWorkEditorTemplate,
+  LegalInstrumentEditorTemplate,
+  MovieEditorTemplate,
+  PersonEditorTemplate,
+  SoftwareEditorTemplate,
+  TaxonEditorTemplate,
+  TransInfraEditorTemplate,
+];
