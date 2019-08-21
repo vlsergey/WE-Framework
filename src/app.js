@@ -25,8 +25,7 @@ mw.loader.using( [ //
   'jquery.ui.dialog', //
   'jquery.ui.tabs', //
   'jquery.uls.data', //
-  'mediawiki.ForeignApi',
-], () => {
+  'mediawiki.ForeignApi' ], () => {
 
   require( 'fetch-polyfill' );
   loadSemanticUiCss();
@@ -53,7 +52,7 @@ mw.loader.using( [ //
   wikieditorIntegration();
 
 }, function() {
-  /*eslint no-console: 0*/
+  /* eslint no-console: 0*/
   console.log( '[WE-F] unable to load WE-F: ' );
   console.log( arguments );
 } );

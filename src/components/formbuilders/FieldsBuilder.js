@@ -45,9 +45,9 @@ export default class FieldsBuilder extends PureComponent {
   }
 
   renderField( field, propertyDescription, props = {} ) {
-    expect ( field ).toBeAn( 'object' );
+    expect( field ).toBeAn( 'object' );
     const propertyId = field.property;
-    expect ( propertyId ).toBeAn( 'string',
+    expect( propertyId ).toBeAn( 'string',
       'Property attribute is not specified in field description: ' + JSON.stringify( field ) );
 
     if ( !propertyDescription || !propertyDescription.label ) {
@@ -55,7 +55,7 @@ export default class FieldsBuilder extends PureComponent {
         <i>Loading property description of {propertyId}...</i>
       </td></tr>;
     }
-    expect ( propertyDescription ).toBeA( PropertyDescription );
+    expect( propertyDescription ).toBeA( PropertyDescription );
     return <PropertyClaimContainer
       {...props}
       propertyDescription={propertyDescription} />;

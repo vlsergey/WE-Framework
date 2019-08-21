@@ -107,7 +107,7 @@ export default class SortClaimsDialog extends PureComponent {
             <th>{i18n.fieldLabelSortBy}</th>
             <td>
               <PropertyDescriptionsProvider propertyIds={propertyIds}>
-                { cache => <select name="propertyId" onChange={this.handleChange} value={this.state.propertyId} >
+                { cache => <select name="propertyId" onChange={this.handleChange} value={this.state.propertyId}>
                   {propertyIds.map( propertyId =>
                     <option
                       key={propertyId}

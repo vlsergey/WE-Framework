@@ -160,7 +160,7 @@ export default class TimeDataValueEditor extends PureComponent {
 
     if ( readOnly ) {
       if ( rendering ) {
-        return <td className={styles.time} colSpan={12} >{text}</td>;
+        return <td className={styles.time} colSpan={12}>{text}</td>;
       }
       return <td className={styles.time} colSpan={12} dangerouslySetInnerHTML={{ __html: renderedAsHtml }} />;
     }

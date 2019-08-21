@@ -4,7 +4,7 @@ import EditorTabsBuilder from './EditorTabsBuilder';
 import PropTypes from 'prop-types';
 import { TabShape } from './FormShapes';
 
-export default class DialogWithTabs extends PureComponent{
+export default class DialogWithTabs extends PureComponent {
 
   static propTypes = {
     tabs: PropTypes.arrayOf( PropTypes.shape( TabShape ) ).isRequired,

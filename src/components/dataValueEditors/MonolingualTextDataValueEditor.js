@@ -57,9 +57,9 @@ export default class MonolingualTextDataValueEditor extends PureComponent {
         return <td colSpan={12}>
           <span>{language}: {text}</span>
         </td>;
-      } else {
-        return null;
       }
+      return null;
+
     }
 
     return <td className={styles.wef_monolingualtext} colSpan={12}>

@@ -14,7 +14,7 @@ export default class FieldsetBuilder extends PureComponent {
     const { fieldset } = this.props;
     const { label, labelEntityId, ...etc } = fieldset;
 
-    return <fieldset >
+    return <fieldset>
       { label && <legend>{label}</legend> }
       { labelEntityId && <legend>
         <EntityLabel entityId={labelEntityId} />

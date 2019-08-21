@@ -25,7 +25,7 @@ export default class CalendarModelSelect extends PureComponent {
   }
 
   render() {
-    /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
+    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
     const { onChange, readOnly, value, ...other } = this.props;
 
     return <select

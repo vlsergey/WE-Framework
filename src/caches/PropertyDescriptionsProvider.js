@@ -85,14 +85,14 @@ export default class PropertyDescriptionsProvider extends PureComponent {
     intern( calcCountryLanguageIds( countriesCache, countries ) )
   );
 
-  memoizeCountries = defaultMemoize ( ( propertyIds, cache ) =>
+  memoizeCountries = defaultMemoize( ( propertyIds, cache ) =>
     intern( propertyIds
       .filter( propertyId => !!cache[ propertyId ] )
       .map( propertyId => cache[ propertyId ] )
       .flatMap( propertyDescription => propertyDescription.countries ) )
   );
 
-  memoizeSourceWebsitesLanguages = defaultMemoize ( ( propertyIds, cache ) =>
+  memoizeSourceWebsitesLanguages = defaultMemoize( ( propertyIds, cache ) =>
     intern( propertyIds
       .filter( propertyId => !!cache[ propertyId ] )
       .map( propertyId => cache[ propertyId ] )
@@ -104,7 +104,7 @@ export default class PropertyDescriptionsProvider extends PureComponent {
 
     return <CacheValuesProvider
       cache={propertyDescriptionCacheController}
-      cacheKeys={propertyIds} >
+      cacheKeys={propertyIds}>
       { propertyDescriptionCache => {
         if ( !propertyDescriptionCache )
           return children( null );

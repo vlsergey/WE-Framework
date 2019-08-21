@@ -1,4 +1,4 @@
-//import * as WEF_Utils from './utils';
+// import * as WEF_Utils from './utils';
 //
 const MW_SCRIPT_PATH = mw.config.get( 'wgScriptPath' );
 
@@ -146,7 +146,7 @@ export function purgeAsync() {
   } );
 }
 
-//export function wbGetEntities( params ) {
+// export function wbGetEntities( params ) {
 //  params.action = 'wbgetentities';
 //  params.uselang = WEF_Utils.getDefaultLanguageCode();
 //
@@ -169,4 +169,4 @@ export function purgeAsync() {
 //        return;
 //      } );
 //  } );
-//}
+// }

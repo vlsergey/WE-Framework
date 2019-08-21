@@ -55,4 +55,4 @@ export const claimColumnsF = () => {
     }
 
     return sortColumns( columns );
-  } );};
+  } ); };

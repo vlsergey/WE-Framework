@@ -40,15 +40,15 @@ class LocalizedWikibaseItemInput extends PureComponent {
         entityId={entityId}
         entityLabel={null}
         ref={wikibaseItemInputRef} />;
-    } else {
-      const labelDescription = cache[ entityId ];
-      const entityLabel = labelDescription ? labelDescription.label : null;
-      return <WikibaseItemInput
-        {...etc}
-        entityId={entityId}
-        entityLabel={entityLabel}
-        ref={wikibaseItemInputRef} />;
     }
+    const labelDescription = cache[ entityId ];
+    const entityLabel = labelDescription ? labelDescription.label : null;
+    return <WikibaseItemInput
+      {...etc}
+      entityId={entityId}
+      entityLabel={entityLabel}
+      ref={wikibaseItemInputRef} />;
+
   }
 }
 

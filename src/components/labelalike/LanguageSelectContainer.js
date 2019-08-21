@@ -25,7 +25,7 @@ export default class LanguageSelectContainer extends PureComponent {
     const { language } = this.state;
 
     return (
-      <fieldset className={styles.wef_fieldset + ' ' + styles.wef_labels_description_area} >
+      <fieldset className={styles.wef_fieldset + ' ' + styles.wef_labels_description_area}>
         <legend>
           {i18n.labelLabels}
           {':\u00A0\u00A0\u00A0'}

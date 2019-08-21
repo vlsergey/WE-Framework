@@ -48,18 +48,18 @@ export default class EntityField extends PureComponent {
       if ( props.oneOf ) {
         if ( !!currentValue && props.oneOf.indexOf( currentValue ) === -1 ) {
           return { selectOptions: [ ...props.oneOf, currentValue ] };
-        } else {
-          return { selectOptions: props.oneOf };
         }
+        return { selectOptions: props.oneOf };
+
       } else if ( state.lruFromCache ) {
         if ( !!currentValue && state.lruFromCache.indexOf( currentValue ) === -1 ) {
           return { selectOptions: [ ...state.lruFromCache, currentValue ] };
-        } else {
-          return { selectOptions: state.lruFromCache };
         }
-      } else {
-        throw new Error( 'Unsupported state: both oneOf and lruFromCache are null or empty' );
+        return { selectOptions: state.lruFromCache };
+
       }
+      throw new Error( 'Unsupported state: both oneOf and lruFromCache are null or empty' );
+
     }
   }
 
@@ -80,9 +80,9 @@ export default class EntityField extends PureComponent {
         return <a href={this.WIKIDATA_LINK_URL + value}>
           <EntityLabel entityId={value} />
         </a>;
-      } else {
-        return null;
       }
+      return null;
+
     }
 
     return this.state.selectMode

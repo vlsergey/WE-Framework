@@ -21,7 +21,7 @@ export const buildStringCacheValuesFromEntity = entity => {
   entityResult.pageid = entity.pageid;
 
   PROPERTIES_TO_CACHE.forEach( propertyId => {
-    if ( !entity.claims ){
+    if ( !entity.claims ) {
       entityResult[ propertyId ] = EMPTY_ARRAY;
       return;
     }

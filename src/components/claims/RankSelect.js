@@ -32,7 +32,7 @@ export default class RankSelect extends Component {
   }
 
   render() {
-    /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
+    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
     const { onChange, value, ...other } = this.props;
 
     return <select
