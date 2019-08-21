@@ -65,8 +65,8 @@
     "wikitext-dom": "0.0.7"
   },
   "scripts": {
-    "eslint:check": "eslint webpack.config.js src/**/*.js test/**/*.js",
-    "eslint:fix": "eslint --fix karma.conf.js postcss.config.js webpack.config.js src/**/*.js test/**/*.js",
+    "eslint:check": "eslint --ignore-pattern \"!.eslintrc.js\" .eslintrc.js karma.conf.js postcss.config.js webpack.config.js src/**/*.js test/**/*.js",
+    "eslint:fix": "eslint --ignore-pattern \"!.eslintrc.js\" --fix .eslintrc.js karma.conf.js postcss.config.js webpack.config.js src/**/*.js",
     "serve": "webpack-dev-server",
     "build": "webpack -p && eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js",
     "deploy": "npm run build && node ./dist/deploy-to-wikipedia.out.js",

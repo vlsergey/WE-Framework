@@ -1,7 +1,7 @@
-'use strict';
+
 
 module.exports = {
-  "globals": {
-    "process": false,
+  globals: {
+    process: false,
   },
 };
