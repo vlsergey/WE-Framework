@@ -21,11 +21,7 @@ function loadSemanticUiCss( ) {
   }
 }
 
-mw.loader.using( [ //
-  'jquery.ui.dialog', //
-  'jquery.ui.tabs', //
-  'jquery.uls.data', //
-  'mediawiki.ForeignApi' ], () => {
+mw.loader.using( [ 'jquery.ui.dialog', 'jquery.ui.tabs', 'jquery.uls.data', 'mediawiki.ForeignApi' ], () => {
 
   require( 'fetch-polyfill' );
   loadSemanticUiCss();

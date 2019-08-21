@@ -68,7 +68,7 @@ module.exports = {
         loader: StringReplacePlugin.replace( {
           replacements: [ {
             pattern: /\/\/fb\.me\//ig,
-            replacement( match, p1, offset, string ) {
+            replacement() {
               return '//fb-removeme.me/';
             },
           } ],
