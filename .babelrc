@@ -1,16 +1,17 @@
 {
   "plugins": [
+    // disable until https://github.com/gajus/flow-runtime/issues/237 is resolved
+    // [ "flow-runtime", { "assert": true, "annotate": true } ],
+    "@babel/plugin-syntax-dynamic-import",
+    [ "@babel/plugin-proposal-decorators", { "decoratorsBeforeExport": true}],
     "@babel/plugin-proposal-class-properties",
     "@babel/plugin-proposal-object-rest-spread",
     "@babel/plugin-transform-runtime",
     "emotion"
   ],
   "presets": [
+    "@babel/preset-flow",
+    "@babel/preset-env",
   	"@babel/preset-react",
-    ["@babel/preset-env", {
-      "targets": {
-        "browsers": [">0.1%", "safari >= 10", "ie >= 11"]
-      }
-    }]
   ]
 }
