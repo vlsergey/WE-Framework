@@ -1,22 +1,20 @@
 import { closeWithoutSave, saveAndClose } from 'core/save';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import DialogWithTabs from 'components/formbuilders/DialogWithTabs';
-import { EditorShape } from 'components/formbuilders/FormShapes';
 import i18n from './core.i18n';
 import ImportDataDialog from 'enhancements/importers/ImportDataDialog';
-import PropTypes from 'prop-types';
 import styles from './EditorApp.css';
 
-class EditorApp extends Component {
+type PropsType = {
+  closeWithoutSave : any => any,
+  description : EditorDefType,
+  reject : string => any,
+  resolve : string => any,
+  saveAndClose : any => any,
+};
 
-  static propTypes = {
-    description: PropTypes.shape( EditorShape ),
-    resolve: PropTypes.func.isRequired,
-    reject: PropTypes.func.isRequired,
-    closeWithoutSave: PropTypes.func.isRequired,
-    saveAndClose: PropTypes.func.isRequired,
-  };
+class EditorApp extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );

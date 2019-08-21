@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { ChildrenContainer } from './FormShapes';
 import ErrorBoundary from './ErrorBoundary';
 import expect from 'expect';
 import FieldsFilterByClaimExistence from './FieldsFilterByClaimExistence';
@@ -10,20 +9,18 @@ import Pagination from 'semantic-ui-react/dist/commonjs/addons/Pagination';
 import PropertyClaimContainer from 'components/claims/PropertyClaimContainer';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import PropTypes from 'prop-types';
 import styles from './form.css';
 
 const FIELDS_PER_PAGE = 20;
 
-export default class FieldsBuilder extends PureComponent {
+type PropsType = ChildrenContainerDefType & {
+  // can be used to hide claim property label
+  parentLabelEntityId? : ?string,
+  quickSearch? : ?boolean,
+  sortBy? : ?( string[] ),
+};
 
-  static propTypes = {
-    ...ChildrenContainer,
-    // can be used to hide claim property label
-    parentLabelEntityId: PropTypes.string,
-    quickSearch: PropTypes.bool,
-    sortBy: PropTypes.arrayOf( PropTypes.string ),
-  };
+export default class FieldsBuilder extends PureComponent<PropsType> {
 
   static defaultProps = {
     parentLabelEntityId: null,

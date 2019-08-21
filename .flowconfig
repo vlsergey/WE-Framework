@@ -1,9 +1,12 @@
 [ignore]
+.*coverage/.*
 .*dist/.*
 .*node_modules/.*
 .*test/.*
 .*\.config\.js
 .*\.conf\.js
+deploy\-to\-wikipedia\.js
+
 .*\.json
 
 [lints]

@@ -1,14 +1,12 @@
 import React, { PureComponent } from 'react';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import EditorTabsBuilder from './EditorTabsBuilder';
-import PropTypes from 'prop-types';
-import { TabShape } from './FormShapes';
 
-export default class DialogWithTabs extends PureComponent {
+type PropsType = {
+  tabs : TabDefType[],
+};
 
-  static propTypes = {
-    tabs: PropTypes.arrayOf( PropTypes.shape( TabShape ) ).isRequired,
-  };
+export default class DialogWithTabs extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );

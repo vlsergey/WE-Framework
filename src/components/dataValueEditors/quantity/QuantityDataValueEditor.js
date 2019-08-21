@@ -11,19 +11,23 @@ import PropTypes from 'prop-types';
 import styles from './Quantity.css';
 import UnitSelect from './UnitSelect';
 
-export const MODES = {
+interface Mode {
+  +canBeUsedForValue : QuantityValueType => boolean,
+}
+
+export const MODES : {[string] : Mode} = {
   exact: ExactValueEditor,
   plusMinus: PlusMinusValueEditor,
   boundaries: BoundariesValueEditor,
 };
 
-function detectAppropriateMode( datavalue ) {
+function detectAppropriateMode( datavalue : DataValueType ) {
   if ( datavalue === undefined || datavalue === null
     || datavalue.value === undefined || datavalue.value === null ) {
     return 'exact';
   }
 
-  const { value } = datavalue;
+  const value : QuantityValueType = datavalue.value;
   return Object.keys( MODES ).find( mode => MODES[ mode ].canBeUsedForValue( value ) );
 }
 

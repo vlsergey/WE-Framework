@@ -1,16 +1,10 @@
-import expect from 'expect';
-
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-const compare = indexedDB ? indexedDB.cmp.bind( indexedDB ) : undefined;
 
-const EMPTY_OBJECT = {};
-
-export default function findByKeysInObjectStore( objectStore, unsortedKeys ) {
-  expect( objectStore ).toBeA( IDBObjectStore );
-  expect( unsortedKeys ).toBeAn( 'array' );
+export default function findByKeysInObjectStore( objectStore : IDBObjectStore, unsortedKeys : any[] ) : Promise< any > {
+  const compare = indexedDB.cmp.bind( indexedDB );
 
   if ( unsortedKeys.length === 0 ) {
-    return Promise.resolve( EMPTY_OBJECT );
+    return Promise.resolve( {} );
   }
 
   return new Promise( ( resolve, reject ) => {

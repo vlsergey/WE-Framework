@@ -2,15 +2,23 @@ import React, { PureComponent } from 'react';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import fetchJsonp from 'fetch-jsonp';
 import i18n from './i18n';
-import PropTypes from 'prop-types';
 import styles from './styles.css';
 
-export default class ViafLookupDialog extends PureComponent {
+type PropsType = {
+  defaultQuery? : ?string,
+  onSelect : string[] => any,
+};
 
-  static propTypes = {
-    defaultQuery: PropTypes.string,
-    onSelect: PropTypes.func.isRequired,
-  };
+type StateType = {
+  autoSuggestResult : any,
+  query : ?string,
+  queryScheduled : string,
+  queryState : 'WAITING' | 'SCHEDULED',
+  selected : any[],
+  wikidataModelautoSuggestResult : any[],
+};
+
+export default class ViafLookupDialog extends PureComponent<PropsType, StateType> {
 
   static defaultProps = {
     defaultQuery: '',
@@ -32,7 +40,7 @@ export default class ViafLookupDialog extends PureComponent {
     this.handleSelect = this.handleSelect.bind( this );
   }
 
-  doLookup( query ) {
+  doLookup( query : string ) {
     const { queryScheduled } = this.state;
     if ( query === queryScheduled ) return;
     this.setState( { queryScheduled: query } );
@@ -72,7 +80,7 @@ export default class ViafLookupDialog extends PureComponent {
     const newQuery = event.target.value || '';
     this.setState( { query: newQuery } );
 
-    setTimeout( this.doLookup( newQuery.trim() ), 0.5 );
+    setTimeout( () => this.doLookup( newQuery.trim() ), 0.5 );
   }
 
   handleSelect() {

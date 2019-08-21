@@ -22,8 +22,8 @@ export default class AbstractQueuedCache {
     this.useIndexedDb = useIndexedDb;
     this.dbConnection = null;
     if ( useIndexedDb && indexedDB ) {
-      const dbOpenRequest = indexedDB.open( 'WEF_CACHE_' + type, 1 );
-      dbOpenRequest.onerror = function( err ) {
+      const dbOpenRequest : IDBOpenDBRequest = indexedDB.open( 'WEF_CACHE_' + type, 1 );
+      dbOpenRequest.onerror = err => {
         mw.log.warn( 'Unable to open indexedDB' );
         mw.log.warn( err );
       };
@@ -58,7 +58,7 @@ export default class AbstractQueuedCache {
     throw new Error( 'Child class need to implement notifyMessage( cacheKeys ) function' );
   }
 
-  buildRequestPromice( cacheKeys ) {
+  buildRequestPromice( cacheKeys ) : Promise< any > {
     /* eslint no-unused-vars: 0 */
     throw new Error( 'Child class need to implement buildRequestPromice( cacheKeys ) function' );
   }
@@ -212,7 +212,7 @@ export default class AbstractQueuedCache {
       } );
   }
 
-  queueNextBatch() {
+  async queueNextBatch() {
     expect( this.queueState ).toEqual( 'REQUEST' );
 
     if ( this.requestQueue.size === 0 ) {
@@ -233,7 +233,8 @@ export default class AbstractQueuedCache {
     const notifyMessage = this.notifyMessage( nextBatch );
     console.debug( notifyMessage + '…' );
 
-    return this.buildRequestPromice( nextBatch ).then( result => {
+    try {
+      const result : any = await this.buildRequestPromice( nextBatch );
       console.info( notifyMessage + '… Success.' );
       console.debug( 'Successfully received ' + nextBatch.length + ' cache ' + this.type + ' items: ' + nextBatch );
 
@@ -261,8 +262,7 @@ export default class AbstractQueuedCache {
 
       this.nextBatch = EMPTY_SET;
       this.decideNextAction( );
-
-    } ).catch( error => {
+    } catch ( error ) {
       mw.notify( notifyMessage + '… Failure. See console log output for details.',
         { autoHide: true, tag: 'WE-F Cache: ' + type } );
       mw.log.error( 'Unable to batch request following items: ' + nextBatch );
@@ -270,7 +270,7 @@ export default class AbstractQueuedCache {
 
       this.nextBatch = EMPTY_SET;
       this.decideNextAction( );
-    } );
+    }
   }
 
   decideNextAction( ) {

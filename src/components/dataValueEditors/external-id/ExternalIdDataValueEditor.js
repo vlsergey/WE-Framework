@@ -68,7 +68,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
     </React.Fragment>;
   }
 
-  renderButtonCells() {
+  renderButtonCells() : any {
     const { propertyDescription } = this.props;
 
     return [

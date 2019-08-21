@@ -45,9 +45,12 @@ class Importer {
 
         const date = ( tpl.getValueByNameAsString( 'ДАТА' ) || '' ).trim();
         if ( date ) {
-          const [ , d, m, y ] = /^[\s\r\n]*(\d+)\.(\d+).(\d+)[\s\r\n]*$/g.exec( date );
-          if ( d && m && y ) {
-            doFillTimeClaim( 'P571', '+' + y + '-' + m + '-' + d + 'T00:00:00Z' );
+          const match : ?string[] = /^[\s\r\n]*(\d+)\.(\d+).(\d+)[\s\r\n]*$/g.exec( date );
+          if ( match ) {
+            const [ , d, m, y ] = match;
+            if ( d && m && y ) {
+              doFillTimeClaim( 'P571', '+' + y + '-' + m + '-' + d + 'T00:00:00Z' );
+            }
           }
         }
 

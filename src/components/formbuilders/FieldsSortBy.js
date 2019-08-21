@@ -1,8 +1,6 @@
 import compare from 'utils/compare';
 import compareLanguageCodes from 'utils/compareLanguageCodes';
 import { defaultMemoize } from 'reselect';
-import { FieldShape } from './FormShapes';
-import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import stableSort from 'utils/stableSort';
 
@@ -28,14 +26,14 @@ const sort = defaultMemoize( ( cache, fields, sortBy ) => {
   return result.map( item => ( { property: item.property } ) );
 } );
 
-export default class FieldsSortBy extends PureComponent {
+type PropsType = {
+  children : any => any,
+  fields : FieldDefType[],
+  propertyDescriptionCache : any,
+  sortBy? : ?( string[] ),
+};
 
-  static propTypes = {
-    propertyDescriptionCache: PropTypes.object.isRequired,
-    children: PropTypes.func.isRequired,
-    fields: PropTypes.arrayOf( PropTypes.shape( FieldShape ) ).isRequired,
-    sortBy: PropTypes.arrayOf( PropTypes.string ),
-  };
+export default class FieldsSortBy extends PureComponent<PropsType> {
 
   render() {
     const { children, fields, propertyDescriptionCache, sortBy } = this.props;

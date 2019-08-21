@@ -1,22 +1,20 @@
 import React, { PureComponent } from 'react';
 import compare from 'utils/compare';
-import { EditorShape } from 'components/formbuilders/FormShapes';
 import { getEntityIdDeferred } from 'core/ApiUtils';
 import i18n from './i18n';
 import { onEditorLinkClick } from 'core/edit';
-import PropTypes from 'prop-types';
 import { start } from './index';
 
-export default class EditorLinks extends PureComponent {
+type PropsType = {
+  editorTemplates : EditorDefType[],
+};
 
-  static propTypes = {
-    editorTemplates: PropTypes.arrayOf( PropTypes.shape( EditorShape ) ),
-  };
+export default class EditorLinks extends PureComponent<PropsType> {
 
-  SPARQL_ENDPOINT = 'https://query.wikidata.org/sparql';
   ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';
   ENTITY_PREFIX = 'wd:';
   INSTANCEOF_PROP = 'wdt:P31';
+  SPARQL_ENDPOINT = 'https://query.wikidata.org/sparql';
   SUBCLASS_PROP = 'wdt:P279';
 
   constructor() {
