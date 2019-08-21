@@ -183,6 +183,18 @@ const editorDescription = {
       labelEntityId: 'Q309' /* history */,
       fieldsets: [
         {
+          labelEntityId: 'P551',
+          fields: [
+            { property: 'P551' } /* residence */,
+          ],
+        },
+        {
+          labelEntityId: 'P7153',
+          fields: [
+            { property: 'P7153' } /* significant place */,
+          ],
+        },
+        {
           labelEntityId: 'P793',
           fields: [
             { property: 'P793' } /* significant event */,
