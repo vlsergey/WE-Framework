@@ -2,7 +2,7 @@ import expect from 'expect';
 
 const localStorage = window.localStorage || {
   _cache: {},
-  getItem( key ) { return this._cache[ key ];},
+  getItem( key ) { return this._cache[ key ]; },
   setItem( key, value ) { this._cache[ key ] = value; },
 };
 const LSKEY = 'WEF_LRU_REFERENCES';

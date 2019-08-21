@@ -71,8 +71,7 @@ module.exports = {
             replacement( match, p1, offset, string ) {
               return '//fb-removeme.me/';
             },
-          },
-          ],
+          } ],
         } ),
       },
     ],

@@ -92,7 +92,7 @@ export function onNewElementClick( editorDescription, classEntityId ) {
 }
 
 export function onEditorLinkClick( editorDescription, entityId ) {
-  expect ( editorDescription ).toBeAn( 'object' );
+  expect( editorDescription ).toBeAn( 'object' );
 
   if ( typeof entityId !== 'string' ) {
 
@@ -142,7 +142,7 @@ export function onEditorLinkClick( editorDescription, entityId ) {
       .then( purge );
 
   } else {
-    expect ( entityId ).toBeA( 'string' );
+    expect( entityId ).toBeA( 'string' );
 
     mw.notify( 'Get Wikidata entity content for ' + entityId + '...' );
     getWikidataApi().getPromise( {

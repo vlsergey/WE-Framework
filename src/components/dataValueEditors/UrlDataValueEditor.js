@@ -28,9 +28,9 @@ export default class UrlDataValueEditor extends AbstractStringBasedDataValueEdit
             {href}
           </a> }
         </td>;
-      } else {
-        return null;
       }
+      return null;
+
     }
 
     const params = {

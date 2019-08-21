@@ -62,7 +62,7 @@ export function collectClaimUpdates( originalEntity, entity ) {
   const toUpdate = [];
   const checked = new Set();
 
-  //calculate changed and removed claims
+  // calculate changed and removed claims
   Object.keys( entity.claims || {} ).forEach( propertyId => {
 
     const newClaims = entity.claims[ propertyId ];
@@ -194,7 +194,7 @@ export function saveAndClose( resolve, reject ) {
     };
 
     if ( typeof state.entity.id !== 'string' ) {
-      params[ 'new' ] = 'item';
+      params.new = 'item';
     } else {
       params.id = state.entity.id;
     }

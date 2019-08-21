@@ -18,7 +18,7 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   case 'ALIASES_CHANGE':
   {
     const { language, newValue } = action;
-    expect ( language ).toBeA( 'string' );
+    expect( language ).toBeA( 'string' );
 
     const elementToChange = {
       LABELS_CHANGE: 'labels',
@@ -54,15 +54,15 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
           [ propertyId ]: [ ...existingClaims, newClaim ],
         },
       };
-    } else {
-      return {
-        ...entity,
-        claims: {
-          ...claims,
-          [ propertyId ]: [ newClaim ],
-        },
-      };
     }
+    return {
+      ...entity,
+      claims: {
+        ...claims,
+        [ propertyId ]: [ newClaim ],
+      },
+    };
+
   }
 
   case 'CLAIM_DELETE': {

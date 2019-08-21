@@ -64,9 +64,9 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
             {datavalue.value}
           </a>
         </td>;
-      } else {
-        return null;
       }
+      return null;
+
     }
 
     const params = {

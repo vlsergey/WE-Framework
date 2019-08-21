@@ -23,7 +23,7 @@ export default class AbstractQueuedCache {
     this.dbConnection = null;
     if ( useIndexedDb && indexedDB ) {
       const dbOpenRequest = indexedDB.open( 'WEF_CACHE_' + type, 1 );
-      dbOpenRequest.onerror = function( err ){
+      dbOpenRequest.onerror = function( err ) {
         mw.log.warn( 'Unable to open indexedDB' );
         mw.log.warn( err );
       };
@@ -141,10 +141,10 @@ export default class AbstractQueuedCache {
         this.changeState( 'SCHEDULED', 'SCAN' );
         this.scanDatabase( );
         return;
-      } else {
-        this.dbQueue.forEach( cacheKey => this.requestQueue.add( cacheKey ) );
-        this.dbQueue.clear();
       }
+      this.dbQueue.forEach( cacheKey => this.requestQueue.add( cacheKey ) );
+      this.dbQueue.clear();
+
     }
 
     if ( this.requestQueue.size > 0 ) {

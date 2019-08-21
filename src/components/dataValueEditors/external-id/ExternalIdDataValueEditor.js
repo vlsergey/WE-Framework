@@ -34,12 +34,12 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
               {datavalue.value}
             </a>
           </td>;
-        } else {
-          return <td colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR}>{datavalue.value}</td>;
         }
-      } else {
-        return null;
+        return <td colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR}>{datavalue.value}</td>;
+
       }
+      return null;
+
     }
 
     const params = {

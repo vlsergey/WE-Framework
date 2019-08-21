@@ -23,7 +23,7 @@ const fromArticleTimelines = () => getArticleDom()
     .map( tl => tl.findPlotDataBarsAttributes() )
     .filter( data => !!data )
     .flatMap( data => Object.values( data ) )
-    .filter( attr => /^\d+$/.exec( attr.bar ) && '0' === attr.from && /^\d+$/.exec( attr.till ) )
+    .filter( attr => /^\d+$/.exec( attr.bar ) && attr.from === '0' && /^\d+$/.exec( attr.till ) )
     .map( attr => ( { year: Number( attr.bar ), population: Number( attr.till ) } ) ) );
 
 const isNumeric = str => !isNaN( toNumber( str ) );

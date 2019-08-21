@@ -79,8 +79,8 @@ export default class QuantityDataValueEditor extends PureComponent {
     const value = ( datavalue || {} ).value || {};
     const unit = value.unit || '1';
 
-    const classNames = [ styles[ 'wef_datavalue_quantity' ] ];
-    if ( readOnly ) classNames.push( styles[ 'wef_datavalue_quantity_readonly' ] );
+    const classNames = [ styles.wef_datavalue_quantity ];
+    if ( readOnly ) classNames.push( styles.wef_datavalue_quantity_readonly );
 
     if ( readOnly ) {
       return <React.Fragment>

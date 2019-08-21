@@ -25,9 +25,9 @@ export default class StringDataValueEditor extends AbstractStringBasedDataValueE
         return <td colSpan={12}>
           <span>{datavalue.value}</span>
         </td>;
-      } else {
-        return null;
       }
+      return null;
+
     }
 
     const params = {

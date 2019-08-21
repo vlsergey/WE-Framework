@@ -41,13 +41,13 @@ export default class SingleLanguageEditor extends PureComponent {
       <tbody>
         <tr>
           <th>{i18n.labelLabel}</th>
-          <td >
+          <td>
             <input onChange={this.handleLabelChange} value={label} />
           </td>
         </tr>
         <tr>
           <th>{i18n.labelDescription}</th>
-          <td >
+          <td>
             <input onChange={this.handleDescriptionChange} value={description} />
           </td>
         </tr>

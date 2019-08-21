@@ -7,7 +7,7 @@ let dbConnection = null;
 
 if ( indexedDB ) {
   const dbOpenRequest = indexedDB.open( 'WEF_WIKIBASE_ITEM_LRU', 1 );
-  dbOpenRequest.onerror = function( err ){
+  dbOpenRequest.onerror = function( err ) {
     mw.log.warn( 'Unable to open indexedDB' );
     mw.log.warn( err );
   };
