@@ -15,7 +15,7 @@ describe( 'components/dataValueEditors', () => {
 
     const p18Description = new PropertyDescription( P18 );
 
-    it ( 'can be rendered', () => {
+    it( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <TableTBodyTr>
           <CommonsMediaDataValueEditor
@@ -30,7 +30,7 @@ describe( 'components/dataValueEditors', () => {
       assert.ok( rendered );
     } );
 
-    it ( 'can be changed via keyboard', () => {
+    it( 'can be changed via keyboard', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <ValueHolder initialValue={{ value: 'Image.jpg', type: 'string' }}>{ ( value, onChange ) =>
           <TableTBodyTr>

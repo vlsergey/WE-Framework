@@ -15,7 +15,7 @@ describe( 'components/dataValueEditors', () => {
 
     const p18Description = new PropertyDescription( P18 );
 
-    it ( 'can be rendered', () => {
+    it( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <TableTBodyTr>
           <MonolingualTextDataValueEditor
@@ -39,7 +39,7 @@ describe( 'components/dataValueEditors', () => {
       assert.equal( inputs[ 1 ].value, 'TestText' );
     } );
 
-    it ( 'non-existing can be changed via keyboard', () => {
+    it( 'non-existing can be changed via keyboard', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <ValueHolder>{ ( value, onChange ) =>
           <TableTBodyTr>
@@ -66,7 +66,7 @@ describe( 'components/dataValueEditors', () => {
       assert.equal( valueHolder.getValue().value.text, 'NewTestText' );
     } );
 
-    it ( 'existing value can be changed via keyboard', () => {
+    it( 'existing value can be changed via keyboard', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <ValueHolder initialValue={{
           value: {

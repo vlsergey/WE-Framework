@@ -24,10 +24,10 @@ function getTitleFromOptions( allLanguagesData, languageCode ) {
 
 export const LANGUAGE_TITLES = ( () => {
   const result = {};
-  for ( const languageCode in jQuery.uls.data.languages ) {
+  Object.keys( jQuery.uls.data.languages ).forEach( languageCode => {
     const languageTitle = getTitleFromOptions( jQuery.uls.data.languages, languageCode );
     result[ languageCode ] = languageTitle;
-  }
+  } );
   return result;
 } )();
 

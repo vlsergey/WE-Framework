@@ -13,7 +13,7 @@ const NOOP = () => {};
 
 describe( 'components/claims/sort/SortClaimsDialog', () => {
 
-  it ( 'renders', () => {
+  it( 'renders', () => {
     const reducers = buildReducers( Q30 );
     const store = createStore( reducers, applyMiddleware( thunk ) );
 

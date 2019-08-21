@@ -24,8 +24,7 @@ export default class LabelDescription {
     }
 
     const translated = I18nUtils.localize( {}, translations );
-    for ( const k in translated )
-      this[ k ] = translated[ k ];
+    Object.keys( translated ).forEach( k => this[ k ] = translated[ k ] );
   }
 
 }

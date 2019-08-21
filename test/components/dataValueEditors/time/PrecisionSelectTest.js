@@ -8,7 +8,7 @@ const NOOP = () => {};
 describe( 'components/dataValueEditors/time', () => {
   describe( 'PrecisionSelect', () => {
 
-    it ( 'can be rendered', () => {
+    it( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <PrecisionSelect onChange={NOOP} readOnly={false} value={null} />
       );

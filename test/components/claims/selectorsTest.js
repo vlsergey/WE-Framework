@@ -8,11 +8,11 @@ describe( 'components/claims', () => {
 
     describe( 'claimColumnsF', () => {
 
-      describe ( 'correctly calculates columns for USA entity', () => {
+      describe( 'correctly calculates columns for USA entity', () => {
         const claimColumns = selectors.claimColumnsF();
 
         const check = ( propertyId, expectedColumns ) =>
-          it ( 'correctly calculates columns for property ' + propertyId + ' of USA entity', () => {
+          it( 'correctly calculates columns for property ' + propertyId + ' of USA entity', () => {
             assert.deepEqual( claimColumns( Q30.claims[ propertyId ] ), expectedColumns );
           } );
 

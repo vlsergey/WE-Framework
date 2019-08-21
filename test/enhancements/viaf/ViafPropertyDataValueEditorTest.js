@@ -4,7 +4,7 @@ describe( 'enhancements/viaf/ViafPropertyDataValueEditor', () => {
 
   describe( 'parseJustLinks', () => {
 
-    it ( 'Can parse Puskin result', () => {
+    it( 'Can parse Puskin result', () => {
 
       const pushkin = { viafID: '66477450',
         B2Q: [ '0000075154' ],

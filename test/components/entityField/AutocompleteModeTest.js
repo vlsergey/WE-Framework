@@ -20,7 +20,7 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
 
   describe( 'AutocompleteMode', () => {
 
-    it ( 'Correctly handles click on item after copy-paste', () => {
+    it( 'Correctly handles click on item after copy-paste', () => {
       function testSuggestionsProvider( value ) {
         if ( value == 'Q752285' ) {
           return [ 'Q752285' ];
@@ -87,7 +87,7 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
 
     } );
 
-    it ( 'Correctly handles copypaste of Wikidata URL', () => {
+    it( 'Correctly handles copypaste of Wikidata URL', () => {
       function testSuggestionsProvider() {
         return [];
       }

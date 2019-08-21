@@ -27,7 +27,7 @@ describe( 'components/dataValueEditors', () => {
     const p21Description = new PropertyDescription( P21 );
     const p31Description = new PropertyDescription( P31 );
 
-    it ( 'can be rendered with empty datavalue for property with limited options and can be changed', () => {
+    it( 'can be rendered with empty datavalue for property with limited options and can be changed', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <ValueHolder initialValue={{}}>{( value, onChange ) =>
@@ -52,7 +52,7 @@ describe( 'components/dataValueEditors', () => {
       assert( valueHolder.getValue().value.id, 'Q6581072' );
     } );
 
-    it ( 'can be rendered with non-empty datavalue for property with limited options and can be changed', () => {
+    it( 'can be rendered with non-empty datavalue for property with limited options and can be changed', () => {
       const initialDataValue = {
         value: {
           'entity-type': 'item',
@@ -86,7 +86,7 @@ describe( 'components/dataValueEditors', () => {
       assert( valueHolder.getValue().value.id, 'Q6581097' );
     } );
 
-    it ( 'can be rendered with empty datavalue for generic property', () => {
+    it( 'can be rendered with empty datavalue for generic property', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <TableTBodyTr>
@@ -104,7 +104,7 @@ describe( 'components/dataValueEditors', () => {
       assert.equal( input.value, '' );
     } );
 
-    it ( 'can be rendered', () => {
+    it( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <TableTBodyTr>
@@ -129,7 +129,7 @@ describe( 'components/dataValueEditors', () => {
       assert.equal( input.value, 'Q35120' );
     } );
 
-    it ( 'click; type; select; clear', () => {
+    it( 'click; type; select; clear', () => {
       const datavalue = {
         value: {
           'entity-type': 'item',
