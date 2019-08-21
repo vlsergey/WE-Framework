@@ -134,8 +134,7 @@ export default class PropertyDescription {
     }
 
     const translated = I18nUtils.localize( {}, translations );
-    for ( const k in translated )
-      this[ k ] = translated[ k ];
+    Object.keys( translated ).forEach( k => this[ k ] = translated[ k ] );
 
     this.allowedQualifiers = getWikibaseItemRestrictions( propertyEntity, 'Q21510851', 'P2306' );
 

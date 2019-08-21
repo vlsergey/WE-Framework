@@ -8,7 +8,7 @@ const NOOP = () => {};
 
 describe( 'components/dataValueEditors/quantity', () => {
   describe( 'ModeSelect', () => {
-    it ( 'correctly displays all options', () => {
+    it( 'correctly displays all options', () => {
       Object.keys( MODES ).forEach( mode => {
 
         const rendered = ReactTestUtils.renderIntoDocument(

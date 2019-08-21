@@ -9,7 +9,7 @@ describe( 'components/languages', () => {
 
   describe( 'LanguageAutocomplete', () => {
 
-    it ( 'can be rendered', () => {
+    it( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <LanguageAutocomplete
           onChange={NOOP}
@@ -23,7 +23,7 @@ describe( 'components/languages', () => {
       assert.equal( input.value, 'en' );
     } );
 
-    it ( 'can be changed via keyboard', () => {
+    it( 'can be changed via keyboard', () => {
       let value = 'en';
       const onChange = newValue => { value = newValue; };
 

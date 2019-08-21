@@ -8,7 +8,7 @@ const NOOP = () => {};
 describe( 'components/dataValueEditors/time', () => {
   describe( 'CalendarModelSelect', () => {
 
-    it ( 'can be rendered', () => {
+    it( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <CalendarModelSelect onChange={NOOP} readOnly={false} value={null} />
       );

@@ -26,7 +26,7 @@ describe( 'components/dataValueEditors/quantity', () => {
 
     const p1971Description = new PropertyDescription( P1971 );
 
-    it ( 'can be rendered with undefined datavalue', () => {
+    it( 'can be rendered with undefined datavalue', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <TableTBodyTr>
@@ -39,7 +39,7 @@ describe( 'components/dataValueEditors/quantity', () => {
       assert.ok( rendered );
     } );
 
-    it ( 'can be rendered with null datavalue', () => {
+    it( 'can be rendered with null datavalue', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <TableTBodyTr>
@@ -67,7 +67,7 @@ describe( 'components/dataValueEditors/quantity', () => {
     } );
 
 
-    it ( 'can be rendered with plus-minus value provided', () => {
+    it( 'can be rendered with plus-minus value provided', () => {
       const datavalue = {
         value: {
           amount: '+311582600',
@@ -110,7 +110,7 @@ describe( 'components/dataValueEditors/quantity', () => {
       assert.equal( modeOptions.filter( modeOptions => !modeOptions.disabled ).length, Object.keys( MODES ).length - 1 );
     } );
 
-    it ( 'with empty value can change to any mode and back', () => {
+    it( 'with empty value can change to any mode and back', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <TableTBodyTr>
@@ -133,7 +133,7 @@ describe( 'components/dataValueEditors/quantity', () => {
       }
     } );
 
-    it ( 'with compatible values can be changed between plusMinus and boundaries', () => {
+    it( 'with compatible values can be changed between plusMinus and boundaries', () => {
       const rendered = ReactTestUtils.renderIntoDocument( <Provider store={store}>
         <ValueHolder initialValue={{ type: 'quantity', value: {} }}>{ ( value, onChange ) =>
           <TableTBodyTr>

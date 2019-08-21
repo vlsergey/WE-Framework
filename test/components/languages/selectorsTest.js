@@ -5,7 +5,7 @@ describe( 'components/languages/selectors', () => {
 
   describe( 'createEmptySuggestionsSelector', () => {
 
-    it ( 'provides correct variants', () => {
+    it( 'provides correct variants', () => {
       const result = selectors.createEmptySuggestionsSelector()( [ 'fr', 'en', 'ru' ] );
       assert.deepEqual( result, [ 'en', 'ru', 'fr' ] );
     } );
