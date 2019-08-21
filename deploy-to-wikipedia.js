@@ -9,7 +9,7 @@ const cookieStorage = { fake: 'fake' };
 const fetch = ( url, options ) => {
   const formatCookies = () => Object.keys( cookieStorage )
     .map( key => key + '=' + cookieStorage[ key ] )
-    .reduce ( ( a, c ) => a ? a + '; ' + c : c );
+    .reduce( ( a, c ) => a ? a + '; ' + c : c );
 
   const cookieHeader = formatCookies();
   // console.log( 'Add additional cookie header to URL \'' + url + '\':' + cookieHeader );
@@ -59,7 +59,7 @@ const defaultFetchOptions = {
 
 if ( httpsProxy ) {
   defaultFetchOptions.agent = new HttpsProxyAgent( httpsProxy );
-  //ignore SSL problems
+  // ignore SSL problems
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 
