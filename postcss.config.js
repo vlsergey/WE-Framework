@@ -1,7 +1,7 @@
 /* eslint-env node */
 module.exports = {
   plugins: [
-    require( 'autoprefixer-core' ),
+    require( 'autoprefixer' ),
     require( 'postcss-color-rebeccapurple' ),
   ],
 };
