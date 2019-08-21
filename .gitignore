@@ -1,6 +1,9 @@
 .project
-dist/
-node_modules/
+/dist/
+/node_modules/
 /coverage/
 .idea/
 yarn.lock
+
+/test/flow-report.json
+/test/filter-flow-report.out.js
