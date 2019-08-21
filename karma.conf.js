@@ -1,6 +1,5 @@
 /* eslint-env node */
 const path = require( 'path' );
-const webpack = require( 'webpack' );
 
 module.exports = function( config ) {
   config.set( {
