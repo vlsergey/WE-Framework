@@ -1,3 +1,6 @@
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
+
 import { getEnabledEditors, registerEditor } from './settings/index';
 import allEditorTemplates from './editors';
 import EditorsLinks from './settings/EditorsLinks';
@@ -5,10 +8,6 @@ import i18n from 'settings/i18n';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import wikieditorIntegration from 'sources/wikieditorIntegration';
-
-if ( !window._babelPolyfill ) {
-  require( 'babel-polyfill' );
-}
 
 function loadSemanticUiCss( ) {
   /* eslint no-undef: 0 */
