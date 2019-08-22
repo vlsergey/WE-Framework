@@ -1,23 +1,23 @@
-import { Claim, newStatementClaim } from 'model/Shapes';
 import React, { PureComponent } from 'react';
 import ClaimAddButtonCell from './ClaimAddButtonCell';
 import ClaimsTableRows from './ClaimsTableRows';
+import { newStatementClaim } from 'model/Shapes';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 import SortClaimsButtonCell from './sort/SortClaimsButtonCell';
 
-export default class ClaimsTableBody extends PureComponent {
+type PropType = {
+  claims? : ClaimType[],
+  displayLabel? : boolean,
+  onClaimAdd : any => any,
+  onClaimAddTwice : any => any,
+  onClaimDelete : ClaimType => any,
+  onClaimUpdate : ClaimType => any,
+  onClaimsReorder : string[] => any,
+  propertyDescription : PropertyDescription,
+};
 
-  static propTypes = {
-    claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
-    displayLabel: PropTypes.bool,
-    onClaimAdd: PropTypes.func.isRequired,
-    onClaimAddTwice: PropTypes.func.isRequired,
-    onClaimDelete: PropTypes.func.isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-    onClaimsReorder: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-  };
+export default class ClaimsTableBody
+  extends PureComponent<PropType> {
 
   static defaultProps = {
     displayLabel: true,

@@ -1,28 +1,28 @@
-import { Claim, newStatementClaim } from 'model/Shapes';
 import React, { PureComponent } from 'react';
 import ClaimAddButtonCell from './ClaimAddButtonCell';
 import ClaimsWithQualifiersTableRows from './ClaimsWithQualifiersTableRows';
 import EntityLabel from 'caches/EntityLabel';
+import { newStatementClaim } from 'model/Shapes';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 import SortClaimsButtonCell from './sort/SortClaimsButtonCell';
 import styles from './ClaimsWithQualifiers.css';
 
 const QUALIFIER_COLUMNS_WIDTH = [ '0%', '33%', '25%', '20%', '17%' ];
 
-export default class ClaimsWithQualifiersTable extends PureComponent {
+type PropsType = {
+  claims? : ClaimType[],
+  columns : string[],
+  displayEmpty? : boolean,
+  onClaimAdd : () => any,
+  onClaimAddTwice : () => any,
+  onClaimDelete : ClaimType => any,
+  onClaimUpdate : ClaimType => any,
+  onClaimsReorder : string[] => any,
+  propertyDescription : PropertyDescription,
+};
 
-  static propTypes = {
-    claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
-    columns: PropTypes.arrayOf( PropTypes.string ).isRequired,
-    displayEmpty: PropTypes.bool,
-    onClaimAdd: PropTypes.func.isRequired,
-    onClaimAddTwice: PropTypes.func.isRequired,
-    onClaimDelete: PropTypes.func.isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-    onClaimsReorder: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-  };
+export default class ClaimsWithQualifiersTable
+  extends PureComponent<PropsType> {
 
   render() {
     const { claims, columns, displayEmpty, propertyDescription,

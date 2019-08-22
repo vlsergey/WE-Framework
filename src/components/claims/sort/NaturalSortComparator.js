@@ -1,8 +1,8 @@
-export default class NaturalSortComparator {
+import { DatavalueComparator } from './DatavalueComparator';
 
-  constructor() {
-    this.code = 'naturalSort';
-  }
+export default class NaturalSortComparator implements DatavalueComparator {
+
+  code = 'naturalSort';
 
   compare( dataValue1, dataValue2, sortEmptyCompareConstant, sortOrderCompareConstant ) {
     const v1 = ( dataValue1 || {} ).value || '';

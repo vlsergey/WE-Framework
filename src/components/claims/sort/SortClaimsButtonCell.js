@@ -1,19 +1,21 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
-import { Claim } from 'model/Shapes';
 import comparators from './comparators';
 import { defaultMemoize } from 'reselect';
-import expect from 'expect';
 import i18n from './i18n';
-import PropTypes from 'prop-types';
 import SortClaimsDialog from './SortClaimsDialog';
 
-export default class SortClaimsButtonCell extends PureComponent {
+type PropsType = {
+  claims : ClaimType[],
+  onClaimsReorder : string[] => any,
+};
 
-  static propTypes = {
-    claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ).isRequired,
-    onClaimsReorder: PropTypes.func.isRequired,
-  }
+type StateType = {
+  displayEditor : boolean,
+};
+
+export default class SortClaimsButtonCell
+  extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );
@@ -34,7 +36,7 @@ export default class SortClaimsButtonCell extends PureComponent {
       const checkedTrue = new Set();
       const checkedFalse = new Set();
 
-      expect( comparator.supports ).toBeA( 'function' );
+      const cmpSupports : ( string, QualifierType ) => ?boolean = comparator.supports;
 
       claims.forEach( claims => {
         if ( !claims.qualifiers ) return;
@@ -45,9 +47,10 @@ export default class SortClaimsButtonCell extends PureComponent {
             qualifiers.forEach( qualifier => {
               if ( checkedTrue.has( propertyId ) || checkedFalse.has( propertyId ) ) return;
 
-              const supports = comparator.supports( propertyId, qualifier );
-              if ( supports === true ) checkedTrue.add( propertyId );
-              if ( supports === false ) checkedFalse.add( propertyId );
+              const supports : ?boolean = cmpSupports( propertyId, qualifier );
+              if ( supports === null ) return;
+              if ( supports ) checkedTrue.add( propertyId );
+              if ( !supports ) checkedFalse.add( propertyId );
             } );
           } );
       } );

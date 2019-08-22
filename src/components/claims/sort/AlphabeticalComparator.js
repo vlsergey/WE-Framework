@@ -1,8 +1,8 @@
-export default class AlphabeticalComparator {
+import { DatavalueComparator } from './DatavalueComparator';
 
-  constructor() {
-    this.code = 'alphabetical';
-  }
+export default class AlphabeticalComparator implements DatavalueComparator {
+
+  code = 'alphabetical';
 
   compare( dataValue1, dataValue2, sortEmptyCompareConstant, sortOrderCompareConstant ) {
     const v1 = ( dataValue1 || {} ).value || '';

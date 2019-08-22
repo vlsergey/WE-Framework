@@ -7,7 +7,6 @@ import FieldsSortBy from './FieldsSortBy';
 import i18n from './i18n';
 import Pagination from 'semantic-ui-react/dist/commonjs/addons/Pagination';
 import PropertyClaimContainer from 'components/claims/PropertyClaimContainer';
-import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import styles from './form.css';
 
@@ -53,7 +52,7 @@ export default class FieldsBuilder extends PureComponent<PropsType> {
         <i>Loading property description of {propertyId}...</i>
       </td></tr>;
     }
-    expect( propertyDescription ).toBeA( PropertyDescription );
+
     return <PropertyClaimContainer
       {...props}
       propertyDescription={propertyDescription} />;

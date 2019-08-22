@@ -1,7 +1,6 @@
 import { getLastRecentlyUsedReferences, onReferenceUpdate } from './LastRecentlyUsedReferencesStore';
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
-import { Claim } from 'model/Shapes';
 import ClaimReferenceEditor from './ClaimReferenceEditor';
 import { constructDescription } from 'caches/EntityDescription';
 import { constructLabel } from 'caches/EntityLabel';
@@ -10,15 +9,19 @@ import generateRandomString from 'utils/generateRandomString';
 import i18n from './i18n';
 import JQueryButton from 'wrappers/JQueryButton';
 import LabelDescriptionsProvider from 'caches/LabelDescriptionsProvider';
-import PropTypes from 'prop-types';
 import styles from './references.css';
 
-export default class ClaimReferencesEditorContent extends PureComponent {
+type PropsType = {
+  claim : ClaimType,
+  onClaimUpdate : ClaimType => any,
+};
 
-  static propTypes = {
-    claim: PropTypes.shape( Claim ).isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-  };
+type StateType = {
+  lru : any[],
+};
+
+export default class ClaimReferencesEditorContent
+  extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );

@@ -1,18 +1,21 @@
 import React, { PureComponent } from 'react';
-import { Claim } from 'model/Shapes';
 import ClaimReferencesEditorDialog from './ClaimReferencesEditorDialog';
 import { defaultMemoize } from 'reselect';
 import i18n from './i18n';
 import JQueryButton from 'wrappers/JQueryButton';
-import PropTypes from 'prop-types';
 import styles from './references.css';
 
-export default class ClaimReferencesButtonCell extends PureComponent {
+type PropsType = {
+  claim : ClaimType,
+  onClaimUpdate : ClaimType => any,
+};
 
-  static propTypes = {
-    claim: PropTypes.shape( Claim ).isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-  };
+type StateType = {
+  displayEditor : boolean,
+};
+
+export default class ClaimReferencesButtonCell
+  extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );

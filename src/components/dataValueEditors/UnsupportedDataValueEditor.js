@@ -1,16 +1,19 @@
 import * as ApiUtils from 'core/ApiUtils';
-import * as Shapes from 'model/Shapes';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 import styles from './UnsupportedDataValueEditor.css';
 
-export default class UnsupportedDataValueEditor extends Component {
+type PropsType = {
+  datavalue? : DataValueType,
+  propertyDescription : PropertyDescription,
+};
 
-  static propTypes = {
-    datavalue: PropTypes.shape( Shapes.DataValue ),
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-  };
+type StateType = {
+  html : ?string,
+};
+
+export default class UnsupportedDataValueEditor
+  extends PureComponent<PropsType, StateType> {
 
   WIKIDATA_ROOT = '//www.wikidata.org/';
 

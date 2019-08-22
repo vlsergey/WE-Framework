@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
-import { Claim } from 'model/Shapes';
 import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import ClaimReferencesButtonCell from 'components/references/ClaimReferencesButtonCell';
@@ -9,22 +8,26 @@ import expect from 'expect';
 import FlagCell from './FlagCell';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyLabelCell from 'components/PropertyLabelCell';
-import PropTypes from 'prop-types';
 import QualifierSelectButtonCell from 'components/qualifiers/QualifierSelectButtonCell';
 import SelectRankButtonCell from './SelectRankButtonCell';
 import SnakEditorTableRowPart from 'components/SnakEditorTableRowPart';
 
-export default class ClaimsTableRows extends PureComponent {
+type PropsType = {
+  claim : ClaimType,
+  displayLabel? : boolean,
+  firstCell : any,
+  hasClaimDelete : boolean,
+  onClaimDelete : ClaimType => any,
+  onClaimUpdate : ClaimType => any,
+  propertyDescription : PropertyDescription,
+};
 
-  static propTypes = {
-    claim: PropTypes.shape( Claim ).isRequired,
-    displayLabel: PropTypes.bool,
-    firstCell: PropTypes.node.isRequired,
-    hasClaimDelete: PropTypes.bool.isRequired,
-    onClaimDelete: PropTypes.func.isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-  };
+type StateType = {
+  displayQualifierSelect : boolean,
+};
+
+export default class ClaimsTableRows
+  extends PureComponent<PropsType, StateType> {
 
   static defaultProps = {
     displayLabel: true,
