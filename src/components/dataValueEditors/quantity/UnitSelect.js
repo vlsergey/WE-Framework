@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 
 export default class UnitSelect extends PureComponent {
 
-  ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';
-
   static propTypes = {
     value: PropTypes.object,
     propertyDescription: PropTypes.instanceOf( PropertyDescription ),
