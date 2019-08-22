@@ -80,8 +80,8 @@
   "scripts": {
     "flow:check": "flow check --show-all-errors --json > ./test/flow-report.json || eslint ./test/filter-flow-report.js --fix && babel ./test/filter-flow-report.js > ./test/filter-flow-report.out.js && node ./test/filter-flow-report.out.js",
     "flow:status": "flow status || flow status --show-all-errors --json > ./test/flow-report.json || eslint ./test/filter-flow-report.js --fix && babel ./test/filter-flow-report.js > ./test/filter-flow-report.out.js && node ./test/filter-flow-report.out.js",
-    "eslint:check": "eslint --ignore-pattern \"!.eslintrc.js\" .eslintrc.js karma.conf.js postcss.config.js webpack.config.js src/**/*.js test/**/*.js test/**/*.js",
-    "eslint:fix": "eslint --ignore-pattern \"!.eslintrc.js\" --fix .eslintrc.js karma.conf.js postcss.config.js webpack.config.js src/**/*.js test/**/*.js",
+    "eslint:check": "eslint --ignore-pattern \"!.eslintrc.js\" .eslintrc.js karma.conf.js postcss.config.js webpack.config.js flow-typed/*.js src/**/*.js test/**/*.js",
+    "eslint:fix": "eslint --ignore-pattern \"!.eslintrc.js\" --fix .eslintrc.js karma.conf.js postcss.config.js webpack.config.js flow-typed/*.js src/**/*.js test/**/*.js",
     "serve": "webpack-dev-server",
     "build": "webpack -p && eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js",
     "deploy": "npm run build && node ./dist/deploy-to-wikipedia.out.js",

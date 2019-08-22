@@ -89,7 +89,6 @@ const claimHasMainsnakValue = statement => statement.mainsnak
     && statement.mainsnak.datavalue
     && statement.mainsnak.datavalue.value;
 
-
 export default class PropertyDescription {
 
   static VERSION = 2;
@@ -101,6 +100,8 @@ export default class PropertyDescription {
     if ( json.urlFormatters )
       json.urlFormatters.forEach( obj => Object.setPrototypeOf( obj, UrlFormatter.prototype ) );
   }
+
+  quantityUnitEnabled : ?boolean;
 
   constructor( propertyEntity ) {
     expect( propertyEntity ).toBeAn( 'object' );

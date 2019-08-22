@@ -1,17 +1,16 @@
 import React, { PureComponent } from 'react';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import { getWikidataApi } from 'core/ApiUtils';
-import PropTypes from 'prop-types';
 import SourceItem from './SourceItem';
 import styles from './styles.css';
 
 const MAX_ITEMS = 15;
 
-export default class SourceLookupTab extends PureComponent {
+type PropsType = {
+  onInsert : string => any,
+};
 
-  static propTypes = {
-    onInsert: PropTypes.func.isRequired,
-  };
+export default class SourceLookupTab extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );
@@ -25,14 +24,12 @@ export default class SourceLookupTab extends PureComponent {
 
     this.handleChangeTerm = event => {
       const newSearchTerm = event.target.value || '';
-      this.setState( {
-        searchTerm: newSearchTerm,
-      } );
-      setTimeout( this.search( newSearchTerm.trim() ), 0.5 );
+      this.setState( { searchTerm: newSearchTerm } );
+      setTimeout( () => this.search( newSearchTerm.trim() ), 0.5 );
     };
   }
 
-  search( searchTerm ) {
+  search( searchTerm : string ) {
     const { searchTermScheduled } = this.state;
     if ( searchTerm === searchTermScheduled ) return;
     this.setState( {
@@ -66,8 +63,7 @@ export default class SourceLookupTab extends PureComponent {
 
       if ( this.state.searchTermScheduled !== searchTerm ) return;
       this.setState( { searchResult: result } );
-    }
-    ) );
+    } ) );
 
     Promise.all( allPromises ).then(
       () => this.setState( {
@@ -76,7 +72,7 @@ export default class SourceLookupTab extends PureComponent {
     );
   }
 
-  handleClickF( entityId ) {
+  handleClickF( entityId : string ) {
     return () => this.props.onInsert( entityId );
   }
 

@@ -1,43 +1,54 @@
 import React, { PureComponent } from 'react';
 import BoundariesValueEditor from './BoundariesValueEditor';
 import { COLUMNS_FOR_DATA_VALUE_EDITOR } from 'components/TableColSpanConstants';
-import { DataValue } from 'model/Shapes';
 import ExactValueEditor from './ExactValueEditor';
 import expect from 'expect';
 import ModeSelect from './ModeSelect';
 import PlusMinusValueEditor from './PlusMinusValueEditor';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 import styles from './Quantity.css';
 import UnitSelect from './UnitSelect';
 
-export const MODES = {
-  exact: ExactValueEditor,
-  plusMinus: PlusMinusValueEditor,
-  boundaries: BoundariesValueEditor,
+type Mode = {
+  canBeUsedForValue : QuantityValueType => boolean,
+  component : Class< PureComponent< any, any > >,
 };
 
-function detectAppropriateMode( datavalue ) {
+const DEFAULT_MODE : string = 'exact';
+
+export const MODES : { [string] : Mode } = {
+  exact: { component: ExactValueEditor, canBeUsedForValue: ExactValueEditor.canBeUsedForValue },
+  plusMinus: { component: PlusMinusValueEditor, canBeUsedForValue: PlusMinusValueEditor.canBeUsedForValue },
+  boundaries: { component: BoundariesValueEditor, canBeUsedForValue: BoundariesValueEditor.canBeUsedForValue },
+};
+
+function detectAppropriateMode( datavalue : DataValueType ) : string {
   if ( datavalue === undefined || datavalue === null
     || datavalue.value === undefined || datavalue.value === null ) {
-    return 'exact';
+    return DEFAULT_MODE;
   }
 
-  const { value } = datavalue;
-  return Object.keys( MODES ).find( mode => MODES[ mode ].canBeUsedForValue( value ) );
+  const value : QuantityValueType = datavalue.value;
+  return Object.keys( MODES ).find( modeKey => MODES[ modeKey ].canBeUsedForValue( value ) ) || DEFAULT_MODE;
 }
 
-export default class QuantityDataValueEditor extends PureComponent {
+type PropsType = {
+  buttonCells? : any[],
+  datavalue : DataValueType,
+  onDataValueChange : any => any,
+  propertyDescription? : ?PropertyDescription,
+  readOnly? : ?boolean,
+};
 
-  static propTypes = {
-    datavalue: PropTypes.shape( DataValue ),
-    onDataValueChange: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-    readOnly: PropTypes.bool,
-  };
+type StateType = {
+  mode : string,
+};
+
+export default class QuantityDataValueEditor extends PureComponent<PropsType, StateType> {
 
   static defaultProps = {
     readOnly: false,
+    buttonCells: [],
   };
 
   constructor() {
@@ -51,11 +62,8 @@ export default class QuantityDataValueEditor extends PureComponent {
     this.handleValueChange = this.handleValueChange.bind( this );
   }
 
-  handleModeChange( newMode ) {
-    expect( newMode ).toBeA( 'string' );
-    this.setState( {
-      mode: newMode,
-    } );
+  handleModeChange( mode : string ) {
+    this.setState( { mode } );
   }
 
   handleValueChange( value ) {
@@ -70,11 +78,10 @@ export default class QuantityDataValueEditor extends PureComponent {
   }
 
   render() {
-    const { datavalue, propertyDescription, readOnly } = this.props;
+    const { datavalue, propertyDescription, readOnly, buttonCells } = this.props;
     const { mode } = this.state;
 
-    const editor = MODES[ mode ];
-    expect( editor ).toBeA( 'function' );
+    const editor : Class< PureComponent< any, any > > = MODES[ mode ].component;
 
     const value = ( datavalue || {} ).value || {};
     const unit = value.unit || '1';
@@ -105,11 +112,8 @@ export default class QuantityDataValueEditor extends PureComponent {
 
     expect( propertyDescription.quantityUnitEnabled ).toBeA( 'boolean' );
 
-    const buttons = this.renderButtonCells();
-    expect( buttons ).toBeAn( 'array' );
-
     return <React.Fragment>
-      <td className={classNames.join( ' ' )} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - buttons.length}>
+      <td className={classNames.join( ' ' )} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - buttonCells.length}>
         <table>
           <tbody>
             <tr>
@@ -132,12 +136,8 @@ export default class QuantityDataValueEditor extends PureComponent {
           </tbody>
         </table>
       </td>
-      { buttons }
+      { buttonCells }
     </React.Fragment>;
-  }
-
-  renderButtonCells() {
-    return [];
   }
 
 }

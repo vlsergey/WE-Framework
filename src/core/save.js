@@ -16,7 +16,11 @@ function notify( text ) {
   mw.notify( '[WE-F] ' + text, notifyOptions );
 }
 
-export function collectlLabelalikeUpdates( originalEntity, entity, labelalikeType, removedPlaceholderF ) {
+export function collectlLabelalikeUpdates(
+    originalEntity : any,
+    entity : any,
+    labelalikeType : ( 'labels' | 'descriptions' | 'aliases' | 'sitelinks' ),
+    removedPlaceholderF : string => any ) {
 
   const changes = [];
 

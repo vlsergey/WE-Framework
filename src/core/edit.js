@@ -15,11 +15,12 @@ export function destroyEditor( appDiv ) {
   document.body.removeChild( appDiv );
 }
 
-export function renderEditor( resolve, reject, editorDescription, oldEntity, newEntity ) {
-  expect( editorDescription ).toBeAn( 'object' );
-  expect( oldEntity ).toBeAn( 'object' );
-  expect( newEntity ).toBeAn( 'object' );
-
+export function renderEditor(
+    resolve : string => any,
+    reject : string => any,
+    editorDescription : EditorDefType,
+    oldEntity : EntityType,
+    newEntity : EntityType ) {
   const appDiv = document.createElement( 'div' );
   document.body.appendChild( appDiv );
 
@@ -37,20 +38,20 @@ export function renderEditor( resolve, reject, editorDescription, oldEntity, new
   return appDiv;
 }
 
-export function openEditor( editorDescription, oldEntity, newEntity ) {
-  expect( editorDescription ).toBeAn( 'object' );
-  expect( oldEntity ).toBeAn( 'object' );
-  expect( newEntity ).toBeAn( 'object' );
-
+export function openEditor(
+    editorDescription : EditorDefType,
+    oldEntity : EntityType,
+    newEntity : EntityType
+) {
   let appDiv;
   return new Promise( ( resolve, reject ) => {
     appDiv = renderEditor( resolve, reject, editorDescription, oldEntity, newEntity );
   } )
-    .then( entityId => {
+    .then( ( entityId : string ) => {
       if ( appDiv ) destroyEditor( appDiv );
       return entityId;
     } )
-    .catch( reason => {
+    .catch( ( reason : any ) => {
       mw.log.warn( reason );
       if ( appDiv ) destroyEditor( appDiv );
       return Promise.reject( reason );

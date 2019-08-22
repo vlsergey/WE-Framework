@@ -1,10 +1,6 @@
 import expect from 'expect';
 import PropTypes from 'prop-types';
 
-export const Claim = {
-  mainsnak: PropTypes.shape( Snak ),
-};
-
 let claimIdCounters = 0;
 
 export function newStatementClaim( propertyId, datatype ) {
@@ -48,3 +44,7 @@ export function emptySnak( ) {
 
   };
 }
+
+export const Claim = {
+  mainsnak: PropTypes.shape( Snak ),
+};

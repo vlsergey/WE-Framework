@@ -9,7 +9,7 @@ const IGNORE_ERROR_PATTERNS = [
   /^Cannot call .* with .* bound to .* because null or undefined .* is incompatible with .*$/,
   /^Cannot call .* with .* bound to .* because property .* of unknown type .* is incompatible with .*$/,
   /^Cannot extend .* with `.*` because property `.*` is read-only in .* but writable in .*$/,
-  /^Cannot resolve module `(bootstrap|font-awesome|memoize-one|react).*$/,
+  /^Cannot resolve module `(bootstrap|font-awesome|memoize-one|react|semantic-ui-css).*$/,
   /^Missing type annotation for .*/,
   /^property `.*` is missing in .*/,
 
