@@ -1,5 +1,3 @@
-import expect from 'expect';
-
 const localStorage = window.localStorage || {
   _cache: {},
   getItem( key ) { return this._cache[ key ]; },
@@ -8,12 +6,11 @@ const localStorage = window.localStorage || {
 const LSKEY = 'WEF_LRU_REFERENCES';
 const MAX_ITEMS = 10;
 
-function get() {
+function get() : any[] {
   const json = localStorage.getItem( LSKEY );
   if ( !json ) return [];
   try {
-    const result = JSON.parse( json );
-    expect( result ).toBeAn( 'array' );
+    const result : any[] = JSON.parse( json );
     return result;
   } catch ( err ) {
     mw.log.warn( 'Unable to parse local storage copy of LRU cache' );
@@ -22,7 +19,7 @@ function get() {
   }
 }
 
-function set( obj ) {
+function set( obj : any ) {
   localStorage.setItem( LSKEY, JSON.stringify( obj ) );
 }
 

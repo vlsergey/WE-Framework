@@ -1,24 +1,49 @@
 import React, { PureComponent } from 'react';
-import { Claim } from 'model/Shapes';
 import ComparatorSelect from './ComparatorSelect';
+import { DatavalueComparator } from './DatavalueComparator';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import expect from 'expect';
 import i18n from './i18n';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import PropTypes from 'prop-types';
 import stableSort from 'utils/stableSort';
 import styles from './SortClaimsDialog.css';
 
 const EMPTY_OBJECT = {};
 
-export default class SortClaimsDialog extends PureComponent {
+type PropsType = {
+  claims : ClaimType[],
+  onClaimsReorder : string[] => any,
+  onCloseClick : () => any,
+  propertyIdToComparators : Map< string, DatavalueComparator[] >,
+};
 
-  static propTypes = {
-    claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ).isRequired,
-    onClaimsReorder: PropTypes.func.isRequired,
-    onCloseClick: PropTypes.func.isRequired,
-    propertyIdToComparators: PropTypes.instanceOf( Map ).isRequired,
-  }
+type StateType = {
+  comparator : ?DatavalueComparator,
+  emptyAs : 'asLast' | 'asFirst',
+  order : 'asc' | 'desc',
+  propertyId : ?string,
+};
+
+function findFirstQuailifierDataValue(
+    claims : ClaimType[],
+    claimId : string,
+    propertyId : string
+) : ?DataValueType {
+  const claim : ?ClaimType = claims.find( ( { id } ) => id === claimId ) || null;
+  if ( !claim ) return null;
+
+  const qualifiersObject : ?{ [string] : QualifierType[] } = claim.qualifiers;
+  if ( !qualifiersObject ) return null;
+
+  const qualifiersArray : ?QualifierType[] = qualifiersObject[ propertyId ];
+  if ( !qualifiersArray || qualifiersArray.length === 0 ) return null;
+
+  const qualifier : QualifierType = qualifiersArray[ 0 ];
+  if ( !qualifier ) return null;
+  return qualifier.datavalue;
+}
+
+export default class SortClaimsDialog extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );
@@ -31,8 +56,10 @@ export default class SortClaimsDialog extends PureComponent {
         propertyId: null,
       };
     } else {
-      const propertyId = this.props.propertyIdToComparators.keys().next().value;
-      const [ comparator ] = this.props.propertyIdToComparators.get( propertyId );
+      const propertyId : ?string = this.props.propertyIdToComparators.keys().next().value;
+      if ( !propertyId ) throw new Error( 'Assertion error: non-empty map keys iterator returned empty first key' );
+      const comparator : ?DatavalueComparator = this.props.propertyIdToComparators.get( propertyId )[ 0 ];
+      if ( !comparator ) throw new Error( 'Assertion error: non-empty map keys iterator returned empty first key value' );
 
       this.state = {
         emptyAs: 'asLast',
@@ -64,16 +91,14 @@ export default class SortClaimsDialog extends PureComponent {
     const { comparator, emptyAs, order, propertyId } = this.state;
     const sortEmptyCompareConstant = emptyAs === 'asLast' ? +1 : -1;
     const sortOrderCompareConstant = order === 'asc' ? +1 : -1;
-    const claimIds = claims.map( claim => claim.id );
+    const claimIds : string[] = claims.map( claim => claim.id );
+    if ( !propertyId ) return;
 
-    stableSort( claimIds, ( c1Id, c2Id ) => {
-      const c1 = claims.find( claim => claim.id === c1Id ) || {};
-      const c2 = claims.find( claim => claim.id === c2Id ) || {};
+    stableSort( claimIds, ( claimId1 : string, claimId2 : string ) => {
+      const dataValue1 : ?DataValueType = findFirstQuailifierDataValue( claims, claimId1, propertyId );
+      const dataValue2 : ?DataValueType = findFirstQuailifierDataValue( claims, claimId2, propertyId );
 
-      const dataValue1 = ( ( ( c1.qualifiers || {} )[ propertyId ] || [] )[ 0 ] || {} ).datavalue || null;
-      const dataValue2 = ( ( ( c2.qualifiers || {} )[ propertyId ] || [] )[ 0 ] || {} ).datavalue || null;
-
-      if ( dataValue1 === null && dataValue2 === null ) return 0;
+      if ( !dataValue1 && !dataValue2 ) return 0;
       return comparator.compare( dataValue1, dataValue2, sortEmptyCompareConstant, sortOrderCompareConstant );
     } );
     onClaimsReorder( claimIds );

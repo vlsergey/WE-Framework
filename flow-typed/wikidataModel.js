@@ -4,11 +4,12 @@ export type DataValueType = {
   value? : ?any,
 };
 
-export type QuantityValueType = {
-  amount? : string,
-  lowerBound? : string,
-  unit? : string,
-  upperBound? : string,
+export type ClaimType = {
+  id? : string,
+  mainsnak? : SnakType,
+  qualifiers? : { [string] : QualifierType[] },
+  rank? : string,
+  type? : string,
 };
 
 export type EntityType = {
@@ -20,11 +21,22 @@ export type EntityType = {
 };
 
 export type SnakType = {
+  datatype? : string,
   datavalue? : DataValueType,
   hash? : string,
   id? : string,
   property? : string,
-  rank : 'preferred' | 'normal' | 'deprecated',
   snaktype? : 'value' | 'novalue' | 'somevalue',
   type? : string,
+};
+
+export type QualifierType = {
+  datavalue? : DataValueType,
+};
+
+export type QuantityValueType = {
+  amount? : string,
+  lowerBound? : string,
+  unit? : string,
+  upperBound? : string,
 };

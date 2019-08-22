@@ -1,25 +1,23 @@
 import React, { PureComponent } from 'react';
-import { Claim } from 'model/Shapes';
 import { claimColumnsF } from './selectors';
 import ClaimsTableBody from './ClaimsTableBody';
 import ClaimsWithQualifiersTable from './ClaimsWithQualifiersTable';
 import { COLUMNS_FOR_CLAIMS_EDITOR } from 'components/TableColSpanConstants';
 import { connect } from 'react-redux';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 
-class PropertyClaimContainer extends PureComponent {
+type PropsType = {
+  claims : ClaimType[],
+  displayLabel? : boolean,
+  onClaimAdd : () => any,
+  onClaimAddTwice : () => any,
+  onClaimDelete : ClaimType => any,
+  onClaimUpdate : ClaimType => any,
+  onClaimsReorder : string[] => any,
+  propertyDescription : PropertyDescription,
+};
 
-  static propTypes = {
-    claims: PropTypes.arrayOf( PropTypes.shape( Claim ) ),
-    displayLabel: PropTypes.bool,
-    onClaimAdd: PropTypes.func.isRequired,
-    onClaimAddTwice: PropTypes.func.isRequired,
-    onClaimDelete: PropTypes.func.isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-    onClaimsReorder: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-  };
+class PropertyClaimContainer extends PureComponent<PropsType> {
 
   static defaultProps = {
     displayLabel: true,

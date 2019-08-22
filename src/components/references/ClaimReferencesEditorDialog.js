@@ -1,18 +1,17 @@
 import React, { PureComponent } from 'react';
-import { Claim } from 'model/Shapes';
 import ClaimReferencesEditorContent from './ClaimReferencesEditorContent';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import generateRandomString from 'utils/generateRandomString';
 import i18n from './i18n';
-import PropTypes from 'prop-types';
 
-export default class ClaimReferencesEditorDialog extends PureComponent {
+type PropsType = {
+  claim : ClaimType,
+  onClaimUpdate : ClaimType => any,
+  onCloseClick : () => any,
+};
 
-  static propTypes = {
-    claim: PropTypes.shape( Claim ).isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-    onCloseClick: PropTypes.func.isRequired,
-  };
+export default class ClaimReferencesEditorDialog
+  extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );

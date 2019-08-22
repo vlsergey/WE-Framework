@@ -1,26 +1,34 @@
 import * as ApiUtils from 'core/ApiUtils';
-import * as Shapes from 'model/Shapes';
 import React, { PureComponent } from 'react';
 import DetailsArea from './DetailsArea';
 import Popup from 'semantic-ui-react/dist/commonjs/modules/Popup';
-import PropTypes from 'prop-types';
 import styles from './Time.css';
 
 const POPUP_ON_CLICK_FOCUS = [ 'click', 'focus' ];
 
-export default class TimeDataValueEditor extends PureComponent {
+type PropsType = {
+  datavalue? : DataValueType,
+  onDataValueChange : ?DataValueType => any,
+  readOnly? : boolean,
+};
 
-  static propTypes = {
-    datavalue: PropTypes.shape( Shapes.DataValue ),
-    onDataValueChange: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool,
-  };
+type StateType = {
+  calendarModel : ?string,
+  error : ?string,
+  parsing : boolean,
+  precision : ?number,
+  renderedAsHtml : string,
+  rendering : boolean,
+  text : ?string,
+};
+
+export default class TimeDataValueEditor
+  extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );
     const text = ( ( this.props.datavalue || {} ).value || {} ).time || '';
     this.state = {
-      ...this.state,
       parsing: false,
       rendering: false,
       error: null,

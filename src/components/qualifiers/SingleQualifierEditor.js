@@ -1,18 +1,16 @@
 import React, { PureComponent } from 'react';
-import { Claim } from 'model/Shapes';
 import i18n from './i18n';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 import SnaksArrayEditor from 'components/snaks/SnaksArrayEditor';
 
-export default class SingleQualifierEditor extends PureComponent {
+type PropsType = {
+  claim : ClaimType,
+  claimPropertyDescription : PropertyDescription,
+  onClaimUpdate : ClaimType => any,
+  qualifierPropertyDescription : PropertyDescription,
+};
 
-  static propTypes = {
-    claim: PropTypes.shape( Claim ).isRequired,
-    claimPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-    qualifierPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-  };
+export default class SingleQualifierEditor extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );

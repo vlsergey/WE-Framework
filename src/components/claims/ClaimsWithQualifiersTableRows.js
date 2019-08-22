@@ -1,31 +1,29 @@
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
-import { Claim } from 'model/Shapes';
 import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import ClaimReferencesButtonCell from 'components/references/ClaimReferencesButtonCell';
 import { COLUMNS_FOR_SNAK_EDITOR } from 'components/TableColSpanConstants';
-import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import PropTypes from 'prop-types';
 import QualifierSelectButtonCell from 'components/qualifiers/QualifierSelectButtonCell';
 import SelectRankButtonCell from './SelectRankButtonCell';
 import SingleQualifierEditor from 'components/qualifiers/SingleQualifierEditor';
 import SnakEditorTableRowPart from 'components/SnakEditorTableRowPart';
 import styles from './ClaimsWithQualifiers.css';
 
-export default class ClaimsWithQualifiersTableRows extends PureComponent {
+type PropsType = {
+  claim : ClaimType,
+  columns : string[],
+  firstCell : any,
+  hasClaimDelete : boolean,
+  onClaimDelete : ClaimType => any,
+  onClaimUpdate : ClaimType => any,
+  propertyDescription : PropertyDescription,
+};
 
-  static propTypes = {
-    firstCell: PropTypes.node.isRequired,
-    claim: PropTypes.shape( Claim ).isRequired,
-    columns: PropTypes.arrayOf( PropTypes.string ).isRequired,
-    hasClaimDelete: PropTypes.bool.isRequired,
-    onClaimDelete: PropTypes.func.isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-  };
+export default class ClaimsWithQualifiersTableRows
+  extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );
@@ -46,28 +44,21 @@ export default class ClaimsWithQualifiersTableRows extends PureComponent {
     this.claimQualifiersTable.current.showQualifierSelect();
   }
 
-  handleRankChange( rank ) {
+  handleRankChange( rank : string ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
       rank,
     } );
   }
 
-  handleSnakChange( snak ) {
-    expect( snak ).toBeAn( 'object' );
-    expect( snak.property ).toBeAn( 'string' );
-    expect( snak.snaktype ).toBeAn( 'string' );
-    expect( snak.datatype ).toBeAn( 'string' );
-
+  handleSnakChange( snak : SnakType ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
       mainsnak: snak,
     } );
   }
 
-  handleSnaksArrayUpdateF( propertyId ) {
-    expect( propertyId ).toBeA( 'string' );
-
+  handleSnaksArrayUpdateF( propertyId : string ) {
     return snaksArray => this.props.onClaimUpdate( {
       ...this.props.claim,
       qualifiers: {

@@ -1,27 +1,30 @@
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
-import { Claim } from 'model/Shapes';
-import expect from 'expect';
 import generateRandomString from 'utils/generateRandomString';
 import getDefaultQualifierSnak from 'enhancements/getDefaultQualifierSnak';
 import i18n from './i18n';
 import NewQualifierAutosuggest from './NewQualifierAutosuggest';
 import NewQualifierSelect from './NewQualifierSelect';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 import SnaksMapEditor from 'components/snaks/SnaksMapEditor';
 import styles from './ClaimQualifiersTable.css';
 
-export default class ClaimQualifiersTable extends PureComponent {
+type PropsType = {
+  allowedQualifiers? : string[],
+  claim : ClaimType,
+  claimPropertyDescription : PropertyDescription,
+  defaultAddQuailifier? : boolean,
+  disabledQualifiers? : string[],
+  onClaimUpdate : ClaimType => any,
+};
 
-  static propTypes = {
-    allowedQualifiers: PropTypes.arrayOf( PropTypes.string ),
-    defaultAddQuailifier: PropTypes.bool,
-    disabledQualifiers: PropTypes.arrayOf( PropTypes.string ),
-    claim: PropTypes.shape( Claim ).isRequired,
-    claimPropertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-    onClaimUpdate: PropTypes.func.isRequired,
-  };
+type StateType = {
+  addQualifierMode : 'SELECT' | 'AUTOSUGGEST' | 'HIDDEN',
+  hiddenBehindLabel : boolean,
+};
+
+export default class ClaimQualifiersTable
+  extends PureComponent<PropsType, StateType> {
 
   static defaultProps = {
     allowedQualifiers: [],
@@ -106,9 +109,7 @@ export default class ClaimQualifiersTable extends PureComponent {
     } );
   }
 
-  removeButtonConfirmMessageF( qualifierPropertyDescription ) {
-    expect( qualifierPropertyDescription ).toBeA( PropertyDescription );
-
+  removeButtonConfirmMessageF( qualifierPropertyDescription : PropertyDescription ) {
     return this.confirmRemoveQualifierTemplate
       .replace( '{qualifierPropertyId}', qualifierPropertyDescription.id )
       .replace( '{qualifierPropertyLabel}', qualifierPropertyDescription.label || qualifierPropertyDescription.id );

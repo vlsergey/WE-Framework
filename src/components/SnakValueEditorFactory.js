@@ -1,13 +1,10 @@
 import React, { PureComponent } from 'react';
 import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
 import enhancementsFactory from 'enhancements/enhancementsFactory';
-import expect from 'expect';
 import ExternalIdDataValueEditor from './dataValueEditors/external-id/ExternalIdDataValueEditor';
 import MonolingualTextDataValueEditor from './dataValueEditors/MonolingualTextDataValueEditor';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 import QuantityDataValueEditor from './dataValueEditors/quantity/QuantityDataValueEditor';
-import { Snak } from 'model/Shapes';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 import TimeDataValueEditor from './dataValueEditors/time/TimeDataValueEditor';
 import UnsupportedDataValueEditor from './dataValueEditors/UnsupportedDataValueEditor';
@@ -27,14 +24,14 @@ const STANDARD = {
 
 export const SUPPORTED_DATATYPES = Object.keys( STANDARD );
 
-export default class SnakValueEditorFactory extends PureComponent {
+type PropsType = {
+  onSnakChange : SnakType => any,
+  propertyDescription : PropertyDescription,
+  readOnly? : boolean,
+  snak? : SnakType,
+};
 
-  static propTypes = {
-    readOnly: PropTypes.bool,
-    onSnakChange: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-    snak: PropTypes.shape( Snak ),
-  };
+export default class SnakValueEditorFactory extends PureComponent<PropsType> {
 
   static defaultProps = {
     readOnly: false,
@@ -48,9 +45,6 @@ export default class SnakValueEditorFactory extends PureComponent {
   handleDataValueChange( datavalue ) {
     const { propertyDescription, snak } = this.props;
 
-    expect( snak ).toBeAn( 'object' );
-    expect( propertyDescription.datatype ).toBeA( 'string' );
-
     this.props.onSnakChange( {
       ...snak,
       datavalue,
@@ -61,7 +55,6 @@ export default class SnakValueEditorFactory extends PureComponent {
   render() {
     const { propertyDescription, readOnly, snak } = this.props;
     const dataType = propertyDescription.datatype;
-    expect( propertyDescription.datatype ).toBeA( 'string' );
 
     const dataValueEditorProps = {
       datavalue: snak.datavalue,

@@ -101,6 +101,9 @@ export default class PropertyDescription {
       json.urlFormatters.forEach( obj => Object.setPrototypeOf( obj, UrlFormatter.prototype ) );
   }
 
+  datatype : string;
+  id : string;
+  label : ?string;
   quantityUnitEnabled : ?boolean;
 
   constructor( propertyEntity ) {

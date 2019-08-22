@@ -1,8 +1,8 @@
-export default class TimeComparator {
+import { DatavalueComparator } from './DatavalueComparator';
 
-  constructor() {
-    this.code = 'time';
-  }
+export default class TimeComparator implements DatavalueComparator {
+
+  code = 'time';
 
   compare( dataValue1, dataValue2, sortEmptyCompareConstant, sortOrderCompareConstant ) {
     let v1 = ( ( dataValue1 || {} ).value || {} ).time || '';
