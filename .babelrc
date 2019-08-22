@@ -1,7 +1,8 @@
 {
   "plugins": [
-    // disable assert until https://github.com/gajus/flow-runtime/issues/237 is resolved
-    [ "flow-runtime", { "assert": false, "annotate": true } ],
+    // asserts can be disabled any moment because of https://github.com/gajus/flow-runtime/issues/237
+    // [ "flow-runtime", { "assert": false, "annotate": true } ],
+    "flow-runtime",
     "@babel/plugin-syntax-dynamic-import",
     [ "@babel/plugin-proposal-decorators", { "decoratorsBeforeExport": true}],
     "@babel/plugin-proposal-class-properties",
