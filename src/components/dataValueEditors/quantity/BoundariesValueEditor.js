@@ -14,7 +14,7 @@ export default class BoundariesValueEditor extends PureComponent {
     readOnly: false,
   };
 
-  static canBeUsedForValue() {
+  static canBeUsedForValue() : boolean {
     return true;
   }
 

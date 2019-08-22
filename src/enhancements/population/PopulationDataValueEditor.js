@@ -1,20 +1,22 @@
+import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
 import i18n from './i18n';
 import PopulationLookupDialog from './PopulationLookupDialog';
 import QuantityDataValueEditor from 'components/dataValueEditors/quantity/QuantityDataValueEditor';
-import React from 'react';
 
-class PopulationDataValueEditor extends QuantityDataValueEditor {
+type StateType = {
+  dialogOpen : boolean,
+};
+
+class PopulationDataValueEditor extends PureComponent<any, StateType> {
+
+  state = {
+    dialogOpen: false,
+  }
 
   constructor() {
     super( ...arguments );
-
-    this.state = {
-      ...this.state,
-      dialogOpen: false,
-    };
-
     this.handleClick = this.handleClick.bind( this );
     this.handleDialogClose = this.handleDialogClose.bind( this );
   }
@@ -27,19 +29,28 @@ class PopulationDataValueEditor extends QuantityDataValueEditor {
     this.setState( { dialogOpen: false } );
   }
 
+  render() {
+    const { ...etc } = this.props;
+    return <QuantityDataValueEditor
+      buttonCells={this.renderButtonCells()}
+      {...etc} />;
+  }
+
   renderButtonCells() {
+    const dialogOpen : boolean = this.state.dialogOpen;
+
     return [
       <ButtonCell
         icon="ui-icon-lightbulb"
         key="PopulationLookup"
         label={i18n.buttonLabelPopulationLookup}
         onClick={this.handleClick}>
-        {children => <React.Fragment>
+        {children => <>
           {children}
-          { this.state.dialogOpen && <PopulationLookupDialog
+          { dialogOpen && <PopulationLookupDialog
             onClaimAdd={this.props.onClaimAdd}
             onClose={this.handleDialogClose} /> }
-        </React.Fragment>}
+        </>}
       </ButtonCell>,
     ];
   }

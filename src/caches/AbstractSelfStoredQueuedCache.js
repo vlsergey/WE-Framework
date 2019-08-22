@@ -108,7 +108,7 @@ export default class AbstractSelfStoredQueuedCache {
 
     } ).catch( error => {
       mw.notify( notifyMessage + '… Failure. See console log output for details.',
-        { autoHide: true, tag: 'WE-F Cache: ' + type } );
+        { autoHide: true, tag: 'WE-F Cache: ' + this.type } );
       mw.log.error( 'Unable to batch request following items: ' + nextBatch );
       mw.log.error( error );
 

@@ -48,7 +48,7 @@ export default class SelectMode extends PureComponent {
     return <LabelDescriptionsProvider entityIds={oneOf}>
       { cache => <select onChange={this.handleChange} value={value || ''}>
         <option key="_empty" value="" />
-        {sort( cache, oneOf ).map( entityId => {
+        {sort( cache, oneOf ).map( ( entityId : string ) => {
           expect( cache ).toBeAn( 'object', 'LabelDescriptionsProvider didn\'t return cache object (' + cache + ')' );
 
           const labelDescription = cache[ entityId ];

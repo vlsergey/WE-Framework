@@ -16,7 +16,7 @@ export default class ExactValueEditor extends PureComponent {
     readOnly: false,
   };
 
-  static canBeUsedForValue( value ) {
+  static canBeUsedForValue( value : QuantityValueType ) : boolean {
     const { amount, lowerBound, upperBound } = value;
 
     return !ok( lowerBound ) && !ok( upperBound )

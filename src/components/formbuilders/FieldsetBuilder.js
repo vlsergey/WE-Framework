@@ -1,14 +1,12 @@
 import React, { PureComponent } from 'react';
 import ChildrenBuilder from './ChildrenBuilder';
 import EntityLabel from 'caches/EntityLabel';
-import { FieldsetShape } from './FormShapes';
-import PropTypes from 'prop-types';
 
-export default class FieldsetBuilder extends PureComponent {
+type PropsType = {
+  fieldset : FieldsetDefType,
+};
 
-  static propTypes = {
-    fieldset: PropTypes.shape( FieldsetShape ).isRequired,
-  };
+export default class FieldsetBuilder extends PureComponent<PropsType> {
 
   render() {
     const { fieldset } = this.props;

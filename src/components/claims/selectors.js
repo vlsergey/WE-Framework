@@ -27,30 +27,31 @@ export const claimColumnsF = () => {
       return EMPTY_ARRAY;
     }
 
-    const qualifierStats = {};
+    const qualifierStats : Map< string, number > = new Map();
     claims
       .map( claim => claim.qualifiers ).filter( ok )
       .forEach( qualifiers => Object.keys( qualifiers )
-        .forEach( propertyId => {
+        .forEach( ( propertyId : string ) => {
           const plus = ( qualifiers[ propertyId ] || EMPTY_ARRAY ).length > 0 ? 1 : 0;
-          qualifierStats[ propertyId ] = ( qualifierStats[ propertyId ] || 0 ) + plus;
+          qualifierStats.set( propertyId, ( qualifierStats.get( propertyId ) || 0 ) + plus );
         } )
       );
 
     const columns = [];
-    while ( columns.length < MAX_COLUMNS && Object.keys( qualifierStats ).length !== 0 ) {
-      const allValues = [ ...Object.values( qualifierStats ) ].sort( ( a, b ) => b - a );
+    while ( columns.length < MAX_COLUMNS && qualifierStats.size !== 0 ) {
+      const qualifierCounts : number[] = [ ...qualifierStats.values() ];
+      const allValues = qualifierCounts.sort( ( a : number, b : number ) => b - a );
       const [ max ] = allValues;
       if ( max < claims.length / 5.0 ) break;
 
       const countOfMax = allValues.filter( item => item === max ).length;
       if ( columns.length + countOfMax > MAX_COLUMNS ) break;
 
-      Object.keys( qualifierStats )
-        .filter( propertyId => qualifierStats[ propertyId ] === max )
+      [ ...qualifierStats.keys() ]
+        .filter( propertyId => qualifierStats.get( propertyId ) === max )
         .forEach( propertyId => {
           columns.push( propertyId );
-          delete qualifierStats[ propertyId ];
+          qualifierStats.delete( propertyId );
         } );
     }
 

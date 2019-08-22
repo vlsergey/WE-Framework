@@ -1,17 +1,15 @@
 import React, { PureComponent } from 'react';
 import ChildrenBuilder from './ChildrenBuilder';
 import EntityLabel from 'caches/EntityLabel';
-import PropTypes from 'prop-types';
 import styles from './EditorTabsBuilder.css';
-import { TabShape } from './FormShapes';
 import TabsWrapper from 'wrappers/TabsWrapper';
 
-export default class EditorTabsBuilder extends PureComponent {
+type PropsType = {
+  onActivate? : ?( any => any ),
+  tabs : TabDefType[],
+};
 
-  static propTypes = {
-    onActivate: PropTypes.func,
-    tabs: PropTypes.arrayOf( PropTypes.shape( TabShape ) ).isRequired,
-  };
+export default class EditorTabsBuilder extends PureComponent<PropsType> {
 
   render() {
     const { onActivate, tabs } = this.props;

@@ -2,18 +2,17 @@ import { addLastRecentlyUsed, findLastRecentlyUsed } from './LruCache';
 import React, { PureComponent } from 'react';
 import AutocompleteMode from './AutocompleteMode';
 import EntityLabel from 'caches/EntityLabel';
-import PropTypes from 'prop-types';
 import SelectMode from './SelectMode';
 
-export default class EntityField extends PureComponent {
+type PropsType = {
+  lruKey? : ?string,
+  onChange : any => any,
+  oneOf? : ?( string[] ),
+  readOnly? : ?boolean,
+  value? : ?string,
+};
 
-  static propTypes = {
-    lruKey: PropTypes.string,
-    oneOf: PropTypes.arrayOf( PropTypes.string ),
-    onChange: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool,
-    value: PropTypes.string,
-  };
+export default class EntityField extends PureComponent<PropsType> {
 
   static defaultProps = {
     readOnly: false,

@@ -1,12 +1,15 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 
-export default class ErrorBoundary extends PureComponent {
+type PropsType = {
+  children : any,
+  description? : ?string,
+};
 
-  static propTypes = {
-    children: PropTypes.node,
-    description: PropTypes.string,
-  };
+type StateType = {
+  hasError : boolean,
+};
+
+export default class ErrorBoundary extends PureComponent<PropsType, StateType> {
 
   state = {
     hasError: false,

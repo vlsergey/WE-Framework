@@ -42,11 +42,9 @@ class ParentTypesCache extends AbstractQueuedCacheWithPostcheck {
       return value.substr( this.ENTITY_URL_PREFIX.length );
     } );
 
-    /* eslint no-undef: 0 */
     if ( process.env.NODE_ENV !== 'production' ) {
       if ( typeIds.length !== new Set( typeIds ).size ) {
-        mw.log.warn( 'SPARQL result has non-distinct values' );
-        mw.log.warn( sparql );
+        mw.log.warn( 'DISTINCT-SPARQL query has non-distinct values: ' );
         mw.log.warn( typeIds );
       }
     }

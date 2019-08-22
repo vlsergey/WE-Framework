@@ -126,7 +126,7 @@ class ViafPropertyDataValueEditor extends ExternalIdDataValueEditor {
     } );
   }
 
-  renderButtonCells() {
+  renderButtonCells() : any {
     return [
       <ButtonCell
         icon="ui-icon-search"

@@ -1,3 +1,5 @@
+import type { BaseEditorPropsTypes } from 'components/dataValueEditors/wikibase-item/BaseEditorPropsTypes';
+import BaseWikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/BaseWikibaseItemDataValueEditor';
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
 import generateRandomString from 'utils/generateRandomString';
@@ -6,9 +8,7 @@ import GoToWikidataButtonCell from 'components/dataValueEditors/wikibase-item/Go
 import i18n from './i18n';
 import { openEditor } from 'core/edit';
 import PersonEditorTemplate from 'editors/PersonEditorTemplate';
-import PropTypes from 'prop-types';
 import React from 'react';
-import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
 export function oppositeGender( entity ) {
   return ( ( entity.claims || {} ).P21 || [] )
@@ -25,15 +25,14 @@ export function oppositeGender( entity ) {
     .filter( id => !!id )[ 0 ] || null;
 }
 
-class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
+type FMPropsType = BaseEditorPropsTypes & {
+  entity : any,
+  newEntityGenderEntityId : any => any | string,
+  propertiesMapping : any,
+  propertyIdSelfInto : string,
+};
 
-  static propTypes = {
-    ...WikibaseItemDataValueEditor.propTypes,
-    entity: PropTypes.object.isRequired,
-    newEntityGenderEntityId: PropTypes.oneOfType( PropTypes.func, PropTypes.string ).isRequired,
-    propertyIdSelfInto: PropTypes.string.isRequired,
-    propertiesMapping: PropTypes.object.isRequired,
-  };
+class FamilyMemberDataValueEditor extends BaseWikibaseItemDataValueEditor<FMPropsType, any> {
 
   constructor() {
     super( ...arguments );
@@ -43,15 +42,18 @@ class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
 
   handleCreateFamilyMember() {
     const { entity, propertiesMapping, propertyIdSelfInto } = this.props;
-    let { newEntityGenderEntityId } = this.props;
+    const { newEntityGenderEntityId } = this.props;
 
+    let actualNewEntityGenderEntityId : ?string;
     // calculate newEntityGenderEntityId if function
     if ( newEntityGenderEntityId instanceof Function ) {
       if ( entity ) {
-        newEntityGenderEntityId = newEntityGenderEntityId( entity );
+        actualNewEntityGenderEntityId = newEntityGenderEntityId( entity );
       } else {
-        newEntityGenderEntityId = null;
+        actualNewEntityGenderEntityId = null;
       }
+    } else {
+      actualNewEntityGenderEntityId = newEntityGenderEntityId;
     }
 
     const newEntity = {
@@ -74,7 +76,7 @@ class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
       rank: 'normal',
     } ];
 
-    if ( newEntityGenderEntityId ) {
+    if ( actualNewEntityGenderEntityId ) {
       newEntity.claims.P21 = [ {
         mainsnak: {
           snaktype: 'value',
@@ -83,8 +85,8 @@ class FamilyMemberDataValueEditor extends WikibaseItemDataValueEditor {
           datavalue: {
             // male
             value: { 'entity-type': 'item',
-              'numeric-id': newEntityGenderEntityId.substr( 1 ),
-              'id': newEntityGenderEntityId,
+              'numeric-id': actualNewEntityGenderEntityId.substr( 1 ),
+              'id': actualNewEntityGenderEntityId,
             },
             type: 'wikibase-entityid',
           },

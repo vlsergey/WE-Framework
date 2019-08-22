@@ -1,13 +1,10 @@
 import React, { PureComponent } from 'react';
-import { ChildrenContainer } from './FormShapes';
 import ErrorBoundary from './ErrorBoundary';
 import FieldsBuilder from './FieldsBuilder';
 import FieldsetBuilder from './FieldsetBuilder';
 import SpecialBuilder from './SpecialBuilder';
 
-export default class ChildrenBuilder extends PureComponent {
-
-  static propTypes = ChildrenContainer;
+export default class ChildrenBuilder extends PureComponent<ChildrenContainerDefType> {
 
   render() {
     const childRenderer = type => {

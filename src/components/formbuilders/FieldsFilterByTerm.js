@@ -1,6 +1,4 @@
 import { defaultMemoize } from 'reselect';
-import { FieldShape } from './FormShapes';
-import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 const filterByTerm = defaultMemoize( ( cache, sorted, originalTerm ) => {
@@ -34,14 +32,14 @@ const filterByTerm = defaultMemoize( ( cache, sorted, originalTerm ) => {
   return result.map( item => ( { property: item.property } ) );
 } );
 
-export default class FieldsFilterByTerm extends PureComponent {
+type PropsType = {
+  children : any => any,
+  fields : FieldDefType[],
+  propertyDescriptionCache : any,
+  term : string,
+};
 
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    fields: PropTypes.arrayOf( PropTypes.shape( FieldShape ) ).isRequired,
-    term: PropTypes.string.isRequired,
-    propertyDescriptionCache: PropTypes.object.isRequired,
-  };
+export default class FieldsFilterByTerm extends PureComponent<PropsType> {
 
   render() {
     const { children, fields, propertyDescriptionCache, term } = this.props;

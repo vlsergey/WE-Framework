@@ -9,8 +9,8 @@ import lastRevisionCache from './lastRevisionCache';
 */
 export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCache {
 
-  constructor() {
-    super( ...arguments );
+  constructor( type : string, useIndexedDb : boolean, maxBatch : number ) {
+    super( type, useIndexedDb, maxBatch );
 
     if ( this.useIndexedDb ) {
       lastRevisionCache.addCacheUpdateCallback( this.onLastRevisionsFetched.bind( this ) );
@@ -48,7 +48,7 @@ export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCach
 
     if ( this.requestQueue.size !== 0 && this.queueState === 'WAITING' ) {
       this.queueState = 'REQUEST';
-      this.queueNextBatch( this.dispatch );
+      this.queueNextBatch( );
     }
 
     lastRevisionCache.doQueue( pageidsToQueue );
@@ -77,7 +77,7 @@ export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCach
 
         if ( this.requestQueue.size !== 0 && this.queueState === 'WAITING' ) {
           this.queueState = 'REQUEST';
-          this.queueNextBatch( this.dispatch );
+          this.queueNextBatch( );
         }
       } );
 
