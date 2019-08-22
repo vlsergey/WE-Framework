@@ -1,16 +1,14 @@
 import React, { PureComponent } from 'react';
-import expect from 'expect';
-import PropTypes from 'prop-types';
 
 const ok = x => typeof x === 'string' && x.trim() !== '';
 
-export default class PlusMinusValueEditor extends PureComponent {
+type PropsType = {
+  onValueChange : QuantityValueType => any,
+  readOnly? : boolean,
+  value? : ?QuantityValueType,
+};
 
-  static propTypes = {
-    onValueChange: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool,
-    value: PropTypes.object,
-  };
+export default class PlusMinusValueEditor extends PureComponent<PropsType> {
 
   static defaultProps = {
     value: null,
@@ -91,32 +89,33 @@ export default class PlusMinusValueEditor extends PureComponent {
   render() {
     const { readOnly, value } = this.props;
 
+    const numAmount : number = Number.parseFloat( ( value || {} ).amount || '' ) || 0;
+    const numLowerBound : number = Number.parseFloat( ( value || {} ).lowerBound || '' ) || 0;
+
     if ( readOnly ) {
       if ( !value || !value.amount )
         return null;
 
-      if ( value.lowerBound )
-        return value.amount + ' ± ' + ( value.amount - value.lowerBound );
+      if ( numLowerBound )
+        return value.amount + ' ± ' + ( numAmount - numLowerBound ).toString();
 
       return value.amount || '';
     }
 
-    let plusMinus;
+    let plusMinus : string;
     if ( !ok( value.lowerBound ) ) {
       plusMinus = '';
     } else {
-      const nAmount = Number( value.amount ) || 0;
-      plusMinus = String( nAmount - ( Number( value.lowerBound ) || nAmount ) );
+      plusMinus = ( numAmount - ( numLowerBound || numAmount ) ).toString();
     }
-    expect( plusMinus ).toBeA( 'string' );
 
     return <React.Fragment>
       <td>
-        <input onChange={this.handleAmountChange} value={( value.amount )} />
+        <input onChange={this.handleAmountChange} value={( value.amount || '' )} />
       </td>
       <td>&nbsp;±&nbsp;</td>
       <td>
-        <input onChange={this.handlePlusMinusChange} value={plusMinus} />
+        <input onChange={this.handlePlusMinusChange} value={plusMinus || ''} />
       </td>
     </React.Fragment>;
   }

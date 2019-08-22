@@ -1,5 +1,4 @@
-import type { BaseEditorPropsTypes } from 'components/dataValueEditors/wikibase-item/BaseEditorPropsTypes';
-import BaseWikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/BaseWikibaseItemDataValueEditor';
+import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
 import generateRandomString from 'utils/generateRandomString';
@@ -8,7 +7,7 @@ import GoToWikidataButtonCell from 'components/dataValueEditors/wikibase-item/Go
 import i18n from './i18n';
 import { openEditor } from 'core/edit';
 import PersonEditorTemplate from 'editors/PersonEditorTemplate';
-import React from 'react';
+import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
 export function oppositeGender( entity ) {
   return ( ( entity.claims || {} ).P21 || [] )
@@ -25,14 +24,16 @@ export function oppositeGender( entity ) {
     .filter( id => !!id )[ 0 ] || null;
 }
 
-type FMPropsType = BaseEditorPropsTypes & {
+type PropsType = {
+  datavalue? : ?DataValueType,
   entity : any,
   newEntityGenderEntityId : any => any | string,
+  onDataValueChange : any => any,
   propertiesMapping : any,
   propertyIdSelfInto : string,
 };
 
-class FamilyMemberDataValueEditor extends BaseWikibaseItemDataValueEditor<FMPropsType, any> {
+class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
 
   constructor() {
     super( ...arguments );
@@ -44,7 +45,7 @@ class FamilyMemberDataValueEditor extends BaseWikibaseItemDataValueEditor<FMProp
     const { entity, propertiesMapping, propertyIdSelfInto } = this.props;
     const { newEntityGenderEntityId } = this.props;
 
-    let actualNewEntityGenderEntityId : ?string;
+    let actualNewEntityGenderEntityId : ?string = null;
     // calculate newEntityGenderEntityId if function
     if ( newEntityGenderEntityId instanceof Function ) {
       if ( entity ) {
@@ -52,7 +53,8 @@ class FamilyMemberDataValueEditor extends BaseWikibaseItemDataValueEditor<FMProp
       } else {
         actualNewEntityGenderEntityId = null;
       }
-    } else {
+    }
+    if ( typeof newEntityGenderEntityId === 'string' ) {
       actualNewEntityGenderEntityId = newEntityGenderEntityId;
     }
 
@@ -145,7 +147,18 @@ class FamilyMemberDataValueEditor extends BaseWikibaseItemDataValueEditor<FMProp
       .then( entityId => super.handleCreate( entityId ) );
   }
 
-  renderButtons( propertyDescription, entityId ) {
+  render() {
+    const { datavalue, onDataValueChange, ...etc } = this.props;
+    const entityId : ?string = ( ( datavalue || {} ).value || {} ).id || '';
+
+    return <WikibaseItemDataValueEditor
+      datavalue={datavalue}
+      onDataValueChange={onDataValueChange}
+      {...etc}
+      buttons={this.renderButtons( entityId )} />;
+  }
+
+  renderButtons( entityId : ?string ) {
     return [
       <ButtonCell
         disabled={!!entityId}
