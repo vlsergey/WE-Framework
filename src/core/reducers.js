@@ -31,15 +31,15 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
   }
 
   case 'CLAIM_ADD': {
-    const { claim, propertyId, datatype } : {
-      claim : ClaimType,
+    const { claimData, propertyId, datatype } : {
+      claimData : ?any,
       datatype : string,
       propertyId : string } = action;
 
     const claims : ClaimsType = entity.claims || {};
     const existingClaims : ?ClaimType[] = claims[ propertyId ];
     let newClaim : ClaimType = newStatementClaim( propertyId, datatype );
-    newClaim = claim ? { ...newClaim, ...claim } : newClaim;
+    newClaim = claimData ? { ...newClaim, ...claimData } : newClaim;
 
     if ( existingClaims ) {
       return {

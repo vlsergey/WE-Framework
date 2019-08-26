@@ -1,6 +1,6 @@
 
 export type ClaimType = {
-  id? : string,
+  id : string,
   mainsnak? : SnakType,
   qualifiers? : { [string] : QualifierType[] },
   rank? : string,

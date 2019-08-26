@@ -105,7 +105,8 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
     const { propertyIdToComparators } = this.props;
     const propertyIds = [ ...propertyIdToComparators.keys() ];
     const { comparator, propertyId } = this.state;
-    const comparatorOptions : DatavalueComparator[] = propertyIdToComparators.get( propertyId ) || [];
+    const comparatorOptions : DatavalueComparator[] =
+      ( propertyId ? propertyIdToComparators.get( propertyId ) : [] ) || [];
 
     return <DialogWrapper
       buttons={[
@@ -128,7 +129,7 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
             <th>{i18n.fieldLabelSortBy}</th>
             <td>
               <PropertyDescriptionsProvider propertyIds={propertyIds}>
-                { cache => <select name="propertyId" onChange={this.handleChange} value={this.state.propertyId}>
+                { cache => <select name="propertyId" onChange={this.handleChange} value={propertyId || ''}>
                   {propertyIds.map( propertyId =>
                     <option
                       key={propertyId}

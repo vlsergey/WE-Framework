@@ -3,13 +3,22 @@ import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
 import i18n from './i18n';
 import PopulationLookupDialog from './PopulationLookupDialog';
+import PropertyDescription from 'core/PropertyDescription';
 import QuantityDataValueEditor from 'components/dataValueEditors/quantity/QuantityDataValueEditor';
+
+type PropsType = {
+  datavalue? : ?DataValueType,
+  onClaimAdd : any => any,
+  onDataValueChange : any => any,
+  propertyDescription? : ?PropertyDescription,
+  readOnly? : ?boolean,
+};
 
 type StateType = {
   dialogOpen : boolean,
 };
 
-class PopulationDataValueEditor extends PureComponent<any, StateType> {
+class PopulationDataValueEditor extends PureComponent<PropsType, StateType> {
 
   state = {
     dialogOpen: false,
@@ -57,7 +66,7 @@ class PopulationDataValueEditor extends PureComponent<any, StateType> {
 }
 
 const mapDispatchToProps = ( dispatch, ownProps ) => ( {
-  onClaimAdd: claim => dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription, claim } ),
+  onClaimAdd: claimData => dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription, claimData } ),
 } );
 
 const PopulationDataValueEditorConnected = connect( undefined, mapDispatchToProps )( PopulationDataValueEditor );

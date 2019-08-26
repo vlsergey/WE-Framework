@@ -21,7 +21,7 @@ export const MODES : { [string] : Mode } = {
   boundaries: { component: BoundariesValueEditor, canBeUsedForValue: BoundariesValueEditor.canBeUsedForValue },
 };
 
-function detectAppropriateMode( datavalue : DataValueType ) : string {
+function detectAppropriateMode( datavalue : ?DataValueType ) : string {
   if ( datavalue === undefined || datavalue === null
     || datavalue.value === undefined || datavalue.value === null ) {
     return DEFAULT_MODE;
@@ -33,7 +33,7 @@ function detectAppropriateMode( datavalue : DataValueType ) : string {
 
 type PropsType = {
   buttonCells? : any[],
-  datavalue : DataValueType,
+  datavalue? : ?DataValueType,
   onDataValueChange : any => any,
   propertyDescription? : ?PropertyDescription,
   readOnly? : ?boolean,
