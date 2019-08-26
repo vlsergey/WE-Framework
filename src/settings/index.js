@@ -1,4 +1,3 @@
-import expect from 'expect';
 import i18n from './i18n';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -9,13 +8,7 @@ const { localStorage } = window;
 
 const editors = [];
 
-export function registerEditor( editorDescription ) {
-  expect( editorDescription ).toBeAn( 'object' );
-  expect( editorDescription.id ).toBeA( 'string' );
-  expect( editorDescription.dialogTitle ).toBeA( 'string' );
-  expect( editorDescription.linkText ).toBeA( 'string' );
-  expect( editorDescription.tabs ).toBeAn( 'array' );
-
+export function registerEditor( editorDescription : EditorDefType ) {
   editors.push( editorDescription );
 }
 

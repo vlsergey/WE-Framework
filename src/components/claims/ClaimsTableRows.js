@@ -4,7 +4,6 @@ import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import ClaimReferencesButtonCell from 'components/references/ClaimReferencesButtonCell';
 import { COLUMNS_FOR_CLAIMS_EDITOR } from 'components/TableColSpanConstants';
-import expect from 'expect';
 import FlagCell from './FlagCell';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyLabelCell from 'components/PropertyLabelCell';
@@ -60,19 +59,14 @@ export default class ClaimsTableRows
     }
   }
 
-  handleRankChange( rank ) {
+  handleRankChange( rank : string ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
       rank,
     } );
   }
 
-  handleSnakChange( snak ) {
-    expect( snak ).toBeAn( 'object' );
-    expect( snak.property ).toBeAn( 'string' );
-    expect( snak.snaktype ).toBeAn( 'string' );
-    expect( snak.datatype ).toBeAn( 'string' );
-
+  handleSnakChange( snak : SnakType ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
       mainsnak: snak,

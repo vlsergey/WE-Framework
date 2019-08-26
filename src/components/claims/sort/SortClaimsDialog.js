@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import ComparatorSelect from './ComparatorSelect';
 import { DatavalueComparator } from './DatavalueComparator';
 import DialogWrapper from 'wrappers/DialogWrapper';
-import expect from 'expect';
 import i18n from './i18n';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import stableSort from 'utils/stableSort';
@@ -74,14 +73,12 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
     this.handleSortClick = this.handleSortClick.bind( this );
   }
 
-  handleChange( event ) {
-    const { name, value } = event.target;
+  handleChange( { target: { name, value } } ) {
     this.setState( { [ name ]: value } );
   }
 
-  handleComparatorChange( newComparator ) {
-    expect( newComparator ).toBeAn( 'object' );
-    this.setState( { comparator: newComparator } );
+  handleComparatorChange( comparator : ?DatavalueComparator ) {
+    this.setState( { comparator } );
   }
 
   handleSortClick() {
@@ -108,8 +105,7 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
     const { propertyIdToComparators } = this.props;
     const propertyIds = [ ...propertyIdToComparators.keys() ];
     const { comparator, propertyId } = this.state;
-    const comparatorOptions = propertyIdToComparators.get( propertyId );
-    expect( comparatorOptions ).toBeAn( 'array' );
+    const comparatorOptions : DatavalueComparator[] = propertyIdToComparators.get( propertyId ) || [];
 
     return <DialogWrapper
       buttons={[

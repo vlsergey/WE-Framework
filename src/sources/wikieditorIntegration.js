@@ -1,6 +1,5 @@
 import { add } from './LruStore';
 import AdditionalArgumentsDialog from './AdditionalArgumentsDialog';
-import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import registerTool from 'utils/registerTool';
@@ -16,8 +15,7 @@ function showWikidataSourceDialog() {
     document.body.removeChild( appDiv );
   };
 
-  const insert = entityId => {
-    expect( entityId ).toBeA( 'string' );
+  const insert = ( entityId : string ) => {
     add( entityId );
 
     ReactDOM.unmountComponentAtNode( appDiv );
@@ -40,8 +38,7 @@ function showAdditionalArgumentsDialog( entityId ) {
     document.body.removeChild( appDiv );
   };
 
-  const handleInsert = text => {
-    expect( text ).toBeA( 'string' );
+  const handleInsert = ( text : string ) => {
     ReactDOM.unmountComponentAtNode( appDiv );
     document.body.removeChild( appDiv );
     encapsulateSelection( text );

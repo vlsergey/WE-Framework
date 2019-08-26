@@ -37,10 +37,13 @@ class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
   }
 
   convertResultToEntities( result ) {
-    const cacheUpdate = {};
-    Object.values( result.entities )
-      .filter( entity => typeof entity.missing === 'undefined' )
-      .forEach( entity => {
+    const entities : {| [string] : PropertyType |} = result.entities;
+    const propertyTypes : PropertyType[] = ( Object.values( entities ) : any );
+
+    const cacheUpdate : {[string] : PropertyDescription} = {};
+    propertyTypes
+      .filter( ( entity : PropertyType ) => typeof entity.missing === 'undefined' )
+      .forEach( ( entity : PropertyType ) => {
         const propertyDescription = new PropertyDescription( entity );
         cacheUpdate[ entity.id ] = Object.freeze( propertyDescription );
       } );

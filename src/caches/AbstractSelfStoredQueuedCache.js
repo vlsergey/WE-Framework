@@ -43,8 +43,7 @@ export default class AbstractSelfStoredQueuedCache {
     throw new Error( 'Child class need to implement convertResultToEntities( result, cacheKeys ) function' );
   }
 
-  doQueue( cacheKeys ) {
-    expect( cacheKeys ).toBeAn( 'array' );
+  doQueue( cacheKeys : any[] ) {
     this.validateCacheKeys( cacheKeys );
 
     let queued = false;

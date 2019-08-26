@@ -1,14 +1,14 @@
 import React, { PureComponent } from 'react';
+import { DatavalueComparator } from './DatavalueComparator';
 import i18n from './i18n';
-import PropTypes from 'prop-types';
 
-export default class ComparatorSelect extends PureComponent {
+type PropsType = {
+  onChange : ?DatavalueComparator => any,
+  options : DatavalueComparator[],
+  value? : ?DatavalueComparator,
+};
 
-  static propTypes = {
-    onChange: PropTypes.func.isRequired,
-    options: PropTypes.array,
-    value: PropTypes.object,
-  }
+export default class ComparatorSelect extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );
@@ -18,8 +18,8 @@ export default class ComparatorSelect extends PureComponent {
   handleChange( event ) {
     const { onChange } = this.props;
 
-    const newCode = event.target.value;
-    const newComparator = this.props.options.find( c => c.code === newCode );
+    const newCode : ?string = event.target.value;
+    const newComparator : ?DatavalueComparator = this.props.options.find( c => c.code === newCode );
     if ( newComparator ) {
       onChange( newComparator );
     }
@@ -27,13 +27,13 @@ export default class ComparatorSelect extends PureComponent {
 
   render() {
     const { options, value } = this.props;
-    const selectValue = ( value || {} ).code || '';
+    const selectValue : string = ( value || {} ).code || '';
 
     return <select onChange={this.handleChange} value={selectValue}>
-      {options.map( comparator => <option
-        key={comparator.code}
-        value={comparator.code}>
-        { ( i18n.comparators || {} )[ comparator.code ] || comparator.code }
+      {options.map( ( { code } ) => <option
+        key={code}
+        value={code}>
+        { ( i18n.comparators || {} )[ code ] || code }
       </option> ) }
     </select>;
   }

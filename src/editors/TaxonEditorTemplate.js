@@ -1,6 +1,6 @@
 import i18n from './i18n';
 
-const editorDescription = {
+const editorDescription : EditorDefType = {
   id: 'Taxon',
   linkText: i18n.taxonLinkText,
   dialogTitle: i18n.taxonDialogTitle,

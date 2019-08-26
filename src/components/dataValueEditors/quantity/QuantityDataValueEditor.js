@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import BoundariesValueEditor from './BoundariesValueEditor';
 import { COLUMNS_FOR_DATA_VALUE_EDITOR } from 'components/TableColSpanConstants';
 import ExactValueEditor from './ExactValueEditor';
-import expect from 'expect';
 import ModeSelect from './ModeSelect';
 import PlusMinusValueEditor from './PlusMinusValueEditor';
 import PropertyDescription from 'core/PropertyDescription';
@@ -109,8 +108,6 @@ export default class QuantityDataValueEditor extends PureComponent<PropsType, St
         </td>
       </React.Fragment>;
     }
-
-    expect( propertyDescription.quantityUnitEnabled ).toBeA( 'boolean' );
 
     return <React.Fragment>
       <td className={classNames.join( ' ' )} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - buttonCells.length}>

@@ -1,6 +1,5 @@
 import React, { PureComponent } from 'react';
 import { COLUMNS_FOR_SNAK_ROW } from 'components/TableColSpanConstants';
-import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropTypes from 'prop-types';
@@ -40,15 +39,14 @@ export default class SnaksMapEditor extends PureComponent {
       .filter( propertyId => ignorePropertyIds.indexOf( propertyId ) === -1 );
     return <PropertyDescriptionsProvider propertyIds={propertyIds}>
       {cache => propertyIds.map( propertyId => {
-        const propertyDescription = cache[ propertyId ];
+        const propertyDescription : ?PropertyDescription = cache[ propertyId ];
 
-        if ( typeof propertyDescription === 'undefined' ) {
+        if ( !propertyDescription ) {
           return <PropertyIsLoadingTBody
             key={propertyId}
             propertyId={propertyId} />;
         }
 
-        expect( propertyDescription ).toBeA( PropertyDescription );
         const removeButtonConfirmMessage = removeButtonConfirmMessageF( propertyDescription );
 
         return <SnaksArrayEditor

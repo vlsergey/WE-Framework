@@ -1,5 +1,4 @@
 import * as I18nUtils from 'utils/I18nUtils';
-import expect from 'expect';
 import { filterClaimsByRank } from 'model/ModelUtils';
 
 const ok = x => typeof x !== 'undefined' && x != null;
@@ -105,12 +104,9 @@ export default class PropertyDescription {
   id : string;
   label : ?string;
   quantityUnitEnabled : ?boolean;
+  sourceWebsitesLanguages : ?string[];
 
-  constructor( propertyEntity ) {
-    expect( propertyEntity ).toBeAn( 'object' );
-    expect( propertyEntity.id ).toBeA( 'string', 'Missing ID in property entity object' );
-    expect( propertyEntity.datatype ).toBeA( 'string', 'Missing datatype in property entity object' );
-
+  constructor( propertyEntity : PropertyType ) {
     this.id = propertyEntity.id;
     this.version = PropertyDescription.VERSION;
     this.datatype = propertyEntity.datatype;

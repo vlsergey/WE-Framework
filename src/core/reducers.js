@@ -1,15 +1,10 @@
 import cacheReducers from 'caches/reducers';
 import { combineReducers } from 'redux';
 import deepEqual from 'deep-equal';
-import expect from 'expect';
 import generateRandomString from 'utils/generateRandomString';
 import { newStatementClaim } from 'model/Shapes';
 
-const EMPTY_OBJECT = {};
-
-const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
-  expect( entity ).toBeAn( 'object' );
-
+const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, action ) => {
   switch ( action.type ) {
 
   case 'LABELS_CHANGE':
@@ -17,8 +12,7 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   case 'DRAFT_ALIAS_CHANGE':
   case 'ALIASES_CHANGE':
   {
-    const { language, newValue } = action;
-    expect( language ).toBeA( 'string' );
+    const { language, newValue } : {language : string, newValue : any} = action;
 
     const elementToChange = {
       LABELS_CHANGE: 'labels',
@@ -37,13 +31,14 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   }
 
   case 'CLAIM_ADD': {
-    const { claim, propertyId, datatype } = action;
-    expect( propertyId ).toBeA( 'string' );
-    expect( datatype ).toBeA( 'string' );
+    const { claim, propertyId, datatype } : {
+      claim : ClaimType,
+      datatype : string,
+      propertyId : string } = action;
 
-    const claims = entity.claims || EMPTY_OBJECT;
-    const existingClaims = claims[ propertyId ];
-    let newClaim = newStatementClaim( propertyId, datatype );
+    const claims : ClaimsType = entity.claims || {};
+    const existingClaims : ?ClaimType[] = claims[ propertyId ];
+    let newClaim : ClaimType = newStatementClaim( propertyId, datatype );
     newClaim = claim ? { ...newClaim, ...claim } : newClaim;
 
     if ( existingClaims ) {
@@ -66,10 +61,13 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   }
 
   case 'CLAIM_DELETE': {
-    const { claim } = action;
-    const propertyId = claim.mainsnak.property;
+    const { claim } : {claim : ClaimType} = action;
+    const propertyId : ?string = ( claim.mainsnak || {} ).property;
+    if ( !propertyId ) {
+      throw new Error( 'Provided claim to delete doesn\'t have propertyId in mainsnak' );
+    }
 
-    const claims = entity.claims || EMPTY_OBJECT;
+    const claims : ClaimsType = entity.claims || {};
     const existingClaims = claims[ propertyId ];
     const claimsToSave = existingClaims.filter( original => original.id !== claim.id );
 
@@ -86,7 +84,7 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
     const { claim } = action;
     const propertyId = claim.mainsnak.property;
 
-    const claims = entity.claims || EMPTY_OBJECT;
+    const claims : ClaimsType = entity.claims || {};
     const existingClaims = claims[ propertyId ];
     const claimsToSave = !!existingClaims && existingClaims.length > 0
       ? existingClaims.map( original => original.id === claim.id ? claim : original )
@@ -107,22 +105,14 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   // also can be used by importers
   // normalization prevents duplication of values
   case 'CLAIMS_FILL': {
-    const { property, datatype, datavalue, normalizeF } = action;
-    expect( property ).toBeA( 'string' );
-    expect( datatype ).toBeA( 'string' );
-    expect( datavalue ).toBeA( 'object' );
-    expect( datavalue.type ).toBeA( 'string' );
-    expect( normalizeF ).toBeA( 'function' );
+    const { property, datatype, datavalue, normalizeF } : {
+      datatype : string,
+      datavalue : DataValueType,
+      normalizeF : any => any,
+      property : string
+    } = action;
 
-    if ( datavalue.type === 'string' ) {
-      expect( datavalue.value ).toBeA( 'string' );
-    } else if ( datavalue.type === 'monolingualtext' ) {
-      expect( datavalue.value ).toBeA( 'object' );
-      expect( datavalue.value.language ).toBeA( 'string' );
-      expect( datavalue.value.text ).toBeA( 'string' );
-    }
-
-    const claims = entity.claims || EMPTY_OBJECT;
+    const claims : ClaimsType = entity.claims || {};
     const existingClaims = claims[ property ] || [];
 
     // let's try to find existing claims that already have this new value
@@ -178,14 +168,12 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   }
 
   case 'CLAIMS_REORDER': {
-    const { propertyId, claimIds } = action;
-    expect( propertyId ).toBeA( 'string', 'Action argument \'propertyId\' is not a string but ' + typeof propertyId );
-    expect( claimIds ).toBeAn( 'array', 'Action argument \'propertyId\' is not a string but ' + typeof claimIds );
+    const { propertyId, claimIds } : {claimIds : string[], propertyId : string} = action;
 
-    const oldClaims = entity.claims[ propertyId ];
-    expect( oldClaims ).toBeAn( 'array' );
-    expect( claimIds.length ).toBe( oldClaims.length,
-      'Supplied ordered claimIds must have the same length as entity claims array for ' + propertyId );
+    const oldClaims : ClaimType[] = entity.claims[ propertyId ];
+    if ( !oldClaims || claimIds.length !== oldClaims.length ) {
+      throw new Error( 'Supplied ordered claimIds must have the same length as entity claims array for ' + propertyId );
+    }
 
     let toReorderStartsFrom = null;
     for ( let i = 0; i < claimIds.length; i++ ) {
@@ -200,15 +188,17 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
       return entity;
     }
 
-    let newClaims = null;
+    let newClaims : ?ClaimType[] = null;
     if ( toReorderStartsFrom !== 0 ) {
       newClaims = oldClaims.slice( 0, toReorderStartsFrom );
     } else {
       newClaims = [];
     }
     for ( let i = toReorderStartsFrom; i < claimIds.length; i++ ) {
-      const claim = oldClaims.find( claim => claim.id === claimIds[ i ] );
-      expect( claim ).toBeAn( 'object' );
+      const claim : ?ClaimType = oldClaims.find( ( { id } ) => id === claimIds[ i ] );
+      if ( !claim ) {
+        throw new Error( 'Missing expected claim with ID ' + claimIds[ i ] );
+      }
       newClaims.push( {
         ...claim,
         id: generateRandomString(),
@@ -230,9 +220,7 @@ const entityReducerF = unsavedEntity => ( entity = unsavedEntity, action ) => {
   return entity;
 };
 
-export default function buildReducers( originalEntity, unsavedEntity ) {
-  expect( originalEntity ).toBeAn( 'object' );
-
+export default function buildReducers( originalEntity : EntityType, unsavedEntity : EntityType ) {
   return combineReducers( {
     originalEntity: () => originalEntity,
     entity: entityReducerF( unsavedEntity || originalEntity ),

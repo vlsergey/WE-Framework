@@ -1,24 +1,22 @@
 import caches from './Caches';
-import expect from 'expect';
 
 const initialState = {
   cache: {},
 };
 
-function cacheReducerBuilder( type ) {
-  expect( type ).toBeA( 'string' );
-
+function cacheReducerBuilder( type : string ) {
   return ( state = initialState, action ) => {
     switch ( action.type ) {
-    case 'CACHE_' + type + '_PUT':
-      expect( action.cacheUpdate ).toBeAn( 'object' );
+    case 'CACHE_' + type + '_PUT': {
+      const cacheUpdate : any = action.cacheUpdate;
       return {
         ...state,
         cache: {
           ...state.cache,
-          ...action.cacheUpdate,
+          ...cacheUpdate,
         },
       };
+    }
     }
 
     return state;

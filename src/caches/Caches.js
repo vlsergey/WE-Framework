@@ -1,5 +1,4 @@
 import AbstractQueuedCache from './AbstractQueuedCache';
-import expect from 'expect';
 import flagImageHtmlCache from './flagImageHtmlCache';
 import labelDescriptionCache from './labelDescriptionCache';
 import localTitleCache from './localTitleCache';
@@ -9,8 +8,7 @@ import propertyDescriptionCache from './propertyDescriptionCache';
 import stringPropertyValuesCache from './stringPropertyValuesCache';
 
 const caches = {};
-const registerCache = cache => {
-  expect( cache ).toBeAn( AbstractQueuedCache );
+const registerCache = ( cache : AbstractQueuedCache ) => {
   caches[ cache.type ] = cache;
 };
 

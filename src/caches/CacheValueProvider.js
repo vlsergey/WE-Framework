@@ -1,17 +1,15 @@
 import { connect } from 'react-redux';
-import expect from 'expect';
-import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-class CacheValueProvider extends PureComponent {
+type PropsType = {
+  cacheData : any,
+  cacheKey? : ?string,
+  children : any => any,
+  isKeyValid : any => boolean,
+  queue : any => any,
+};
 
-  static propTypes = {
-    cacheData: PropTypes.object.isRequired,
-    cacheKey: PropTypes.string,
-    children: PropTypes.func.isRequired,
-    isKeyValid: PropTypes.func.isRequired,
-    queue: PropTypes.func.isRequired,
-  }
+class CacheValueProvider extends PureComponent<PropsType> {
 
   componentDidMount() {
     const { cacheData, cacheKey, isKeyValid, queue } = this.props;
@@ -21,13 +19,12 @@ class CacheValueProvider extends PureComponent {
   }
 
   render() {
-    const child = this.props.children;
-    expect( child ).toBeA( 'function' );
+    const children : ( any => any ) = this.props.children;
 
     const { cacheKey, cacheData, isKeyValid } = this.props;
     const result = isKeyValid( cacheKey )
-      ? child( cacheData[ cacheKey ] )
-      : child( null );
+      ? children( cacheData[ cacheKey ] )
+      : children( null );
 
     return result || null;
   }

@@ -16,8 +16,8 @@ export default class TimeComparator implements DatavalueComparator {
     return v1 === v2 ? 0 : v1 > v2 ? sortOrderCompareConstant : -sortOrderCompareConstant;
   }
 
-  supports( propertyId, exampleQualifier ) {
-    const datatype = exampleQualifier.datatype || null;
+  supports( propertyId : string, exampleSnak : SnakType ) {
+    const datatype = exampleSnak.datatype || null;
     if ( datatype === 'time' ) return true;
     if ( datatype !== 'time' ) return false;
     return null;

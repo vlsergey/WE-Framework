@@ -7,7 +7,7 @@ import GoToWikidataButtonCell from './GoToWikidataButtonCell';
 import PropertyDescription from 'core/PropertyDescription';
 import styles from './WikibaseItem.css';
 
-export type PropsType = {
+type PropsType = {
   buttonCells? : ?any[],
   datavalue? : ?DataValueType,
   onDataValueChange : any => any,

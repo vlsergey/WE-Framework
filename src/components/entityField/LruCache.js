@@ -1,5 +1,3 @@
-import expect from 'expect';
-
 const MAX_ITEMS_TO_REMEMBER = 10;
 
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
@@ -35,9 +33,7 @@ export function findLastRecentlyUsed( propertyId ) {
   } );
 }
 
-export function addLastRecentlyUsed( propertyId, value ) {
-  expect( value ).toBeA( 'string' );
-  expect( value ).toMatch( /^Q\d+$/ );
+export function addLastRecentlyUsed( propertyId : string, value : string ) {
   if ( !indexedDB || !dbConnection ) return;
 
   const transaction = dbConnection.transaction( [ 'LRU' ], 'readwrite' );
