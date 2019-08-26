@@ -4,15 +4,14 @@ import DialogWrapper from 'wrappers/DialogWrapper';
 import i18n from './i18n';
 import JQueryButton from 'wrappers/JQueryButton';
 import PropertyLabelCellById from 'components/PropertyLabelCellById';
-import PropTypes from 'prop-types';
 import styles from './styles.css';
 
-export default class PopulationLookupDialog extends PureComponent {
+type PropsType = {
+  onClaimAdd : any => any,
+  onClose : () => any,
+};
 
-  static propTypes = {
-    onClaimAdd: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired,
-  };
+export default class PopulationLookupDialog extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );
