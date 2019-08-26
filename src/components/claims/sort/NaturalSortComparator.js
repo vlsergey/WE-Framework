@@ -17,8 +17,8 @@ export default class NaturalSortComparator implements DatavalueComparator {
       : v1.localeCompare( v2, undefined, { numeric: true, sensitivity: 'base' } ) * sortOrderCompareConstant;
   }
 
-  supports( propertyId, exampleQualifier ) {
-    const datatype = exampleQualifier.datatype || null;
+  supports( propertyId : string, exampleSnak : SnakType ) {
+    const datatype = exampleSnak.datatype || null;
     if ( datatype === 'string' ) return true;
     if ( datatype !== 'string' ) return false;
     return null;

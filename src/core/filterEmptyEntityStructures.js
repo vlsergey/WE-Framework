@@ -1,5 +1,3 @@
-import expect from 'expect';
-
 const ok = x => typeof x !== 'undefined' && x !== null;
 
 function filterEmptyAliases( aliases ) {
@@ -82,10 +80,9 @@ function filterEmptyLabelalikes( labelalikes ) {
   return result;
 }
 
-function filterSnaksMap( snaksMap ) {
-  if ( typeof snaksMap === 'undefined' )
+function filterSnaksMap( snaksMap : ?{ [string] : SnakType } ) {
+  if ( !snaksMap )
     return undefined;
-  expect( snaksMap ).toBeAn( 'object' );
 
   const result = {};
   let resultIsEmpty = true;

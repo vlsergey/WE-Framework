@@ -1,18 +1,16 @@
 import { connect } from 'react-redux';
-import expect from 'expect';
-import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 const EMPTY_OBJECT = {};
 
-class CacheValuesProvider extends PureComponent {
+type PropsType = {
+  cacheData : any,
+  cacheKeys? : ?string[],
+  children : any => any,
+  queue : any => any,
+};
 
-  static propTypes = {
-    cacheData: PropTypes.object.isRequired,
-    cacheKeys: PropTypes.arrayOf( PropTypes.string ),
-    children: PropTypes.func.isRequired,
-    queue: PropTypes.func.isRequired,
-  }
+class CacheValuesProvider extends PureComponent<PropsType> {
 
   componentDidMount() {
     const { cacheData, cacheKeys, queue } = this.props;
@@ -40,16 +38,15 @@ class CacheValuesProvider extends PureComponent {
   }
 
   render() {
-    const child = this.props.children;
-    expect( child ).toBeA( 'function' );
+    const children = this.props.children;
 
     const { cacheKeys, cacheData } = this.props;
     if ( !cacheKeys || cacheKeys.length === 0 )
-      return child( EMPTY_OBJECT );
+      return children( EMPTY_OBJECT );
 
     // limit cache return and memoize result for react speed-up
     const limitedCache = this.memoizeResult( cacheData, cacheKeys );
-    return child( limitedCache );
+    return children( limitedCache );
   }
 
   componentDidUpdate( prevProps ) {

@@ -1,6 +1,6 @@
 import i18n from './i18n';
 
-const editorDescription = {
+const editorDescription : EditorDefType = {
   id: 'AdmEntity',
   linkText: i18n.admEntityLinkText,
   description: i18n.admEntityDescription,

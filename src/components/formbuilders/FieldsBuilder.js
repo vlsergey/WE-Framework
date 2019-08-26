@@ -1,12 +1,12 @@
 import React, { PureComponent } from 'react';
 import ErrorBoundary from './ErrorBoundary';
-import expect from 'expect';
 import FieldsFilterByClaimExistence from './FieldsFilterByClaimExistence';
 import FieldsFilterByTerm from './FieldsFilterByTerm';
 import FieldsSortBy from './FieldsSortBy';
 import i18n from './i18n';
 import Pagination from 'semantic-ui-react/dist/commonjs/addons/Pagination';
 import PropertyClaimContainer from 'components/claims/PropertyClaimContainer';
+import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import styles from './form.css';
 
@@ -41,11 +41,12 @@ export default class FieldsBuilder extends PureComponent<PropsType> {
     this.handleQuickSearchTermChange = event => this.setState( { quickSearchTerm: event.target.value || '' } );
   }
 
-  renderField( field, propertyDescription, props = {} ) {
-    expect( field ).toBeAn( 'object' );
+  renderField(
+    field : FieldDefType,
+    propertyDescription : ?PropertyDescription,
+    props = {}
+  ) {
     const propertyId = field.property;
-    expect( propertyId ).toBeAn( 'string',
-      'Property attribute is not specified in field description: ' + JSON.stringify( field ) );
 
     if ( !propertyDescription || !propertyDescription.label ) {
       return <tr><td colSpan={99}>

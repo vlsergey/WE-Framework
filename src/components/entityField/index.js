@@ -62,11 +62,11 @@ export default class EntityField extends PureComponent<PropsType> {
     }
   }
 
-  handleSelect( entityId ) {
+  handleSelect( entityId : ?string ) {
     const { lruKey, onChange } = this.props;
     onChange( entityId );
 
-    if ( entityId !== null && entityId.trim() !== '' )
+    if ( !!lruKey && !!entityId && entityId.trim() !== '' )
       addLastRecentlyUsed( lruKey, entityId );
   }
 

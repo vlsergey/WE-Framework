@@ -58,8 +58,9 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
       actualNewEntityGenderEntityId = newEntityGenderEntityId;
     }
 
-    const newEntity = {
+    const newEntity : EntityType = {
       claims: {},
+      type: 'item',
     };
 
     newEntity.claims.P31 = [ {
@@ -143,7 +144,8 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
         } ) );
     } );
 
-    openEditor( PersonEditorTemplate, {}, newEntity )
+    const oldEntity : EntityType = { type: 'item' };
+    openEditor( PersonEditorTemplate, oldEntity, newEntity )
       .then( entityId => super.handleCreate( entityId ) );
   }
 

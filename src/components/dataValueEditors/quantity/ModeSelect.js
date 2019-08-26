@@ -1,17 +1,15 @@
 import React, { PureComponent } from 'react';
-import expect from 'expect';
 import i18n from './i18n';
 import { MODES } from './QuantityDataValueEditor';
-import PropTypes from 'prop-types';
 import styles from './ModeSelect.css';
 
-export default class ModeSelect extends PureComponent {
+type PropsType = {
+  mode : string,
+  onSelect : string => any,
+  value? : ?QuantityValueType,
+};
 
-  static propTypes = {
-    mode: PropTypes.string.isRequired,
-    onSelect: PropTypes.func.isRequired,
-    value: PropTypes.object,
-  };
+export default class ModeSelect extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );
@@ -19,10 +17,8 @@ export default class ModeSelect extends PureComponent {
     this.handleModeChange = this.handleModeChange.bind( this );
   }
 
-  handleModeChange( event ) {
-    const newMode = event.target.value;
-    expect( newMode ).toBeA( 'string' );
-    this.props.onSelect( newMode );
+  handleModeChange( { target: { value } } : { target : { value : string } } ) {
+    this.props.onSelect( value );
   }
 
   render() {
@@ -30,7 +26,7 @@ export default class ModeSelect extends PureComponent {
 
     return <select onChange={this.handleModeChange} value={mode}>
       {Object.keys( MODES ).map( m => {
-        const compatible = MODES[ m ].canBeUsedForValue( value );
+        const compatible = !!value && MODES[ m ].canBeUsedForValue( value );
         return <option
           className={compatible ? styles.compatible : styles.incompatible}
           disabled={!compatible}

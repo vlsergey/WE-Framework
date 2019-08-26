@@ -1,6 +1,6 @@
 import i18n from './i18n';
 
-const editorDescription = {
+const editorDescription : EditorDefType = {
   id: 'FrbrWork',
   linkText: i18n.frbrWorkLinkText,
   dialogTitle: i18n.frbrWorkDialogTitle,

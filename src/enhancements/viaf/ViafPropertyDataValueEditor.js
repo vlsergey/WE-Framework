@@ -1,6 +1,5 @@
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
-import expect from 'expect';
 import ExternalIdDataValueEditor from 'components/dataValueEditors/external-id/ExternalIdDataValueEditor';
 import i18n from './i18n';
 import React from 'react';
@@ -60,15 +59,16 @@ const VIAF_REPLACES = {
   NLP: x => x.toUpperCase(),
 };
 
-export function parseJustLinks( justlinks, onPropertyValueFound ) {
+export function parseJustLinks(
+    justlinks : { [string] : string[] },
+    onPropertyValueFound : ( string, string ) => any ) {
   Object.keys( justlinks )
     .filter( key => !!VIAF_2_PROPERTY[ key ] )
     .forEach( key => {
-      const propertyId = VIAF_2_PROPERTY[ key ];
-      const pattern = VIAF_PATTERNS[ key ] || DEFAULT_PATTERN;
-      const replacement = VIAF_REPLACES[ key ] || DEFAULT_REPLACE;
-      const values = justlinks[ key ];
-      expect( values ).toBeAn( 'array' );
+      const propertyId : string = VIAF_2_PROPERTY[ key ];
+      const pattern : RegExp = VIAF_PATTERNS[ key ] || DEFAULT_PATTERN;
+      const replacement : string = VIAF_REPLACES[ key ] || DEFAULT_REPLACE;
+      const values : ?string[] = justlinks[ key ];
 
       values.forEach( value => {
         if ( pattern.test( value ) ) {
@@ -106,13 +106,12 @@ class ViafPropertyDataValueEditor extends ExternalIdDataValueEditor {
     this.setState( { dialogOpen: false } );
   }
 
-  handleSelect( viafIds ) {
+  handleSelect( viafIds : string[] ) {
     this.setState( { dialogOpen: false } );
-    expect( viafIds ).toBeAn( 'array' );
 
     const { onClaimsFill } = this.props;
 
-    viafIds.forEach( viafid => {
+    viafIds.forEach( ( viafid : string ) => {
       onClaimsFill( 'P214', x => x, viafid );
       const onValue = ( propertyId, value ) => onClaimsFill( propertyId, x => x.trim(), value );
 

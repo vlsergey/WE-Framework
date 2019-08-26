@@ -28,7 +28,7 @@ export type SpecialDefType = {
 };
 
 export type TabDefType = ChildrenContainerDefType & {
-  key : string,
-  label : string,
-  labelEntityId : string,
+  key? : ?string,
+  label? : ?string,
+  labelEntityId? : ?string,
 };

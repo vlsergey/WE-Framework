@@ -1,8 +1,5 @@
-import expect from 'expect';
-
-export function filterClaimsByRank( claims ) {
+export function filterClaimsByRank( claims : ?ClaimType[] ) : ClaimType[] {
   if ( !claims ) return [];
-  expect( claims ).toBeAn( 'array' );
 
   const preferred = claims.filter( claim => claim.rank === 'preferred' );
   if ( preferred.length > 0 ) return preferred;
@@ -10,15 +7,14 @@ export function filterClaimsByRank( claims ) {
   return claims.filter( claim => claim.rank === 'normal' );
 }
 
-export function getEntityIdFromClaim( claim ) {
+export function getEntityIdFromClaim( claim ) : ?string {
   if ( typeof claim == 'undefined' )
     return;
 
   return getEntityIdFromSnak( claim.mainsnak );
 }
 
-/** @returns {String} */
-export function getEntityIdFromDatavalue( datavalue ) {
+export function getEntityIdFromDatavalue( datavalue ) : ?string {
   if ( typeof datavalue === 'undefined' //
       || typeof datavalue.value === 'undefined'//
       || typeof datavalue.value[ 'entity-type' ] === 'undefined'//

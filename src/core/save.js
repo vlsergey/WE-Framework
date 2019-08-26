@@ -1,5 +1,4 @@
 import deepEqual from 'deep-equal';
-import expect from 'expect';
 import { getWikidataApi } from './ApiUtils';
 import i18n from './i18n';
 import preSaveTransformations from './preSaveTransformations';
@@ -12,31 +11,32 @@ const notifyOptions = {
   tag: 'WE-F Save',
 };
 
-function notify( text ) {
+function notify( text : string ) {
   mw.notify( '[WE-F] ' + text, notifyOptions );
 }
 
-export function collectlLabelalikeUpdates(
-    originalEntity : any,
-    entity : any,
-    labelalikeType : ( 'labels' | 'descriptions' | 'aliases' | 'sitelinks' ),
-    removedPlaceholderF : string => any ) {
+type LabelalikeType = 'labels' | 'descriptions' | 'aliases' | 'sitelinks';
 
-  const changes = [];
+export function collectlLabelalikeUpdates<T>(
+    originalEntity : EntityType,
+    entity : EntityType,
+    labelalikeType : LabelalikeType,
+    removedPlaceholderF : string => ?T ) : ?{ [string] : ?T } {
 
-  const oldData = originalEntity[ labelalikeType ] || {};
-  const newData = entity[ labelalikeType ] || {};
+  const oldData : { [string] : T } = originalEntity[ labelalikeType ] || {};
+  const newData : { [string] : T } = entity[ labelalikeType ] || {};
 
-  const allKeys = new Set();
+  const allKeys : Set< string > = new Set();
   Object.keys( oldData ).forEach( key => allKeys.add( key ) );
   Object.keys( newData ).forEach( key => allKeys.add( key ) );
 
-  const allKeysSorted = [ ...allKeys ];
+  const allKeysSorted : string[] = [ ...allKeys ];
   allKeysSorted.sort();
 
+  const changes : { key : string, value : ?T}[] = [];
   allKeysSorted.forEach( key => {
-    const oldValue = oldData[ key ] || null;
-    const newValue = newData[ key ] || null;
+    const oldValue : ?T = oldData[ key ] || null;
+    const newValue : ?T = newData[ key ] || null;
 
     if ( oldValue === null && newValue === null ) {
       console.warn( 'Something strage goes here with ' + labelalikeType + '...' );
@@ -56,23 +56,21 @@ export function collectlLabelalikeUpdates(
   } );
 
   if ( changes.length > 0 ) {
-    const result = {};
+    const result : { [string] : ?T } = {};
     changes.forEach( value => result[ value.key ] = value.value );
     return result;
   }
 }
 
-export function collectClaimUpdates( originalEntity, entity ) {
+export function collectClaimUpdates( originalEntity : EntityType, entity : EntityType ) {
   const toUpdate = [];
   const checked = new Set();
 
   // calculate changed and removed claims
   Object.keys( entity.claims || {} ).forEach( propertyId => {
 
-    const newClaims = entity.claims[ propertyId ];
-    expect( newClaims ).toBeAn( 'array' );
-
-    const oldClaims = ( originalEntity.claims || {} )[ propertyId ];
+    const newClaims : ClaimType[] = entity.claims[ propertyId ];
+    const oldClaims : ?ClaimType[] = ( originalEntity.claims || {} )[ propertyId ];
 
     if ( typeof oldClaims !== 'object' ) {
       newClaims.forEach( newClaim => {
@@ -82,20 +80,16 @@ export function collectClaimUpdates( originalEntity, entity ) {
       } );
       return;
     }
-    expect( newClaims ).toBeAn( 'array' );
 
     if ( oldClaims === newClaims ) {
       newClaims.forEach( newClaim => checked.add( newClaim.id ) );
       return;
     }
 
-    newClaims.forEach( newClaim => {
-      expect( newClaim ).toBeAn( 'object' );
-      expect( newClaim.id ).toBeA( 'string' );
-      expect( newClaim.mainsnak ).toBeAn( 'object' );
+    newClaims.forEach( ( newClaim : ClaimType ) => {
       checked.add( newClaim.id );
 
-      const oldClaim = oldClaims.find( oldClaim => oldClaim.id === newClaim.id );
+      const oldClaim = oldClaims.find( ( { id } ) => id === newClaim.id );
       if ( typeof oldClaim === 'object' ) {
         if ( !deepEqual( oldClaim, newClaim ) ) {
           console.log( 'collectClaimUpdates: Saving claim with id ' + newClaim.id + ' as updated claim' );
@@ -118,22 +112,22 @@ export function collectClaimUpdates( originalEntity, entity ) {
   } );
 
   return toUpdate
-    .map( claim => {
+    .map( ( claim : ClaimType ) => {
       if ( typeof claim.id === 'string' || claim.remove !== '' )
         return claim;
 
-      expect( claim ).toBeAn( 'object' );
-      expect( claim.mainsnak ).toBeAn( 'object', 'Strange claim in toUpdate array: ' + JSON.stringify( claim ) );
-
-      if ( typeof claim.mainsnak.datavalue !== 'object' ) {
+      const dateValue : ?DataValueType = claim.mainsnak.datavalue;
+      if ( !dateValue ) {
         return { id: claim.id, remove: '' };
       }
       return claim;
     } );
 }
 
-export function collectEntityUpdates( originalEntity, dirtyEntity ) {
-  const entity = preSaveTransformations( dirtyEntity );
+export function collectEntityUpdates(
+    originalEntity : EntityType,
+    dirtyEntity : EntityType ) {
+  const entity : EntityType = preSaveTransformations( dirtyEntity );
   let data = {};
 
   const updatedLabels = collectlLabelalikeUpdates( originalEntity, entity, 'labels',

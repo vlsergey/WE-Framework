@@ -1,6 +1,5 @@
 import AbstractStringBasedDataValueEditor from '../AbstractStringBasedDataValueEditor';
 import { COLUMNS_FOR_DATA_VALUE_EDITOR } from 'components/TableColSpanConstants';
-import expect from 'expect';
 import React from 'react';
 import SearchOnSourceWebsitesButtonCell from './SearchOnSourceWebsitesButtonCell';
 import styles from './styles.css';
@@ -54,9 +53,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
     params.value = datavalue ? datavalue.value : '';
     params.onChange = this.handleChange;
 
-    const buttons = this.renderButtonCells();
-    expect( buttons ).toBeAn( 'array' );
-
+    const buttons : any[] = this.renderButtonCells();
     return <React.Fragment>
       <td className={styles.externalIdTableCell} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - buttons.length}>
         <div className={styles.container}>

@@ -9,6 +9,6 @@ export interface DatavalueComparator {
     sortEmptyCompareConstant : number,
     sortOrderCompareConstant : number ) : number,
 
-  supports( propertyId : string, exampleQualifier : QualifierType ) : ?boolean,
+  supports( propertyId : string, exampleSnake : SnakType ) : ?boolean,
 
 }

@@ -2,7 +2,6 @@ import { applyMiddleware, createStore } from 'redux';
 import { getWikidataApi, purge } from './ApiUtils';
 import buildReducers from './reducers';
 import EditorApp from 'components/EditorApp';
-import expect from 'expect';
 import generateRandomString from 'utils/generateRandomString';
 import { Provider } from 'react-redux';
 import React from 'react';
@@ -42,7 +41,7 @@ export function openEditor(
     editorDescription : EditorDefType,
     oldEntity : EntityType,
     newEntity : EntityType
-) {
+) : Promise< string > {
   let appDiv;
   return new Promise( ( resolve, reject ) => {
     appDiv = renderEditor( resolve, reject, editorDescription, oldEntity, newEntity );
@@ -58,12 +57,11 @@ export function openEditor(
     } );
 }
 
-export function onNewElementClick( editorDescription, classEntityId ) {
-  expect( editorDescription ).toBeAn( 'object' );
-  expect( classEntityId ).toBeAn( 'string' );
-
-  const oldEntity = {};
-  const newEntity = {};
+export function onNewElementClick(
+    editorDescription : EditorDefType,
+    classEntityId : ?string ) : Promise< string > {
+  const oldEntity : EntityType = {};
+  const newEntity : EntityType = {};
 
   if ( classEntityId ) {
     newEntity.claims = {
@@ -92,11 +90,11 @@ export function onNewElementClick( editorDescription, classEntityId ) {
   return openEditor( editorDescription, oldEntity, newEntity );
 }
 
-export function onEditorLinkClick( editorDescription, entityId ) {
-  expect( editorDescription ).toBeAn( 'object' );
+export function onEditorLinkClick(
+    editorDescription : EditorDefType,
+    entityId : ?string ) {
 
-  if ( typeof entityId !== 'string' ) {
-
+  if ( !entityId ) {
     const oldEntity = {};
     const newEntity = {
       labels: {
@@ -143,8 +141,6 @@ export function onEditorLinkClick( editorDescription, entityId ) {
       .then( purge );
 
   } else {
-    expect( entityId ).toBeA( 'string' );
-
     mw.notify( 'Get Wikidata entity content for ' + entityId + '...' );
     getWikidataApi().getPromise( {
       action: 'wbgetentities',

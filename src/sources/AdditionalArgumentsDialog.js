@@ -2,18 +2,17 @@ import React, { PureComponent } from 'react';
 import createTalkPageWithPlaceholder from './createTalkPageWithPlaceholder';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import { getServerApi } from 'core/ApiUtils';
-import PropTypes from 'prop-types';
 import styles from './styles.css';
 
 const isBlank = str => str === undefined || str === null || str.trim() === '';
 
-export default class AdditionalArgumentsDialog extends PureComponent {
+type PropsType= {
+  entityId : string,
+  onClose : () => any,
+  onInsert : ( string ) => any,
+};
 
-  static propTypes = {
-    entityId: PropTypes.string.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onInsert: PropTypes.func.isRequired,
-  };
+export default class AdditionalArgumentsDialog extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );

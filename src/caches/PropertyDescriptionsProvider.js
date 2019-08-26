@@ -2,10 +2,8 @@ import React, { PureComponent } from 'react';
 import CacheValuesProvider from 'caches/CacheValuesProvider';
 import deepEqual from 'deep-equal';
 import { defaultMemoize } from 'reselect';
-import expect from 'expect';
 import PropertyDescription from 'core/PropertyDescription';
 import propertyDescriptionCacheController from 'caches/propertyDescriptionCache';
-import PropTypes from 'prop-types';
 import StringPropertyValuesProvider from 'caches/StringPropertyValuesProvider';
 
 const EMPTY_ARRAY = [];
@@ -20,14 +18,15 @@ const calcCountryFlags = ( countriesCache, countries ) => intern( countries
 const calcCountryLanguageIds = ( countriesCache, countries ) => intern( countries
   .map( country => countriesCache[ country ] )
   .filter( cacheItem => !!cacheItem )
-  .flatMap( cacheItem => cacheItem.P37 || EMPTY_ARRAY ) );
+  .flatMap( cacheItem => cacheItem.P37 || [] ) );
 
-export default class PropertyDescriptionsProvider extends PureComponent {
+type PropsType = {
+  children : any => any,
+  propertyIds : string[],
+};
 
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    propertyIds: PropTypes.arrayOf( PropTypes.string ).isRequired,
-  }
+export default class PropertyDescriptionsProvider
+  extends PureComponent<PropsType> {
 
   propertyDescriptionMemoizeCache = {};
 
@@ -38,10 +37,8 @@ export default class PropertyDescriptionsProvider extends PureComponent {
       const echancedCache = {};
 
       propertyIds.forEach( propertyId => {
-        const propertyDescription = propertyDescriptionCache[ propertyId ];
-        if ( propertyDescription == null )
-          return null;
-        expect( propertyDescription ).toBeA( PropertyDescription );
+        const propertyDescription : ?PropertyDescription = propertyDescriptionCache[ propertyId ];
+        if ( !propertyDescription ) return null;
 
         const countryFlags = calcCountryFlags( countriesCache, propertyDescription.countries );
         const countryLanguageIds = calcCountryLanguageIds( countriesCache, propertyDescription.countries );
@@ -112,14 +109,9 @@ export default class PropertyDescriptionsProvider extends PureComponent {
         const countries = this.memoizeCountries( propertyIds, propertyDescriptionCache );
         return <StringPropertyValuesProvider entityIds={countries}>
           { countriesCache => {
-            const countriesOfficialLanguagesIds = this.memoizeAllCountriesLanguageIds( countriesCache, countries );
-            expect( countriesOfficialLanguagesIds ).toBeAn( 'array' );
-
-            const sourceWebsitesLanguagesIds = this.memoizeSourceWebsitesLanguages( propertyIds, propertyDescriptionCache );
-            expect( countriesOfficialLanguagesIds ).toBeAn( 'array' );
-
-            const allLanguageIds = this.memoizeAllLanguageIds( countriesOfficialLanguagesIds, sourceWebsitesLanguagesIds );
-            expect( countriesOfficialLanguagesIds ).toBeAn( 'array' );
+            const countriesOfficialLanguagesIds : any[] = this.memoizeAllCountriesLanguageIds( countriesCache, countries );
+            const sourceWebsitesLanguagesIds : any[] = this.memoizeSourceWebsitesLanguages( propertyIds, propertyDescriptionCache );
+            const allLanguageIds : any[] = this.memoizeAllLanguageIds( countriesOfficialLanguagesIds, sourceWebsitesLanguagesIds );
 
             return <StringPropertyValuesProvider entityIds={allLanguageIds}>
               { languagesCache =>

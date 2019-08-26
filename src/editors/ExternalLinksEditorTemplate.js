@@ -1,6 +1,6 @@
 import i18n from './i18n';
 
-const editorDescription = {
+const editorDescription : EditorDefType = {
   id: 'ExternalLinks',
   linkText: i18n.externalLinksLinkText,
   description: i18n.externalLinksDescription,

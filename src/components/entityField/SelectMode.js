@@ -1,29 +1,24 @@
 import React, { PureComponent } from 'react';
-import expect from 'expect';
 import i18n from './i18n';
 import LabelDescriptionsProvider from 'caches/LabelDescriptionsProvider';
-import PropTypes from 'prop-types';
 import stableSort from 'utils/stableSort';
 
-function sort( cache, oneOf ) {
-  expect( cache ).toBeAn( 'object' );
-  expect( oneOf ).toBeAn( 'array' );
-
-  return stableSort( [ ...oneOf ], ( o1, o2 ) => {
-    const v1 = ( ( cache[ o1 ] || {} ).label || '' ).toLowerCase();
-    const v2 = ( ( cache[ o2 ] || {} ).label || '' ).toLowerCase();
+function sort( cache : { [string] : any }, oneOf : string[] ) {
+  return stableSort( [ ...oneOf ], ( o1 : string, o2 : string ) => {
+    const v1 : string = ( ( cache[ o1 ] || {} ).label || '' ).toLowerCase();
+    const v2 : string = ( ( cache[ o2 ] || {} ).label || '' ).toLowerCase();
     return v1 === v2 ? 0 : v1 > v2 ? +1 : -1;
   } );
 }
 
-export default class SelectMode extends PureComponent {
+type PropsType = {
+  onOtherSelect : () => any,
+  onSelect : ?string => any,
+  oneOf : string[],
+  value? : ?string,
+};
 
-  static propTypes = {
-    value: PropTypes.string,
-    oneOf: PropTypes.arrayOf( PropTypes.string ).isRequired,
-    onOtherSelect: PropTypes.func.isRequired,
-    onSelect: PropTypes.func.isRequired,
-  };
+export default class SelectMode extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );
@@ -32,7 +27,7 @@ export default class SelectMode extends PureComponent {
   }
 
   handleChange( event ) {
-    const selectedValue = event.target.value;
+    const selectedValue : string = event.target.value;
     if ( selectedValue === 'OTHER' ) {
       this.props.onOtherSelect();
       return;
@@ -46,11 +41,9 @@ export default class SelectMode extends PureComponent {
 
     // include SELECT into LDP, becase rerendering only options leads to lost current option in SELECT
     return <LabelDescriptionsProvider entityIds={oneOf}>
-      { cache => <select onChange={this.handleChange} value={value || ''}>
+      { ( cache : { [string] : any } ) => <select onChange={this.handleChange} value={value || ''}>
         <option key="_empty" value="" />
         {sort( cache, oneOf ).map( ( entityId : string ) => {
-          expect( cache ).toBeAn( 'object', 'LabelDescriptionsProvider didn\'t return cache object (' + cache + ')' );
-
           const labelDescription = cache[ entityId ];
           if ( !labelDescription || !labelDescription.label ) {
             return <option key={entityId} value={entityId}>{entityId}</option>;
@@ -69,14 +62,13 @@ export default class SelectMode extends PureComponent {
 
 }
 
+type SelectOptionPropsType = {
+  description? : ?string,
+  entityId : string,
+  label? : ?string,
+};
 
-class SelectOption extends PureComponent {
-
-  static propTypes = {
-    entityId: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    label: PropTypes.string,
-  };
+class SelectOption extends PureComponent<SelectOptionPropsType> {
 
   render() {
     const { entityId, description, label } = this.props;

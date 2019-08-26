@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { connect } from 'react-redux';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
-import expect from 'expect';
 import LocalizedWikibaseItemInput from './LocalizedWikibaseItemInput';
 import PropTypes from 'prop-types';
 import styles from './styles.css';
@@ -49,9 +48,7 @@ class AutocompleteMode extends Component {
     this.setState( { suggestions: [] } );
   }
 
-  handleSuggestionsFetchRequested( { value } ) {
-    expect( value ).toBeA( 'string' );
-
+  handleSuggestionsFetchRequested( { value } : ( {value : string} ) ) {
     if ( this.props.testSuggestionsProvider ) {
       this.setState( {
         suggestions: this.props.testSuggestionsProvider( value ),

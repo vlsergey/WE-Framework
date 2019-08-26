@@ -1,24 +1,22 @@
 import React, { PureComponent } from 'react';
-import expect from 'expect';
 import generateRandomString from 'utils/generateRandomString';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 import SnakAddButtonCell from './SnakAddButtonCell';
 import SnakRemoveButtonCell from './SnakRemoveButtonCell';
 import SnakTableRow from './SnakTableRow';
 
-export default class SnaksArrayEditor extends PureComponent {
+type PropsType = {
+  displayEmpty? : boolean,
+  displayLabels? : boolean,
+  onSnaksArrayUpdate : SnakType[] => any,
+  propertyDescription : PropertyDescription,
+  readOnly : boolean,
+  removeButtonConfirmMessage : string,
+  removeButtonLabel : string,
+  snaksArray? : SnakType[],
+};
 
-  static propTypes = {
-    snaksArray: PropTypes.array,
-    displayEmpty: PropTypes.bool,
-    displayLabels: PropTypes.bool,
-    onSnaksArrayUpdate: PropTypes.func.isRequired,
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ).isRequired,
-    readOnly: PropTypes.bool.isRequired,
-    removeButtonLabel: PropTypes.string.isRequired,
-    removeButtonConfirmMessage: PropTypes.string.isRequired,
-  };
+export default class SnaksArrayEditor extends PureComponent<PropsType> {
 
   static defaultProps = {
     displayEmpty: false,
@@ -120,8 +118,6 @@ export default class SnaksArrayEditor extends PureComponent {
           }} />
       </tbody>;
     }
-
-    expect( snaksArray ).toBeAn( 'array' );
 
     return <tbody>
       { snaksArray.map( ( snak, index ) =>
