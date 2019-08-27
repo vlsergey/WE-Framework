@@ -20,7 +20,13 @@ type PropsType = {
   sortBy? : ?( string[] ),
 };
 
-export default class FieldsBuilder extends PureComponent<PropsType> {
+type StateType = {
+  activePage : number,
+  displayEmpty : boolean,
+  quickSearchTerm : string,
+};
+
+export default class FieldsBuilder extends PureComponent<PropsType, StateType> {
 
   static defaultProps = {
     parentLabelEntityId: null,

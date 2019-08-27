@@ -55,7 +55,7 @@ export default class ClaimReferencesEditorContent
     } );
   }
 
-  handleReferenceAddImpl( newReference ) {
+  handleReferenceAddImpl( newReference : ReferenceType ) {
     const { claim, onClaimUpdate } = this.props;
     const references = claim.references || [];
     onClaimUpdate( {

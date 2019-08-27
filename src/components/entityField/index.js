@@ -12,7 +12,13 @@ type PropsType = {
   value? : ?string,
 };
 
-export default class EntityField extends PureComponent<PropsType> {
+type StateType = {
+  lruFromCache : ?string[],
+  selectMode : boolean,
+  selectOptions : string[],
+};
+
+export default class EntityField extends PureComponent<PropsType, StateType> {
 
   static defaultProps = {
     readOnly: false,
@@ -26,7 +32,7 @@ export default class EntityField extends PureComponent<PropsType> {
     this.state = {
       lruFromCache: null,
       selectMode: !!this.props.oneOf,
-      selectOptions: null,
+      selectOptions: [],
     };
 
     if ( !this.props.oneOf && this.props.lruKey ) {
@@ -58,7 +64,6 @@ export default class EntityField extends PureComponent<PropsType> {
 
       }
       throw new Error( 'Unsupported state: both oneOf and lruFromCache are null or empty' );
-
     }
   }
 

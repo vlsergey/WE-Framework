@@ -46,7 +46,7 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
     const { datatype, id } = this.props.propertyDescription;
 
     this.props.onSnaksArrayUpdate( [
-      ...this.props.snaksArray,
+      ...( this.props.snaksArray || [] ),
       {
         snaktype: 'value',
         property: id,
@@ -60,7 +60,7 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
     const { datatype, id } = this.props.propertyDescription;
 
     this.props.onSnaksArrayUpdate( [
-      ...this.props.snaksArray,
+      ...( this.props.snaksArray || [] ),
       {
         snaktype: 'value',
         property: id,

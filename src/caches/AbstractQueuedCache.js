@@ -4,10 +4,20 @@ import findByKeysInObjectStore from 'utils/findByKeysInObjectStore';
 
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
-const EMPTY_SET = Object.freeze( new Set() );
+const EMPTY_SET : Set< string > = Object.freeze( new Set() );
 const PAUSE_BEFORE_REQUEUE = 100;
 
 export default class AbstractQueuedCache {
+
+  type : string;
+  maxBatch : number;
+  dbQueue : Set< string >;
+  requestQueue : Set< string >;
+  queueState : string;
+  queueHasNewElements : boolean;
+  nextBatch : Set< string >;
+  useIndexedDb : boolean;
+  dbConnection : ?IDBDatabase;
 
   constructor( type : string, useIndexedDb : boolean, maxBatch : number ) {
     this.type = type;
@@ -29,7 +39,7 @@ export default class AbstractQueuedCache {
       };
       dbOpenRequest.onsuccess = () => {
         console.debug( 'Successfully open indexedDB connection for database ' + type );
-        this.dbConnection = dbOpenRequest.result;
+        this.dbConnection = ( ( dbOpenRequest.result : any ) : IDBDatabase );
       };
       dbOpenRequest.onupgradeneeded = event => {
         const db = event.target.result;
@@ -182,8 +192,8 @@ export default class AbstractQueuedCache {
     expect( cacheKeys ).toBeAn( 'array' );
     expect( this.queueState ).toEqual( 'SCAN' );
 
-    const transaction = this.dbConnection.transaction( [ 'CACHE' ], 'readonly' );
-    const objectStore = transaction.objectStore( 'CACHE' );
+    const transaction : IDBTransaction = this.dbConnection.transaction( [ 'CACHE' ], 'readonly' );
+    const objectStore : IDBObjectStore = transaction.objectStore( 'CACHE' );
 
     return findByKeysInObjectStore( objectStore, cacheKeys )
       .then( result => {

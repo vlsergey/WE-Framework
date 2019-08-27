@@ -4,6 +4,7 @@ export type ClaimType = {
   mainsnak? : SnakType,
   qualifiers? : { [string] : QualifierType[] },
   rank? : string,
+  references? : ReferenceType[],
   remove? : '',
   type? : string,
 };
@@ -54,6 +55,12 @@ export type QuantityValueType = {
   lowerBound? : string,
   unit? : string,
   upperBound? : string,
+};
+
+export type ReferenceType = {
+  hash? : string,
+  snaks : { [string] : SnakType[] },
+  ['snaks-order'] : ?string[],
 };
 
 export type SnakType = {

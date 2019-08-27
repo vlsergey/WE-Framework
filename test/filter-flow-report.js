@@ -9,7 +9,6 @@ const IGNORE_ERROR_PATTERNS = [
   /^Cannot extend .* with `.*` because property `.*` is read-only in .* but writable in .*$/,
   /^Cannot resolve module `(bootstrap|font-awesome|memoize-one|react|semantic-ui-css).*$/,
   /^Missing type annotation for .*/,
-  /^property `.*` is missing in .*/,
 
   // generics of React classes
   /^Cannot assign object literal to `this.state` because object literal .* is incompatible with undefined .*\.$/,

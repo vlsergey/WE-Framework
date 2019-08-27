@@ -5,7 +5,6 @@ import { getServerApi } from 'core/ApiUtils';
 import i18n from './i18n';
 import JQueryButton from 'wrappers/JQueryButton';
 import { Parser } from 'wikitext-dom';
-import PropTypes from 'prop-types';
 
 const allImporters = [
   require( './ПостановлениеПравительстваРФ' ).default,
@@ -14,12 +13,18 @@ const allImporters = [
   require( './УказПрезидентаРФ' ).default,
 ];
 
-class ImportDataDialog extends PureComponent {
+type PropsType = {
+  dispatch : any => any,
+  onClose : () => any,
+};
 
-  static propTypes = {
-    dispatch: PropTypes.func.isRequired,
-    onClose: PropTypes.func.isRequired,
-  };
+type StateType = {
+  articleDom : ?any,
+  importers : any[],
+  queryState : 'LOADING' | 'ERROR' | 'HAS_SUPPORTED_IMPORTERS' | 'NO_SUPPORTED_IMPORTERS',
+};
+
+class ImportDataDialog extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );

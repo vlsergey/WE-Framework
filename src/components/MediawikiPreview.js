@@ -1,13 +1,17 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import Spinner from 'components/Spinner';
 
-export default class MediawikiPreview extends PureComponent {
+type PropsType = {
+  spinnerSize? : number,
+  wikitext : string,
+};
 
-  static propTypes = {
-    spinnerSize: PropTypes.number,
-    wikitext: PropTypes.string.isRequired,
-  }
+type StateType = {
+  html : ?string,
+};
+
+export default class MediawikiPreview
+  extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );

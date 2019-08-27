@@ -56,11 +56,7 @@ export default class SortClaimsButtonCell
       } );
 
       checkedTrue.forEach( propertyId => {
-        if ( result.has( propertyId ) ) {
-          result.set( propertyId, [ ...result.get( propertyId ), comparator ] );
-        } else {
-          result.set( propertyId, [ comparator ] );
-        }
+        result.set( propertyId, [ ...( result.get( propertyId ) || [] ), comparator ] );
       } );
     } );
 

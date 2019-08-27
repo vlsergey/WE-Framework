@@ -1,22 +1,25 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 
-export default class DialogWrapper extends PureComponent {
+type PropsType = {
+  buttons? : ?any[],
+  children? : ?any,
+  className? : ?string,
+  height? : ?( number | string ),
+  maxHeight? : ?number,
+  maxWidth? : ?number,
+  minHeight? : ?number,
+  minWidth? : ?number,
+  onBeforeClose? : ?( any => any ),
+  onClose? : ?( any => any ),
+  title? : ?string,
+  width? : ?( number | string ),
+};
 
-  static propTypes = {
-    buttons: PropTypes.arrayOf( PropTypes.object ),
-    children: PropTypes.node,
-    className: PropTypes.string,
-    height: PropTypes.oneOfType( [ PropTypes.number, PropTypes.string ] ),
-    maxHeight: PropTypes.number,
-    maxWidth: PropTypes.number,
-    minHeight: PropTypes.number,
-    minWidth: PropTypes.number,
-    onBeforeClose: PropTypes.func,
-    onClose: PropTypes.func,
-    width: PropTypes.oneOfType( [ PropTypes.number, PropTypes.string ] ),
-    title: PropTypes.string,
-  };
+type StateType = {
+  manuallyResized : boolean,
+};
+
+export default class DialogWrapper extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );

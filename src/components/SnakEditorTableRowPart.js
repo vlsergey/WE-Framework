@@ -6,11 +6,12 @@ import SelectSnakTypeButtonCell from './SelectSnakTypeButtonCell';
 import SnakValueEditorFactory from './SnakValueEditorFactory';
 import styles from './core.css';
 
+/* eslint react/default-props-match-prop-types: 0 */
 type PropsType = {
   onSnakChange : SnakType => any,
   propertyDescription : PropertyDescription,
-  readOnly? : boolean,
-  snak? : SnakType,
+  readOnly : boolean,
+  snak : SnakType,
 };
 
 export default class SnakEditorTableRowPart extends PureComponent<PropsType> {

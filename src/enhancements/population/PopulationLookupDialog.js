@@ -11,7 +11,21 @@ type PropsType = {
   onClose : () => any,
 };
 
-export default class PopulationLookupDialog extends PureComponent<PropsType> {
+type ResultItem = {
+  determinationMethod : string,
+  population : number,
+  year : number,
+};
+
+type StateType = {
+  queryScheduled : string,
+  queryState : 'WAITING' | 'SCHEDULED' | 'ERROR',
+  result : ResultItem[],
+  selected : number[],
+};
+
+export default class PopulationLookupDialog
+  extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );
@@ -115,8 +129,8 @@ export default class PopulationLookupDialog extends PureComponent<PropsType> {
   }
 
   handleSelectAll() {
-    this.setState( ( { result } ) => ( {
-      selected: result.map( ( v, i ) => i ),
+    this.setState( ( { result } : { result : ResultItem[] } ) => ( {
+      selected: result.map( ( v : ResultItem, i : number ) => i ),
     } ) );
   }
 

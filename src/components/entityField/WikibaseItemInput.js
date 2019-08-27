@@ -1,19 +1,21 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 
-export default class WikibaseItemInput extends PureComponent {
+type PropsType = {
+  entityId? : string,
+  entityLabel? : string,
+  inputRef? : any,
+  onBlur : () => any,
+  onChange : any => any,
+  onFocus : () => any,
+  value? : string,
+};
 
-  static propTypes = {
-    entityId: PropTypes.string,
-    entityLabel: PropTypes.string,
-    value: PropTypes.string,
+type StateType = {
+  focused : boolean,
+  value : string,
+};
 
-    inputRef: PropTypes.func,
-
-    onBlur: PropTypes.func,
-    onChange: PropTypes.func.isRequired,
-    onFocus: PropTypes.func,
-  };
+export default class WikibaseItemInput extends PureComponent<PropsType, StateType> {
 
   static getEtcProps( props ) {
     /* eslint no-unused-vars: 0 */

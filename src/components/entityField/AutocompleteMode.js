@@ -1,28 +1,34 @@
 import * as ApiUtils from 'core/ApiUtils';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { connect } from 'react-redux';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import LocalizedWikibaseItemInput from './LocalizedWikibaseItemInput';
-import PropTypes from 'prop-types';
 import styles from './styles.css';
 import Suggestion from './Suggestion';
 
 const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
 
-class AutocompleteMode extends Component {
+type PropsType = {
+  cache : any,
+  onSelect : ?string => any,
+  readOnly? : ?boolean,
+  testSuggestionsProvider? : string => string[],
+  value? : ?string,
+};
 
-  static propTypes = {
-    cache: PropTypes.object.isRequired,
-    value: PropTypes.string,
-    onSelect: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool,
-    testSuggestionsProvider: PropTypes.func,
-  };
+type StateType = {
+  suggestions : string[],
+  textValue : string,
+};
+
+class AutocompleteMode extends PureComponent<PropsType, StateType> {
 
   static defaultProps = {
     readOnly: false,
   };
+
+  requestedValue : ?string;
 
   constructor() {
     super( ...arguments );

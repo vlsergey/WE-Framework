@@ -1,30 +1,49 @@
 /*
-* Source code: https://ru.wikipedia.org/w/index.php?title=MediaWiki:Gadget-registerTool.js&oldid=96997778
-* License: GFDL & CC-BY-SA 3.0 (used as included library without any changes)
+* Derived from code: https://ru.wikipedia.org/w/index.php?title=MediaWiki:Gadget-registerTool.js&oldid=96997778
+* Source License: GFDL & CC-BY-SA 3.0
 */
 /* eslint no-undef: 0 */
-const toolsToAdd = {};
+const toolsToAdd : { [string] : ToolType } = {};
 let addClassicToolbarToolsHooked = false;
 
-export default function registerTool( tool ) {
-  function moveProperties( tool, mode ) {
-    function generalPropertyToParticular( property ) {
-      if ( tool[ property ] && !tool[ mode ][ property ] ) {
-        tool[ mode ][ property ] = tool[ property ];
-      }
-    }
+type ToolTypeData = {
+  addCallback? : () => any,
+  addRightAway? : boolean,
+  callback? : () => any,
+  icon? : string,
+  label? : string,
+  name? : string,
+  position? : number,
+  title? : string,
+};
 
-    if ( tool[ mode ] ) {
-      [ 'name', 'position', 'title', 'label', 'icon', 'callback', 'addCallback' ]
-        .forEach( item => {
-          generalPropertyToParticular( item );
-        } );
-      return tool[ mode ];
-    }
+type ToolType = {
+  addCallback? : () => any,
+  addRightAway? : boolean,
+  callback : () => any,
+  classic? : ToolTypeData,
+  group? : string,
+  icon? : string,
+  label? : string,
+  modes? : string[],
+  name : string,
+  position : number,
+  title? : string,
+  visual? : ToolTypeData,
+};
+
+type ModeType = 'classic' | 'visual';
+
+export default function registerTool( tool : ToolType ) {
+  function moveProperties( tool, mode : ModeType ) : ToolType {
+    const result : ToolType = tool[ mode ]
+      ? { ...tool[ mode ], ...tool }
+      : tool;
+    return result;
   }
 
-  function sortTools( mode ) {
-    return Object.keys( toolsToAdd ).sort().reduce( ( result, key ) => {
+  function sortTools( mode : ModeType ) : ToolType[] {
+    return Object.keys( toolsToAdd ).sort().reduce( ( result : ToolType[], key : string ) => {
       if ( toolsToAdd[ key ][ mode ] ) {
         result.push( moveProperties( toolsToAdd[ key ], mode ) );
       }
@@ -33,7 +52,7 @@ export default function registerTool( tool ) {
   }
 
   function addClassicToolbarTools() {
-    function addClassicToolbarTool( tool ) {
+    function addClassicToolbarTool( tool : ToolType ) {
       const toolObj = {
         section: 'main',
         group: tool.group || 'gadgets',
@@ -58,7 +77,7 @@ export default function registerTool( tool ) {
       // Для совместимости со скриптами, которые опираются на событие добавления иконки Викификатора
       mw.hook( 'wikieditor.toolbar.' + tool.name ).fire();
 
-      delete toolsToAdd[ tool.position ].classic;
+      delete toolsToAdd[ '' + tool.position ].classic;
     }
 
     const tools = sortTools( 'classic' );
@@ -70,7 +89,7 @@ export default function registerTool( tool ) {
     addClassicToolbarToolsHooked = false;
   }
 
-  function addVeTool( tool ) {
+  function addVeTool( tool : ToolType ) {
     // Create and register a command
     function Command() {
       Command.parent.call( this, tool.name );
@@ -80,7 +99,7 @@ export default function registerTool( tool ) {
     // Forbid the command from being executed in the visual mode
     Command.prototype.isExecutable = function() {
       const surface = ve.init.target.getSurface();
-      const mode = surface.getMode();
+      const mode = ( surface || {} ).getMode();
       return surface && tool.modes && ( tool.modes === mode || tool.modes.indexOf( mode ) !== -1 );
     };
 
@@ -128,7 +147,7 @@ export default function registerTool( tool ) {
   }
 
   function registerVeTools() {
-    function registerVeTool( tool ) {
+    function registerVeTool( tool : ToolType ) {
       mw.libs.ve.addPlugin( () => mw.loader.using( [
         'ext.visualEditor.core',
         'ext.visualEditor.mwwikitext',
@@ -137,7 +156,7 @@ export default function registerTool( tool ) {
         addVeTool( tool );
       } ) );
 
-      delete toolsToAdd[ tool.position ].visual;
+      delete toolsToAdd[ '' + tool.position ].visual;
     }
 
     const tools = sortTools( 'visual' );
@@ -148,11 +167,10 @@ export default function registerTool( tool ) {
   }
 
   // Чтобы в случае совпадений индексов гаджеты не перезаписывали друг друга
-  while ( toolsToAdd[ tool.position ] ) {
+  while ( toolsToAdd[ '' + tool.position ] ) {
     tool.position++;
   }
-
-  toolsToAdd[ tool.position ] = tool;
+  toolsToAdd[ '' + tool.position ] = tool;
 
   if ( tool.classic
     && ( [ 'edit', 'submit' ].indexOf( mw.config.get( 'wgAction' ) ) !== -1
