@@ -17,6 +17,7 @@ export default class ErrorBoundary extends PureComponent<PropsType, StateType> {
 
   componentDidCatch( error, info ) {
     this.setState( { hasError: true } );
+    console.log( error );
     mw.log.error( error );
     mw.log.error( info );
   }

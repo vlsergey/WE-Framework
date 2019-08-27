@@ -5,7 +5,7 @@ const TYPE = 'LASTREVISION';
 
 type ResultType = {
   query : {
-    pages : {| [any] : PageType |}
+    pages : { [any] : PageType }
   }
 };
 

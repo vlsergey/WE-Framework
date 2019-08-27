@@ -13,7 +13,10 @@ import thunk from 'redux-thunk';
 describe( 'PropertyDescriptionsProviderTest', () => {
 
   const reducers = buildReducers( Q1367759 );
+  assert.ok( reducers );
+
   const store = createStore( reducers, applyMiddleware( thunk ) );
+  assert.ok( store );
 
   it( 'provides country flags', () => {
     const rendered = ReactTestUtils.renderIntoDocument( <Provider store={store}>

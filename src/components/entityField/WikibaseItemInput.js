@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react';
 
 type PropsType = {
-  entityId? : string,
-  entityLabel? : string,
+  entityId? : ?string,
+  entityLabel? : ?string,
   inputRef? : any,
   onBlur : () => any,
   onChange : any => any,

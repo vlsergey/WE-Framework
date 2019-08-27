@@ -4,14 +4,19 @@ import labelDescriptionCache from 'caches/labelDescriptionCache';
 import PropTypes from 'prop-types';
 import WikibaseItemInput from './WikibaseItemInput';
 
-class LocalizedWikibaseItemInput extends PureComponent {
+type PropsType = {
+  cache : any,
+  entityId? : ?string,
+  inputRef? : any,
+  onBlur : () => any,
+  onChange : any => any,
+  onFocus : () => any,
+  queue : string => any,
+  value? : string,
+  wikibaseItemInputRef : any,
+};
 
-  static propTypes = {
-    ...WikibaseItemInput.propTypes,
-    cache: PropTypes.object.isRequired,
-    queue: PropTypes.func.isRequired,
-    wikibaseItemInputRef: PropTypes.object.isRequired,
-  };
+class LocalizedWikibaseItemInput extends PureComponent<PropsType> {
 
   componentDidMount() {
     const { cache, entityId, queue } = this.props;
@@ -37,7 +42,7 @@ class LocalizedWikibaseItemInput extends PureComponent {
     if ( !entityId ) {
       return <WikibaseItemInput
         {...etc}
-        entityId={entityId}
+        entityId={null}
         entityLabel={null}
         ref={wikibaseItemInputRef} />;
     }
