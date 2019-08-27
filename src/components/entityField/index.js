@@ -61,10 +61,10 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
           return { selectOptions: [ ...state.lruFromCache, currentValue ] };
         }
         return { selectOptions: state.lruFromCache };
-
       }
       throw new Error( 'Unsupported state: both oneOf and lruFromCache are null or empty' );
     }
+    return null;
   }
 
   handleSelect( entityId : ?string ) {

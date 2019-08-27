@@ -27,7 +27,7 @@ export function oppositeGender( entity ) {
 type PropsType = {
   datavalue? : ?DataValueType,
   entity : any,
-  newEntityGenderEntityId : any => any | string,
+  newEntityGenderEntityId : ( EntityType => ?string ) | string,
   onDataValueChange : any => any,
   propertiesMapping : any,
   propertyIdSelfInto : string,
