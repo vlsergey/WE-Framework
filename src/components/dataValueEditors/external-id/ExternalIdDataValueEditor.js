@@ -6,8 +6,6 @@ import styles from './styles.css';
 
 export default class ExternalIdDataValueEditor extends AbstractStringBasedDataValueEditor {
 
-  static propTypes = AbstractStringBasedDataValueEditor.propTypes;
-
   constructor() {
     super( ...arguments );
 
@@ -35,10 +33,8 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
           </td>;
         }
         return <td colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR}>{datavalue.value}</td>;
-
       }
       return null;
-
     }
 
     const params = {
@@ -53,7 +49,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
     params.value = datavalue ? datavalue.value : '';
     params.onChange = this.handleChange;
 
-    const buttons : any[] = this.renderButtonCells();
+    const buttons : any[] = this.props.buttons || this.renderButtonCells();
     return <React.Fragment>
       <td className={styles.externalIdTableCell} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - buttons.length}>
         <div className={styles.container}>
@@ -65,7 +61,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
     </React.Fragment>;
   }
 
-  renderButtonCells() : any {
+  renderButtonCells() : any[] {
     const { propertyDescription } = this.props;
 
     return [

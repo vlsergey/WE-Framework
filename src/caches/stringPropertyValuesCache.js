@@ -14,7 +14,7 @@ const PROPERTIES_TO_CACHE = [
 const ok = variable => !!variable;
 const EMPTY_ARRAY = [];
 
-export const buildStringCacheValuesFromEntity = entity => {
+export const buildStringCacheValuesFromEntity = ( entity : ( PropertyType | EntityType ) ) => {
 
   const entityResult = {};
   entityResult.lastrevid = entity.lastrevid;
@@ -26,11 +26,11 @@ export const buildStringCacheValuesFromEntity = entity => {
       return;
     }
 
-    const values = filterClaimsByRank( entity.claims[ propertyId ] )
+    const values = ( ( filterClaimsByRank( entity.claims[ propertyId ] )
       .filter( ok )
       .map( claim => claim.mainsnak ).filter( ok )
       .map( mainsnak => mainsnak.datavalue ).filter( ok )
-      .filter( datavalue => datavalue.value )
+      .filter( datavalue => datavalue.value ) : any ) : DataValueType[] )
       .map( datavalue => {
         switch ( datavalue.type ) {
         case 'string':
@@ -71,8 +71,12 @@ class StringPropertyValuesCache extends AbstractQueuedCacheWithPostcheck {
 
   convertResultToEntities( result ) {
     const cacheUpdate = {};
-    Object.values( result.entities ).forEach( entity => {
-      cacheUpdate[ entity.id ] = buildStringCacheValuesFromEntity( entity );
+    const entities : ( EntityType | PropertyType )[] =
+      ( ( Object.values( result.entities ) : any ) : ( EntityType | PropertyType )[] );
+    entities.forEach( entity => {
+      const entityId : ?string = entity.id;
+      if ( !entityId ) return;
+      cacheUpdate[ entityId ] = buildStringCacheValuesFromEntity( entity );
     } );
     return cacheUpdate;
   }

@@ -12,7 +12,23 @@ type PropsType= {
   onInsert : ( string ) => any,
 };
 
-export default class AdditionalArgumentsDialog extends PureComponent<PropsType> {
+type StateType = {
+  addRefAuthor : boolean,
+  addRefComment : boolean,
+  addRefYear : boolean,
+  insertAsRef : boolean,
+  issue : string,
+  pages : string,
+  part : string,
+  partUrl : string,
+  refAuthor : string,
+  refComment : string,
+  refYear : string,
+  volume : string,
+};
+
+export default class AdditionalArgumentsDialog
+  extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );
@@ -167,7 +183,7 @@ export default class AdditionalArgumentsDialog extends PureComponent<PropsType> 
               <th>
                 <label>
                   <input
-                    checked={this.state.asRef || false}
+                    checked={this.state.insertAsRef || false}
                     name="insertAsRef"
                     onChange={this.handleChange}
                     type="checkbox" />

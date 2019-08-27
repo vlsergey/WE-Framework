@@ -14,13 +14,16 @@ type PropsType = {
   saveAndClose : ( ( string => any ), ( string => any ) ) => any,
 };
 
-class EditorApp extends PureComponent<PropsType> {
+type StateType = {
+  dialogOpen : boolean
+};
+
+class EditorApp extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );
 
     this.state = {
-      ...this.state,
       dialogOpen: false,
     };
 

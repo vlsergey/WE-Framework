@@ -1,8 +1,9 @@
+import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
 import ExternalIdDataValueEditor from 'components/dataValueEditors/external-id/ExternalIdDataValueEditor';
 import i18n from './i18n';
-import React from 'react';
+import PropertyDescription from 'core/PropertyDescription';
 import ViafLookupDialog from './ViafLookupDialog';
 
 const VIAF_2_PROPERTY = {
@@ -84,7 +85,20 @@ export function parseJustLinks(
     } );
 }
 
-class ViafPropertyDataValueEditor extends ExternalIdDataValueEditor {
+type PropsType = {
+  datavalue? : DataValueType,
+  onClaimsFill : ( string, string => string, string ) => any,
+  onDataValueChange : ?DataValueType => any,
+  propertyDescription : PropertyDescription,
+  readOnly? : boolean,
+};
+
+type StateType = {
+  dialogOpen : boolean,
+};
+
+class ViafPropertyDataValueEditor
+  extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );
@@ -125,8 +139,10 @@ class ViafPropertyDataValueEditor extends ExternalIdDataValueEditor {
     } );
   }
 
-  renderButtonCells() : any {
-    return [
+  render() {
+    const { datavalue, onDataValueChange, ...etc } = this.props;
+
+    const buttons = [
       <ButtonCell
         icon="ui-icon-search"
         key="ViafLookup"
@@ -140,6 +156,12 @@ class ViafPropertyDataValueEditor extends ExternalIdDataValueEditor {
         </React.Fragment>}
       </ButtonCell>,
     ];
+
+    return <ExternalIdDataValueEditor
+      buttons={buttons}
+      datavalue={datavalue}
+      onDataValueChange={onDataValueChange}
+      {...etc} />;
   }
 }
 

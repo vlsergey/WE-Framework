@@ -3,6 +3,20 @@ import { getWikidataApi } from 'core/ApiUtils';
 
 const TYPE = 'LASTREVISION';
 
+type ResultType = {
+  query : {
+    pages : {| [any] : PageType |}
+  }
+};
+
+type PageType = {
+  missing? : '',
+  pageid : number,
+  revisions : {
+    revid : number,
+  }[]
+};
+
 class LastRevisionCache extends AbstractSelfStoredQueuedCache {
 
   constructor() {
@@ -27,9 +41,10 @@ class LastRevisionCache extends AbstractSelfStoredQueuedCache {
       } );
   }
 
-  convertResultToEntities( result ) {
+  convertResultToEntities( result : ResultType ) {
     const cacheUpdate = {};
-    Object.values( result.query.pages ).forEach( page => {
+    const pages : PageType[] = ( ( Object.values( result.query.pages ) : any ) : PageType[] );
+    pages.forEach( page => {
       if ( page.missing !== undefined ) {
         cacheUpdate[ page.pageid ] = -1;
       } else {

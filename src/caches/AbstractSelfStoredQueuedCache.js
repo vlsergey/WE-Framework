@@ -1,11 +1,20 @@
 import expect from 'expect';
 
-const EMPTY_SET = Object.freeze( new Set() );
+const EMPTY_SET : Set< string > = Object.freeze( new Set() );
 const PAUSE_BEFORE_REQUEUE = 100;
 
 export default class AbstractSelfStoredQueuedCache {
 
-  constructor( type, useIndexedDb, maxBatch ) {
+  type : string;
+  maxBatch : number;
+  queue : Set< string >;
+  queueHasNewElements : boolean;
+  queueState : 'WAITING' | 'REQUEST';
+  nextBatch : Set< string >;
+  cache : { [string] : any };
+  cacheUpdateCallbacks : ( { [string] : any } => any )[];
+
+  constructor( type : string, useIndexedDb : boolean, maxBatch : number ) {
     this.type = type;
     this.maxBatch = maxBatch;
 

@@ -56,6 +56,9 @@ function getStringRestriction( propertyEntity, restrictionId, valuePropertyId ) 
 
 class UrlFormatter {
 
+  _format : ?string;
+  _regexp : ?string;
+
   constructor( statement ) {
     this._format = statement.mainsnak.datavalue.value;
 
@@ -100,10 +103,15 @@ export default class PropertyDescription {
       json.urlFormatters.forEach( obj => Object.setPrototypeOf( obj, UrlFormatter.prototype ) );
   }
 
+  countryFlags : ?string[];
   datatype : string;
   id : string;
   label : ?string;
+  languageCodes : string[];
+  languageIds : string[];
   quantityUnitEnabled : ?boolean;
+  regexp : ?string;
+  sourceWebsites : string[];
   sourceWebsitesLanguages : ?string[];
 
   constructor( propertyEntity : PropertyType ) {
@@ -182,9 +190,9 @@ export default class PropertyDescription {
 
     this.regexp = getStringRestriction( propertyEntity, 'Q21502404', 'P1793' );
 
-    this.sourceWebsites = filterClaimsByRank( ( propertyEntity.claims || {} ).P1896 )
+    this.sourceWebsites = ( ( filterClaimsByRank( ( propertyEntity.claims || {} ).P1896 )
       .filter( claimHasMainsnakValue )
-      .map( statement => statement.mainsnak.datavalue.value );
+      .map( statement => statement.mainsnak.datavalue.value ) : any ) : string[] );
 
     this.sourceWebsitesLanguages = filterClaimsByRank( ( propertyEntity.claims || {} ).P1896 )
       .filter( claimHasMainsnakValue )

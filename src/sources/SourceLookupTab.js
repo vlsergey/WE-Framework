@@ -10,7 +10,14 @@ type PropsType = {
   onInsert : string => any,
 };
 
-export default class SourceLookupTab extends PureComponent<PropsType> {
+type StateType = {
+  searchInProgress : boolean,
+  searchResult : string[],
+  searchTerm : string,
+  searchTermScheduled : string,
+};
+
+export default class SourceLookupTab extends PureComponent<PropsType, StateType> {
 
   constructor() {
     super( ...arguments );

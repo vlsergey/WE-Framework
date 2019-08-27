@@ -35,7 +35,7 @@ type PropsType = {
   buttonCells? : any[],
   datavalue? : ?DataValueType,
   onDataValueChange : any => any,
-  propertyDescription? : ?PropertyDescription,
+  propertyDescription : PropertyDescription,
   readOnly? : ?boolean,
 };
 

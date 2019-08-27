@@ -89,7 +89,8 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
   render() {
     const { readOnly, value } = this.props;
 
-    const numAmount : number = Number.parseFloat( ( value || {} ).amount || '' ) || 0;
+    const strAmount = ( value || {} ).amount || '';
+    const numAmount : number = Number.parseFloat( strAmount ) || 0;
     const numLowerBound : number = Number.parseFloat( ( value || {} ).lowerBound || '' ) || 0;
 
     if ( readOnly ) {
@@ -111,7 +112,7 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
 
     return <React.Fragment>
       <td>
-        <input onChange={this.handleAmountChange} value={( value.amount || '' )} />
+        <input onChange={this.handleAmountChange} value={strAmount} />
       </td>
       <td>&nbsp;±&nbsp;</td>
       <td>

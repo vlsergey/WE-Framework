@@ -10,7 +10,7 @@ type PropsType = {
   datavalue? : ?DataValueType,
   onClaimAdd : any => any,
   onDataValueChange : any => any,
-  propertyDescription? : ?PropertyDescription,
+  propertyDescription : PropertyDescription,
   readOnly? : ?boolean,
 };
 

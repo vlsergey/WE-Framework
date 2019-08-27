@@ -4,7 +4,12 @@ import i18n from 'components/core.i18n';
 import LanguageSelect from './LanguageSelect';
 import styles from 'components/core.css';
 
-export default class LanguageSelectContainer extends PureComponent {
+type StateType = {
+  language : ?string,
+};
+
+export default class LanguageSelectContainer
+  extends PureComponent<any, StateType> {
 
   constructor() {
     super( ...arguments );
@@ -15,7 +20,7 @@ export default class LanguageSelectContainer extends PureComponent {
     this.handleLanguageChange = this.handleLanguageChange.bind( this );
   }
 
-  handleLanguageChange( langCode ) {
+  handleLanguageChange( langCode : string ) {
     this.setState( {
       language: langCode,
     } );

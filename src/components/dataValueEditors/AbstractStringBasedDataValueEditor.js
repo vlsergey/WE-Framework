@@ -3,9 +3,10 @@ import { PureComponent } from 'react';
 
 /* eslint react/no-unused-prop-types : 0 */
 type PropsType = {
+  buttons? : any[],
   datavalue? : DataValueType,
   onDataValueChange : ?DataValueType => any,
-  propertyDescription? : PropertyDescription,
+  propertyDescription : PropertyDescription,
   readOnly? : boolean,
 };
 

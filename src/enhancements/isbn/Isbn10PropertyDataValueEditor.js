@@ -1,16 +1,25 @@
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import ExternalIdDataValueEditor from 'components/dataValueEditors/external-id/ExternalIdDataValueEditor';
 import FillSisterIsbnClaimButtonCell from './FillSisterIsbnClaimButtonCell';
 import HyphenateIsbnButtonCell from './HyphenateIsbnButtonCell';
-import React from 'react';
+import PropertyDescription from 'core/PropertyDescription';
 
-class Isbn10PropertyDataValueEditor extends ExternalIdDataValueEditor {
+type PropsType = {
+  datavalue? : DataValueType,
+  onClaimsFill : ( string => string, string ) => any,
+  onDataValueChange : ?DataValueType => any,
+  propertyDescription : PropertyDescription,
+  readOnly? : boolean,
+};
 
-  renderButtonCells() {
-    const { datavalue, onClaimsFill } = this.props;
+class Isbn10PropertyDataValueEditor extends PureComponent<PropsType> {
+
+  render() {
+    const { datavalue, onClaimsFill, onDataValueChange, ...etc } = this.props;
     const isbn = ( datavalue || {} ).value || '';
 
-    return [
+    const buttons = [
       <HyphenateIsbnButtonCell
         isbn={isbn}
         key="HyphenateIsbn"
@@ -24,6 +33,12 @@ class Isbn10PropertyDataValueEditor extends ExternalIdDataValueEditor {
         onClaimsFill={onClaimsFill}
         onHyphenate={this.handeFillIsbn13} />,
     ];
+
+    return <ExternalIdDataValueEditor
+      buttons={buttons}
+      datavalue={datavalue}
+      onDataValueChange={onDataValueChange}
+      {...etc} />;
   }
 
 }

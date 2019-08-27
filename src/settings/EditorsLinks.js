@@ -9,7 +9,12 @@ type PropsType = {
   editorTemplates : EditorDefType[],
 };
 
-export default class EditorLinks extends PureComponent<PropsType> {
+type StateType = {
+  classIds : string[],
+  entityId : ?string,
+};
+
+export default class EditorLinks extends PureComponent<PropsType, StateType> {
 
   ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';
   ENTITY_PREFIX = 'wd:';
