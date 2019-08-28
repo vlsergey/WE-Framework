@@ -3,7 +3,7 @@ import assert from 'assert';
 import buildReducers from 'core/reducers';
 import P31 from '../../entities/P31';
 import PropertyDescription from 'core/PropertyDescription';
-import { Provider } from 'react-redux';
+import Provider from 'ProviderWrapper';
 import Q30 from '../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';

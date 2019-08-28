@@ -4,7 +4,7 @@ import buildReducers from 'core/reducers';
 import P21 from '../../../entities/P21';
 import P31 from '../../../entities/P31';
 import PropertyDescription from 'core/PropertyDescription';
-import { Provider } from 'react-redux';
+import Provider from 'ProviderWrapper';
 import Q1367759 from '../../../entities/Q1367759';
 import React from 'react';
 import ReactDOM from 'react-dom';

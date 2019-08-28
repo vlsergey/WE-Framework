@@ -79,6 +79,7 @@ module.exports = function( config ) {
       resolve: {
         modules: [
           path.resolve( __dirname, 'src' ),
+          path.resolve( __dirname, 'test' ),
           'node_modules',
         ],
       },

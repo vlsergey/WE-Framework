@@ -4,7 +4,7 @@ import buildReducers from 'core/reducers';
 import P345 from '../entities/P345';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import { Provider } from 'react-redux';
+import Provider from 'ProviderWrapper';
 import Q1367759 from '../entities/Q1367759';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';

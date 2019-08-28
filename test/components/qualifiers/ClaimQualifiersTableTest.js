@@ -6,7 +6,7 @@ import CommonsMediaDataValueEditor from 'components/dataValueEditors/CommonsMedi
 import P51 from '../../entities/P51';
 import P85 from '../../entities/P85';
 import PropertyDescription from 'core/PropertyDescription';
-import { Provider } from 'react-redux';
+import Provider from 'ProviderWrapper';
 import Q30 from '../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';

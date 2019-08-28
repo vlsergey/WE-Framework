@@ -7,7 +7,7 @@ import P345 from '../../../entities/P345';
 import PropertyDescription from 'core/PropertyDescription';
 import propertyDescriptionCache from 'caches/propertyDescriptionCache';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import { Provider } from 'react-redux';
+import Provider from 'ProviderWrapper';
 import Q2262932 from '../../../entities/Q2262932';
 import Q652 from '../../../entities/Q652';
 import React from 'react';
