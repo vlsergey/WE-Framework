@@ -7,7 +7,7 @@ import ModeSelect from 'components/dataValueEditors/quantity/ModeSelect';
 import P1971 from '../../../entities/P1971';
 import PlusMinusValueEditor from 'components/dataValueEditors/quantity/PlusMinusValueEditor';
 import PropertyDescription from 'core/PropertyDescription';
-import { Provider } from 'react-redux';
+import Provider from 'ProviderWrapper';
 import Q1367759 from '../../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';

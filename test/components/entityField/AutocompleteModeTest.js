@@ -3,7 +3,7 @@ import assert from 'assert';
 import AutocompleteMode from 'components/entityField/AutocompleteMode';
 import buildReducers from 'core/reducers';
 import LabelDescription from 'caches/LabelDescription';
-import { Provider } from 'react-redux';
+import Provider from 'ProviderWrapper';
 import Q1367759 from '../../entities/Q1367759';
 import Q752285 from '../../entities/Q752285';
 import React from 'react';
