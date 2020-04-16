@@ -40,7 +40,7 @@
     "flow-typed": "^2.6.1",
     "form-data": "^2.5.0",
     "global-jsdom": "^5.0.0",
-    "https-proxy-agent": "^2.2.2",
+    "https-proxy-agent": "^2.2.3",
     "isbn": "git+https://github.com/AV-Forlaget/isbnjs.git#master",
     "isomorphic-fetch": "^2.2.1",
     "jsdom": "^15.1.1",
