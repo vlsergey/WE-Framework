@@ -1,7 +1,7 @@
 WE-Framework
 ============
 
-![Travis](https://travis-ci.org/vlsergey/WE-Framework.svg?branch=master)
+![Travis](https://api.travis-ci.com/vlsergey/WE-Framework.svg?branch=master)
 
 Wikidata Edit Framework for Javascript
 
