@@ -14,6 +14,7 @@ type ToolTypeData = {|
   callback? : () => any,
   icon? : string,
   label? : string,
+  modes? : string[],
   name? : string,
   position? : number,
   title? : string,
@@ -39,7 +40,7 @@ type ModeType = 'classic' | 'visual';
 export default function registerTool( tool : ToolType ) {
   function moveProperties( tool, mode : ModeType ) : ToolType {
     const result : ToolType = tool[ mode ]
-      ? { ...tool[ mode ], ...tool }
+      ? { ...tool, ...tool[ mode ] }
       : tool;
     return result;
   }
