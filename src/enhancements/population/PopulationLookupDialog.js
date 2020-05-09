@@ -151,7 +151,7 @@ export default class PopulationLookupDialog
         text: i18n.buttonLabelImport,
         label: i18n.buttonLabelImport,
         click: this.handleImport,
-      },
+      }
     );
 
     return <DialogWrapper

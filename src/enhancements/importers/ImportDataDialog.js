@@ -87,7 +87,7 @@ class ImportDataDialog extends PureComponent<PropsType, StateType> {
         click: onClose,
         text: i18n.buttonCloseText,
         title: i18n.buttonCloseTitle,
-      },
+      }
     );
 
     return <DialogWrapper
