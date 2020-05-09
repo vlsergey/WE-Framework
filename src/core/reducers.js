@@ -34,7 +34,7 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
 
   case 'CLAIM_ADD': {
     const { claimData, propertyId, datatype } : {
-      claimData : ?any,
+      claimData? : ?any,
       datatype : string,
       propertyId : string } = action;
 
