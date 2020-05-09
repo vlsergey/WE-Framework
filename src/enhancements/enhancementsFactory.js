@@ -1,3 +1,5 @@
+// @flow
+
 class EnhancementsFactory {
 
   findDataValueEditor( propertyDescription ) {

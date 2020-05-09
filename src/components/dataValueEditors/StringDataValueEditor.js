@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
 import React from 'react';
 import styles from 'components/core.css';

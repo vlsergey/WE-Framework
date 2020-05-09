@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropertyLabelCell from './PropertyLabelCell';

@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import ButtonCell from './ButtonCell';
 import i18n from './core.i18n';

@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
 import GoToUrlButtonCell from './GoToUrlButtonCell';
 import React from 'react';

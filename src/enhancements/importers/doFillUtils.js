@@ -1,3 +1,5 @@
+// @flow
+
 export default function( dispatch ) {
   const identityF = x => x;
   const itemValue = numericId => ( { 'entity-type': 'item', 'numeric-id': '' + numericId, 'id': 'Q' + numericId } );

@@ -1,3 +1,5 @@
+// @flow
+
 export const DEFAULT_LANGUAGES = [];
 
 [ mw.config.get( 'wgUserLanguage' ), mw.config.get( 'wgContentLanguage' ), 'en', 'ru' ]

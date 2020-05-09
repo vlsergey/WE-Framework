@@ -1,12 +1,14 @@
+// @flow
+
 import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 
 const TYPE = 'PARENTTYPES';
 
 class ParentTypesCache extends AbstractQueuedCacheWithPostcheck {
-  SPARQL_ENDPOINT = 'https://query.wikidata.org/sparql';
-  ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';
-  ENTITY_PREFIX = 'wd:';
-  SUBCLASS_PROP = 'wdt:P279';
+  SPARQL_ENDPOINT : string = 'https://query.wikidata.org/sparql';
+  ENTITY_URL_PREFIX : string = 'http://www.wikidata.org/entity/';
+  ENTITY_PREFIX : string = 'wd:';
+  SUBCLASS_PROP : string = 'wdt:P279';
 
   constructor() {
     super( TYPE, true, 1 );
@@ -17,8 +19,8 @@ class ParentTypesCache extends AbstractQueuedCacheWithPostcheck {
   }
 
   buildRequestPromice( [ typeId ] ) {
-    const url = this.SPARQL_ENDPOINT + '?query='
-      + encodeURIComponent( `SELECT DISTINCT ?type WHERE { ${this.ENTITY_PREFIX}${typeId} ${this.SUBCLASS_PROP}* ?type . }` );
+    const sparql = `SELECT DISTINCT ?type WHERE { ${this.ENTITY_PREFIX}${typeId} ${this.SUBCLASS_PROP}* ?type . }`;
+    const url = this.SPARQL_ENDPOINT + '?query=' + encodeURIComponent( sparql );
     return fetch( url, {
       headers: {
         Accept: 'application/sparql-results+json',

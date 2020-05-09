@@ -1,3 +1,5 @@
+// @flow
+
 import * as selectors from './selectors';
 import { DEFAULT_LANGUAGES, LANGUAGE_TITLES } from 'utils/I18nUtils';
 import React, { Component } from 'react';

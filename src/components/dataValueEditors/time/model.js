@@ -1,3 +1,5 @@
+// @flow
+
 
 export const DEFAULT_CALENDAR_MODEL = 'http://www.wikidata.org/entity/Q1985727';
 

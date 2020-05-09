@@ -1,3 +1,5 @@
+// @flow
+
 import AlphabeticalComparator from './AlphabeticalComparator';
 import NaturalSortComparator from './NaturalSortComparator';
 import TimeComparator from './TimeComparator';

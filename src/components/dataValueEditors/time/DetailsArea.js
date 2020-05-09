@@ -1,3 +1,5 @@
+// @flow
+
 import { DEFAULT_CALENDAR_MODEL, DEFAULT_PRECISION } from './model';
 import React, { PureComponent } from 'react';
 import CalendarModelSelect from './CalendarModelSelect';

@@ -1,3 +1,5 @@
+// @flow
+
 export default function getDefaultQualifierSnak( propertyId : string ) : ?SnakType {
   if ( propertyId === 'P813' ) {
     const today = '+' + new Date().toISOString().replace( /T.*$/, 'T00:00:00Z' );

@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
 import { getWikidataApi } from 'core/ApiUtils';

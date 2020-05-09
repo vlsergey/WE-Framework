@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import JQueryButton from 'wrappers/JQueryButton';
 import PropTypes from 'prop-types';

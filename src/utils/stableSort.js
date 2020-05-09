@@ -1,3 +1,5 @@
+// @flow
+
 export default function stableSort<T>( arr : T[], cmp : ( T, T ) => number ) : T[] {
   const stabilizedThis : [T, number][] = arr.map( ( el, index ) => [ el, index ] );
   const stableCmp = ( a, b ) => {

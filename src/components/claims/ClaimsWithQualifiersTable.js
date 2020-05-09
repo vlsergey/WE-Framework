@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import ClaimAddButtonCell from './ClaimAddButtonCell';
 import ClaimsWithQualifiersTableRows from './ClaimsWithQualifiersTableRows';

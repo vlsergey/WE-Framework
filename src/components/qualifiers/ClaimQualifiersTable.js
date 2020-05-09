@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
 import generateRandomString from 'utils/generateRandomString';

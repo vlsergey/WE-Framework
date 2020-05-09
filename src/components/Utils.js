@@ -1,3 +1,5 @@
+// @flow
+
 
 export function regexpGetHtmlPattern( regexp ) {
   let source = regexpGetSource( regexp );

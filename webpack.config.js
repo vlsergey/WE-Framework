@@ -5,7 +5,7 @@ const StringReplacePlugin = require( 'string-replace-webpack-plugin' );
 module.exports = {
   mode: 'none', // no defaults
 
-  entry: './src/app.js',
+  entry: './src/index.js',
 
   module: {
     rules: [

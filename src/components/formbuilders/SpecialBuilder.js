@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';
 import PropTypes from 'prop-types';

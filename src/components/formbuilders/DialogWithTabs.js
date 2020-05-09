@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import EditorTabsBuilder from './EditorTabsBuilder';

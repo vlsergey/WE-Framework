@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 
 const ok = x => typeof x === 'string' && x.trim() !== '';

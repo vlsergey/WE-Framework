@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import PropertyDescription from 'core/PropertyDescription';
 import PropTypes from 'prop-types';

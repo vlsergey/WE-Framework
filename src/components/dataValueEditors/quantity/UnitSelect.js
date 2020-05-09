@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import EntityField from 'components/entityField';
 import PropertyDescription from 'core/PropertyDescription';

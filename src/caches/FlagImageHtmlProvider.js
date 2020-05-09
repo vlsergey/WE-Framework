@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import CacheValueProvider from 'caches/CacheValueProvider';
 import flagImageHtmlCache from './flagImageHtmlCache';

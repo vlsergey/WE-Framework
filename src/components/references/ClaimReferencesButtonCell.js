@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import ClaimReferencesEditorDialog from './ClaimReferencesEditorDialog';
 import { defaultMemoize } from 'reselect';

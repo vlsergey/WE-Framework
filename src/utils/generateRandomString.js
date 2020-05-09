@@ -1,3 +1,5 @@
+// @flow
+
 let counter = 0;
 const startTimestamp = Date.now().toString( 36 );
 

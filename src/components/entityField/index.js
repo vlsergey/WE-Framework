@@ -1,3 +1,5 @@
+// @flow
+
 import { addLastRecentlyUsed, findLastRecentlyUsed } from './LruCache';
 import React, { PureComponent } from 'react';
 import AutocompleteMode from './AutocompleteMode';

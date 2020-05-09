@@ -1,3 +1,5 @@
+// @flow
+
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import { defaultMemoize } from 'reselect';
 

@@ -1,3 +1,5 @@
+// @flow
+
 import deepEqual from 'deep-equal';
 import { getWikidataApi } from './ApiUtils';
 import i18n from './i18n';

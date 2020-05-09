@@ -1,3 +1,5 @@
+// @flow
+
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
 export default function findByKeysInObjectStore( objectStore : IDBObjectStore, unsortedKeys : any[] ) : Promise< any > {

@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractQueuedCache from './AbstractQueuedCache';
 import expect from 'expect';
 import findByKeysInObjectStore from 'utils/findByKeysInObjectStore';

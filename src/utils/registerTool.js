@@ -1,3 +1,5 @@
+// @flow
+
 /*
 * Derived from code: https://ru.wikipedia.org/w/index.php?title=MediaWiki:Gadget-registerTool.js&oldid=96997778
 * Source License: GFDL & CC-BY-SA 3.0

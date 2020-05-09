@@ -1,3 +1,5 @@
+// @flow
+
 import FamilyMemberDataValueEditor, { oppositeGender } from './FamilyMemberDataValueEditor';
 import React, { PureComponent } from 'react';
 

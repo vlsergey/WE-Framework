@@ -1,20 +1,10 @@
 [ignore]
-.*coverage/.*
-.*dist/.*
-.*node_modules/.*
-.*test/.*
-.*\.config\.js
-.*\.conf\.js
-.*deploy\-to\-wikipedia\.js
-
-.*\.json
 
 [lints]
 untyped-import=off
 unclear-type=off
 
 [options]
-all=true
 module.name_mapper='^react\-bootstrap\/.*' -> 'react-bootstrap'
 module.name_mapper='^semantic\-ui\-css\/.*' -> 'semantic-ui-css'
 

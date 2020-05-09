@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import CacheValuesProvider from './CacheValuesProvider';
 import parentTypesCache from './parentTypesCache';

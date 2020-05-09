@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractQueuedCache from './AbstractQueuedCache';
 import { getWikidataApi } from 'core/ApiUtils';
 

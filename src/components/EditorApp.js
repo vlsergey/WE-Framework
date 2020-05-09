@@ -1,3 +1,5 @@
+// @flow
+
 import { closeWithoutSave, saveAndClose } from 'core/save';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';

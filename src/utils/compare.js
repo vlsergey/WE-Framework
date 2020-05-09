@@ -1,3 +1,5 @@
+// @flow
+
 export default function compare( a, b ) {
   if ( typeof a === 'undefined' && typeof b === 'undefined' )
     return 0;

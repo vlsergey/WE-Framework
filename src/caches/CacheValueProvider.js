@@ -1,3 +1,5 @@
+// @flow
+
 import { connect } from 'react-redux';
 import { PureComponent } from 'react';
 

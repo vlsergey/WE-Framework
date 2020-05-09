@@ -1,3 +1,5 @@
+// @flow
+
 const MAX_ITEMS_TO_REMEMBER = 10;
 
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;

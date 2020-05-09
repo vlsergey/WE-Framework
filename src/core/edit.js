@@ -1,3 +1,5 @@
+// @flow
+
 import { applyMiddleware, createStore } from 'redux';
 import { getWikidataApi, purge } from './ApiUtils';
 import buildReducers from './reducers';

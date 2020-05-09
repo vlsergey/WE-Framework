@@ -1,3 +1,5 @@
+// @flow
+
 import { defaultMemoize } from 'reselect';
 import { PureComponent } from 'react';
 

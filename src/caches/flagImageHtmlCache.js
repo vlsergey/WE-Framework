@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractQueuedCache from './AbstractQueuedCache';
 import { getServerApi } from 'core/ApiUtils';
 import md5 from 'md5';

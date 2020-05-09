@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 
 const TYPE = 'PROPERTIESBYSPARQL';

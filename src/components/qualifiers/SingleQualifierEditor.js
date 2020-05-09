@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import i18n from './i18n';
 import PropertyDescription from 'core/PropertyDescription';

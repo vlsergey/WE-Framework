@@ -1,3 +1,5 @@
+// @flow
+
 const localStorage = window.localStorage || {
   _cache: {},
   getItem( key ) { return this._cache[ key ]; },

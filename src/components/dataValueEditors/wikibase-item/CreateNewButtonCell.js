@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import allEditorTemplates from 'editors';
 import ButtonCell from 'components/ButtonCell';

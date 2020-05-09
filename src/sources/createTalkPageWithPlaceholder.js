@@ -1,3 +1,5 @@
+// @flow
+
 import { getWikidataApi } from 'core/ApiUtils';
 
 export default function createTalkPageWithPlaceholder( entityId ) {

@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 import { filterClaimsByRank } from 'model/ModelUtils';
 import { getWikidataApi } from 'core/ApiUtils';

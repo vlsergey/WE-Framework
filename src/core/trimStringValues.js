@@ -1,3 +1,5 @@
+// @flow
+
 import expect from 'expect';
 
 export default function trimStringValues( entity ) {

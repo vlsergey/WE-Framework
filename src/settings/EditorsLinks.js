@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import compare from 'utils/compare';
 import { getEntityIdDeferred } from 'core/ApiUtils';

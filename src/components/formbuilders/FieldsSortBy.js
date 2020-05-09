@@ -1,3 +1,5 @@
+// @flow
+
 import compare from 'utils/compare';
 import compareLanguageCodes from 'utils/compareLanguageCodes';
 import { defaultMemoize } from 'reselect';

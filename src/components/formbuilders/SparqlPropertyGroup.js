@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import ChildrenBuilder from './ChildrenBuilder';
 import PropertiesBySparqlProvider from 'caches/PropertiesBySparqlProvider';

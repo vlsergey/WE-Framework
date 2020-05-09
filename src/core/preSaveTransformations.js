@@ -1,3 +1,5 @@
+// @flow
+
 import commitDraftAliases from './commitDraftAliases';
 import filterEmptyEntityStructures from './filterEmptyEntityStructures';
 import trimStringValues from './trimStringValues';

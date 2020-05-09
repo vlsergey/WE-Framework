@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import CreateNewButtonCell from './CreateNewButtonCell';
 import EntityField from 'components/entityField';

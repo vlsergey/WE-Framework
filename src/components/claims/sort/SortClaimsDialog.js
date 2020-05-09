@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import ComparatorSelect from './ComparatorSelect';
 import { DatavalueComparator } from './DatavalueComparator';

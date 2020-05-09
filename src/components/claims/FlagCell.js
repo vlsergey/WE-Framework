@@ -1,3 +1,5 @@
+// @flow
+
 import React, { Component } from 'react';
 import FlagImageHtmlProvider from 'caches/FlagImageHtmlProvider';
 import PropTypes from 'prop-types';

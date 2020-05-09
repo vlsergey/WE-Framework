@@ -1,3 +1,5 @@
+// @flow
+
 import * as ApiUtils from 'core/ApiUtils';
 import React, { PureComponent } from 'react';
 import Autosuggest from 'react-autosuggest';

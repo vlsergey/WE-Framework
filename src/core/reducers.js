@@ -1,3 +1,5 @@
+// @flow
+
 import cacheReducers from 'caches/reducers';
 import { combineReducers } from 'redux';
 import deepEqual from 'deep-equal';

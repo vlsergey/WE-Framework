@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractStringBasedDataValueEditor from '../AbstractStringBasedDataValueEditor';
 import { COLUMNS_FOR_DATA_VALUE_EDITOR } from 'components/TableColSpanConstants';
 import React from 'react';

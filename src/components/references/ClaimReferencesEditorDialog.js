@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import ClaimReferencesEditorContent from './ClaimReferencesEditorContent';
 import DialogWrapper from 'wrappers/DialogWrapper';

@@ -1,3 +1,5 @@
+// @flow
+
 import * as ApiUtils from 'core/ApiUtils';
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
 import Autosuggest from 'react-autosuggest';

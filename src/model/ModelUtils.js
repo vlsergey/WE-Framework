@@ -1,3 +1,5 @@
+// @flow
+
 export function filterClaimsByRank( claims : ?ClaimType[] ) : ClaimType[] {
   if ( !claims ) return [];
 

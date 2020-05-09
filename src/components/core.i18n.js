@@ -1,3 +1,5 @@
+// @flow
+
 import * as I18nUtils from 'utils/I18nUtils';
 
 const en = {

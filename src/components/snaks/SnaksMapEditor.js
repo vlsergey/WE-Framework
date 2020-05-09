@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import { COLUMNS_FOR_SNAK_ROW } from 'components/TableColSpanConstants';
 import PropertyDescription from 'core/PropertyDescription';

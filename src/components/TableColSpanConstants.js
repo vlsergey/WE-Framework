@@ -1,3 +1,5 @@
+// @flow
+
 
 export const COLUMNS_FOR_DATA_VALUE_EDITOR = 12;
 

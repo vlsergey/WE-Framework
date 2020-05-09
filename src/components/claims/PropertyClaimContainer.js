@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import { claimColumnsF } from './selectors';
 import ClaimsTableBody from './ClaimsTableBody';

@@ -1,3 +1,5 @@
+// @flow
+
 let claimIdCounters = 0;
 
 export function newStatementClaim(

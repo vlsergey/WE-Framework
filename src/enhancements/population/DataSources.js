@@ -1,3 +1,5 @@
+// @flow
+
 import { Extension, Parser, Template } from 'wikitext-dom';
 import { getServerApi } from 'core/ApiUtils';
 

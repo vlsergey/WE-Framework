@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import FieldsFilterByClaimExistence from './FieldsFilterByClaimExistence';

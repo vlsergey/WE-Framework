@@ -1,3 +1,5 @@
+// @flow
+
 export default function commitDraftAliases( entity ) {
 
   if ( typeof entity.draftAliases !== 'object' ) return entity;

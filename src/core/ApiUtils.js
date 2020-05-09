@@ -1,3 +1,5 @@
+// @flow
+
 // import * as WEF_Utils from './utils';
 //
 const MW_SCRIPT_PATH = mw.config.get( 'wgScriptPath' );

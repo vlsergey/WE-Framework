@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractQueuedCache from './AbstractQueuedCache';
 import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
 import { getWikidataApi } from 'core/ApiUtils';

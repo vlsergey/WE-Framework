@@ -1,3 +1,5 @@
+// @flow
+
 import animations from './animations.css';
 import PropTypes from 'prop-types';
 import React from 'react';

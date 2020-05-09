@@ -1,3 +1,5 @@
+// @flow
+
 import AbstractQueuedCache from './AbstractQueuedCache';
 import flagImageHtmlCache from './flagImageHtmlCache';
 import labelDescriptionCache from './labelDescriptionCache';

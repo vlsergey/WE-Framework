@@ -1,3 +1,5 @@
+// @flow
+
 import { getLastRecentlyUsedReferences, onReferenceUpdate } from './LastRecentlyUsedReferencesStore';
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';

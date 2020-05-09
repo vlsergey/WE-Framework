@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import EntityDescription from 'caches/EntityDescription';
 import EntityLabel from 'caches/EntityLabel';

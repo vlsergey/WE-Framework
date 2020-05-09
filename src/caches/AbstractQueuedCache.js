@@ -1,3 +1,5 @@
+// @flow
+
 import deepEqual from 'deep-equal';
 import expect from 'expect';
 import findByKeysInObjectStore from 'utils/findByKeysInObjectStore';

@@ -19,6 +19,7 @@ const IGNORE_ERROR_PATTERNS = [
 console.log( 'Errors before filtering: ' + reportJson.errors.length );
 
 const filteredErrors = reportJson.errors
+  .filter( error => !error.message.some( message => message.path.endsWith( 'flow-report.json' ) ) )
   .filter( error => !error.message.some( message =>
     IGNORE_ERROR_PATTERNS.some( regexp => regexp.test( message.descr ) )
   ) );

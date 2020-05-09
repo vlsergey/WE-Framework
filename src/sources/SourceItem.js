@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import MediawikiPreview from 'components/MediawikiPreview';
 import PropTypes from 'prop-types';

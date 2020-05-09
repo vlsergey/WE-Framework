@@ -1,3 +1,5 @@
+// @flow
+
 import caches from './Caches';
 
 const initialState = {

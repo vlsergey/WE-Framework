@@ -1,3 +1,5 @@
+// @flow
+
 import { localize } from 'utils/I18nUtils';
 
 const en = {

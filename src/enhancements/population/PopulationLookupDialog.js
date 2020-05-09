@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import dataSources from './DataSources';
 import DialogWrapper from 'wrappers/DialogWrapper';

@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import generateRandomString from 'utils/generateRandomString';
 import PropertyDescription from 'core/PropertyDescription';

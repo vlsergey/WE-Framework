@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import BoundariesValueEditor from './BoundariesValueEditor';
 import { COLUMNS_FOR_DATA_VALUE_EDITOR } from 'components/TableColSpanConstants';

@@ -1,3 +1,5 @@
+// @flow
+
 import doFillUtils from './doFillUtils';
 import { Template } from 'wikitext-dom';
 

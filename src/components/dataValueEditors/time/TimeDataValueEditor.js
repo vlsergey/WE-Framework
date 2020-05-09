@@ -1,3 +1,5 @@
+// @flow
+
 import * as ApiUtils from 'core/ApiUtils';
 import React, { PureComponent } from 'react';
 import DetailsArea from './DetailsArea';

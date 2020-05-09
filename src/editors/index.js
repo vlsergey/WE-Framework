@@ -1,3 +1,5 @@
+// @flow
+
 import AdmEntityEditorTemplate from './AdmEntityEditorTemplate';
 import ArticleEditorTemplate from './ArticleEditorTemplate';
 import AwardEditorTemplate from './AwardEditorTemplate';

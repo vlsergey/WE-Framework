@@ -1,3 +1,5 @@
+// @flow
+
 const ok = x => typeof x !== 'undefined' && x !== null;
 
 function filterEmptyAliases( aliases ) {

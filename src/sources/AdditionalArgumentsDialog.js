@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import createTalkPageWithPlaceholder from './createTalkPageWithPlaceholder';
 import DialogWrapper from 'wrappers/DialogWrapper';

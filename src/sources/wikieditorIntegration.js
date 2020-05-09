@@ -1,3 +1,5 @@
+// @flow
+
 import { add } from './LruStore';
 import AdditionalArgumentsDialog from './AdditionalArgumentsDialog';
 import React from 'react';

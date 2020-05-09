@@ -1,3 +1,5 @@
+// @flow
+
 import PropertyDescription from 'core/PropertyDescription';
 import { PureComponent } from 'react';
 

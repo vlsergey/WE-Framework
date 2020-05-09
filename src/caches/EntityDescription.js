@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import LabelDescriptionProvider from './LabelDescriptionProvider';
 import PropTypes from 'prop-types';

@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import ClipLoader from 'react-spinners/ClipLoader';
 import PropTypes from 'prop-types';

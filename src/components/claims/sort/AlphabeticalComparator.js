@@ -1,3 +1,5 @@
+// @flow
+
 import { DatavalueComparator } from './DatavalueComparator';
 
 export default class AlphabeticalComparator implements DatavalueComparator {

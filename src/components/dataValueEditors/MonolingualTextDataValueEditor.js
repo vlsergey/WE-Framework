@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import LanguageAutocomplete from 'components/languages/LanguageAutocomplete';
 import styles from './MonolingualText.css';

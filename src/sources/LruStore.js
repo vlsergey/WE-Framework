@@ -1,3 +1,5 @@
+// @flow
+
 const isBlank = str => str === undefined || str === null || str.trim() === '';
 
 const EMPTY_ARRAY = [];

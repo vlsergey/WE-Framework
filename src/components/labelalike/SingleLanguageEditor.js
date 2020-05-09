@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import AliasesEditor from './AliasesEditor';
 import i18n from 'components/core.i18n';

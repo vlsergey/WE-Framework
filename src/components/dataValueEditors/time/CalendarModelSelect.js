@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import { CALENDAR_MODELS } from './model';
 import i18n from './i18n';

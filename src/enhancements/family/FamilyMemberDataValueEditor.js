@@ -1,3 +1,5 @@
+// @flow
+
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';

@@ -1,3 +1,5 @@
+// @flow
+
 
 export function isEmpty( str ) {
   if ( typeof str === 'undefined' )

@@ -1,3 +1,5 @@
+// @flow
+
 import expect from 'expect';
 
 const EMPTY_SET : Set< string > = Object.freeze( new Set() );
