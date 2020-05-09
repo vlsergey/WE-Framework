@@ -63,15 +63,16 @@ const VIAF_REPLACES = {
 };
 
 export function parseJustLinks(
-    justlinks : { [string] : string[] },
+    justlinks : any,
     onPropertyValueFound : ( string, string ) => any ) {
   Object.keys( justlinks )
     .filter( key => !!VIAF_2_PROPERTY[ key ] )
+    .filter( key => Array.isArray( justlinks[ key ] ) )
     .forEach( key => {
       const propertyId : string = VIAF_2_PROPERTY[ key ];
       const pattern : RegExp = VIAF_PATTERNS[ key ] || DEFAULT_PATTERN;
-      const replacement : string = VIAF_REPLACES[ key ] || DEFAULT_REPLACE;
-      const values : ?string[] = justlinks[ key ];
+      const replacement : string | ( string => string ) = VIAF_REPLACES[ key ] || DEFAULT_REPLACE;
+      const values : string[] = justlinks[ key ];
 
       values.forEach( value => {
         if ( pattern.test( value ) ) {
