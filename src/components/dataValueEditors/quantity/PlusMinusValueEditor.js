@@ -72,7 +72,7 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
     const oldAmount = Number( oldValue.amount ) || 0;
 
     if ( event.target.value == null || event.target.value.trim() === '' ) {
-      const newValue = { ...this.props.value };
+      const newValue : QuantityValueType = { ...this.props.value };
       delete newValue.lowerBound;
       delete newValue.upperBound;
       this.props.onValueChange( newValue );

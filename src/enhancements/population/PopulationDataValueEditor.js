@@ -43,8 +43,8 @@ class PopulationDataValueEditor extends PureComponent<PropsType, StateType> {
   render() {
     const { ...etc } = this.props;
     return <QuantityDataValueEditor
-      buttonCells={this.renderButtonCells()}
-      {...etc} />;
+      {...etc}
+      buttonCells={this.renderButtonCells()} />;
   }
 
   renderButtonCells() {

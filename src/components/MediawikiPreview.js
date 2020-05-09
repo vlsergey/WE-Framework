@@ -63,13 +63,13 @@ export default class MediawikiPreview
 
   render() {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "wikitext" }] */
-    const { spinnerSize, wikitext, ...other } = this.props;
+    const { spinnerSize, wikitext, ...etc } = this.props;
 
     if ( this.state.html ) {
-      return <div dangerouslySetInnerHTML={{ __html: this.state.html }} {...other} />;
+      return <div {...etc} dangerouslySetInnerHTML={{ __html: this.state.html }} />;
     }
 
-    return <Spinner size={spinnerSize} {...other} />;
+    return <Spinner {...etc} size={spinnerSize} />;
   }
 
 }

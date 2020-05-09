@@ -37,10 +37,10 @@ class Isbn10PropertyDataValueEditor extends PureComponent<PropsType> {
     ];
 
     return <ExternalIdDataValueEditor
+      {...etc}
       buttons={buttons}
       datavalue={datavalue}
-      onDataValueChange={onDataValueChange}
-      {...etc} />;
+      onDataValueChange={onDataValueChange} />;
   }
 
 }

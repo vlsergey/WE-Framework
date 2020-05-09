@@ -55,7 +55,7 @@ export default class AbstractQueuedCache {
     this.queueState = newState;
   }
 
-  isKeyValid( cacheKey ) {
+  isKeyValid( cacheKey : string ) : boolean {
     /* eslint no-unused-vars: 0 */
     return true;
   }

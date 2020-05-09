@@ -12,8 +12,8 @@ class LocalTitleCache extends AbstractQueuedCache {
     super( TYPE, false, 50 );
   }
 
-  isKeyValid( cacheKey ) {
-    return typeof cacheKey === 'string' && cacheKey.match( /^Q(\d+)$/i );
+  isKeyValid( cacheKey : string ) : boolean {
+    return typeof cacheKey === 'string' && !!cacheKey.match( /^Q(\d+)$/i );
   }
 
   notifyMessage( cacheKeys ) {

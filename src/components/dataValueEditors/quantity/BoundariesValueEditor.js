@@ -28,7 +28,7 @@ export default class BoundariesValueEditor extends PureComponent {
     this.handleUpperBoundChange = this.handleUpperBoundChange.bind( this );
   }
 
-  handleFieldChange( field, event ) {
+  handleFieldChange( field : string, event ) {
     this.props.onValueChange( {
       ...this.props.value,
       [ field ]: event.target.value || '',

@@ -29,7 +29,7 @@ export default class DialogWithTabs extends PureComponent<PropsType> {
   render() {
     const { tabs, ...etc } = this.props;
 
-    return <DialogWrapper ref={this.dialogRef} {...etc}>
+    return <DialogWrapper {...etc} ref={this.dialogRef}>
       <EditorTabsBuilder onActivate={this.handleTabChange} tabs={tabs} />
     </DialogWrapper>;
   }

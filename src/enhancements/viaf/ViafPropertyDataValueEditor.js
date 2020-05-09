@@ -161,10 +161,10 @@ class ViafPropertyDataValueEditor
     ];
 
     return <ExternalIdDataValueEditor
+      {...etc}
       buttons={buttons}
       datavalue={datavalue}
-      onDataValueChange={onDataValueChange}
-      {...etc} />;
+      onDataValueChange={onDataValueChange} />;
   }
 }
 
