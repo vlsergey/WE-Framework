@@ -1,9 +1,13 @@
 /* eslint-env node */
+const env = process.env.NODE_ENV;
 const path = require( 'path' );
+
+const OptimizeCSSAssetsPlugin = require( 'optimize-css-assets-webpack-plugin' );
 const StringReplacePlugin = require( 'string-replace-webpack-plugin' );
+const TerserJSPlugin = require( 'terser-webpack-plugin' );
 
 module.exports = {
-  mode: 'none', // no defaults
+  mode: env || 'development',
 
   entry: './src/index.js',
 
@@ -78,15 +82,14 @@ module.exports = {
     ],
   },
 
-  resolve: {
-    modules: [
-      path.resolve( __dirname, 'src' ),
-      'node_modules',
+  optimization: {
+    minimizer: [
+      new TerserJSPlugin( {
+        extractComments: true,
+        parallel: true,
+      } ),
+      new OptimizeCSSAssetsPlugin( {} ),
     ],
-  },
-
-  performance: {
-    hints: false,
   },
 
   output: {
@@ -98,5 +101,12 @@ module.exports = {
     // an instance of the plugin must be present
     new StringReplacePlugin(),
   ],
+
+  resolve: {
+    modules: [
+      path.resolve( __dirname, 'src' ),
+      'node_modules',
+    ],
+  },
 
 };
