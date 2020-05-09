@@ -5,8 +5,8 @@ import { getWikidataApi } from './ApiUtils';
 import i18n from './i18n';
 import preSaveTransformations from './preSaveTransformations';
 
-const SUMMARY_PREFIX = 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ';
-const TAG = 'WE-Framework gadget';
+const SUMMARY_PREFIX : string = 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ';
+const TAG : string = 'WE-Framework gadget';
 
 const notifyOptions = {
   autoHide: true,
@@ -189,8 +189,9 @@ export function saveAndClose( resolve, reject ) {
 
     const params = {
       action: 'wbeditentity',
-      summary: 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' ),
       data: JSON.stringify( data ),
+      summary: 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' ),
+      tags: TAG,
     };
 
     if ( typeof state.entity.id !== 'string' ) {
