@@ -34,7 +34,7 @@ class PropertyClaimContainer extends PureComponent<PropsType> {
     if ( columns.length !== 0 ) {
       return <tr>
         <td colSpan={COLUMNS_FOR_CLAIMS_EDITOR}>
-          <ClaimsWithQualifiersTable columns={columns} {...this.props} />
+          <ClaimsWithQualifiersTable {...this.props} columns={columns} />
         </td>
       </tr>;
     }

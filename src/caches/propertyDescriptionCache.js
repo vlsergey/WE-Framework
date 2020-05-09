@@ -14,8 +14,8 @@ class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
     this.currentVersion = PropertyDescription.VERSION;
   }
 
-  isKeyValid( cacheKey ) {
-    return typeof cacheKey === 'string' && cacheKey.match( /^P(\d+)$/i );
+  isKeyValid( cacheKey : string ) : boolean {
+    return typeof cacheKey === 'string' && !!cacheKey.match( /^P(\d+)$/i );
   }
 
   enchanceIndexedDbResult( cachedValue ) {

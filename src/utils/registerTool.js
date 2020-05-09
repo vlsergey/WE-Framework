@@ -8,7 +8,7 @@
 const toolsToAdd : { [string] : ToolType } = {};
 let addClassicToolbarToolsHooked = false;
 
-type ToolTypeData = {
+type ToolTypeData = {|
   addCallback? : () => any,
   addRightAway? : boolean,
   callback? : () => any,
@@ -17,9 +17,9 @@ type ToolTypeData = {
   name? : string,
   position? : number,
   title? : string,
-};
+|};
 
-type ToolType = {
+type ToolType = {|
   addCallback? : () => any,
   addRightAway? : boolean,
   callback : () => any,
@@ -32,7 +32,7 @@ type ToolType = {
   position : number,
   title? : string,
   visual? : ToolTypeData,
-};
+|};
 
 type ModeType = 'classic' | 'visual';
 

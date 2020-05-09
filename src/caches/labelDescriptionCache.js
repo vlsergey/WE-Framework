@@ -13,8 +13,8 @@ class LabelDescriptionCache extends AbstractQueuedCache {
     super( TYPE, false, 50 );
   }
 
-  isKeyValid( cacheKey ) {
-    return typeof cacheKey === 'string' && cacheKey.match( /^[PQ](\d+)$/i );
+  isKeyValid( cacheKey : string ) : boolean {
+    return typeof cacheKey === 'string' && !!cacheKey.match( /^[PQ](\d+)$/i );
   }
 
   notifyMessage( cacheKeys ) {

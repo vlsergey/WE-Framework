@@ -60,18 +60,18 @@ export default class UnsupportedDataValueEditor
 
   render() {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "datavalue" }] */
-    const { datavalue, propertyDescription, ...other } = this.props;
+    const { datavalue, propertyDescription, ...etc } = this.props;
     const { datatype } = propertyDescription;
 
     const className = styles[ 'wef_datavalue_' + propertyDescription.datatype ] + ' ' + styles.wef_datavalue_unsupported;
 
     if ( !this.state.html ) {
-      return <td className={className} colSpan={12} {...other}>
+      return <td {...etc} className={className} colSpan={12}>
         <span>datatype {datatype} is not supported yet</span>
       </td>;
     }
 
-    return <td className={className} colSpan={12} {...other}>
+    return <td {...etc} className={className} colSpan={12}>
       <div dangerouslySetInnerHTML={{ __html: this.state.html }} />
     </td>;
   }

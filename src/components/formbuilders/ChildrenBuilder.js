@@ -41,7 +41,7 @@ export default class ChildrenBuilder extends PureComponent<ChildrenContainerDefT
       return null;
 
     return specials.map( ( { key, type, ...etc } ) =>
-      <SpecialBuilder key={key || type} type={type} {...etc} />
+      <SpecialBuilder {...etc} key={key || type} type={type} />
     );
   }
 

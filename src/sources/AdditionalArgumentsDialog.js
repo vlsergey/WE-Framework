@@ -60,7 +60,7 @@ export default class AdditionalArgumentsDialog
     this.expandtemplates( 'Sources-title', 'renderSourceTitle', entityId, 'refComment' );
   }
 
-  expandtemplates( renderModule, renderFunction, entityId, stateKey ) {
+  expandtemplates( renderModule : string, renderFunction : string, entityId : string, stateKey : string ) {
     getServerApi()
       .postPromise( {
         action: 'expandtemplates',

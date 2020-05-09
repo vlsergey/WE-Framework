@@ -19,7 +19,7 @@ export default class FieldsetBuilder extends PureComponent<PropsType> {
       { labelEntityId && <legend>
         <EntityLabel entityId={labelEntityId} />
       </legend> }
-      <ChildrenBuilder parentLabelEntityId={labelEntityId} {...etc} />
+      <ChildrenBuilder {...etc} parentLabelEntityId={labelEntityId} />
     </fieldset>;
   }
 

@@ -52,7 +52,7 @@ export default class FieldsBuilder extends PureComponent<PropsType, StateType> {
   renderField(
     field : FieldDefType,
     propertyDescription : ?PropertyDescription,
-    props = {}
+    etc : any = {}
   ) {
     const propertyId = field.property;
 
@@ -63,7 +63,7 @@ export default class FieldsBuilder extends PureComponent<PropsType, StateType> {
     }
 
     return <PropertyClaimContainer
-      {...props}
+      {...etc}
       propertyDescription={propertyDescription} />;
   }
 

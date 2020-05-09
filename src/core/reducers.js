@@ -16,7 +16,7 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
   {
     const { language, newValue } : {language : string, newValue : any} = action;
 
-    const elementToChange = {
+    const elementToChange : string = {
       LABELS_CHANGE: 'labels',
       DESCRIPTION_CHANGE: 'descriptions',
       DRAFT_ALIAS_CHANGE: 'draftAliases',

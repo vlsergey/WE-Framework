@@ -156,10 +156,10 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
     const entityId : ?string = ( ( datavalue || {} ).value || {} ).id || '';
 
     return <WikibaseItemDataValueEditor
-      datavalue={datavalue}
-      onDataValueChange={onDataValueChange}
       {...etc}
-      buttons={this.renderButtons( entityId )} />;
+      buttons={this.renderButtons( entityId )}
+      datavalue={datavalue}
+      onDataValueChange={onDataValueChange} />;
   }
 
   renderButtons( entityId : ?string ) {
