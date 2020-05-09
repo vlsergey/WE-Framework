@@ -94,9 +94,9 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
     return this.state.selectMode
       ? <SelectMode
         {...etc}
+        oneOf={this.state.selectOptions}
         onOtherSelect={this.handleOtherSelect}
         onSelect={this.handleSelect}
-        oneOf={this.state.selectOptions}
         value={value} />
       : <AutocompleteMode
         {...etc}

@@ -52,7 +52,14 @@ module.exports = {
     'block-spacing': [ 1, 'always' ],
 
     /* require or disallow trailing commas */
-    'comma-dangle': [ 1, 'always-multiline' ],
+    'comma-dangle': [ 1, {
+      arrays: 'only-multiline',
+      objects: 'only-multiline',
+      imports: 'only-multiline',
+      exports: 'only-multiline',
+      functions: 'never'
+    } ],
+
     /* enforce consistent spacing before and after commas */
     'comma-spacing': 1,
     /* enforce consistent spacing inside computed property brackets */
