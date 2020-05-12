@@ -3,14 +3,13 @@
 import React, { PureComponent } from 'react';
 import CacheValueProvider from 'caches/CacheValueProvider';
 import localTitleCache from './localTitleCache';
-import PropTypes from 'prop-types';
 
-export default class LocalTitleProvider extends PureComponent {
+type PropsType = {
+  children : any => any,
+  entityId? : ?string,
+};
 
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    entityId: PropTypes.string.isRequired,
-  }
+export default class LocalTitleProvider extends PureComponent<PropsType> {
 
   render() {
     const { children, entityId } = this.props;

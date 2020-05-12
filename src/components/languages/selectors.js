@@ -3,11 +3,11 @@
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import { defaultMemoize } from 'reselect';
 
-function getEmptySuggestionsImpl( provided ) {
-  const added = new Set();
-  const result = [];
+function getEmptySuggestionsImpl( provided : string[] ) : string[] {
+  const added : Set< string > = new Set();
+  const result : string[] = [];
 
-  const codeNotYetIncluded = code => !added.has( code );
+  const codeNotYetIncluded : ( string => boolean ) = code => !added.has( code );
   const add = code => { added.add( code ); result.push( code ); };
 
   // both in default and in present
@@ -25,6 +25,6 @@ function getEmptySuggestionsImpl( provided ) {
   return result;
 }
 
-export function createEmptySuggestionsSelector() {
+export function createEmptySuggestionsSelector() : string[] => string[] {
   return defaultMemoize( getEmptySuggestionsImpl );
 }

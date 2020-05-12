@@ -1,5 +1,6 @@
 // @flow
 
+import type { EditorDefType } from 'editors/EditorDefModel';
 import i18n from './i18n';
 
 const editorDescription : EditorDefType = {

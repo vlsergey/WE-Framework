@@ -1,7 +1,7 @@
 // @flow
 
 
-export function regexpGetHtmlPattern( regexp ) {
+export function regexpGetHtmlPattern( regexp : RegExp ) : string {
   let source = regexpGetSource( regexp );
   if ( source.substr( 0, 1 ) !== '^' ) {
     source = '.*' + source;
@@ -12,6 +12,6 @@ export function regexpGetHtmlPattern( regexp ) {
   return source;
 }
 
-export function regexpGetSource( regexp ) {
+export function regexpGetSource( regexp : RegExp ) : string {
   return regexp.toString().replace( /^\/(.*)\/[a-z]*$/, '$1' );
 }

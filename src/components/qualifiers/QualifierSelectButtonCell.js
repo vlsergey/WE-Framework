@@ -3,14 +3,13 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import i18n from './i18n';
-import PropTypes from 'prop-types';
 
-export default class QualifierSelectButtonCell extends PureComponent {
+type PropsType = {
+  disabled : boolean,
+  onClick : any => any,
+};
 
-  static propTypes = {
-    disabled: PropTypes.bool,
-    onClick: PropTypes.func.isRequired,
-  };
+export default class QualifierSelectButtonCell extends PureComponent<PropsType> {
 
   static defaultProps = {
     disabled: false,

@@ -25,7 +25,7 @@ class PropertyClaimContainer extends PureComponent<PropsType> {
     displayLabel: true,
   };
 
-  columnsMemoization = claimColumnsF();
+  columnsMemoization : ( ClaimType[] => string[] ) = claimColumnsF();
 
   render() {
     const { claims } = this.props;
@@ -61,5 +61,6 @@ const mapDispatchToProps = ( dispatch, ownProps ) => ( {
   onClaimsReorder: claimIds => dispatch( { type: 'CLAIMS_REORDER', propertyId: ownProps.propertyDescription.id, claimIds } ),
 } );
 
+// $FlowFixMe
 const PropertyClaimContainerConnected = connect( mapStateToProps, mapDispatchToProps )( PropertyClaimContainer );
 export default PropertyClaimContainerConnected;

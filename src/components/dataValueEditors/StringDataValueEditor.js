@@ -1,21 +1,19 @@
 // @flow
 
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
+import { boundMethod } from 'autobind-decorator';
 import React from 'react';
 import styles from 'components/core.css';
+
+const EMPTY_OBJECT : any = Object.freeze( {} );
 
 export default class StringDataValueEditor extends AbstractStringBasedDataValueEditor {
 
   static propTypes = AbstractStringBasedDataValueEditor.propTypes;
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleChange = this.handleChange.bind( this );
-  }
-
-  handleChange( event ) {
-    this.handleValueChange( event.target.value );
+  @boundMethod
+  handleChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
+    this.handleValueChange( value );
   }
 
   render() {
@@ -32,19 +30,14 @@ export default class StringDataValueEditor extends AbstractStringBasedDataValueE
 
     }
 
-    const params = {
-      type: 'text',
-      className: styles[ 'wef_' + propertyDescription.datatype ],
-    };
-
-    if ( propertyDescription.regexp ) {
-      params.pattern = propertyDescription.regexp;
-    }
-
-    params.value = datavalue ? datavalue.value : '';
-    params.onChange = this.handleChange;
-
-    return <td colSpan={12}><input {...params} /></td>;
+    return <td colSpan={12}>
+      <input
+        className={styles[ 'wef_' + propertyDescription.datatype ]}
+        onChange={this.handleChange}
+        pattern={propertyDescription.regexp || undefined}
+        type="text"
+        value={( datavalue || EMPTY_OBJECT ).value || ''} />
+    </td>;
   }
 
 }

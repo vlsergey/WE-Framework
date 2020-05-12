@@ -25,15 +25,15 @@ class LastRevisionCache extends AbstractSelfStoredQueuedCache {
     super( TYPE, true, 50 );
   }
 
-  isKeyValid( pageId ) {
+  isKeyValid( pageId : ?number ) : boolean {
     return typeof pageId === 'number' && Number.isInteger( pageId );
   }
 
-  notifyMessage( cacheKeys ) {
+  notifyMessage( cacheKeys : number[] ) : string {
     return 'Fetching ' + cacheKeys.length + ' last revisions from Wikidata';
   }
 
-  buildRequestPromice( pageIds ) {
+  buildRequestPromice( pageIds : number[] ) {
     return getWikidataApi()
       .getPromise( {
         action: 'query',
@@ -43,14 +43,14 @@ class LastRevisionCache extends AbstractSelfStoredQueuedCache {
       } );
   }
 
-  convertResultToEntities( result : ResultType ) {
-    const cacheUpdate = {};
+  convertResultToEntities( result : ResultType ) : Map< number, number > {
+    const cacheUpdate : Map< number, number > = new Map();
     const pages : PageType[] = ( ( Object.values( result.query.pages ) : any ) : PageType[] );
     pages.forEach( page => {
       if ( page.missing !== undefined ) {
-        cacheUpdate[ page.pageid ] = -1;
+        cacheUpdate.set( page.pageid, -1 );
       } else {
-        cacheUpdate[ page.pageid ] = page.revisions[ 0 ].revid;
+        cacheUpdate.set( page.pageid, page.revisions[ 0 ].revid );
       }
     } );
     return cacheUpdate;

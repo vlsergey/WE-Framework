@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import i18n from './i18n';
 import PropertyDescription from 'core/PropertyDescription';
 import SnaksArrayEditor from 'components/snaks/SnaksArrayEditor';
@@ -14,6 +15,8 @@ type PropsType = {
 
 export default class SingleQualifierEditor extends PureComponent<PropsType> {
 
+  confirmRemoveQualifierMessage : string;
+
   constructor() {
     super( ...arguments );
 
@@ -23,11 +26,10 @@ export default class SingleQualifierEditor extends PureComponent<PropsType> {
       .replace( '{claimPropertyLabel}', claimPropertyDescription.label || claimPropertyDescription.id )
       .replace( '{qualifierPropertyId}', qualifierPropertyDescription.id )
       .replace( '{qualifierPropertyLabel}', qualifierPropertyDescription.label || qualifierPropertyDescription.id );
-
-    this.handleSnaksArrayUpdate = this.handleSnaksArrayUpdate.bind( this );
   }
 
-  handleSnaksArrayUpdate( snaksArray ) {
+  @boundMethod
+  handleSnaksArrayUpdate( snaksArray : SnakType[] ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
       qualifiers: {

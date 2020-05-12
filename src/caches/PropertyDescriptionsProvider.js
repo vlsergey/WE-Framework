@@ -2,28 +2,34 @@
 
 import React, { PureComponent } from 'react';
 import CacheValuesProvider from 'caches/CacheValuesProvider';
-import deepEqual from 'deep-equal';
+import deepEqual from 'utils/deepEqual';
 import { defaultMemoize } from 'reselect';
 import PropertyDescription from 'core/PropertyDescription';
 import propertyDescriptionCacheController from 'caches/propertyDescriptionCache';
 import StringPropertyValuesProvider from 'caches/StringPropertyValuesProvider';
 
-const EMPTY_ARRAY = [];
+const EMPTY_ARRAY : any[] = Object.freeze( [] );
+const EMPTY_OBJECT : any = Object.freeze( {} );
+const EMPTY_MAP : Map< string, PropertyDescription > = Object.freeze( new Map() );
 
 const intern = x => Array.isArray( x ) && x.length === 0 ? EMPTY_ARRAY : x;
 
-const calcCountryFlags = ( countriesCache, countries ) => intern( countries
-  .map( country => countriesCache[ country ] )
-  .filter( cacheItem => !!cacheItem )
-  .flatMap( cacheItem => cacheItem.P41 || EMPTY_ARRAY ) );
+const calcCountryFlags = (
+  countriesCacheData : any,
+  countries : string[]
+) => intern( countries.flatMap<string>(
+  ( countryEntityId : string ) => ( countriesCacheData[ countryEntityId ] || EMPTY_OBJECT ).P41 || EMPTY_ARRAY )
+);
 
-const calcCountryLanguageIds = ( countriesCache, countries ) => intern( countries
-  .map( country => countriesCache[ country ] )
-  .filter( cacheItem => !!cacheItem )
-  .flatMap( cacheItem => cacheItem.P37 || [] ) );
+const calcCountryLanguageIds = (
+  countriesCacheData : any,
+  countries : string[]
+) => intern( countries.flatMap<string>(
+  ( countryEntityId : string ) => ( countriesCacheData[ countryEntityId ] || EMPTY_OBJECT ).P37 || EMPTY_ARRAY )
+);
 
 type PropsType = {
-  children : any => any,
+  children : Map< string, PropertyDescription > => any,
   propertyIds : string[],
 };
 
@@ -33,17 +39,21 @@ export default class PropertyDescriptionsProvider
   propertyDescriptionMemoizeCache = {};
 
   memoize = defaultMemoize(
-    ( propertyIds, propertyDescriptionCache, countriesCache, languagesCache ) => {
+    ( propertyIds : string[],
+      propertyDescriptionCacheData : any,
+      countriesCacheData : any,
+      languagesCacheData : any
+    ) => {
       // TODO: report bug in eslint!
       /* eslint no-invalid-this: 0 */
-      const echancedCache = {};
+      const echancedCache : Map< string, PropertyDescription > = new Map();
 
       propertyIds.forEach( propertyId => {
-        const propertyDescription : ?PropertyDescription = propertyDescriptionCache[ propertyId ];
+        const propertyDescription : ?PropertyDescription = propertyDescriptionCacheData[ propertyId ];
         if ( !propertyDescription ) return null;
 
-        const countryFlags = calcCountryFlags( countriesCache, propertyDescription.countries );
-        const countryLanguageIds = calcCountryLanguageIds( countriesCache, propertyDescription.countries );
+        const countryFlags = calcCountryFlags( countriesCacheData, propertyDescription.countries );
+        const countryLanguageIds = calcCountryLanguageIds( countriesCacheData, propertyDescription.countries );
 
         let languageIds = propertyDescription.sourceWebsitesLanguages;
         if ( !languageIds || languageIds.length === 0 ) {
@@ -51,24 +61,19 @@ export default class PropertyDescriptionsProvider
         }
 
         const languageCodes = intern( languageIds
-          .filter( entityId => !!languagesCache[ entityId ] )
-          .filter( entityId => !!languagesCache[ entityId ].P424 )
-          .flatMap( entityId => languagesCache[ entityId ].P424 ) );
+          .flatMap<string>( entityId => ( languagesCacheData[ entityId ] || EMPTY_OBJECT ).P424 || EMPTY_ARRAY ) );
 
-        const result = {
-          ...propertyDescription,
-          countryFlags,
-          languageIds,
-          languageCodes,
-        };
-        PropertyDescription.deserialize( result );
+        const result : PropertyDescription = Object.create( propertyDescription );
+        result.countryFlags = countryFlags;
+        result.languageIds = languageIds;
+        result.languageCodes = languageCodes;
 
         const perPropertyCache = this.propertyDescriptionMemoizeCache;
         const previous = perPropertyCache[ propertyId ];
         if ( !!previous && deepEqual( previous, result ) ) {
-          echancedCache[ propertyId ] = previous;
+          echancedCache.set( propertyId, previous );
         } else {
-          echancedCache[ propertyId ] = result;
+          echancedCache.set( propertyId, result );
           perPropertyCache[ propertyId ] = result;
         }
       } );
@@ -76,26 +81,30 @@ export default class PropertyDescriptionsProvider
     }
   );
 
-  memoizeAllLanguageIds = defaultMemoize( ( ids1, ids2 ) =>
+  memoizeAllLanguageIds = defaultMemoize( ( ids1 : string[], ids2 : string[] ) =>
     intern( [ ...new Set( [ ...ids1, ...ids2 ] ) ] )
   );
 
-  memoizeAllCountriesLanguageIds = defaultMemoize( ( countriesCache, countries ) =>
-    intern( calcCountryLanguageIds( countriesCache, countries ) )
+  memoizeAllCountriesLanguageIds = defaultMemoize( ( countriesCacheData : any, countries : string[] ) =>
+    intern( calcCountryLanguageIds( countriesCacheData, countries ) )
   );
 
-  memoizeCountries = defaultMemoize( ( propertyIds, cache ) =>
-    intern( propertyIds
-      .filter( propertyId => !!cache[ propertyId ] )
-      .map( propertyId => cache[ propertyId ] )
-      .flatMap( propertyDescription => propertyDescription.countries ) )
+  memoizeCountries = defaultMemoize( (
+    propertyIds : string[],
+    cacheData : any
+  ) => intern( propertyIds
+    .filter( propertyId => !!cacheData[ propertyId ] )
+    .map( propertyId => cacheData[ propertyId ] )
+    .flatMap<string>( propertyDescription => propertyDescription.countries || EMPTY_ARRAY ) )
   );
 
-  memoizeSourceWebsitesLanguages = defaultMemoize( ( propertyIds, cache ) =>
-    intern( propertyIds
-      .filter( propertyId => !!cache[ propertyId ] )
-      .map( propertyId => cache[ propertyId ] )
-      .flatMap( propertyDescription => propertyDescription.sourceWebsitesLanguages ) )
+  memoizeSourceWebsitesLanguages = defaultMemoize( (
+    propertyIds : string[],
+    cacheData : any
+  ) => intern( propertyIds
+    .filter( propertyId => !!cacheData[ propertyId ] )
+    .map( propertyId => cacheData[ propertyId ] )
+    .flatMap<string>( propertyDescription => propertyDescription.sourceWebsitesLanguages || EMPTY_ARRAY ) )
   );
 
   render() {
@@ -106,18 +115,18 @@ export default class PropertyDescriptionsProvider
       cacheKeys={propertyIds}>
       { propertyDescriptionCache => {
         if ( !propertyDescriptionCache )
-          return children( null );
+          return children( EMPTY_MAP );
 
         const countries = this.memoizeCountries( propertyIds, propertyDescriptionCache );
         return <StringPropertyValuesProvider entityIds={countries}>
-          { countriesCache => {
-            const countriesOfficialLanguagesIds : any[] = this.memoizeAllCountriesLanguageIds( countriesCache, countries );
+          { ( countriesCacheData : any ) => {
+            const countriesOfficialLanguagesIds : any[] = this.memoizeAllCountriesLanguageIds( countriesCacheData, countries );
             const sourceWebsitesLanguagesIds : any[] = this.memoizeSourceWebsitesLanguages( propertyIds, propertyDescriptionCache );
             const allLanguageIds : any[] = this.memoizeAllLanguageIds( countriesOfficialLanguagesIds, sourceWebsitesLanguagesIds );
 
             return <StringPropertyValuesProvider entityIds={allLanguageIds}>
-              { languagesCache =>
-                children( this.memoize( propertyIds, propertyDescriptionCache, countriesCache, languagesCache ) )
+              { ( languagesCacheData : any ) =>
+                children( this.memoize( propertyIds, propertyDescriptionCache, countriesCacheData, languagesCacheData ) )
               }
             </StringPropertyValuesProvider>;
           } }

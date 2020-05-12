@@ -5,22 +5,17 @@ import DialogWrapper from 'wrappers/DialogWrapper';
 import { get } from './LruStore';
 import LruTab from './LruTab';
 import NewSourceTab from './NewSourceTab';
-import PropTypes from 'prop-types';
 import SourceLookupTab from './SourceLookupTab';
 import TabsWrapper from 'wrappers/TabsWrapper';
 
-export default class WikidataSourceDialog extends PureComponent {
+type PropsType = {
+  onClose : any => any,
+  onInsert : any => any,
+};
 
-  static propTypes = {
-    onClose: PropTypes.func.isRequired,
-    onInsert: PropTypes.func.isRequired,
-  };
+export default class WikidataSourceDialog extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-
-    this.dialogRef = React.createRef();
-  }
+  dialogRef : ReactObjRef< DialogWrapper > = React.createRef();
 
   render() {
     const { onClose, onInsert } = this.props;

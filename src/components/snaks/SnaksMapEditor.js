@@ -4,27 +4,26 @@ import React, { PureComponent } from 'react';
 import { COLUMNS_FOR_SNAK_ROW } from 'components/TableColSpanConstants';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import PropTypes from 'prop-types';
 import SnaksArrayEditor from './SnaksArrayEditor';
 
-export default class SnaksMapEditor extends PureComponent {
+type PropsType = {
+  ignorePropertyIds : string[],
+  onSnaksMapUpdate : any => any,
+  readOnly : boolean,
+  removeButtonConfirmMessageF : PropertyDescription => string,
+  removeButtonLabel : string,
+  snaksMap? : ?any,
+};
 
-  static propTypes = {
-    ignorePropertyIds: PropTypes.arrayOf( PropTypes.string ),
-    onSnaksMapUpdate: PropTypes.func.isRequired,
-    snaksMap: PropTypes.object,
-    readOnly: PropTypes.bool,
-    removeButtonLabel: PropTypes.string.isRequired,
-    removeButtonConfirmMessageF: PropTypes.func.isRequired,
-  };
+export default class SnaksMapEditor extends PureComponent<PropsType> {
 
   static defaultProps = {
     ignorePropertyIds: [],
     readOnly: false,
   };
 
-  handleSnaksArrayUpdateF( propertyDescription ) {
-    return snaksArray => {
+  handleSnaksArrayUpdateF( propertyDescription : PropertyDescription ) {
+    return ( snaksArray : SnakType[] ) => {
       this.props.onSnaksMapUpdate( {
         ...this.props.snaksMap,
         [ propertyDescription.id ]: snaksArray,
@@ -41,7 +40,7 @@ export default class SnaksMapEditor extends PureComponent {
       .filter( propertyId => ignorePropertyIds.indexOf( propertyId ) === -1 );
     return <PropertyDescriptionsProvider propertyIds={propertyIds}>
       {cache => propertyIds.map( propertyId => {
-        const propertyDescription : ?PropertyDescription = cache[ propertyId ];
+        const propertyDescription : ?PropertyDescription = cache.get( propertyId );
 
         if ( !propertyDescription ) {
           return <PropertyIsLoadingTBody
@@ -65,11 +64,11 @@ export default class SnaksMapEditor extends PureComponent {
 
 }
 
-class PropertyIsLoadingTBody extends PureComponent {
+type PropertyIsLoadingTBodyPropsType = {
+  propertyId : string,
+};
 
-  static propTypes = {
-    propertyId: PropTypes.string.isRequired,
-  };
+class PropertyIsLoadingTBody extends PureComponent<PropertyIsLoadingTBodyPropsType> {
 
   render() {
     const { propertyId } = this.props;

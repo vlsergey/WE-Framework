@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
 import enhancementsFactory from 'enhancements/enhancementsFactory';
 import ExternalIdDataValueEditor from './dataValueEditors/external-id/ExternalIdDataValueEditor';
@@ -24,13 +25,13 @@ const STANDARD = {
   'wikibase-item': WikibaseItemDataValueEditor,
 };
 
-export const SUPPORTED_DATATYPES = Object.keys( STANDARD );
+export const SUPPORTED_DATATYPES : string[] = Object.keys( STANDARD );
 
 type PropsType = {
   onSnakChange : SnakType => any,
   propertyDescription : PropertyDescription,
   readOnly? : boolean,
-  snak? : SnakType,
+  snak : SnakType,
 };
 
 export default class SnakValueEditorFactory extends PureComponent<PropsType> {
@@ -39,12 +40,8 @@ export default class SnakValueEditorFactory extends PureComponent<PropsType> {
     readOnly: false,
   };
 
-  constructor() {
-    super( ...arguments );
-    this.handleDataValueChange = this.handleDataValueChange.bind( this );
-  }
-
-  handleDataValueChange( datavalue ) {
+  @boundMethod
+  handleDataValueChange( datavalue : DataValueType ) {
     const { propertyDescription, snak } = this.props;
 
     this.props.onSnakChange( {

@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import fetchJsonp from 'fetch-jsonp';
 import i18n from './i18n';
@@ -17,7 +18,6 @@ type StateType = {
   queryScheduled : string,
   queryState : 'WAITING' | 'SCHEDULED',
   selected : any[],
-  wikidataModelautoSuggestResult : any[],
 };
 
 export default class ViafLookupDialog extends PureComponent<PropsType, StateType> {
@@ -36,12 +36,9 @@ export default class ViafLookupDialog extends PureComponent<PropsType, StateType
       autoSuggestResult: [],
       selected: [],
     };
-
-    this.doLookup = this.doLookup.bind( this );
-    this.handleChange = this.handleChange.bind( this );
-    this.handleSelect = this.handleSelect.bind( this );
   }
 
+  @boundMethod
   doLookup( query : string ) {
     const { queryScheduled } = this.state;
     if ( query === queryScheduled ) return;
@@ -78,13 +75,15 @@ export default class ViafLookupDialog extends PureComponent<PropsType, StateType
       } );
   }
 
-  handleChange( event ) {
-    const newQuery = event.target.value || '';
+  @boundMethod
+  handleChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
+    const newQuery = value || '';
     this.setState( { query: newQuery } );
 
     setTimeout( () => this.doLookup( newQuery.trim() ), 0.5 );
   }
 
+  @boundMethod
   handleSelect() {
     const { onSelect } = this.props;
     const { autoSuggestResult, selected } = this.state;
@@ -94,7 +93,7 @@ export default class ViafLookupDialog extends PureComponent<PropsType, StateType
     onSelect( viafIds );
   }
 
-  handleTrigger( viafid ) {
+  handleTrigger( viafid : string ) {
     return () => this.setState( ( { selected } ) => ( {
       selected: selected.indexOf( viafid ) === -1
         ? [ ...selected, viafid ]
@@ -125,7 +124,7 @@ export default class ViafLookupDialog extends PureComponent<PropsType, StateType
         onChange={this.handleChange}
         type="text"
         value={query} />
-      { Object.keys( autoSuggestResult ).map( viafid => <div className={styles.entry} key={viafid}>
+      { Object.keys( autoSuggestResult ).map( ( viafid : string ) => <div className={styles.entry} key={viafid}>
         <label>
           <input
             checked={this.state.selected.indexOf( viafid ) !== -1}

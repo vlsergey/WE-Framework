@@ -14,6 +14,8 @@ export default function findByKeysInObjectStore( objectStore : IDBObjectStore, u
     let index = 0;
 
     const result = {};
+    // Property `bound` is surely present in statics of `IDBKeyRange`
+    // $FlowFixMe
     const keyRange = IDBKeyRange.bound( sortedKeys[ 0 ], sortedKeys[ sortedKeys.length - 1 ] );
 
     const request = objectStore.openCursor( keyRange );

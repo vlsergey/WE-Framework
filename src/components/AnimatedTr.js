@@ -1,19 +1,22 @@
 // @flow
 
+import React, { PureComponent } from 'react';
 import animations from './animations.css';
-import PropTypes from 'prop-types';
-import React from 'react';
 
-const AnimatedTr = ( { children, className, ...etc } ) => {
-  const resultClassName = className
-    ? className + ' ' + animations.animatedFateIn
-    : animations.animatedFateIn;
-  return <tr className={resultClassName} {...etc}>{children}</tr>;
+type PropsType = {
+  children : any,
+  className? : ?string,
 };
 
-AnimatedTr.propTypes = {
-  className: PropTypes.string,
-  children: PropTypes.node,
-};
+export default class AnimatedTr extends PureComponent<PropsType> {
+  render() {
+    const { children, className, ...etc } = this.props;
 
-export default AnimatedTr;
+    const resultClassName = className
+      ? className + ' ' + animations.animatedFateIn
+      : animations.animatedFateIn;
+    return <tr {...etc} className={resultClassName}>
+      {children}
+    </tr>;
+  }
+}

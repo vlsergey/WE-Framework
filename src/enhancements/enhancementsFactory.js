@@ -1,8 +1,10 @@
 // @flow
 
+import PropertyDescription from 'core/PropertyDescription';
+
 class EnhancementsFactory {
 
-  findDataValueEditor( propertyDescription ) {
+  findDataValueEditor( propertyDescription : PropertyDescription ) {
     switch ( propertyDescription.id ) {
 
     case 'P22': return require( './family/FatherDataValueEditor' ).default;

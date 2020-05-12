@@ -1,46 +1,40 @@
 // @flow
 
-import expect from 'expect';
-
-export default function trimStringValues( entity ) {
+export default function trimStringValues( entity : EntityType ) {
   const result = { ...entity };
   let hasChanges = false;
 
   [ 'labels', 'descriptions', 'aliases', 'claims' ].forEach( key => {
     const oldValue = entity[ key ];
-
-    if ( oldValue === undefined || oldValue === null ) {
+    if ( !oldValue ) {
       return;
     }
 
-    const newValue = trimValuesImpl( oldValue );
+    const newValue = trimStringValuesImpl( oldValue );
     if ( newValue !== oldValue ) {
       hasChanges = true;
       result[ key ] = newValue;
-    } else {
-      result[ key ] = oldValue;
     }
   } );
 
   return hasChanges ? result : entity;
 }
 
-function trimValuesImpl( obj ) {
-  expect( obj ).toExist();
-
-  const result = Array.isArray( obj ) ? [ ...obj ] : { ...obj };
+function trimStringValuesImpl( obj : any ) : any {
+  const result : any = Array.isArray( obj ) ? [ ...obj ] : { ...obj };
   let hasChanges = false;
-  Object.keys( obj ).forEach( key => {
-    const oldValue = obj[ key ];
+
+  Object.entries( obj ).forEach( ( [ key, oldValue ] ) => {
     let newValue = oldValue;
 
-    if ( oldValue === null ) {
+    if ( oldValue === null || oldValue === undefined ) {
+      // $FlowFixMe
       result[ key ] = null;
       return;
     }
 
     if ( typeof oldValue === 'object' ) {
-      newValue = trimValuesImpl( oldValue );
+      newValue = trimStringValuesImpl( oldValue );
     }
     if ( typeof oldValue === 'string' ) {
       newValue = oldValue.trim();
@@ -48,8 +42,10 @@ function trimValuesImpl( obj ) {
 
     if ( newValue !== oldValue ) {
       hasChanges = true;
+      // $FlowFixMe
       result[ key ] = newValue;
     } else {
+      // $FlowFixMe
       result[ key ] = oldValue;
     }
   } );

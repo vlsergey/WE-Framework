@@ -15,11 +15,11 @@ class FlagImageHtmlCache extends AbstractQueuedCache {
     super( TYPE, false, 50 );
   }
 
-  notifyMessage( fileNames ) {
+  notifyMessage( fileNames : string[] ) {
     return 'Rendering ' + fileNames.length + ' flag images on server';
   }
 
-  buildRequestPromice( fileNames ) {
+  buildRequestPromice( fileNames : string[] ) {
     return getServerApi().postPromise( {
       action: 'parse',
       contentmodel: 'wikitext',
@@ -35,7 +35,7 @@ class FlagImageHtmlCache extends AbstractQueuedCache {
     } );
   }
 
-  convertResultToEntities( result, fileNames ) {
+  convertResultToEntities( result : any, fileNames : string[] ) {
     const cacheUpdate = {};
     const html = result.parse.text[ '*' ];
     fileNames.forEach( fileName => {

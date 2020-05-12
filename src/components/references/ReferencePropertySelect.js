@@ -1,33 +1,27 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import i18n from './i18n';
 import PropertiesBySparqlProvider from 'caches/PropertiesBySparqlProvider';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import PropTypes from 'prop-types';
 import styles from './references.css';
 import { SUPPORTED_DATATYPES } from 'components/SnakValueEditorFactory';
 
-export default class ReferencePropertySelect extends PureComponent {
+const INSTANCE_OF : string = 'wdt:P31';
+const SOURCE_TYPE : string = 'wd:Q18608359';
 
-  static propTypes = {
-    alreadyPresent: PropTypes.arrayOf( PropTypes.string ).isRequired,
-    onSelect: PropTypes.func.isRequired,
-  };
+type PropsType = {
+  alreadyPresent : string[],
+  onSelect : string => any,
+};
 
-  INSTANCE_OF = 'wdt:P31';
-  SOURCE_TYPE = 'wd:Q18608359';
+export default class ReferencePropertySelect extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleChange = this.handleChange.bind( this );
-  }
-
-  handleChange( event ) {
-    const propertyId = event.target.value;
-    if ( propertyId ) {
-      this.props.onSelect( propertyId );
+  @boundMethod
+  handleChange( { currentTarget: { value } } : SyntheticEvent< HTMLSelectElement > ) {
+    if ( value ) {
+      this.props.onSelect( value );
     }
   }
 
@@ -35,15 +29,13 @@ export default class ReferencePropertySelect extends PureComponent {
     const { alreadyPresent } = this.props;
 
     // see https://www.wikidata.org/wiki/Q18608359
-    return <PropertiesBySparqlProvider sparql={'SELECT DISTINCT ?property '
-              + 'WHERE { '
-              + `?property ${this.INSTANCE_OF} ${this.SOURCE_TYPE} . `
-              + '}'}>
+    return <PropertiesBySparqlProvider
+      sparql={`SELECT DISTINCT ?property WHERE { ?property ${INSTANCE_OF} ${SOURCE_TYPE} . }`}>
       { propertyIds => {
         if ( !propertyIds ) return <i>Loading possible reference properties...</i>;
 
         return <PropertyDescriptionsProvider propertyIds={propertyIds}>{ caches => {
-          if ( !caches ) return <i>Loading possible reference properties...</i>;
+          if ( !caches || caches.size === 0 ) return <i>Loading possible reference properties...</i>;
 
           return <select onChange={this.handleChange} value="_placeholder">
             <option
@@ -52,7 +44,7 @@ export default class ReferencePropertySelect extends PureComponent {
               key="_placeholder"
               value="_placeholder">{i18n.placehoderSelect}</option>
             { propertyIds.map( propertyId => {
-              const propertyDescription = caches[ propertyId ];
+              const propertyDescription = caches.get( propertyId );
               if ( !propertyDescription || !propertyDescription.label ) {
                 return <option key={propertyId} value={propertyId}>{propertyId}</option>;
               }
@@ -73,15 +65,15 @@ export default class ReferencePropertySelect extends PureComponent {
 
 }
 
-class SelectOption extends PureComponent {
+type SelectOptionPropsType = {
+  alreadyPresent : boolean,
+  description? : ?string,
+  label? : ?string,
+  propertyId : string,
+  unsupported : boolean,
+};
 
-  static propTypes = {
-    alreadyPresent: PropTypes.bool.isRequired,
-    unsupported: PropTypes.bool.isRequired,
-    propertyId: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    label: PropTypes.string,
-  };
+class SelectOption extends PureComponent<SelectOptionPropsType> {
 
   render() {
     const { alreadyPresent, unsupported, propertyId, description, label } = this.props;

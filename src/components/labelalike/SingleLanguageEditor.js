@@ -2,23 +2,22 @@
 
 import React, { PureComponent } from 'react';
 import AliasesEditor from './AliasesEditor';
+import { boundMethod } from 'autobind-decorator';
 import i18n from 'components/core.i18n';
-import PropTypes from 'prop-types';
 import styles from 'components/core.css';
 
-export default class SingleLanguageEditor extends PureComponent {
+type PropsType = {
+  aliases : string[],
+  description : string,
+  draftAlias : string,
+  label : string,
+  onAliasesChange : ?( string[] ) => any,
+  onDescriptionChange : ?string => any,
+  onDraftAliasChange : ?string => any,
+  onLabelChange : ?string => any,
+};
 
-  static propTypes = {
-    label: PropTypes.string,
-    description: PropTypes.string,
-    draftAlias: PropTypes.string,
-    aliases: PropTypes.arrayOf( PropTypes.string ),
-
-    onLabelChange: PropTypes.func.isRequired,
-    onDescriptionChange: PropTypes.func.isRequired,
-    onAliasesChange: PropTypes.func.isRequired,
-    onDraftAliasChange: PropTypes.func.isRequired,
-  };
+export default class SingleLanguageEditor extends PureComponent<PropsType> {
 
   static defaultProps = {
     label: '',
@@ -27,19 +26,24 @@ export default class SingleLanguageEditor extends PureComponent {
     draftAlias: '',
   };
 
-  constructor() {
-    super( ...arguments );
+  @boundMethod
+  handleLabelChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
+    this.props.onLabelChange( value || '' );
+  }
 
-    this.handleLabelChange = event => this.props.onLabelChange( event.target.value || '' );
-    this.handleDescriptionChange = event => this.props.onDescriptionChange( event.target.value || '' );
+  @boundMethod
+  handleDescriptionChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
+    this.props.onDescriptionChange( value || '' );
   }
 
   render() {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*Change" }] */
-    const { label, description, draftAlias, aliases,
-      onLabelChange, onDescriptionChange, onDraftAliasChange, onAliasesChange, ...other } = this.props;
+    const { label, description, draftAlias, aliases, onLabelChange,
+      onDescriptionChange, onDraftAliasChange, onAliasesChange, ...etc } = this.props;
 
-    return <table className={styles.wef_table + ' ' + styles.wef_labels_description_area} {...other}>
+    return <table
+      {...etc}
+      className={styles.wef_table + ' ' + styles.wef_labels_description_area}>
       <tbody>
         <tr>
           <th>{i18n.labelLabel}</th>

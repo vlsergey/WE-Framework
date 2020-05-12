@@ -5,10 +5,11 @@ import { connect } from 'react-redux';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import { getServerApi } from 'core/ApiUtils';
 import i18n from './i18n';
+import { ImporterType } from './ImporterType';
 import JQueryButton from 'wrappers/JQueryButton';
 import { Parser } from 'wikitext-dom';
 
-const allImporters = [
+const allImporters : ImporterType[] = [
   require( './ПостановлениеПравительстваРФ' ).default,
   require( './РаспоряжениеПравительстваРФ' ).default,
   require( './РаспоряжениеПрезидентаРФ' ).default,
@@ -16,13 +17,13 @@ const allImporters = [
 ];
 
 type PropsType = {
-  dispatch : any => any,
+  dispatch : DispatchType,
   onClose : () => any,
 };
 
 type StateType = {
   articleDom : ?any,
-  importers : any[],
+  importers : ImporterType[],
   queryState : 'LOADING' | 'ERROR' | 'HAS_SUPPORTED_IMPORTERS' | 'NO_SUPPORTED_IMPORTERS',
 };
 
@@ -67,7 +68,7 @@ class ImportDataDialog extends PureComponent<PropsType, StateType> {
       } );
   }
 
-  handleImporterSelect( importer ) {
+  handleImporterSelect( importer : ImporterType ) {
     const { dispatch, onClose } = this.props;
     const { articleDom } = this.state;
     return () => {
@@ -110,5 +111,6 @@ class ImportDataDialog extends PureComponent<PropsType, StateType> {
 }
 
 const mapDispatchToProps = dispatch => ( { dispatch } );
+// $FlowFixMe
 const ImportDataDialogConnected = connect( undefined, mapDispatchToProps )( ImportDataDialog );
 export default ImportDataDialogConnected;

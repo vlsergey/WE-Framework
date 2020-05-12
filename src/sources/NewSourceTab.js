@@ -3,21 +3,21 @@
 import React, { PureComponent } from 'react';
 import ArticleEditorTemplate from 'editors/ArticleEditorTemplate';
 import BookEditorTemplate from 'editors/BookEditorTemplate';
+import type { EditorDefType } from 'editors/EditorDefModel';
 import FrbrEditionEditorTemplate from 'editors/FrbrEditionEditorTemplate';
 import FrbrWorkEditorTemplate from 'editors/FrbrWorkEditorTemplate';
 import { onNewElementClick } from 'core/edit';
-import PropTypes from 'prop-types';
 import styles from './styles.css';
 
-export default class NewSourceTab extends PureComponent {
+type PropsType = {
+  onInsert : string => any,
+};
 
-  static propTypes = {
-    onInsert: PropTypes.func.isRequired,
-  };
+export default class NewSourceTab extends PureComponent<PropsType> {
 
-  handleClickF( editorDescription, classId ) {
+  handleClickF( editorDescription : EditorDefType, classEntityId : string ) {
     return () => {
-      onNewElementClick( editorDescription, classId )
+      onNewElementClick( editorDescription, classEntityId )
         .then( entityId => this.props.onInsert( entityId ) );
     };
   }

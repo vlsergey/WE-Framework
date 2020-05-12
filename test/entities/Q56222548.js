@@ -1,4 +1,4 @@
-const data = {
+const data : EntityType = {
   claims: {
     P31: [
       {

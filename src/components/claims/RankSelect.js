@@ -1,49 +1,48 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import i18n from '../core.i18n';
-import PropTypes from 'prop-types';
 import styles from '../core.css';
 
-const RANKS = [ 'preferred', 'normal', 'deprecated' ];
+const RANKS : RankType[] = [ 'preferred', 'normal', 'deprecated' ];
 
-export default class RankSelect extends Component {
+type PropsType = {
+  onChange : RankType => any,
+  value : RankType,
+};
 
-  static propTypes = {
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.oneOf( RANKS ),
-  };
+export default class RankSelect extends PureComponent<PropsType> {
 
   static defaultProps = {
     value: 'normal',
   };
 
-  constructor() {
-    super( ...arguments );
-    this.ref = React.createRef();
-    this.handleChange = this.handleChange.bind( this );
-  }
+  ref : ReactObjRef< HTMLSelectElement > = React.createRef();
 
   componentDidMount() {
-    this.ref.current.focus();
+    if ( this.ref.current ) this.ref.current.focus();
   }
 
-  handleChange( event ) {
-    this.props.onChange( this.ref.current.value );
+  @boundMethod
+  handleChange( event : SyntheticEvent< HTMLSelectElement > ) {
+    if ( this.ref.current ) {
+      this.props.onChange( this.ref.current.value );
+    }
     event.stopPropagation();
   }
 
   render() {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
-    const { onChange, value, ...other } = this.props;
+    const { onChange, value, ...etc } = this.props;
 
     return <select
+      {...etc}
       className={styles[ 'wef-rankselector-menu' ]}
       onChange={this.handleChange}
       ref={this.ref}
       size={3}
-      value={value}
-      {...other}>
+      value={value}>
       {RANKS.map( rank => <option
         key={rank}
         title={i18n.rankTitle[ rank ]}

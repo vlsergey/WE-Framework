@@ -3,7 +3,7 @@
 let counter = 0;
 const startTimestamp = Date.now().toString( 36 );
 
-export default function() {
+export default function generateRandomString() : string {
   return ( startTimestamp
      + ( counter++ ).toString( 36 )
      + performance.now().toString( 36 ).replace( /[^a-z]+/g, '' )

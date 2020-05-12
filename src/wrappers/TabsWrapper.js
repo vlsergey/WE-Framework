@@ -1,35 +1,35 @@
 // @flow
 
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 
 let counter = 0;
 const UL_TABS_CONTENT_STYLE = { margin: 0, padding: 0 };
 
-export default class TabsWrapper extends Component {
+type PropsType = {
+  onActivate? : any => any,
+  tabs : {
+    content : any,
+    label : any
+  }[],
+};
 
-  static propTypes = {
-    tabs: PropTypes.arrayOf( PropTypes.shape( {
-      label: PropTypes.oneOfType( [ PropTypes.node, PropTypes.string ] ),
-      content: PropTypes.node,
-    } ) ),
-    onActivate: PropTypes.func,
-  };
+export default class TabsWrapper extends Component<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-    this.ref = React.createRef();
-    this.renderCounter = counter++;
-  }
+  ref : ReactObjRef< HTMLDivElement > = React.createRef();
+  renderCounter : number = counter++;
 
   componentDidMount() {
-    jQuery( this.ref.current ).tabs( {
-      activate: this.props.onActivate,
-    } );
+    if ( this.ref.current ) {
+      jQuery( this.ref.current ).tabs( {
+        activate: this.props.onActivate,
+      } );
+    }
   }
 
   componentWillUnmount() {
-    jQuery( this.ref.current ).tabs( 'destroy' );
+    if ( this.ref.current ) {
+      jQuery( this.ref.current ).tabs( 'destroy' );
+    }
   }
 
   shouldComponentUpdate() {

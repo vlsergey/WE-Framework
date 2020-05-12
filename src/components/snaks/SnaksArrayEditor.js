@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import generateRandomString from 'utils/generateRandomString';
 import PropertyDescription from 'core/PropertyDescription';
 import SnakAddButtonCell from './SnakAddButtonCell';
@@ -8,8 +9,8 @@ import SnakRemoveButtonCell from './SnakRemoveButtonCell';
 import SnakTableRow from './SnakTableRow';
 
 type PropsType = {
-  displayEmpty? : boolean,
-  displayLabels? : boolean,
+  displayEmpty : boolean,
+  displayLabels : boolean,
   onSnaksArrayUpdate : SnakType[] => any,
   propertyDescription : PropertyDescription,
   readOnly : boolean,
@@ -25,16 +26,10 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
     displayLabels: true,
   };
 
-  constructor() {
-    super( ...arguments );
+  emptySnakHash : string = generateRandomString();
 
-    this.emptySnakHash = generateRandomString();
-    this.handleEmptySnakChange = this.handleEmptySnakChange.bind( this );
-    this.handleSnakAdd = this.handleSnakAdd.bind( this );
-    this.handleSnakAddTwice = this.handleSnakAddTwice.bind( this );
-  }
-
-  handleEmptySnakChange( snak ) {
+  @boundMethod
+  handleEmptySnakChange( snak : SnakType ) {
     const { datatype, id } = this.props.propertyDescription;
 
     this.props.onSnaksArrayUpdate( [ {
@@ -44,6 +39,7 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
     } ] );
   }
 
+  @boundMethod
   handleSnakAdd() {
     const { datatype, id } = this.props.propertyDescription;
 
@@ -58,6 +54,7 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
     ] );
   }
 
+  @boundMethod
   handleSnakAddTwice() {
     const { datatype, id } = this.props.propertyDescription;
 
@@ -78,11 +75,11 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
     ] );
   }
 
-  handleSnakChangeF( index ) {
+  handleSnakChangeF( index : number ) {
     const { datatype, id } = this.props.propertyDescription;
 
-    return snak => this.props.onSnaksArrayUpdate(
-      this.props.snaksArray.map( ( item, i ) => i === index ? {
+    return ( snak : SnakType ) => this.props.onSnaksArrayUpdate(
+      ( this.props.snaksArray || [] ).map( ( item, i ) => i === index ? {
         ...snak,
         property: id,
         datatype,
@@ -90,8 +87,8 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
     );
   }
 
-  handleSnakRemoveF( indexToDelete ) {
-    return () => this.props.onSnaksArrayUpdate( this.props.snaksArray
+  handleSnakRemoveF( indexToDelete : number ) {
+    return () => this.props.onSnaksArrayUpdate( ( this.props.snaksArray || [] )
       .filter( ( item, i ) => i !== indexToDelete ) );
   }
 

@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import Provider from 'ProviderWrapper';
+import Provider from 'testUtils/ProviderWrapper';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 

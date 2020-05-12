@@ -208,7 +208,8 @@ module.exports = {
     'flowtype/use-flow-type': 1,
 
     /* Enforce all defaultProps have a corresponding non-required PropType */
-    'react/default-props-match-prop-types': 1,
+    // not working good with flow
+    'react/default-props-match-prop-types': 0,
     /* Validate closing bracket location in JSX */
     /* Better to place after props due to Atom/react plugin problem */
     'react/jsx-closing-bracket-location': [ 1, 'after-props' ],

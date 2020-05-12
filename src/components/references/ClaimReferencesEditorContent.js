@@ -3,6 +3,7 @@
 import { getLastRecentlyUsedReferences, onReferenceUpdate } from './LastRecentlyUsedReferencesStore';
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
+import { boundMethod } from 'autobind-decorator';
 import ClaimReferenceEditor from './ClaimReferenceEditor';
 import { constructDescription } from 'caches/EntityDescription';
 import { constructLabel } from 'caches/EntityLabel';
@@ -25,20 +26,19 @@ type StateType = {
 export default class ClaimReferencesEditorContent
   extends PureComponent<PropsType, StateType> {
 
+  memoizeLruKeys : any[] => string[];
+
   constructor() {
     super( ...arguments );
 
-    this.memoizeLruKeys = defaultMemoize( lru => lru.map( item => item.key ) );
-
-    this.handleReferenceAdd = this.handleReferenceAdd.bind( this );
-    this.handleReferenceChange = this.handleReferenceChange.bind( this );
+    this.memoizeLruKeys = defaultMemoize( lru => lru.map( ( { key } ) => key ) );
 
     this.state = {
       lru: getLastRecentlyUsedReferences(),
     };
   }
 
-  bindLruClick( item ) {
+  bindLruClick( item : any ) {
     return () => {
       this.setState( state => ( {
         lru: state.lru.filter( i => i.key !== item.key ),
@@ -50,6 +50,7 @@ export default class ClaimReferencesEditorContent
     };
   }
 
+  @boundMethod
   handleReferenceAdd() {
     this.handleReferenceAddImpl( {
       hash: generateRandomString(),
@@ -57,6 +58,7 @@ export default class ClaimReferencesEditorContent
     } );
   }
 
+  @boundMethod
   handleReferenceAddImpl( newReference : ReferenceType ) {
     const { claim, onClaimUpdate } = this.props;
     const references = claim.references || [];
@@ -69,13 +71,14 @@ export default class ClaimReferencesEditorContent
     } );
   }
 
-  handleReferenceChange( reference ) {
+  @boundMethod
+  handleReferenceChange( reference : ReferenceType ) {
     const { claim, onClaimUpdate } = this.props;
 
     onClaimUpdate( {
       ...claim,
-      references: claim
-        .references.map( oldRef => oldRef.hash === reference.hash ? reference : oldRef ),
+      references: ( claim.references || [] )
+        .map( oldRef => oldRef.hash === reference.hash ? reference : oldRef ),
     } );
     onReferenceUpdate( reference );
   }

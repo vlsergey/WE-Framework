@@ -1,24 +1,29 @@
 // @flow
 
+import type { LabelsAndDescriptionAreaSpecialGroup, SparqlSpecialGroup } from 'editors/EditorDefModel';
 import React, { PureComponent } from 'react';
 import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';
-import PropTypes from 'prop-types';
 import SparqlPropertyGroup from './SparqlPropertyGroup';
 
-export default class SpecialBuilder extends PureComponent {
+type PropsType = SparqlSpecialGroup | LabelsAndDescriptionAreaSpecialGroup;
 
-  static propTypes = {
-    type: PropTypes.string.isRequired,
-  };
+export default class SpecialBuilder extends PureComponent<PropsType> {
 
   render() {
-    const { type, ...etc } = this.props;
+    const params : SparqlSpecialGroup | LabelsAndDescriptionAreaSpecialGroup = this.props;
 
-    switch ( type ) {
-    case 'LabelsAndDescriptionArea': return <LanguageSelectContainer />;
-    case 'SparqlPropertyGroup': return <SparqlPropertyGroup {...etc} />;
-    default: return <span>unsupported special type: {type}</span>;
+    switch ( params.type ) {
+    case 'LabelsAndDescriptionArea': {
+      return <LanguageSelectContainer />;
     }
+    case 'SparqlPropertyGroup': {
+      return <SparqlPropertyGroup {...params} />;
+    }
+    default: {
+      return <span>unsupported special type: {params.type}</span>;
+    }
+    }
+
   }
 
 }

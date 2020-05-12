@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import { connect } from 'react-redux';
 import ExternalIdDataValueEditor from 'components/dataValueEditors/external-id/ExternalIdDataValueEditor';
 import FillSisterIsbnClaimButtonCell from './FillSisterIsbnClaimButtonCell';
@@ -9,13 +10,24 @@ import PropertyDescription from 'core/PropertyDescription';
 
 type PropsType = {
   datavalue? : DataValueType,
-  onClaimsFill : ( string => string, string ) => any,
+  onClaimsFill : ( ?string => ?string, string ) => any,
   onDataValueChange : ?DataValueType => any,
   propertyDescription : PropertyDescription,
   readOnly? : boolean,
 };
 
 class Isbn10PropertyDataValueEditor extends PureComponent<PropsType> {
+
+  @boundMethod
+  handleValueChange( value : string ) {
+    this.props.onDataValueChange( value.length !== 0
+      ? {
+        ...this.props.datavalue,
+        type: 'string',
+        value,
+      }
+      : null );
+  }
 
   render() {
     const { datavalue, onClaimsFill, onDataValueChange, ...etc } = this.props;
@@ -32,8 +44,7 @@ class Isbn10PropertyDataValueEditor extends PureComponent<PropsType> {
         key="FillSisterIsbnClaim"
         modeOwn="Isbn10"
         modeSister="Isbn13"
-        onClaimsFill={onClaimsFill}
-        onHyphenate={this.handeFillIsbn13} />,
+        onClaimsFill={onClaimsFill} />,
     ];
 
     return <ExternalIdDataValueEditor
@@ -55,5 +66,6 @@ const mapDispatchToProps = dispatch => ( {
   } ),
 } );
 
+// $FlowFixMe
 const Isbn10PropertyDataValueEditorConnected = connect( undefined, mapDispatchToProps )( Isbn10PropertyDataValueEditor );
 export default Isbn10PropertyDataValueEditorConnected;

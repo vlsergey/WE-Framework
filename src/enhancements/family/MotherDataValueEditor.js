@@ -2,18 +2,30 @@
 
 import React, { PureComponent } from 'react';
 import FamilyMemberDataValueEditor from './FamilyMemberDataValueEditor';
+import PropertyDescription from 'core/PropertyDescription';
 
-export default class MotherDataValueEditor extends PureComponent {
+const GENDER_FEMALE : string = 'Q6581072';
 
-  constructor() {
-    super( ...arguments );
-  }
+const PROPERTY_FATHER : string = 'P22';
+const PROPERTY_SPOUSE : string = 'P26';
+const PROPERTIES_MAPPING = Object.freeze( {
+  // by default father of current entity will be spouse of new entity
+  [ PROPERTY_FATHER ]: PROPERTY_SPOUSE
+} );
+
+type PropsType = {
+  datavalue? : ?DataValueType,
+  onDataValueChange : DataValueType => any,
+  propertyDescription : PropertyDescription,
+};
+
+export default class MotherDataValueEditor extends PureComponent<PropsType> {
 
   render() {
     return <FamilyMemberDataValueEditor
       {...this.props}
-      newEntityGenderEntityId="Q6581072"
-      propertiesMapping={{ P22: 'P26' }}
+      newEntityGenderEntityId={GENDER_FEMALE}
+      propertiesMapping={PROPERTIES_MAPPING}
       propertyIdSelfInto="P40" />;
   }
 }

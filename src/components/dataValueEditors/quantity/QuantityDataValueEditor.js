@@ -2,9 +2,11 @@
 
 import React, { PureComponent } from 'react';
 import BoundariesValueEditor from './BoundariesValueEditor';
+import { boundMethod } from 'autobind-decorator';
 import { COLUMNS_FOR_DATA_VALUE_EDITOR } from 'components/TableColSpanConstants';
 import ExactValueEditor from './ExactValueEditor';
 import ModeSelect from './ModeSelect';
+import type { ModeType } from './ModeType';
 import PlusMinusValueEditor from './PlusMinusValueEditor';
 import PropertyDescription from 'core/PropertyDescription';
 import styles from './Quantity.css';
@@ -15,15 +17,15 @@ type Mode = {
   component : Class< PureComponent< any, any > >,
 };
 
-const DEFAULT_MODE : string = 'exact';
+const DEFAULT_MODE : ModeType = 'exact';
 
-export const MODES : { [string] : Mode } = {
+export const MODES : { [ModeType] : Mode } = {
   exact: { component: ExactValueEditor, canBeUsedForValue: ExactValueEditor.canBeUsedForValue },
   plusMinus: { component: PlusMinusValueEditor, canBeUsedForValue: PlusMinusValueEditor.canBeUsedForValue },
   boundaries: { component: BoundariesValueEditor, canBeUsedForValue: BoundariesValueEditor.canBeUsedForValue },
 };
 
-function detectAppropriateMode( datavalue : ?DataValueType ) : string {
+function detectAppropriateMode( datavalue : ?DataValueType ) : ModeType {
   if ( datavalue === undefined || datavalue === null
     || datavalue.value === undefined || datavalue.value === null ) {
     return DEFAULT_MODE;
@@ -34,15 +36,15 @@ function detectAppropriateMode( datavalue : ?DataValueType ) : string {
 }
 
 type PropsType = {
-  buttonCells? : any[],
+  buttonCells : any[],
   datavalue? : ?DataValueType,
   onDataValueChange : any => any,
   propertyDescription : PropertyDescription,
-  readOnly? : ?boolean,
+  readOnly : boolean,
 };
 
 type StateType = {
-  mode : string,
+  mode : ModeType,
 };
 
 export default class QuantityDataValueEditor extends PureComponent<PropsType, StateType> {
@@ -58,16 +60,15 @@ export default class QuantityDataValueEditor extends PureComponent<PropsType, St
     this.state = {
       mode: detectAppropriateMode( this.props.datavalue ),
     };
-
-    this.handleModeChange = this.handleModeChange.bind( this );
-    this.handleValueChange = this.handleValueChange.bind( this );
   }
 
-  handleModeChange( mode : string ) {
+  @boundMethod
+  handleModeChange( mode : ModeType ) {
     this.setState( { mode } );
   }
 
-  handleValueChange( value ) {
+  @boundMethod
+  handleValueChange( value : QuantityValueType ) {
     this.props.onDataValueChange( {
       ...this.props.datavalue,
       type: 'quantity',

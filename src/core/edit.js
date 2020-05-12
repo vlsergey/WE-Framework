@@ -4,16 +4,19 @@ import { applyMiddleware, createStore } from 'redux';
 import { getWikidataApi, purge } from './ApiUtils';
 import buildReducers from './reducers';
 import EditorApp from 'components/EditorApp';
+import type { EditorDefType } from 'editors/EditorDefModel';
 import generateRandomString from 'utils/generateRandomString';
+import { getBody } from 'utils/DomUtils';
 import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import reduxPerformanceMark from 'utils/reduxPerformanceMark';
 import thunk from 'redux-thunk';
+import { toWikibaseEntityIdValue } from 'model/ModelUtils';
 
-export function destroyEditor( appDiv ) {
+export function destroyEditor( appDiv : HTMLDivElement ) {
   ReactDOM.unmountComponentAtNode( appDiv );
-  document.body.removeChild( appDiv );
+  getBody().removeChild( appDiv );
 }
 
 export function renderEditor(
@@ -22,8 +25,8 @@ export function renderEditor(
     editorDescription : EditorDefType,
     oldEntity : EntityType,
     newEntity : EntityType ) {
-  const appDiv = document.createElement( 'div' );
-  document.body.appendChild( appDiv );
+  const appDiv : HTMLDivElement = document.createElement( 'div' );
+  getBody().appendChild( appDiv );
 
   const reducers = buildReducers( oldEntity, newEntity );
   const store = createStore( reducers, applyMiddleware( reduxPerformanceMark, thunk ) );
@@ -73,11 +76,7 @@ export function onNewElementClick(
           property: 'P31',
           hash: generateRandomString(),
           datavalue: {
-            value: {
-              'entity-type': 'item',
-              'numeric-id': classEntityId.substr( 1 ),
-              'id': classEntityId,
-            },
+            value: toWikibaseEntityIdValue( classEntityId ),
             type: 'wikibase-entityid',
           },
           datatype: 'wikibase-item',
@@ -98,7 +97,7 @@ export function onEditorLinkClick(
 
   if ( !entityId ) {
     const oldEntity = {};
-    const newEntity = {
+    const newEntity : any = {
       labels: {
         [ mw.config.get( 'wgContentLanguage' ) ]: {
           language: mw.config.get( 'wgContentLanguage' ),
@@ -112,6 +111,7 @@ export function onEditorLinkClick(
           badges: [],
         },
       },
+      type: 'item',
     };
 
     const instanceOf = editorDescription.newEntityInstanceOf;
@@ -123,11 +123,7 @@ export function onEditorLinkClick(
             property: 'P31',
             hash: generateRandomString(),
             datavalue: {
-              value: {
-                'entity-type': 'item',
-                'numeric-id': instanceOf.substr( 1 ),
-                'id': instanceOf,
-              },
+              value: toWikibaseEntityIdValue( instanceOf ),
               type: 'wikibase-entityid',
             },
             datatype: 'wikibase-item',

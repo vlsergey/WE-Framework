@@ -1,12 +1,16 @@
 // @flow
 
-export default function commitDraftAliases( entity ) {
+import { entries } from 'utils/ObjectUtils';
 
-  if ( typeof entity.draftAliases !== 'object' ) return entity;
-  const newAliases = { ...entity.aliases || {} };
+const EMPTY_OBJECT : any = Object.freeze( {} );
 
-  Object.keys( entity.draftAliases ).forEach( language => {
-    const newAlias = entity.draftAliases[ language ] || {};
+export default function commitDraftAliases( entity : EntityType ) {
+
+  if ( !entity.draftAliases ) return entity;
+  const newAliases : AliasesType = { ...entity.aliases || {} };
+
+  entries( entity.draftAliases ).forEach( ( [ language, draftAlias ] ) => {
+    const newAlias : LabelalikeType = draftAlias || EMPTY_OBJECT;
     const newAliasText = newAlias.value || '';
     if ( newAliasText.trim() === '' ) return;
 

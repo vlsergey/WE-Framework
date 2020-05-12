@@ -1,7 +1,9 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ErrorBoundary from './ErrorBoundary';
+import type { FieldDefType } from 'editors/EditorDefModel';
 import FieldsFilterByClaimExistence from './FieldsFilterByClaimExistence';
 import FieldsFilterByTerm from './FieldsFilterByTerm';
 import FieldsSortBy from './FieldsSortBy';
@@ -35,18 +37,25 @@ export default class FieldsBuilder extends PureComponent<PropsType, StateType> {
     quickSearch: false,
   }
 
-  constructor() {
-    super( ...arguments );
+  state = {
+    activePage: 1,
+    displayEmpty: true,
+    quickSearchTerm: '',
+  };
 
-    this.state = {
-      activePage: 1,
-      displayEmpty: true,
-      quickSearchTerm: '',
-    };
+  @boundMethod
+  handleDisplayEmptyToggle() {
+    this.setState( ( { displayEmpty } ) => ( { displayEmpty: !displayEmpty } ) );
+  }
 
-    this.handleDisplayEmptyToggle = () => this.setState( state => ( { displayEmpty: !state.displayEmpty } ) );
-    this.handlePageChange = ( e, { activePage } ) => this.setState( { activePage } );
-    this.handleQuickSearchTermChange = event => this.setState( { quickSearchTerm: event.target.value || '' } );
+  @boundMethod
+  handlePageChange( e : any, { activePage } : { activePage : number } ) {
+    this.setState( { activePage } );
+  }
+
+  @boundMethod
+  handleQuickSearchTermChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
+    this.setState( { quickSearchTerm: value || '' } );
   }
 
   renderField(
@@ -123,7 +132,7 @@ export default class FieldsBuilder extends PureComponent<PropsType, StateType> {
               <tbody>
                 {paged.map( field =>
                   <ErrorBoundary description={'field: ' + JSON.stringify( field )} key={field.property}>
-                    {this.renderField( field, cache[ field.property ], {
+                    {this.renderField( field, cache.get( field.property ), {
                       displayLabel: fields.length !== 1 || parentLabelEntityId !== field.property,
                     } )}
                   </ErrorBoundary>

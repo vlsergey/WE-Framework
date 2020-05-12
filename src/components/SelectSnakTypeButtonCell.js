@@ -1,32 +1,28 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ButtonCell from './ButtonCell';
 import i18n from './core.i18n';
 import Popup from 'semantic-ui-react/dist/commonjs/modules/Popup';
-import PropTypes from 'prop-types';
 import SnakTypeSelect from './SnakTypeSelect';
 import styles from './SelectSnakTypeButtonCell.css';
 
-export default class SnakTypeSelectButtonCell extends PureComponent {
+type PropsType = {
+  disabled : boolean,
+  onChange : SnakTypeType => any,
+  value : SnakTypeType,
+};
 
-  static propTypes = {
-    disabled: PropTypes.bool,
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.string,
-  };
+export default class SnakTypeSelectButtonCell extends PureComponent<PropsType> {
 
   static defaultProps = {
     disabled: false,
     value: 'value',
   };
 
-  constructor() {
-    super( ...arguments );
-    this.handleChange = this.handleChange.bind( this );
-  }
-
-  handleChange( value ) {
+  @boundMethod
+  handleChange( value : SnakTypeType ) {
     if ( value !== this.props.value ) {
       const { onChange } = this.props;
       if ( onChange )
@@ -41,8 +37,7 @@ export default class SnakTypeSelectButtonCell extends PureComponent {
       className={styles.selectSnakTypeButtonCell}
       disabled={disabled}
       icon={styles[ 'ui-icon-wef-snaktype-' + value ]}
-      label={i18n.snakType[ value ]}
-      onClick={this.handleClick}>
+      label={i18n.snakType[ value ]}>
       {children =>
         <Popup
           basic

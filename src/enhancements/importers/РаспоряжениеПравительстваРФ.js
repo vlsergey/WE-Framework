@@ -2,6 +2,7 @@
 
 import doFillUtils from './doFillUtils';
 import { Template } from 'wikitext-dom';
+import { toWikibaseEntityIdValue } from 'model/ModelUtils';
 
 const ITEM_ID_LEGAL_INSTRUMENT = 'Q1428955';
 
@@ -14,30 +15,29 @@ class Importer {
   key = 'РаспоряжениеПравительстваРФ';
   label = '{{' + SUPPORTED_TEMPLATE_NAME + '}}';
 
-  canImport( dom ) {
+  canImport( dom : any ) {
     return dom.getChildByClass( Template )
       .filter( isTemplateSupported )
       .length !== 0;
   }
 
-  process( dispatch, dom ) {
+  process( dispatch : DispatchType, dom : any ) {
 
-    const itemValue = numericId => ( { 'entity-type': 'item', 'numeric-id': '' + numericId, 'id': 'Q' + numericId } );
     const { doFillItemClaim, doFillMonolingualTextClaim, doFillStringClaim, doFillTimeClaim, doFillUrlClaim } = doFillUtils( dispatch );
 
     dom.getChildByClass( Template )
       .filter( isTemplateSupported )
       .forEach( tpl => {
 
-        doFillItemClaim( 'P31', 63098946, oldValue =>
-          oldValue && oldValue.id === ITEM_ID_LEGAL_INSTRUMENT ? itemValue( 63098946 ) : oldValue );
+        doFillItemClaim( 'P31', 'Q63098946', oldValue =>
+          oldValue && oldValue.id === ITEM_ID_LEGAL_INSTRUMENT ? toWikibaseEntityIdValue( 'Q63098946' ) : oldValue );
 
         // language <= Russian
-        doFillItemClaim( 'P407', 7737 );
+        doFillItemClaim( 'P407', 'Q7737' );
         // author <= Government of Russia
-        doFillItemClaim( 'P50', 1140115 );
+        doFillItemClaim( 'P50', 'Q1140115' );
         // published in <= Собрание законодательства Российской Федерации
-        doFillItemClaim( 'P1433', 4426104 );
+        doFillItemClaim( 'P1433', 'Q4426104' );
 
         const name = ( tpl.getValueByNameAsString( 'НАЗВАНИЕ' ) || '' ).trim();
         if ( name ) {

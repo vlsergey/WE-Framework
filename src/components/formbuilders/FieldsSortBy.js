@@ -3,35 +3,51 @@
 import compare from 'utils/compare';
 import compareLanguageCodes from 'utils/compareLanguageCodes';
 import { defaultMemoize } from 'reselect';
+import type { FieldDefType } from 'editors/EditorDefModel';
+import PropertyDescription from 'core/PropertyDescription';
 import { PureComponent } from 'react';
 import stableSort from 'utils/stableSort';
 
 const compareByLabel = ( a, b ) => compare( a.label, b.label );
-
 const compareByLanguageCodes = ( a, b ) => compareLanguageCodes( a.languageCodes, b.languageCodes );
 
-const sort = defaultMemoize( ( cache, fields, sortBy ) => {
-  const result = fields.map( field => ( {
-    ...field,
-    ...cache[ field.property ],
+const EMPTY_OBJECT : any = Object.freeze( {} );
+
+type TempItemToSort = {|
+  label? : ?string,
+  languageCodes : string[],
+  property : string,
+|};
+
+const sort = defaultMemoize( (
+  cache : Map< string, PropertyDescription >,
+  fields : FieldDefType[],
+  sortBy : string[]
+) => {
+  const toSort : TempItemToSort[] = fields.map( field => ( {
+    property: field.property,
+    label: ( cache.get( field.property ) || EMPTY_OBJECT ).label,
+    languageCodes: ( cache.get( field.property ) || EMPTY_OBJECT ).languageCodes,
   } ) );
+
   for ( let sortByIndex = sortBy.length - 1; sortByIndex >= 0; sortByIndex-- ) {
     const sortMethod = sortBy[ sortByIndex ];
     if ( !sortMethod ) continue;
 
     switch ( sortMethod ) {
-    case 'language': stableSort( result, compareByLanguageCodes ); break;
-    case 'label': stableSort( result, compareByLabel ); break;
+    case 'language': stableSort( toSort, compareByLanguageCodes ); break;
+    case 'label': stableSort( toSort, compareByLabel ); break;
     default: mw.log( 'Unknown sort method: ' + sortMethod ); break;
     }
   }
-  return result.map( item => ( { property: item.property } ) );
+  const result : FieldDefType[] = toSort.map( item => ( { property: item.property } ) );
+  return result;
 } );
 
 type PropsType = {
   children : any => any,
   fields : FieldDefType[],
-  propertyDescriptionCache : any,
+  propertyDescriptionCache : Map< string, PropertyDescription >,
   sortBy? : ?( string[] ),
 };
 

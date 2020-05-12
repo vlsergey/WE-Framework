@@ -1,17 +1,17 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import i18n from './i18n';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import PropTypes from 'prop-types';
 import styles from './NewQualifierSelect.css';
 import { SUPPORTED_DATATYPES } from 'components/SnakValueEditorFactory';
 
-function sort( cache, propertyIds ) {
+function sort( cache, propertyIds : string[] ) {
   const result = [ ...propertyIds ];
-  return result.sort( ( a, b ) => {
-    const labelA = ( cache[ a ] || {} ).label || a;
-    const labelB = ( cache[ b ] || {} ).label || b;
+  return result.sort( ( a : string, b : string ) => {
+    const labelA = ( cache.get( a ) || {} ).label || a;
+    const labelB = ( cache.get( b ) || {} ).label || b;
 
     if ( labelA < labelB ) return -1;
     if ( labelA > labelB ) return +1;
@@ -19,24 +19,18 @@ function sort( cache, propertyIds ) {
   } );
 }
 
-export default class NewQualifierSelect extends PureComponent {
+type PropsType = {
+  allowedQualifiers : string[],
+  alreadyPresent : string[],
+  onSelect : string => any,
+};
 
-  static propTypes = {
-    allowedQualifiers: PropTypes.arrayOf( PropTypes.string ).isRequired,
-    alreadyPresent: PropTypes.arrayOf( PropTypes.string ).isRequired,
-    onSelect: PropTypes.func.isRequired,
-  };
+export default class NewQualifierSelect extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleChange = this.handleChange.bind( this );
-  }
-
-  handleChange( event ) {
-    const propertyId = event.target.value;
-    if ( propertyId ) {
-      this.props.onSelect( propertyId );
+  @boundMethod
+  handleChange( { currentTarget: { value } } : SyntheticEvent< HTMLSelectElement > ) {
+    if ( value ) {
+      this.props.onSelect( value );
     }
   }
 
@@ -48,7 +42,7 @@ export default class NewQualifierSelect extends PureComponent {
       { cache => <select defaultValue="_placeholder" onChange={this.handleChange}>
         <option disabled hidden key="_placeholder" value="_placeholder">{i18n.placehoderSelect}</option>
         {sort( cache, allowedQualifiers ).map( propertyId => {
-          const propertyDescription = cache[ propertyId ];
+          const propertyDescription = cache.get( propertyId );
           if ( !propertyDescription || !propertyDescription.label ) {
             return <option key={propertyId} value={propertyId}>{propertyId}</option>;
           }
@@ -67,16 +61,15 @@ export default class NewQualifierSelect extends PureComponent {
   }
 }
 
+type NewQualifierSelectOptionPropsType = {
+  alreadyPresent : boolean,
+  description? : ?string,
+  label? : ?string,
+  propertyId : string,
+  unsupported : boolean,
+};
 
-class NewQualifierSelectOption extends PureComponent {
-
-  static propTypes = {
-    alreadyPresent: PropTypes.bool.isRequired,
-    unsupported: PropTypes.bool.isRequired,
-    propertyId: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    label: PropTypes.string,
-  };
+class NewQualifierSelectOption extends PureComponent<NewQualifierSelectOptionPropsType> {
 
   render() {
     const { alreadyPresent, unsupported, propertyId, description, label } = this.props;

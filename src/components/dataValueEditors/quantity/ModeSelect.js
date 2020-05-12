@@ -1,25 +1,22 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import i18n from './i18n';
 import { MODES } from './QuantityDataValueEditor';
+import type { ModeType } from './ModeType';
 import styles from './ModeSelect.css';
 
 type PropsType = {
-  mode : string,
-  onSelect : string => any,
+  mode : ModeType,
+  onSelect : ModeType => any,
   value? : ?QuantityValueType,
 };
 
 export default class ModeSelect extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleModeChange = this.handleModeChange.bind( this );
-  }
-
-  handleModeChange( { target: { value } } : { target : { value : string } } ) {
+  @boundMethod
+  handleModeChange( { target: { value } } : { target : { value : ModeType } } ) {
     this.props.onSelect( value );
   }
 

@@ -1,3 +1,5 @@
+// @flow
+
 import { applyMiddleware, createStore } from 'redux';
 import stringPropertyValuesCache, { buildStringCacheValuesFromEntity } from 'caches/stringPropertyValuesCache';
 import assert from 'assert';
@@ -7,7 +9,7 @@ import P345 from '../../../entities/P345';
 import PropertyDescription from 'core/PropertyDescription';
 import propertyDescriptionCache from 'caches/propertyDescriptionCache';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import Provider from 'ProviderWrapper';
+import Provider from 'testUtils/ProviderWrapper';
 import Q2262932 from '../../../entities/Q2262932';
 import Q652 from '../../../entities/Q652';
 import React from 'react';
@@ -19,8 +21,8 @@ import thunk from 'redux-thunk';
 describe( 'components/dataValueEditors/SearchOnSourceWebsitesButtonCell', () => {
 
   const linkIsCorrectFor = ( q, p, expected ) => () => {
-    const pDescription = new PropertyDescription( p );
-    const reducers = buildReducers( q );
+    const pDescription : PropertyDescription = new PropertyDescription( p );
+    const reducers = buildReducers( q, q );
     const store = createStore( reducers, applyMiddleware( thunk ) );
 
     propertyDescriptionCache.dispatch = store.dispatch;
@@ -38,8 +40,8 @@ describe( 'components/dataValueEditors/SearchOnSourceWebsitesButtonCell', () => 
         <PropertyDescriptionsProvider propertyIds={[ p.id ]}>
           {cache => <TableTBodyTr>
             <SearchOnSourceWebsitesButtonCell
-              languageCodes={cache[ p.id ].languageCodes}
-              sourceWebsites={cache[ p.id ].sourceWebsites} />
+              languageCodes={( cache.get( p.id ) || {} ).languageCodes}
+              sourceWebsites={( cache.get( p.id ) || {} ).sourceWebsites} />
           </TableTBodyTr>}
         </PropertyDescriptionsProvider>
       </Provider>

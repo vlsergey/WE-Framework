@@ -1,5 +1,6 @@
 // @flow
 
+import { boundMethod } from 'autobind-decorator';
 import PropertyDescription from 'core/PropertyDescription';
 import { PureComponent } from 'react';
 
@@ -21,15 +22,11 @@ export default class AbstractStringBasedDataValueEditor
     readOnly: false,
   };
 
-  constructor() {
-    super( ...arguments );
-    this.handleValueChange = this.handleValueChange.bind( this );
-  }
-
-  handleValueChange( value ) {
+  @boundMethod
+  handleValueChange( value : ?string ) : void {
     const { datavalue, onDataValueChange } = this.props;
 
-    if ( typeof value === 'string' && value.length !== 0 ) {
+    if ( value ) {
       onDataValueChange( {
         ...datavalue,
         type: AbstractStringBasedDataValueEditor.DATAVALUE_TYPE,

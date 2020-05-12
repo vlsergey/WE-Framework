@@ -4,7 +4,7 @@ import buildReducers from 'core/reducers';
 import P21 from '../../../entities/P21';
 import P31 from '../../../entities/P31';
 import PropertyDescription from 'core/PropertyDescription';
-import Provider from 'ProviderWrapper';
+import Provider from 'testUtils/ProviderWrapper';
 import Q1367759 from '../../../entities/Q1367759';
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -12,7 +12,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 import Suggestion from 'components/entityField/Suggestion';
 import TableTBodyTr from '../TableTBodyTr';
 import thunk from 'redux-thunk';
-import ValueHolder from '../../../ValueHolder';
+import ValueHolder from 'testUtils/ValueHolder';
 import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
 const NOOP = () => {};

@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import i18n from './i18n';
 import LabelDescriptionsProvider from 'caches/LabelDescriptionsProvider';
 import stableSort from 'utils/stableSort';
@@ -22,20 +23,13 @@ type PropsType = {
 
 export default class SelectMode extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleChange = this.handleChange.bind( this );
-  }
-
-  handleChange( event ) {
-    const selectedValue : string = event.target.value;
-    if ( selectedValue === 'OTHER' ) {
+  @boundMethod
+  handleChange( { currentTarget: { value } } : SyntheticEvent< HTMLSelectElement > ) {
+    if ( value === 'OTHER' ) {
       this.props.onOtherSelect();
       return;
     }
-
-    this.props.onSelect( selectedValue );
+    this.props.onSelect( value );
   }
 
   render() {

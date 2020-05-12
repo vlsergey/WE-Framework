@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
 import i18n from './i18n';
@@ -13,7 +14,7 @@ type PropsType = {
   onClaimAdd : any => any,
   onDataValueChange : any => any,
   propertyDescription : PropertyDescription,
-  readOnly? : ?boolean,
+  readOnly : boolean,
 };
 
 type StateType = {
@@ -22,20 +23,20 @@ type StateType = {
 
 class PopulationDataValueEditor extends PureComponent<PropsType, StateType> {
 
+  static defaultProps = {
+    readOnly: false,
+  }
+
   state = {
     dialogOpen: false,
   }
 
-  constructor() {
-    super( ...arguments );
-    this.handleClick = this.handleClick.bind( this );
-    this.handleDialogClose = this.handleDialogClose.bind( this );
-  }
-
+  @boundMethod
   handleClick() {
     this.setState( { dialogOpen: true } );
   }
 
+  @boundMethod
   handleDialogClose() {
     this.setState( { dialogOpen: false } );
   }
@@ -71,5 +72,6 @@ const mapDispatchToProps = ( dispatch, ownProps ) => ( {
   onClaimAdd: claimData => dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription, claimData } ),
 } );
 
+// $FlowFixMe
 const PopulationDataValueEditorConnected = connect( undefined, mapDispatchToProps )( PopulationDataValueEditor );
 export default PopulationDataValueEditorConnected;

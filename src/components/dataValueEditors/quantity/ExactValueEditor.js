@@ -1,21 +1,21 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import { boundMethod } from 'autobind-decorator';
 
+const EMPTY_OBJECT : any = Object.freeze( {} );
 const ok = x => typeof x === 'string' && x.trim() !== '';
 
-export default class ExactValueEditor extends PureComponent {
+type PropsType = {
+  onValueChange : QuantityValueType => any,
+  readOnly? : ?boolean,
+  value : QuantityValueType,
+};
 
-  static propTypes = {
-    onValueChange: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool,
-    value: PropTypes.object,
-  };
+export default class ExactValueEditor extends PureComponent<PropsType> {
 
   static defaultProps = {
-    value: {},
-    readOnly: false,
+    value: EMPTY_OBJECT,
   };
 
   static canBeUsedForValue( value : QuantityValueType ) : boolean {
@@ -25,18 +25,13 @@ export default class ExactValueEditor extends PureComponent {
       || Number( lowerBound ) === Number( amount ) && Number( upperBound ) === Number( amount );
   }
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleChange = this.handleChange.bind( this );
-  }
-
-  handleChange( event ) {
+  @boundMethod
+  handleChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
     /* eslint no-unused-vars: 0 */
     const { lowerBound, amount, upperBound, ...etc } = this.props.value;
     this.props.onValueChange( {
       ...etc,
-      amount: event.target.value || '',
+      amount: value || '',
     } );
   }
 

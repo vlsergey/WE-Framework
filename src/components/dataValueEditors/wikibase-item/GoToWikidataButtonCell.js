@@ -3,23 +3,22 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import i18n from 'components/core.i18n';
-import PropTypes from 'prop-types';
 
 const NOOP = () => {};
 
-export default class GoToWikidataButtonCell extends PureComponent {
+type PropsType = {
+  disabled : boolean,
+  entityId : ?string,
+};
 
-  static propTypes = {
-    disabled: PropTypes.bool,
-    entityId: PropTypes.string,
-  };
+const WIKIDATA_LINK_URL : string = '//www.wikidata.org/wiki/';
+
+export default class GoToWikidataButtonCell extends PureComponent<PropsType> {
 
   static defaultProps = {
     disabled: false,
     entityId: null,
   };
-
-  WIKIDATA_LINK_URL = '//www.wikidata.org/wiki/';
 
   render() {
     const { disabled, entityId } = this.props;
@@ -28,7 +27,7 @@ export default class GoToWikidataButtonCell extends PureComponent {
       disabled={disabled || !entityId}
       icon="ui-icon-extlink"
       label={i18n.buttonOnWikidata}
-      onClick={NOOP}>{ children => <a href={entityId ? this.WIKIDATA_LINK_URL + entityId : '#'}
+      onClick={NOOP}>{ children => <a href={entityId ? WIKIDATA_LINK_URL + entityId : '#'}
         rel="noopener noreferrer"
         target="_blank">{children}</a> }</ButtonCell>;
   }

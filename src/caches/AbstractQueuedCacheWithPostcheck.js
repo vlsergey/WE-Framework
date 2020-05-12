@@ -1,7 +1,6 @@
 // @flow
 
 import AbstractQueuedCache from './AbstractQueuedCache';
-import expect from 'expect';
 import findByKeysInObjectStore from 'utils/findByKeysInObjectStore';
 import lastRevisionCache from './lastRevisionCache';
 
@@ -11,18 +10,18 @@ import lastRevisionCache from './lastRevisionCache';
 */
 export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCache {
 
+  pageid2cacheKey : any = { };
+
   constructor( type : string, useIndexedDb : boolean, maxBatch : number ) {
     super( type, useIndexedDb, maxBatch );
 
     if ( this.useIndexedDb ) {
       lastRevisionCache.addCacheUpdateCallback( this.onLastRevisionsFetched.bind( this ) );
     }
-
-    this.pageid2cacheKey = {};
   }
 
-  onCacheUpdateFromDatabase( cacheUpdate ) {
-    expect( this.dbConnection ).toBeTruthy();
+  onCacheUpdateFromDatabase( cacheUpdate : any ) {
+    if ( !this.dbConnection ) throw new Error( 'DB connection is not open' );
 
     const lastRevisionsCacheData = lastRevisionCache.cache;
 
@@ -54,7 +53,7 @@ export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCach
     lastRevisionCache.doQueue( pageidsToQueue );
   }
 
-  onLastRevisionsFetched( lastRevisionsFetched ) {
+  onLastRevisionsFetched( lastRevisionsFetched : any ) {
     if ( !this.dbConnection ) return;
 
     const transaction = this.dbConnection.transaction( [ 'CACHE' ] );

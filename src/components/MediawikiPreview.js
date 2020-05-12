@@ -15,20 +15,16 @@ type StateType = {
 export default class MediawikiPreview
   extends PureComponent<PropsType, StateType> {
 
-  constructor() {
-    super( ...arguments );
+  state = {
+    html: null,
+  };
 
-    this.state = {
-      html: null,
-    };
-
-    this.loadHtml = this.loadHtml.bind( this );
-
+  componentDidMount() {
     // initial loading
     this.loadHtml();
   }
 
-  componentDidUpdate( prevProps ) {
+  componentDidUpdate( prevProps : PropsType ) {
     if ( prevProps.wikitext !== this.props.wikitext ) {
       this.setState( { html: null } );
       this.loadHtml();

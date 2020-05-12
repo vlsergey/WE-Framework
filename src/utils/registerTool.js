@@ -138,11 +138,9 @@ export default function registerTool( tool : ToolType ) {
 
     ve.init.mw.DesktopArticleTarget.static.actionGroups[ 1 ].include.push( tool.name );
 
-    mw.util.addCSS( '\
-      .oo-ui-icon-' + tool.name + ' {\
-        background-image: url(' + tool.icon + ');\
-      }\
-    ' );
+    if ( tool.icon ) {
+      mw.util.addCSS( `.oo-ui-icon-${tool.name} { background-image: url(${tool.icon}) ); }` );
+    }
 
     if ( tool.addCallback ) {
       tool.addCallback();

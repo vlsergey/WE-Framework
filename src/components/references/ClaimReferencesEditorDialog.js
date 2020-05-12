@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ClaimReferencesEditorContent from './ClaimReferencesEditorContent';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import generateRandomString from 'utils/generateRandomString';
@@ -15,12 +16,7 @@ type PropsType = {
 export default class ClaimReferencesEditorDialog
   extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleReferenceAdd = this.handleReferenceAdd.bind( this );
-  }
-
+  @boundMethod
   handleReferenceAdd() {
     const { claim, onClaimUpdate } = this.props;
     const references = claim.references || [];

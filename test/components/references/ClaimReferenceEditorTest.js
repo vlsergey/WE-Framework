@@ -2,7 +2,7 @@ import { applyMiddleware, createStore } from 'redux';
 import assert from 'assert';
 import buildReducers from 'core/reducers';
 import ClaimReferencesEditorContent from 'components/references/ClaimReferencesEditorContent';
-import Provider from 'ProviderWrapper';
+import Provider from 'testUtils/ProviderWrapper';
 import Q30 from '../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';

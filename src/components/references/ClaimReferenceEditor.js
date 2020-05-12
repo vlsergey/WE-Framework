@@ -1,28 +1,29 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import generateRandomString from 'utils/generateRandomString';
 import i18n from './i18n';
-import PropTypes from 'prop-types';
+import PropertyDescription from 'core/PropertyDescription';
 import ReferencePropertySelect from './ReferencePropertySelect';
 import SnaksMapEditor from 'components/snaks/SnaksMapEditor';
 import styles from './references.css';
 
-export default class ClaimReferenceEditor extends PureComponent {
+const EMPTY_OBJECT : any = Object.freeze( {} );
 
-  static propTypes = {
-    onReferenceChange: PropTypes.func.isRequired,
-    reference: PropTypes.object.isRequired,
-  };
+type PropsType = {
+  onReferenceChange : ReferenceType => any,
+  reference : ReferenceType,
+};
+
+export default class ClaimReferenceEditor extends PureComponent<PropsType> {
 
   constructor() {
     super( ...arguments );
-
-    this.handleReferencePropertyAdd = this.handleReferencePropertyAdd.bind( this );
-    this.handleSnaksMapUpdate = this.handleSnaksMapUpdate.bind( this );
   }
 
-  handleReferencePropertyAdd( propertyId ) {
+  @boundMethod
+  handleReferencePropertyAdd( propertyId : string ) {
     const { onReferenceChange, reference } = this.props;
     const existing = ( reference.snaks || {} )[ propertyId ] || [];
 
@@ -42,14 +43,15 @@ export default class ClaimReferenceEditor extends PureComponent {
     } );
   }
 
-  handleSnaksMapUpdate( snaks ) {
+  @boundMethod
+  handleSnaksMapUpdate( snaks : SnaksType ) {
     this.props.onReferenceChange( {
       ...this.props.reference,
       snaks,
     } );
   }
 
-  removeButtonConfirmMessageF( snakPropertyDescription ) {
+  removeButtonConfirmMessageF( snakPropertyDescription : PropertyDescription ) {
     return i18n.confirmRemoveSnakTemplate
       .replace( '{snakPropertyId}', snakPropertyDescription.id )
       .replace( '{snakPropertyLabel}', snakPropertyDescription.label || snakPropertyDescription.id );
@@ -57,7 +59,7 @@ export default class ClaimReferenceEditor extends PureComponent {
 
   render() {
     const { reference } = this.props;
-    const snaks = reference.snaks || {};
+    const snaks : SnaksType = reference.snaks || EMPTY_OBJECT;
     const propertyIds = Object.keys( snaks );
 
     return <table className={styles.claimReferenceEditor}>

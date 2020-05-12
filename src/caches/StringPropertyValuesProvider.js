@@ -2,15 +2,16 @@
 
 import React, { PureComponent } from 'react';
 import CacheValuesProvider from 'caches/CacheValuesProvider';
-import PropTypes from 'prop-types';
+/* eslint no-duplicate-imports: 0 */
 import stringPropertyValuesCache from './stringPropertyValuesCache';
 
-export default class StringPropertyValuesProvider extends PureComponent {
+type PropsType = {
+  children : any => any,
+  entityIds : string[],
+};
 
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    entityIds: PropTypes.arrayOf( PropTypes.string ).isRequired,
-  }
+export default class StringPropertyValuesProvider
+  extends PureComponent<PropsType> {
 
   render() {
     const { children, entityIds } = this.props;

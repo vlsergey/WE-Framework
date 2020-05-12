@@ -3,6 +3,7 @@
 import React, { PureComponent } from 'react';
 import ChildrenBuilder from './ChildrenBuilder';
 import EntityLabel from 'caches/EntityLabel';
+import type { FieldsetDefType } from 'editors/EditorDefModel';
 
 type PropsType = {
   fieldset : FieldsetDefType,

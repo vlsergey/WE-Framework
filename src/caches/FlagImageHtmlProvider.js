@@ -3,14 +3,13 @@
 import React, { PureComponent } from 'react';
 import CacheValueProvider from 'caches/CacheValueProvider';
 import flagImageHtmlCache from './flagImageHtmlCache';
-import PropTypes from 'prop-types';
 
-export default class FlagImageHtmlProvider extends PureComponent {
+type PropsType = {
+  children : any => any,
+  fileName : string,
+};
 
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    fileName: PropTypes.string.isRequired,
-  }
+export default class FlagImageHtmlProvider extends PureComponent<PropsType> {
 
   render() {
     const { children, fileName } = this.props;

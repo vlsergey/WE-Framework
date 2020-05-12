@@ -1,6 +1,7 @@
 // @flow
 
 import { defaultMemoize } from 'reselect';
+import { entries } from 'utils/ObjectUtils';
 import stableSort from 'utils/stableSort';
 
 const ok = x => x !== undefined && x !== null;
@@ -16,15 +17,16 @@ const PREDEFINED_SORT = [
 
 export const claimColumnsF = () => {
 
-  const sortColumns = defaultMemoize( columns => stableSort( columns, ( c1, c2 ) => {
-    let o1 = PREDEFINED_SORT.indexOf( c1 );
-    o1 = o1 === -1 ? PREDEFINED_SORT.length : o1;
-    let o2 = PREDEFINED_SORT.indexOf( c2 );
-    o2 = o2 === -1 ? PREDEFINED_SORT.length : o2;
-    return o1 === o2 ? 0 : o1 > o2 ? +1 : -1;
-  } ) );
+  const sortColumns : ( string[] => string[] ) =
+   defaultMemoize( columns => stableSort<string>( columns, ( c1, c2 ) => {
+     let o1 = PREDEFINED_SORT.indexOf( c1 );
+     o1 = o1 === -1 ? PREDEFINED_SORT.length : o1;
+     let o2 = PREDEFINED_SORT.indexOf( c2 );
+     o2 = o2 === -1 ? PREDEFINED_SORT.length : o2;
+     return o1 === o2 ? 0 : o1 > o2 ? +1 : -1;
+   } ) );
 
-  return defaultMemoize( claims => {
+  return defaultMemoize( ( claims : ClaimType[] ) => {
     if ( claims.length < 5 ) {
       return EMPTY_ARRAY;
     }
@@ -32,14 +34,14 @@ export const claimColumnsF = () => {
     const qualifierStats : Map< string, number > = new Map();
     claims
       .map( claim => claim.qualifiers ).filter( ok )
-      .forEach( qualifiers => Object.keys( qualifiers )
-        .forEach( ( propertyId : string ) => {
-          const plus = ( qualifiers[ propertyId ] || EMPTY_ARRAY ).length > 0 ? 1 : 0;
+      .forEach( qualifiers => entries( qualifiers || {} )
+        .forEach( ( [ propertyId, qualifiersArray ] ) => {
+          const plus = ( qualifiersArray || EMPTY_ARRAY ).length > 0 ? 1 : 0;
           qualifierStats.set( propertyId, ( qualifierStats.get( propertyId ) || 0 ) + plus );
         } )
       );
 
-    const columns = [];
+    const columns : string[] = [];
     while ( columns.length < MAX_COLUMNS && qualifierStats.size !== 0 ) {
       const qualifierCounts : number[] = [ ...qualifierStats.values() ];
       const allValues = qualifierCounts.sort( ( a : number, b : number ) => b - a );

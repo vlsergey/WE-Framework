@@ -5,27 +5,24 @@ import React, { PureComponent } from 'react';
 import CalendarModelSelect from './CalendarModelSelect';
 import i18n from './i18n';
 import PrecisionSelect from './PrecisionSelect';
-import PropTypes from 'prop-types';
 import Spinner from 'components/Spinner';
 import styles from './Time.css';
 
-export default class DetailsArea extends PureComponent {
+type PropsType = {
+  error : ?string,
+  manualCalendarModel : ?string,
+  manualPrecision : ?number,
+  onManualCalendarModelChange : any => any,
+  onManualCalendarModelToggle : any => any,
+  onManualPrecisionChange : any => any,
+  onManualPrecisionToggle : any => any,
+  parsedCalendarModel : ?string,
+  parsedPrecision : ?number,
+  preview : ?string,
+  spinner : boolean,
+};
 
-  static propTypes = {
-    spinner: PropTypes.bool.isRequired,
-    preview: PropTypes.string,
-    error: PropTypes.string,
-
-    parsedCalendarModel: PropTypes.string,
-    manualCalendarModel: PropTypes.string,
-    onManualCalendarModelToggle: PropTypes.func.isRequired,
-    onManualCalendarModelChange: PropTypes.func.isRequired,
-
-    parsedPrecision: PropTypes.number,
-    manualPrecision: PropTypes.number,
-    onManualPrecisionToggle: PropTypes.func.isRequired,
-    onManualPrecisionChange: PropTypes.func.isRequired,
-  };
+export default class DetailsArea extends PureComponent<PropsType> {
 
   render() {
     const { spinner, error, preview,

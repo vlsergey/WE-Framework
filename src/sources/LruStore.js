@@ -8,9 +8,8 @@ const ENABLED = window.localStorage !== undefined && window.localStorage !== nul
 
 const MAX_ENTRIES = 10;
 
-export function add( entityId ) {
-  // FIXME: bug?
-  if ( !ENABLED );
+export function add( entityId : string ) : void {
+  if ( !ENABLED ) return;
 
   const existing = get();
   const newSources = [ entityId, ...existing.filter( item => item !== entityId ) ]
@@ -19,7 +18,7 @@ export function add( entityId ) {
   window.localStorage.setItem( 'WEF_LatestUsedSources', newSources.join( ',' ) );
 }
 
-export function get() {
+export function get() : string[] {
   if ( !ENABLED ) return EMPTY_ARRAY;
 
   const serialized = window.localStorage.getItem( 'WEF_LatestUsedSources' );

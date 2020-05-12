@@ -79,8 +79,11 @@ describe( 'PropertyDescription', () => {
     assert.equal( pd345.regexp, '|ev\\d{7}\\/(19|20)\\d{2}(-\\d)?|(ch|co|ev|nm|tt)\\d{7}|ni\\d{8}' );
   } );
 
-  it( 'quantityUnitEnabled is undefined if no consrain', () => {
-    assert.equal( pd345.quantityUnitEnabled, undefined );
+  it( 'quantityUnits is undefined if no constraints', () => {
+    assert.equal( pd345.quantityUnits, undefined );
+  } );
+  it( 'quantityUnitEnabled is false if no constraints', () => {
+    assert.equal( pd345.quantityUnitEnabled, false );
   } );
 
   it( 'quantityUnitEnabled is true if constrain is "novalue"', () => {

@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import LanguageAutocomplete from 'components/languages/LanguageAutocomplete';
 import styles from './MonolingualText.css';
 
@@ -13,17 +14,11 @@ type PropsType = {
 export default class MonolingualTextDataValueEditor
   extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleLanguageChange = this.handleLanguageChange.bind( this );
-    this.handleTextChange = this.handleTextChange.bind( this );
-  }
-
-  handleLanguageChange( value ) {
+  @boundMethod
+  handleLanguageChange( value : string ) {
     const { datavalue, onDataValueChange } = this.props;
 
-    onDataValueChange( {
+    return onDataValueChange( {
       ...datavalue,
       value: {
         ...datavalue ? datavalue.value : undefined,
@@ -33,16 +28,17 @@ export default class MonolingualTextDataValueEditor
     } );
   }
 
-  handleTextChange( event ) {
+  @boundMethod
+  handleTextChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
     const { datavalue, onDataValueChange } = this.props;
 
-    onDataValueChange( {
+    return onDataValueChange( {
       ...datavalue,
       value: {
         // set language of current content language if no specified yet AND some text entered
-        language: event.target.value.trim() !== '' ? mw.config.get( 'wgContentLanguage' ) : undefined,
+        language: value ? mw.config.get( 'wgContentLanguage' ) : undefined,
         ...datavalue ? datavalue.value : undefined,
-        text: event.target.value,
+        text: value,
       },
       type: 'monolingualtext',
     } );

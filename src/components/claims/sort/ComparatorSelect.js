@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import { DatavalueComparator } from './DatavalueComparator';
 import i18n from './i18n';
 
@@ -12,16 +13,11 @@ type PropsType = {
 
 export default class ComparatorSelect extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-    this.handleChange = this.handleChange.bind( this );
-  }
-
-  handleChange( event ) {
+  @boundMethod
+  handleChange( { currentTarget: { value } } : SyntheticEvent< HTMLSelectElement > ) {
     const { onChange } = this.props;
 
-    const newCode : ?string = event.target.value;
-    const newComparator : ?DatavalueComparator = this.props.options.find( c => c.code === newCode );
+    const newComparator : ?DatavalueComparator = this.props.options.find( c => c.code === value );
     if ( newComparator ) {
       onChange( newComparator );
     }

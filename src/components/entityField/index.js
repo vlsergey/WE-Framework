@@ -3,6 +3,7 @@
 import { addLastRecentlyUsed, findLastRecentlyUsed } from './LruCache';
 import React, { PureComponent } from 'react';
 import AutocompleteMode from './AutocompleteMode';
+import { boundMethod } from 'autobind-decorator';
 import EntityLabel from 'caches/EntityLabel';
 import SelectMode from './SelectMode';
 
@@ -44,12 +45,9 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
         }
       } );
     }
-
-    this.handleOtherSelect = () => this.setState( { selectMode: false } );
-    this.handleSelect = this.handleSelect.bind( this );
   }
 
-  static getDerivedStateFromProps( props, state ) {
+  static getDerivedStateFromProps( props : PropsType, state : StateType ) {
     if ( state.selectMode ) {
       const currentValue = props.value;
       if ( props.oneOf ) {
@@ -69,6 +67,12 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
     return null;
   }
 
+  @boundMethod
+  handleOtherSelect() {
+    this.setState( { selectMode: false } );
+  }
+
+  @boundMethod
   handleSelect( entityId : ?string ) {
     const { lruKey, onChange } = this.props;
     onChange( entityId );

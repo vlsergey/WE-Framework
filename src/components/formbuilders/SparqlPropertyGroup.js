@@ -3,16 +3,15 @@
 import React, { PureComponent } from 'react';
 import ChildrenBuilder from './ChildrenBuilder';
 import PropertiesBySparqlProvider from 'caches/PropertiesBySparqlProvider';
-import PropTypes from 'prop-types';
 import Spinner from 'components/Spinner';
 import styles from './SparqlPropertyGroup.css';
 
-export default class SparqlPropertyGroup extends PureComponent {
+type PropsType = {
+  sortBy : string,
+  sparql : string,
+};
 
-  static propTypes = {
-    sparql: PropTypes.string.isRequired,
-    sortBy: PropTypes.string,
-  };
+export default class SparqlPropertyGroup extends PureComponent<PropsType> {
 
   static defaultProps = {
     sortBy: 'language, label',

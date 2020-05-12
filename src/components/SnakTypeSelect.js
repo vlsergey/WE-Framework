@@ -1,47 +1,47 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import i18n from './core.i18n';
-import PropTypes from 'prop-types';
 import styles from './core.css';
 
-export default class SnakTypeSelect extends PureComponent {
+type PropsType = {
+  onChange : SnakTypeType => any,
+  value : SnakTypeType,
+};
 
-  static propTypes = {
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.string,
-  };
+export default class SnakTypeSelect extends PureComponent<PropsType> {
 
   static defaultProps = {
     value: 'value',
   };
 
-  constructor() {
-    super( ...arguments );
-    this.ref = React.createRef();
-    this.handleChange = this.handleChange.bind( this );
-  }
+  ref : ReactObjRef< HTMLSelectElement > = React.createRef();
 
   componentDidMount() {
-    this.ref.current.focus();
+    if ( this.ref.current ) {
+      this.ref.current.focus();
+    }
   }
 
-  handleChange( event ) {
-    this.props.onChange( this.ref.current.value );
+  @boundMethod
+  handleChange( event : SyntheticEvent< HTMLSelectElement > ) {
+    // $FlowFixMe
+    const snakType : SnakTypeType = event.currentTarget.value;
+    this.props.onChange( snakType );
     event.stopPropagation();
   }
 
   render() {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
-    const { onChange, value, ...other } = this.props;
+    const { onChange, value, ...etc } = this.props;
 
     return <select
+      {...etc}
       className={styles[ 'wef-snaktypeselector-menu' ]}
       onChange={this.handleChange}
-      ref={this.ref}
       size={3}
-      value={value}
-      {...other}>
+      value={value}>
       <option
         title={i18n.snakTypeTitle.value}
         value="value">{i18n.snakType.value}</option>

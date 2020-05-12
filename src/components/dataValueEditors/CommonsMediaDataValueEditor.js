@@ -1,17 +1,33 @@
 // @flow
 
 import * as ApiUtils from 'core/ApiUtils';
-import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
+import React, { PureComponent } from 'react';
 import Autosuggest from 'react-autosuggest';
+import { boundMethod } from 'autobind-decorator';
 import MediawikiPreview from 'components/MediawikiPreview';
-import React from 'react';
+import PropertyDescription from 'core/PropertyDescription';
 import styles from './CommonsMediaDataValueEditor.css';
 
-export default class CommonsMediaDataValueEditor extends AbstractStringBasedDataValueEditor {
+type PropsType = {
+  datavalue? : DataValueType,
+  onDataValueChange : ?DataValueType => any,
+  propertyDescription : PropertyDescription,
+  readOnly? : boolean,
+};
+
+type StateType = {
+  suggestions : string[],
+};
+
+const EMPTY_OBJECT : any = Object.freeze( {} );
+
+export default class CommonsMediaDataValueEditor
+  extends PureComponent<PropsType, StateType> {
 
   static DATATYPE = 'commonsMedia';
+  static DATAVALUE_TYPE : string = 'string';
 
-  static propTypes = AbstractStringBasedDataValueEditor.propTypes;
+  commonsApi : any;
 
   constructor() {
     super( ...arguments );
@@ -20,17 +36,15 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
     this.state = {
       suggestions: [],
     };
-
-    this.handleChange = this.handleChange.bind( this );
-    this.handleSuggestionsClearRequested = this.handleSuggestionsClearRequested.bind( this );
-    this.handleSuggestionsFetchRequested = this.handleSuggestionsFetchRequested.bind( this );
   }
 
+  @boundMethod
   handleSuggestionsClearRequested() {
     this.setState( { suggestions: [] } );
   }
 
-  handleSuggestionsFetchRequested( { value } ) {
+  @boundMethod
+  handleSuggestionsFetchRequested( { value } : { value : ?string } ) {
     this.commonsApi.post( {
       action: 'query',
       list: 'prefixsearch',
@@ -44,12 +58,31 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
     } );
   }
 
-  getSuggestionValue( data ) {
+  getSuggestionValue( data : string ) : string {
     return data ? data : '';
   }
 
-  handleChange( event, { newValue } ) {
+  @boundMethod
+  handleChange(
+    event : SyntheticEvent< any >,
+    { newValue } : { newValue : ?string }
+  ) {
     this.handleValueChange( newValue );
+  }
+
+  @boundMethod
+  handleValueChange( value : ?string ) {
+    const { datavalue, onDataValueChange } = this.props;
+
+    if ( value ) {
+      onDataValueChange( {
+        ...datavalue,
+        type: CommonsMediaDataValueEditor.DATAVALUE_TYPE,
+        value,
+      } );
+    } else {
+      onDataValueChange( null );
+    }
   }
 
   render() {
@@ -68,24 +101,17 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
         </td>;
       }
       return null;
-
     }
-
-    const params = {
-      type: 'text',
-    };
-
-    if ( propertyDescription.regexp ) {
-      params.pattern = propertyDescription.regexp;
-    }
-
-    params.value = datavalue ? datavalue.value : '';
-    params.onChange = this.handleChange;
 
     return <td className={className} colSpan={12}>
       <Autosuggest
         getSuggestionValue={this.getSuggestionValue}
-        inputProps={params}
+        inputProps={{
+          type: 'text',
+          pattern: propertyDescription.regexp || undefined,
+          value: ( datavalue || EMPTY_OBJECT ).value || '',
+          onChange: this.handleChange
+        }}
         onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
         onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
         renderSuggestion={this.renderSuggestion}
@@ -94,7 +120,7 @@ export default class CommonsMediaDataValueEditor extends AbstractStringBasedData
     </td>;
   }
 
-  renderSuggestion( data ) {
+  renderSuggestion( data : string ) : any {
     return <div className={styles.suggestionContent}>
       <div className={styles.suggestionContentPreviewOuter}>
         <div className={styles.suggestionContentPreviewInner}>

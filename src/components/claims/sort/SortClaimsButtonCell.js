@@ -1,11 +1,16 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ButtonCell from 'components/ButtonCell';
 import comparators from './comparators';
+import { DatavalueComparator } from './DatavalueComparator';
 import { defaultMemoize } from 'reselect';
 import i18n from './i18n';
 import SortClaimsDialog from './SortClaimsDialog';
+
+// Flow typecheck hack
+const entries = <T>( obj : { [string] : T } ) : [string, T][] => Object.keys( obj ).map( key => [ key, obj[ key ] ] );
 
 type PropsType = {
   claims : ClaimType[],
@@ -19,42 +24,38 @@ type StateType = {
 export default class SortClaimsButtonCell
   extends PureComponent<PropsType, StateType> {
 
-  constructor() {
-    super( ...arguments );
+  state = {
+    displayEditor: false,
+  };
 
-    this.state = {
-      displayEditor: false,
-    };
-
-    this.handleClick =
-      () => this.setState( state => ( { displayEditor: !state.displayEditor } ) );
+  @boundMethod
+  handleClick() {
+    this.setState( ( { displayEditor } ) => ( { displayEditor: !displayEditor } ) );
   }
 
-  propertyIdToComparatorsMemoize = defaultMemoize( claims => {
+  propertyIdToComparatorsMemoize = defaultMemoize( ( claims : ClaimType[] ) => {
     // propertyId to array of comparators
-    const result = new Map();
+    const result : Map< string, DatavalueComparator[] > = new Map();
 
-    comparators.forEach( comparator => {
+    comparators.forEach( ( comparator : DatavalueComparator ) => {
       const checkedTrue = new Set();
       const checkedFalse = new Set();
 
       const cmpSupports : ( string, QualifierType ) => ?boolean = comparator.supports;
 
-      claims.forEach( claims => {
-        if ( !claims.qualifiers ) return;
+      claims.forEach( ( claim : ClaimType ) => {
+        if ( !claim.qualifiers ) return;
 
-        Object.keys( claims.qualifiers )
-          .forEach( propertyId => {
-            const qualifiers = claims.qualifiers[ propertyId ];
-            qualifiers.forEach( qualifier => {
-              if ( checkedTrue.has( propertyId ) || checkedFalse.has( propertyId ) ) return;
+        for ( const [ propertyId, qualifiers ] of entries( claim.qualifiers ) ) {
+          qualifiers.forEach( qualifier => {
+            if ( checkedTrue.has( propertyId ) || checkedFalse.has( propertyId ) ) return;
 
-              const supports : ?boolean = cmpSupports( propertyId, qualifier );
-              if ( supports === null ) return;
-              if ( supports ) checkedTrue.add( propertyId );
-              if ( !supports ) checkedFalse.add( propertyId );
-            } );
+            const supports : ?boolean = cmpSupports( propertyId, qualifier );
+            if ( supports === null ) return;
+            if ( supports ) checkedTrue.add( propertyId );
+            if ( !supports ) checkedFalse.add( propertyId );
           } );
+        }
       } );
 
       checkedTrue.forEach( propertyId => {

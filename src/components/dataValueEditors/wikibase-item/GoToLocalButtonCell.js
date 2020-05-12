@@ -4,24 +4,17 @@ import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import i18n from './i18n';
 import LocalTitleProvider from 'caches/LocalTitleProvider';
-import PropTypes from 'prop-types';
 
 const wgArticlePath = mw.config.get( 'wgArticlePath' );
 
-export default class GoToLocalButtonCell extends PureComponent {
+type PropsType = {
+  entityId? : ?string,
+};
 
-  static propTypes = {
-    entityId: PropTypes.string,
-  };
-
-  static defaultProps = {
-    entityId: null,
-  };
+export default class GoToLocalButtonCell extends PureComponent<PropsType> {
 
   render() {
-    const { entityId } = this.props;
-
-    return <LocalTitleProvider entityId={entityId}>
+    return <LocalTitleProvider entityId={this.props.entityId}>
       { title => title
         ? <ButtonCell
           icon="ui-icon-extlink"

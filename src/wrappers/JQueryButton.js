@@ -1,19 +1,18 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 
-export default class JQueryButton extends PureComponent {
+type PropsType = {
+  className? : ?string,
+  disabled? : ?boolean,
+  icon? : ?string,
+  label? : ?string,
+  onClick? : ?( any => any ),
+  text? : ?boolean,
+  title? : ?string,
+};
 
-  static propTypes = {
-    className: PropTypes.string,
-    onClick: PropTypes.func,
-    disabled: PropTypes.bool,
-    icon: PropTypes.string,
-    label: PropTypes.string,
-    text: PropTypes.bool,
-    title: PropTypes.string,
-  };
+export default class JQueryButton extends PureComponent<PropsType> {
 
   render() {
     // opimize JQuery alike behavious by direct rendering into HTML

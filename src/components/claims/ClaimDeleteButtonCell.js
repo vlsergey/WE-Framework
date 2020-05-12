@@ -1,28 +1,20 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ButtonCell from 'components/ButtonCell';
 import i18n from 'components/core.i18n';
-import PropTypes from 'prop-types';
 
-export default class ClaimDeleteButtonCell extends PureComponent {
+type PropsType = {
+  disabled : boolean,
+  onClaimDelete : void => any,
+  propertyId : string,
+  propertyLabel : string,
+};
 
-  static propTypes = {
-    disabled: PropTypes.bool,
-    onClaimDelete: PropTypes.func.isRequired,
-    propertyId: PropTypes.string.isRequired,
-    propertyLabel: PropTypes.string.isRequired,
-  };
+export default class ClaimDeleteButtonCell extends PureComponent<PropsType> {
 
-  static defaultProps = {
-    disabled: false,
-  };
-
-  constructor() {
-    super( ...arguments );
-    this.handleClick = this.handleClick.bind( this );
-  }
-
+  @boundMethod
   handleClick() {
     const { propertyId, propertyLabel } = this.props;
 

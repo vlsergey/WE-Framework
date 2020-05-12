@@ -4,13 +4,13 @@ import buildReducers from 'core/reducers';
 import P345 from '../entities/P345';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
-import Provider from 'ProviderWrapper';
+import Provider from 'testUtils/ProviderWrapper';
 import Q1367759 from '../entities/Q1367759';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import thunk from 'redux-thunk';
 
-describe( 'PropertyDescriptionsProviderTest', () => {
+describe( 'PropertyDescriptionsProvider', () => {
 
   const reducers = buildReducers( Q1367759 );
   assert.ok( reducers );
@@ -22,12 +22,12 @@ describe( 'PropertyDescriptionsProviderTest', () => {
     const rendered = ReactTestUtils.renderIntoDocument( <Provider store={store}>
       <PropertyDescriptionsProvider propertyIds={[ 'P345' ]}>
         {cache => <div>
-          <span className="P345_label">{cache.P345 && cache.P345.label }</span>
-          <span className="P345_description">{cache.P345 && cache.P345.description}</span>
-          <span className="P345_countries">{cache.P345 && cache.P345.countries.join( ' ' )}</span>
-          <span className="P345_countryFlags">{cache.P345 && cache.P345.countryFlags.join( ' ' )}</span>
-          <span className="P345_languageIds">{cache.P345 && cache.P345.languageIds.join( ' ' )}</span>
-          <span className="P345_languageCodes">{cache.P345 && cache.P345.languageCodes.join( ' ' )}</span>
+          <span className="P345_label">{( cache.get( 'P345' ) || {} ).label }</span>
+          <span className="P345_description">{( cache.get( 'P345' ) || {} ).description}</span>
+          <span className="P345_countries">{( ( cache.get( 'P345' ) || {} ).countries || [] ).join( ' ' )}</span>
+          <span className="P345_countryFlags">{( ( cache.get( 'P345' ) || {} ).countryFlags || [] ).join( ' ' )}</span>
+          <span className="P345_languageIds">{( ( cache.get( 'P345' ) || {} ).languageIds || [] ).join( ' ' )}</span>
+          <span className="P345_languageCodes">{( ( cache.get( 'P345' ) || {} ).languageCodes || [] ).join( ' ' )}</span>
         </div>}
       </PropertyDescriptionsProvider>
     </Provider> );

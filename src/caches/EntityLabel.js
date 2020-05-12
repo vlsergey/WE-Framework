@@ -1,10 +1,14 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import LabelDescription from './LabelDescription';
 import LabelDescriptionProvider from './LabelDescriptionProvider';
-import PropTypes from 'prop-types';
 
-export function constructLabel( entityId, labelDescription, appendEntityId ) {
+export function constructLabel(
+    entityId : string,
+    labelDescription : ?LabelDescription,
+    appendEntityId : boolean
+) {
   if ( !labelDescription || !labelDescription.label )
     return entityId;
 
@@ -15,12 +19,12 @@ export function constructLabel( entityId, labelDescription, appendEntityId ) {
   return result;
 }
 
-export default class EntityLabel extends PureComponent {
+type PropsType ={
+  appendEntityId : boolean,
+  entityId? : ?string,
+};
 
-  static propTypes ={
-    appendEntityId: PropTypes.bool,
-    entityId: PropTypes.string.isRequired,
-  }
+export default class EntityLabel extends PureComponent<PropsType> {
 
   static defaultProps = {
     appendEntityId: false,
@@ -32,7 +36,7 @@ export default class EntityLabel extends PureComponent {
       return null;
 
     return <LabelDescriptionProvider entityId={entityId}>
-      {labelDescription => constructLabel( entityId, labelDescription, appendEntityId )}
+      {( labelDescription : ?LabelDescription ) => constructLabel( entityId, labelDescription, appendEntityId )}
     </LabelDescriptionProvider>;
   }
 

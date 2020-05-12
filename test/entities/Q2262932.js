@@ -1,4 +1,4 @@
-const data = {
+const data : EntityType = {
   pageid: 2185742,
   ns: 0,
   title: 'Q2262932',

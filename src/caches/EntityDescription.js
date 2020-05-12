@@ -1,23 +1,24 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import LabelDescription from './LabelDescription';
 import LabelDescriptionProvider from './LabelDescriptionProvider';
-import PropTypes from 'prop-types';
 
-export function constructDescription( labelDescription ) {
-  return ( labelDescription || {} ).description || null;
+const EMPTY_OBJECT : any = Object.freeze( {} );
+
+export function constructDescription( labelDescription : ?LabelDescription ) {
+  return ( labelDescription || EMPTY_OBJECT ).description || null;
 }
 
-export default class EntityLabel extends PureComponent {
+type PropsType = {
+  entityId? : ?string,
+};
 
-  static propTypes ={
-    entityId: PropTypes.string.isRequired,
-  }
+export default class EntityLabel extends PureComponent<PropsType> {
 
   render() {
     const { entityId } = this.props;
-    if ( !entityId )
-      return null;
+    if ( !entityId ) return null;
 
     return <LabelDescriptionProvider entityId={entityId}>
       {constructDescription}

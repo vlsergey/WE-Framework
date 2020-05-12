@@ -2,14 +2,13 @@
 
 import React, { PureComponent } from 'react';
 import MediawikiPreview from 'components/MediawikiPreview';
-import PropTypes from 'prop-types';
 import styles from './styles.css';
 
-export default class SourceItem extends PureComponent {
+type PropsType = {
+  entityId : string,
+};
 
-  static propTypes = {
-    entityId: PropTypes.string.isRequired,
-  };
+export default class SourceItem extends PureComponent<PropsType> {
 
   render() {
     const { entityId, ...etc } = this.props;
@@ -17,7 +16,7 @@ export default class SourceItem extends PureComponent {
     const wikitext1 = '{{#statements:P31|from=' + entityId + '}}';
     const wikitext2 = '{{source|' + entityId + '}}';
 
-    return <button className={styles.sourceItem} {...etc}>
+    return <button {...etc} className={styles.sourceItem}>
       <div>
         <span className={styles.entityId}>{entityId}</span>: <MediawikiPreview className={styles.entityClasses} spinnerSize={10} wikitext={wikitext1} />
       </div>

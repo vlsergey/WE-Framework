@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import CreateNewButtonCell from './CreateNewButtonCell';
 import EntityField from 'components/entityField';
 import EntityLabel from 'caches/EntityLabel';
@@ -8,20 +9,21 @@ import GoToLocalButtonCell from './GoToLocalButtonCell';
 import GoToWikidataButtonCell from './GoToWikidataButtonCell';
 import PropertyDescription from 'core/PropertyDescription';
 import styles from './WikibaseItem.css';
+import { toWikibaseEntityIdValue } from 'model/ModelUtils';
 
 type PropsType = {
   buttonCells? : ?any[],
   datavalue? : ?DataValueType,
-  onDataValueChange : any => any,
-  propertyDescription? : ?PropertyDescription,
-  readOnly? : ?boolean,
+  onDataValueChange : DataValueType => any,
+  propertyDescription : PropertyDescription,
+  readOnly : boolean,
 };
 
 export default class WikibaseItemDataValueEditor
-  extends PureComponent<PropsType, any> {
+  extends PureComponent<PropsType> {
 
-  static DATATYPE = 'wikibase-item';
-  static DATAVALUE_TYPE = 'wikibase-entityid';
+  static DATATYPE : string = 'wikibase-item';
+  static DATAVALUE_TYPE : string = 'wikibase-entityid';
 
   static defaultProps = {
     readOnly: false,
@@ -29,30 +31,21 @@ export default class WikibaseItemDataValueEditor
 
   WIKIDATA_LINK_URL = 'https://www.wikidata.org/wiki/';
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleChange = this.handleChange.bind( this );
-    this.handleCreate = this.handleCreate.bind( this );
-  }
-
-  handleCreate( entityId ) {
+  @boundMethod
+  handleCreate( entityId : string ) {
     const { datavalue, onDataValueChange } = this.props;
 
     onDataValueChange( {
       ...datavalue,
-      value: {
-        'entity-type': 'item',
-        'numeric-id': entityId.substr( 1 ),
-        'id': entityId,
-      },
+      value: toWikibaseEntityIdValue( entityId ),
       type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
     } );
   }
 
-  handleChange( entityId ) {
+  @boundMethod
+  handleChange( entityId : ?string ) {
     const { datavalue, onDataValueChange } = this.props;
-    if ( entityId === null || entityId.trim() === '' ) {
+    if ( !entityId || entityId.trim() === '' ) {
       onDataValueChange( {
         ...datavalue,
         value: null,
@@ -61,11 +54,7 @@ export default class WikibaseItemDataValueEditor
     } else {
       onDataValueChange( {
         ...datavalue,
-        value: {
-          'entity-type': 'item',
-          'numeric-id': entityId.substr( 1 ),
-          'id': entityId,
-        },
+        value: toWikibaseEntityIdValue( entityId ),
         type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
       } );
     }
@@ -103,7 +92,7 @@ export default class WikibaseItemDataValueEditor
     </React.Fragment>;
   }
 
-  renderButtons( propertyDescription, entityId ) {
+  renderButtons( propertyDescription : PropertyDescription, entityId : string ) {
     return [
       <CreateNewButtonCell
         disabled={!!entityId}

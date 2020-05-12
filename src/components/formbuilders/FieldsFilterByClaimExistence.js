@@ -3,6 +3,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { defaultMemoize } from 'reselect';
+import type { FieldDefType } from 'editors/EditorDefModel';
 
 const EMPTY_OBJECT = {};
 
@@ -31,6 +32,7 @@ const mapStateToProps = state => ( {
   claims: state.entity.claims || EMPTY_OBJECT,
 } );
 
+// $FlowFixMe
 const FilterConnected = connect( mapStateToProps )( FieldsFilterByClaimExistence );
 
 type FilterPropsType = {

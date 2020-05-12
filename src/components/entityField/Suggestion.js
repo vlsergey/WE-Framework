@@ -4,14 +4,13 @@ import React, { PureComponent } from 'react';
 import EntityDescription from 'caches/EntityDescription';
 import EntityLabel from 'caches/EntityLabel';
 import MediawikiPreview from 'components/MediawikiPreview';
-import PropTypes from 'prop-types';
 import styles from './styles.css';
 
-export default class Suggestion extends PureComponent {
+type PropsType = {
+  entityId : string,
+};
 
-  static propTypes = {
-    entityId: PropTypes.string.isRequired,
-  };
+export default class Suggestion extends PureComponent<PropsType> {
 
   render() {
     const { entityId } = this.props;

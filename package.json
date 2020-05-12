@@ -16,6 +16,7 @@
     "@babel/preset-env": "^7.9.6",
     "@babel/preset-flow": "^7.9.0",
     "@babel/preset-react": "^7.9.4",
+    "autobind-decorator": "^2.4.0",
     "autoprefixer": "^9.7.6",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
@@ -24,7 +25,6 @@
     "core-js": "^3.6.5",
     "cross-env": "^7.0.2",
     "css-loader": "^3.5.3",
-    "deep-equal": "^2.0.3",
     "emotion": "^10.0.27",
     "eslint": "^7.0.0",
     "eslint-loader": "^4.0.2",
@@ -81,17 +81,17 @@
     "wikitext-dom": "0.0.7"
   },
   "scripts": {
-    "flow:check": "flow check --show-all-errors --json > ./test/flow-report.json || eslint ./test/filter-flow-report.js --fix && babel ./test/filter-flow-report.js > ./test/filter-flow-report.out.js && node ./test/filter-flow-report.out.js",
-    "flow:status": "flow status || flow status --show-all-errors --json > ./test/flow-report.json || eslint ./test/filter-flow-report.js --fix && babel ./test/filter-flow-report.js > ./test/filter-flow-report.out.js && node ./test/filter-flow-report.out.js",
+    "flow:check": "flow check",
+    "flow:status": "flow status",
     "eslint:check": "eslint --ignore-pattern \"!.eslintrc.js\" .eslintrc.js karma.conf.js postcss.config.js webpack.config.js flow-typed/*.js src/**/*.js test/**/*.js",
     "eslint:fix": "eslint --ignore-pattern \"!.eslintrc.js\" --fix .eslintrc.js karma.conf.js postcss.config.js webpack.config.js flow-typed/*.js src/**/*.js test/**/*.js",
     "serve": "cross-env NODE_ENV=development webpack-dev-server",
     "build": "cross-env NODE_ENV=production webpack && eslint ./deploy-to-wikipedia.js --fix || babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js",
     "deploy": "npm run build && node ./dist/deploy-to-wikipedia.out.js",
     "test": "npm run eslint:check && npm run flow:check && npm run test:karma",
-    "test:karma": "karma start karma.conf.js --single-run",
-    "test:watch": "karma start karma.conf.js --no-single-run",
-    "test:watch:chrome": "karma start karma.conf.js --no-single-run --browsers Chrome"
+    "test:karma": "cross-env NODE_ENV=development karma start karma.conf.js --single-run",
+    "test:watch": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run",
+    "test:watch:chrome": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run --browsers Chrome"
   },
   "repository": {
     "type": "git",
@@ -106,5 +106,6 @@
   "bugs": {
     "url": "https://github.com/vlsergey/WE-Framework/issues"
   },
-  "homepage": "https://github.com/vlsergey/WE-Framework#readme"
+  "homepage": "https://github.com/vlsergey/WE-Framework#readme",
+  "dependencies": {}
 }

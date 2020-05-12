@@ -1,13 +1,18 @@
+// @flow
 
 export type ChildrenContainerDefType = {
   fields? : FieldDefType[],
   fieldsets? : FieldsetDefType[],
-  specials? : SpecialDefType[],
+  specials? : SpecialGroup[],
 };
 
 export type EditorDefType = {
+  description? : ?string,
   dialogTitle : string,
+  id : string,
   linkText : string,
+  newEntityInstanceOf? : string,
+  recommendedClasses? : string[],
   tabs : TabDefType[],
 };
 
@@ -22,10 +27,19 @@ export type FieldsetDefType = ChildrenContainerDefType & {
   labelEntityId? : string,
 };
 
-export type SpecialDefType = {
+export type SpecialGroup = LabelsAndDescriptionAreaSpecialGroup | SparqlSpecialGroup;
+
+export type LabelsAndDescriptionAreaSpecialGroup = {|
   key? : string,
-  type : string,
-};
+  type : 'LabelsAndDescriptionArea',
+|};
+
+export type SparqlSpecialGroup = {|
+  key? : string,
+  sortBy? : string,
+  sparql : string,
+  type : 'SparqlPropertyGroup',
+|};
 
 export type TabDefType = ChildrenContainerDefType & {
   key? : ?string,

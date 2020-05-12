@@ -2,22 +2,21 @@
 
 import React, { PureComponent } from 'react';
 import PropertyDescription from 'core/PropertyDescription';
-import PropTypes from 'prop-types';
 import styles from './PropertyLabelCell.css';
 
-export default class PropertyLabelCell extends PureComponent {
+const WIKIDATA_LINK_URL : string = '//www.wikidata.org/wiki/';
 
-  static propTypes = {
-    propertyDescription: PropTypes.instanceOf( PropertyDescription ),
-  };
+type PropsType = {
+  propertyDescription : PropertyDescription,
+};
 
-  WIKIDATA_LINK_URL = '//www.wikidata.org/wiki/';
+export default class PropertyLabelCell extends PureComponent<PropsType> {
 
   render() {
     const { label, description, id } = this.props.propertyDescription;
     return <th className={styles.wef_property_label}>
       <a
-        href={`${this.WIKIDATA_LINK_URL}Property:${id}`}
+        href={`${WIKIDATA_LINK_URL}Property:${id}`}
         rel="noopener noreferrer"
         target="_blank"
         title={description}>

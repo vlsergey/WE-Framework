@@ -1,10 +1,12 @@
 // @flow
 
-import deepEqual from 'deep-equal';
+import { entries, values } from 'utils/ObjectUtils';
+import deepEqual from 'utils/deepEqual';
 import { getWikidataApi } from './ApiUtils';
 import i18n from './i18n';
 import preSaveTransformations from './preSaveTransformations';
 
+const EMPTY_OBJECT : any = Object.freeze( {} );
 const SUMMARY_PREFIX : string = 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ';
 const TAG : string = 'WE-Framework gadget';
 
@@ -17,16 +19,15 @@ function notify( text : string ) {
   mw.notify( '[WE-F] ' + text, notifyOptions );
 }
 
-type LabelalikeType = 'labels' | 'descriptions' | 'aliases' | 'sitelinks';
-
-export function collectlLabelalikeUpdates<T>(
+type LAType = any;
+export function collectlLabelalikeUpdates(
     originalEntity : EntityType,
     entity : EntityType,
-    labelalikeType : LabelalikeType,
-    removedPlaceholderF : string => ?T ) : ?{ [string] : ?T } {
+    labelalikeType : ( 'labels' | 'descriptions' | 'aliases' | 'sitelinks' ),
+    removedPlaceholderF : string => ?LAType ) : ?{ [string] : ?LAType } {
 
-  const oldData : { [string] : T } = originalEntity[ labelalikeType ] || {};
-  const newData : { [string] : T } = entity[ labelalikeType ] || {};
+  const oldData : { [string] : LAType } = originalEntity[ labelalikeType ] || EMPTY_OBJECT;
+  const newData : { [string] : LAType } = entity[ labelalikeType ] || EMPTY_OBJECT;
 
   const allKeys : Set< string > = new Set();
   Object.keys( oldData ).forEach( key => allKeys.add( key ) );
@@ -35,10 +36,10 @@ export function collectlLabelalikeUpdates<T>(
   const allKeysSorted : string[] = [ ...allKeys ];
   allKeysSorted.sort();
 
-  const changes : { key : string, value : ?T}[] = [];
+  const changes : { key : string, value : ?LAType}[] = [];
   allKeysSorted.forEach( key => {
-    const oldValue : ?T = oldData[ key ] || null;
-    const newValue : ?T = newData[ key ] || null;
+    const oldValue : ?LAType = oldData[ key ] || null;
+    const newValue : ?LAType = newData[ key ] || null;
 
     if ( oldValue === null && newValue === null ) {
       console.warn( 'Something strage goes here with ' + labelalikeType + '...' );
@@ -58,72 +59,68 @@ export function collectlLabelalikeUpdates<T>(
   } );
 
   if ( changes.length > 0 ) {
-    const result : { [string] : ?T } = {};
+    const result : { [string] : ?LAType } = {};
     changes.forEach( value => result[ value.key ] = value.value );
     return result;
   }
 }
 
-export function collectClaimUpdates( originalEntity : EntityType, entity : EntityType ) {
-  const toUpdate = [];
-  const checked = new Set();
+export function collectClaimUpdates( originalEntity : EntityType, entity : EntityType ) : EditClaimType[] {
+  const toUpdate : EditClaimType[] = [];
+  const checked : Set< string > = new Set();
 
   // calculate changed and removed claims
-  Object.keys( entity.claims || {} ).forEach( propertyId => {
+  for ( const [ propertyId, newClaims ] of entries( entity.claims || EMPTY_OBJECT ) ) {
+    const oldClaims : ?ClaimType[] = ( originalEntity.claims || EMPTY_OBJECT )[ propertyId ];
 
-    const newClaims : ClaimType[] = entity.claims[ propertyId ];
-    const oldClaims : ?ClaimType[] = ( originalEntity.claims || {} )[ propertyId ];
-
-    if ( typeof oldClaims !== 'object' ) {
+    if ( !oldClaims ) {
       newClaims.forEach( newClaim => {
         const { id, ...claimWithoutId } = newClaim;
         console.log( 'collectClaimUpdates: Saving claim with temporary id ' + id + ' as new claim without ID' );
         toUpdate.push( claimWithoutId );
       } );
-      return;
+      continue;
     }
 
     if ( oldClaims === newClaims ) {
       newClaims.forEach( newClaim => checked.add( newClaim.id ) );
-      return;
+      continue;
     }
 
     newClaims.forEach( ( newClaim : ClaimType ) => {
       checked.add( newClaim.id );
 
-      const oldClaim = oldClaims.find( ( { id } ) => id === newClaim.id );
-      if ( typeof oldClaim === 'object' ) {
+      const oldClaim : ?ClaimType = oldClaims.find( ( { id } ) => id === newClaim.id );
+      if ( oldClaim ) {
         if ( !deepEqual( oldClaim, newClaim ) ) {
           console.log( 'collectClaimUpdates: Saving claim with id ' + newClaim.id + ' as updated claim' );
-          toUpdate.push( newClaim );
+          toUpdate.push( { ...newClaim } );
         }
       } else {
         // it's a new claim
         const { id, ...claimWithoutId } = newClaim;
-        console.log( 'collectClaimUpdates: Saving claim with temporary id ' + id + ' as new claim without ID' );
+        console.log( `collectClaimUpdates: Saving claim with temporary id ${String( id )} as new claim without ID` );
         toUpdate.push( claimWithoutId );
       }
-
     } );
-  } );
+  }
 
-  Object.values( originalEntity.claims || {} ).forEach( originalClaims => {
+  values( originalEntity.claims || EMPTY_OBJECT ).forEach( originalClaims => {
     originalClaims
       .filter( oldClaim => !checked.has( oldClaim.id ) )
       .forEach( oldClaim => toUpdate.push( { id: oldClaim.id, remove: '' } ) );
   } );
 
-  return toUpdate
-    .map( ( claim : ClaimType ) => {
-      if ( typeof claim.id === 'string' || claim.remove !== '' )
-        return claim;
-
-      const dateValue : ?DataValueType = claim.mainsnak.datavalue;
-      if ( !dateValue ) {
-        return { id: claim.id, remove: '' };
-      }
+  return toUpdate.map( ( claim : EditClaimType ) => {
+    if ( typeof claim.id === 'string' || claim.remove !== '' )
       return claim;
-    } );
+
+    const dateValue : ?DataValueType = ( claim.mainsnak || EMPTY_OBJECT ).datavalue;
+    if ( !dateValue ) {
+      return { id: claim.id, remove: '' };
+    }
+    return claim;
+  } );
 }
 
 export function collectEntityUpdates(
@@ -158,8 +155,8 @@ export function collectEntityUpdates(
   return data;
 }
 
-export function closeWithoutSave( reject ) {
-  return ( dispatch, getState ) => {
+export function closeWithoutSave( reject : ( string => any ) ) {
+  return ( dispatch : DispatchType, getState : GetStateType ) => {
     notify( 'Analyzing changes...' );
     const state = getState();
     const data = collectEntityUpdates( state.originalEntity, state.entity );
@@ -173,11 +170,15 @@ export function closeWithoutSave( reject ) {
   };
 }
 
-export function saveAndClose( resolve, reject ) {
-  return ( dispatch, getState ) => {
+export function saveAndClose(
+    resolve : ( string => any ),
+    reject : ( string => any )
+) {
+  return ( dispatch : DispatchType, getState : GetStateType ) => {
     notify( 'Analyzing changes...' );
     const state = getState();
-    const data = collectEntityUpdates( state.originalEntity, state.entity );
+    const dirtyEntity : ItemType = state.entity;
+    const data = collectEntityUpdates( state.originalEntity, dirtyEntity );
 
     if ( Object.keys( data ).length === 0 ) {
       notify( 'No changes' );
@@ -187,17 +188,17 @@ export function saveAndClose( resolve, reject ) {
 
     notify( 'Saving changes...' );
 
-    const params = {
+    const params : any = {
       action: 'wbeditentity',
       data: JSON.stringify( data ),
       summary: 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get( 'wgDBname' ),
       tags: TAG,
     };
 
-    if ( typeof state.entity.id !== 'string' ) {
+    if ( !dirtyEntity.id ) {
       params.new = 'item';
     } else {
-      params.id = state.entity.id;
+      params.id = dirtyEntity.id;
     }
 
     getWikidataApi()
@@ -223,7 +224,7 @@ export function saveAndClose( resolve, reject ) {
       } );
   };
 
-  function tagRevisions( entityId, displayNotifications ) {
+  function tagRevisions( entityId : string, displayNotifications : ?boolean ) {
     const notifyOptions = {
       autoHide: true,
       tag: 'WE-F Revisions Tags',

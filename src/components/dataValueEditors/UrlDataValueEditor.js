@@ -1,22 +1,21 @@
 // @flow
 
 import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
+import { boundMethod } from 'autobind-decorator';
 import GoToUrlButtonCell from './GoToUrlButtonCell';
 import React from 'react';
 import styles from './UrlDataValueEditor.css';
+
+const EMPTY_OBJECT : any = Object.freeze( {} );
+const EMPTY_STRING : string = '';
 
 export default class UrlDataValueEditor extends AbstractStringBasedDataValueEditor {
 
   static propTypes = AbstractStringBasedDataValueEditor.propTypes;
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleChange = this.handleChange.bind( this );
-  }
-
-  handleChange( event ) {
-    this.handleValueChange( event.target.value );
+  @boundMethod
+  handleChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
+    this.handleValueChange( value );
   }
 
   render() {
@@ -35,16 +34,13 @@ export default class UrlDataValueEditor extends AbstractStringBasedDataValueEdit
 
     }
 
-    const params = {
-      className: styles.wef_url,
-      onChange: this.handleChange,
-      type: 'text',
-      value: datavalue && datavalue.value ? datavalue.value : '',
-    };
-
     return <React.Fragment>
       <td className={styles.wef_datavalue_url} colSpan={11}>
-        <input {...params} />
+        <input
+          className={styles.wef_url}
+          onChange={this.handleChange}
+          type="text"
+          value={( datavalue || EMPTY_OBJECT ).value || EMPTY_STRING} />
       </td>
       <GoToUrlButtonCell href={href} />
     </React.Fragment>;
