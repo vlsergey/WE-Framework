@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
+import { boundMethod } from 'autobind-decorator';
 import generateRandomString from 'utils/generateRandomString';
 import getDefaultQualifierSnak from 'enhancements/getDefaultQualifierSnak';
 import i18n from './i18n';
@@ -12,7 +13,7 @@ import SnaksMapEditor from 'components/snaks/SnaksMapEditor';
 import styles from './ClaimQualifiersTable.css';
 
 type PropsType = {
-  allowedQualifiers? : string[],
+  allowedQualifiers : string[],
   claim : ClaimType,
   claimPropertyDescription : PropertyDescription,
   defaultAddQuailifier? : boolean,
@@ -34,6 +35,8 @@ export default class ClaimQualifiersTable
     disabledQualifiers: [],
   };
 
+  confirmRemoveQualifierTemplate : string;
+
   constructor() {
     super( ...arguments );
 
@@ -48,14 +51,10 @@ export default class ClaimQualifiersTable
     this.confirmRemoveQualifierTemplate = i18n.confirmRemoveQualifierTemplate
       .replace( '{claimPropertyId}', claimPropertyDescription.id )
       .replace( '{claimPropertyLabel}', claimPropertyDescription.label || claimPropertyDescription.id );
-
-    this.handleQualifierAdd = this.handleQualifierAdd.bind( this );
-    this.handleQualifiersUpdate = this.handleQualifiersUpdate.bind( this );
-    this.removeButtonConfirmMessageF = this.removeButtonConfirmMessageF.bind( this );
-    this.showFromBehindLabel = this.showFromBehindLabel.bind( this );
   }
 
-  handleQualifierAdd( propertyId ) {
+  @boundMethod
+  handleQualifierAdd( propertyId : string ) {
     if ( propertyId === 'OTHER' ) {
       // switch from simple select to complex autosuggest
       this.setState( {
@@ -89,6 +88,7 @@ export default class ClaimQualifiersTable
     } );
   }
 
+  @boundMethod
   showFromBehindLabel() {
     if ( this.state.hiddenBehindLabel ) {
       this.setState( {
@@ -97,6 +97,7 @@ export default class ClaimQualifiersTable
     }
   }
 
+  @boundMethod
   showQualifierSelect() {
     const { allowedQualifiers } = this.props;
     this.setState( {
@@ -104,13 +105,15 @@ export default class ClaimQualifiersTable
     } );
   }
 
-  handleQualifiersUpdate( qualifiers ) {
+  @boundMethod
+  handleQualifiersUpdate( qualifiers : QualifiersType ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
       qualifiers,
     } );
   }
 
+  @boundMethod
   removeButtonConfirmMessageF( qualifierPropertyDescription : PropertyDescription ) {
     return this.confirmRemoveQualifierTemplate
       .replace( '{qualifierPropertyId}', qualifierPropertyDescription.id )

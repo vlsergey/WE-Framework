@@ -3,7 +3,7 @@ import assert from 'assert';
 import buildReducers from 'core/reducers';
 import { LanguageSelectImpl as LanguageSelect } from 'components/labelalike/LanguageSelect';
 import LanguageSelectContainer from 'components/labelalike/LanguageSelectContainer';
-import Provider from 'ProviderWrapper';
+import Provider from 'testUtils/ProviderWrapper';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import SingleLanguageEditor from 'components/labelalike/SingleLanguageEditor';

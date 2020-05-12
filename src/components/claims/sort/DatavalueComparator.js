@@ -1,6 +1,5 @@
 // @flow
 
-
 export interface DatavalueComparator {
 
   code : string,

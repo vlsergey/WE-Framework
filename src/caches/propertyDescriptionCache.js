@@ -11,23 +11,22 @@ class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
 
   constructor() {
     super( TYPE, true, 50 );
-    this.currentVersion = PropertyDescription.VERSION;
   }
 
   isKeyValid( cacheKey : string ) : boolean {
     return typeof cacheKey === 'string' && !!cacheKey.match( /^P(\d+)$/i );
   }
 
-  enchanceIndexedDbResult( cachedValue ) {
+  enchanceIndexedDbResult( cachedValue : any ) {
     PropertyDescription.deserialize( cachedValue );
     return cachedValue;
   }
 
-  notifyMessage( cacheKeys ) {
+  notifyMessage( cacheKeys : string[] ) : string {
     return 'Fetching ' + cacheKeys.length + ' property descriptions from Wikidata';
   }
 
-  buildRequestPromice( cacheKeys ) {
+  buildRequestPromice( cacheKeys : string[] ) {
     return getWikidataApi()
       .getPromise( {
         action: 'wbgetentities',
@@ -38,15 +37,15 @@ class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
       } );
   }
 
-  convertResultToEntities( result ) {
-    const cacheUpdate : {[string] : PropertyDescription} = {};
+  convertResultToEntities( result : any ) {
+    const cacheUpdate : {| [string] : PropertyDescription |} = ( {} : any );
 
     const propertyTypes : PropertyType[] = ( Object.values( result.entities ) : any );
     propertyTypes
       .filter( ( entity : PropertyType ) => typeof entity.missing === 'undefined' )
       .forEach( ( entity : PropertyType ) => {
         const propertyDescription = new PropertyDescription( entity );
-        cacheUpdate[ entity.id ] = Object.freeze( propertyDescription );
+        cacheUpdate[ propertyDescription.id ] = Object.freeze( propertyDescription );
       } );
     return cacheUpdate;
   }

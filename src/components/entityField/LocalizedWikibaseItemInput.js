@@ -27,7 +27,7 @@ class LocalizedWikibaseItemInput extends PureComponent<PropsType> {
     }
   }
 
-  componentDidUpdate( prevProps ) {
+  componentDidUpdate( prevProps : PropsType ) {
     const { cache, entityId, queue } = this.props;
 
     if ( prevProps.entityId !== this.props.entityId
@@ -67,5 +67,6 @@ const mapDispatchToProps = dispatch => ( {
   queue: key => dispatch( labelDescriptionCache.actionQueue( [ key ] ) ),
 } );
 
+// $FlowFixMe
 const LocalizedWikibaseItemInputConnected = connect( mapStateToProps, mapDispatchToProps )( LocalizedWikibaseItemInput );
 export default LocalizedWikibaseItemInputConnected;

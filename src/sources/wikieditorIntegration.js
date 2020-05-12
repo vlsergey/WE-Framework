@@ -2,26 +2,29 @@
 
 import { add } from './LruStore';
 import AdditionalArgumentsDialog from './AdditionalArgumentsDialog';
+import { getBody } from 'utils/DomUtils';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import registerTool from 'utils/registerTool';
 import WikidataSourceDialog from './WikidataSourceDialog';
 
 function showWikidataSourceDialog() {
+  const body : HTMLBodyElement = getBody();
+
   /* eslint react/jsx-no-bind: 0 */
-  const appDiv = document.createElement( 'div' );
-  document.body.appendChild( appDiv );
+  const appDiv : HTMLDivElement = document.createElement( 'div' );
+  body.appendChild( appDiv );
 
   const handleClose = () => {
     ReactDOM.unmountComponentAtNode( appDiv );
-    document.body.removeChild( appDiv );
+    body.removeChild( appDiv );
   };
 
   const insert = ( entityId : string ) => {
     add( entityId );
 
     ReactDOM.unmountComponentAtNode( appDiv );
-    document.body.removeChild( appDiv );
+    body.removeChild( appDiv );
     showAdditionalArgumentsDialog( entityId );
   };
 
@@ -30,19 +33,21 @@ function showWikidataSourceDialog() {
     onInsert={insert} />, appDiv );
 }
 
-function showAdditionalArgumentsDialog( entityId ) {
+function showAdditionalArgumentsDialog( entityId : string ) {
+  const body : HTMLBodyElement = getBody();
+
   /* eslint react/jsx-no-bind: 0 */
-  const appDiv = document.createElement( 'div' );
-  document.body.appendChild( appDiv );
+  const appDiv : HTMLDivElement = document.createElement( 'div' );
+  body.appendChild( appDiv );
 
   const handleClose = () => {
     ReactDOM.unmountComponentAtNode( appDiv );
-    document.body.removeChild( appDiv );
+    body.removeChild( appDiv );
   };
 
   const handleInsert = ( text : string ) => {
     ReactDOM.unmountComponentAtNode( appDiv );
-    document.body.removeChild( appDiv );
+    body.removeChild( appDiv );
     encapsulateSelection( text );
   };
 

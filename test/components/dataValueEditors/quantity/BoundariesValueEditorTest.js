@@ -3,7 +3,7 @@ import BoundariesValueEditor from 'components/dataValueEditors/quantity/Boundari
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import TableTBodyTr from '../TableTBodyTr';
-import ValueHolder from '../../../ValueHolder';
+import ValueHolder from 'testUtils/ValueHolder';
 
 const NOOP = () => {};
 

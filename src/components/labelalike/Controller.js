@@ -1,63 +1,56 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import { connect } from 'react-redux';
 import { defaultMemoize } from 'reselect';
-import PropTypes from 'prop-types';
 import SingleLanguageEditor from './SingleLanguageEditor';
 
-const EMPTY_STRING = '';
+const EMPTY_STRING : string = '';
 
-class Controller extends Component {
+type PropsType = {
+  aliases : LabelalikeType[],
+  description : LabelalikeType,
+  draftAlias : LabelalikeType,
+  label : LabelalikeType,
+  language : string,
+  onAliasesChange : ( ?( LabelalikeType[] ) ) => any,
+  onDescriptionChange : ( ?LabelalikeType ) => any,
+  onDraftAliasChange : any => any,
+  onLabelChange : ( ?LabelalikeType ) => any,
+};
 
-  static propTypes = {
-    language: PropTypes.string.isRequired,
+class Controller extends PureComponent<PropsType> {
 
-    label: PropTypes.object,
-    description: PropTypes.object,
-    draftAlias: PropTypes.object,
-    aliases: PropTypes.arrayOf( PropTypes.object ),
-
-    onLabelChange: PropTypes.func.isRequired,
-    onDescriptionChange: PropTypes.func.isRequired,
-    onDraftAliasChange: PropTypes.func.isRequired,
-    onAliasesChange: PropTypes.func.isRequired,
-  }
-
-  constructor() {
-    super( ...arguments );
-    this.handleLabelChange = this.handleLabelChange.bind( this );
-    this.handleDescriptionChange = this.handleDescriptionChange.bind( this );
-    this.handleDraftAliasChange = this.handleDraftAliasChange.bind( this );
-    this.handleAliasesChange = this.handleAliasesChange.bind( this );
-  }
-
-  aliasValues = defaultMemoize(
-    aliases => aliases.map( alias => alias.value || '' )
+  aliasValues : ( LabelalikeType[] => string[] ) = defaultMemoize(
+    ( aliases : LabelalikeType[] ) => aliases.map( alias => alias.value || '' )
   );
 
-  handleLabelChange( newValue ) {
+  @boundMethod
+  handleLabelChange( newValue : ?string ) {
     this.props.onLabelChange( !newValue || newValue.length === 0
       ? undefined
       : { language: this.props.language, value: newValue } );
   }
 
-  handleDescriptionChange( newValue ) {
+  @boundMethod
+  handleDescriptionChange( newValue : ?string ) {
     this.props.onDescriptionChange( !newValue || newValue.length === 0
       ? undefined
       : { language: this.props.language, value: newValue } );
   }
 
-  handleDraftAliasChange( newValue ) {
+  @boundMethod
+  handleDraftAliasChange( newValue : ?string ) {
     this.props.onDraftAliasChange( !newValue || newValue.length === 0
       ? undefined
       : { language: this.props.language, value: newValue } );
   }
 
-  handleAliasesChange( tags ) {
-    const aliases = ( tags || [] ).filter( item => item.length > 0 );
-    this.props.onAliasesChange( aliases.length === 0
-      ? undefined
+  @boundMethod
+  handleAliasesChange( tags : ?( string[] ) ) {
+    const aliases : string[] = ( tags || [] ).filter( item => item.length > 0 );
+    this.props.onAliasesChange( aliases.length === 0 ? undefined
       : aliases.map( alias => ( { language: this.props.language, value: alias } ) ) );
   }
 
@@ -78,7 +71,7 @@ class Controller extends Component {
 }
 
 const EMPTY_ARRAY = [];
-const EMPTY_OBJECT = {};
+const EMPTY_OBJECT : any = Object.freeze( {} );
 
 const mapStateToProps = ( state, ownProps ) => {
   const entity = state.entity || EMPTY_OBJECT;
@@ -99,5 +92,6 @@ const mapDispatchToProps = ( dispatch, ownProps ) => ( {
   onAliasesChange: newValue => dispatch( { type: 'ALIASES_CHANGE', language: ownProps.language, newValue } ),
 } );
 
+// $FlowFixMe
 const ControllerConnected = connect( mapStateToProps, mapDispatchToProps )( Controller );
 export default ControllerConnected;

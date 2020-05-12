@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
 import ExternalIdDataValueEditor from 'components/dataValueEditors/external-id/ExternalIdDataValueEditor';
@@ -78,11 +79,11 @@ export function parseJustLinks(
         if ( pattern.test( value ) ) {
           const normalized = value.replace( pattern, replacement );
           if ( normalized !== value ) {
-            console.debug( 'Value ' + key + ' with pattern ' + pattern + ' normalized from "' + value + '" to: "' + normalized + '"' );
+            console.debug( `Value ${key} with pattern ${String( pattern )} normalized from "${value}" to: "${normalized}"` );
           }
           onPropertyValueFound( propertyId, normalized );
         } else {
-          console.debug( 'Seems unsupported value for ' + key + ' by pattern ' + pattern + ': "' + value + '"' );
+          console.debug( `Seems unsupported value for ${key} by pattern ${String( pattern )}: "${value}"` );
         }
       } );
     } );
@@ -103,26 +104,21 @@ type StateType = {
 class ViafPropertyDataValueEditor
   extends PureComponent<PropsType, StateType> {
 
-  constructor() {
-    super( ...arguments );
+  state = {
+    dialogOpen: false,
+  };
 
-    this.state = {
-      dialogOpen: false,
-    };
-
-    this.handleClick = this.handleClick.bind( this );
-    this.handleDialogClose = this.handleDialogClose.bind( this );
-    this.handleSelect = this.handleSelect.bind( this );
-  }
-
+  @boundMethod
   handleClick() {
     this.setState( { dialogOpen: true } );
   }
 
+  @boundMethod
   handleDialogClose() {
     this.setState( { dialogOpen: false } );
   }
 
+  @boundMethod
   handleSelect( viafIds : string[] ) {
     this.setState( { dialogOpen: false } );
 
@@ -178,5 +174,6 @@ const mapDispatchToProps = dispatch => ( {
   } ),
 } );
 
+// $FlowFixMe
 const ViafPropertyDataValueEditorConnected = connect( undefined, mapDispatchToProps )( ViafPropertyDataValueEditor );
 export default ViafPropertyDataValueEditorConnected;

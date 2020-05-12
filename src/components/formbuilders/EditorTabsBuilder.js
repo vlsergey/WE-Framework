@@ -4,10 +4,11 @@ import React, { PureComponent } from 'react';
 import ChildrenBuilder from './ChildrenBuilder';
 import EntityLabel from 'caches/EntityLabel';
 import styles from './EditorTabsBuilder.css';
+import type { TabDefType } from 'editors/EditorDefModel';
 import TabsWrapper from 'wrappers/TabsWrapper';
 
 type PropsType = {
-  onActivate? : ?( any => any ),
+  onActivate? : any => any,
   tabs : TabDefType[],
 };
 

@@ -34,7 +34,7 @@ export function getEntityIdDeferred() {
     return deferredEntityIdPromise;
   }
 
-  deferredEntityIdPromise = new Promise( ( resolve, reject ) => {
+  deferredEntityIdPromise = new Promise<?string>( ( resolve, reject ) => {
     if ( !WG_ARTICLE_ID ) {
       reject( 'wgArticleId configuration variable is not set' );
       return;

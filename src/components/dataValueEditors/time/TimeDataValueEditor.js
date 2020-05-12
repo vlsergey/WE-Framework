@@ -2,6 +2,7 @@
 
 import * as ApiUtils from 'core/ApiUtils';
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import DetailsArea from './DetailsArea';
 import Popup from 'semantic-ui-react/dist/commonjs/modules/Popup';
 import styles from './Time.css';
@@ -27,9 +28,12 @@ type StateType = {
 export default class TimeDataValueEditor
   extends PureComponent<PropsType, StateType> {
 
+  wikidataApi = ApiUtils.getWikidataApi();
+
   constructor() {
     super( ...arguments );
     const text = ( ( this.props.datavalue || {} ).value || {} ).time || '';
+
     this.state = {
       parsing: false,
       rendering: false,
@@ -39,22 +43,25 @@ export default class TimeDataValueEditor
       calendarModel: null,
       precision: null,
     };
-    this.wikidataApi = ApiUtils.getWikidataApi();
-
-    this.handleTextChange = this.handleTextChange.bind( this );
-    this.handleChangeManualCalendarModel = calendarModel => { this.setState( { calendarModel } ); this.requestParsing( ); };
-    this.handleChangeManualPrecision = precision => { this.setState( { precision } ); this.requestParsing( ); };
-
-    this.handleToggleManualCalendarModel = this.handleToggleManualCalendarModel.bind( this );
-    this.handleToggleManualPrecision = this.handleToggleManualPrecision.bind( this );
-
-    this.refPopup = React.createRef();
   }
 
   componentDidMount() {
     this.requestRender( true );
   }
 
+  @boundMethod
+  handleChangeManualCalendarModel( calendarModel : ?string ) {
+    this.setState( { calendarModel } );
+    this.requestParsing( );
+  }
+
+  @boundMethod
+  handleChangeManualPrecision( precision : ?number ) {
+    this.setState( { precision } );
+    this.requestParsing( );
+  }
+
+  @boundMethod
   handleToggleManualCalendarModel() {
     const valueCalendarModel = ( ( this.props.datavalue || {} ).value || {} ).calendarmodel;
     if ( this.state.calendarModel === null && !!valueCalendarModel ) {
@@ -65,6 +72,7 @@ export default class TimeDataValueEditor
     this.requestParsing( );
   }
 
+  @boundMethod
   handleToggleManualPrecision() {
     const valuePrecision = ( ( this.props.datavalue || {} ).value || {} ).precision;
     if ( this.state.precision === null && valuePrecision !== null ) {
@@ -75,9 +83,8 @@ export default class TimeDataValueEditor
     this.requestParsing( );
   }
 
-  handleTextChange( event ) {
-    const { value } = event.target;
-
+  @boundMethod
+  handleTextChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
     this.setState( { text: value } );
     this.requestParsing( );
   }
@@ -116,18 +123,18 @@ export default class TimeDataValueEditor
         value: response.results.length !== 0 ? response.results[ 0 ].value : null,
         type: 'time',
       } );
-      this.requestRender();
+      this.requestRender( false );
     } ).catch( error => {
       mw.warn( 'Unable to parse time value: ' + error );
     } );
   }
 
-  requestRender( renderToText ) {
+  requestRender( renderToText : boolean ) {
     // we need to be sure that changes to state are applied
     setTimeout( () => this.requestRenderImpl( renderToText ), 0 );
   }
 
-  requestRenderImpl( renderToText ) {
+  requestRenderImpl( renderToText : boolean ) {
     const { datavalue } = this.props;
     if ( !this.props.datavalue ) {
       this.setState( { rendering: false, renderedAsHtml: '' } );
@@ -177,7 +184,6 @@ export default class TimeDataValueEditor
 
     const input = <input
       onChange={this.handleTextChange}
-      onKeyDown={this.handleKeyDown}
       value={text} />;
 
     const details = <DetailsArea

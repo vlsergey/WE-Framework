@@ -3,6 +3,7 @@
 import * as ApiUtils from 'core/ApiUtils';
 import React, { PureComponent } from 'react';
 import Autosuggest from 'react-autosuggest';
+import { boundMethod } from 'autobind-decorator';
 import { connect } from 'react-redux';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import LocalizedWikibaseItemInput from './LocalizedWikibaseItemInput';
@@ -14,7 +15,7 @@ const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
 type PropsType = {
   cache : any,
   onSelect : ?string => any,
-  readOnly? : ?boolean,
+  readOnly : boolean,
   testSuggestionsProvider? : string => string[],
   value? : ?string,
 };
@@ -32,6 +33,9 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
 
   requestedValue : ?string;
 
+  wikibaseItemInputRef : ReactObjRef< any > = React.createRef();
+  wikidataApi = ApiUtils.getWikidataApi();
+
   constructor() {
     super( ...arguments );
 
@@ -40,23 +44,15 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
       suggestions: value ? [ value ] : [],
       textValue: value || '',
     };
-    this.wikidataApi = ApiUtils.getWikidataApi();
-
-    this.wikibaseItemInputRef = React.createRef();
-
-    this.handleChange = this.handleChange.bind( this );
-    this.handleSuggestionsClearRequested = this.handleSuggestionsClearRequested.bind( this );
-    this.handleSuggestionsFetchRequested = this.handleSuggestionsFetchRequested.bind( this );
-
-    this.renderInput = this.renderInput.bind( this );
-    this.renderSuggestion = this.renderSuggestion.bind( this );
   }
 
+  @boundMethod
   handleSuggestionsClearRequested() {
     this.setState( { suggestions: [] } );
   }
 
-  handleSuggestionsFetchRequested( { value } : ( {value : string} ) ) {
+  @boundMethod
+  handleSuggestionsFetchRequested( { value } : { value : string } ) : void {
     if ( this.props.testSuggestionsProvider ) {
       this.setState( {
         suggestions: this.props.testSuggestionsProvider( value ),
@@ -84,16 +80,20 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
     } );
   }
 
-  getSuggestionValue( data ) {
-    return data ? data : '';
+  getSuggestionValue( data : ?string ) : string {
+    return data || '';
   }
 
-  handleChange( event, { method, newValue } ) {
+  @boundMethod
+  handleChange(
+    event : SyntheticEvent< any >,
+    { method, newValue } : { method : string, newValue : ?string }
+  ) {
     const { cache, value, onSelect } = this.props;
 
     switch ( method ) {
     case 'type': {
-      if ( newValue === null || newValue.trim() === '' ) {
+      if ( !newValue || newValue.trim() === '' ) {
         onSelect( null );
         break;
       }
@@ -109,26 +109,25 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
       onSelect( newValue );
       const newTextValue = cache[ newValue ] && cache[ newValue ].label ? cache[ newValue ].label : newValue;
       this.setState( {
-        textValue: newTextValue,
+        textValue: newTextValue || '',
       } );
-      this.wikibaseItemInputRef.current.setValue( newTextValue );
+      if ( this.wikibaseItemInputRef.current ) {
+        this.wikibaseItemInputRef.current.setValue( newTextValue );
+      }
       break;
     }
     }
   }
 
   render() {
-    const inputProps = {
-      type: 'text',
-    };
-
-    inputProps.entityId = this.props.value || null;
-    inputProps.onChange = this.handleChange;
-    inputProps.value = this.state.textValue;
-
     return <Autosuggest
       getSuggestionValue={this.getSuggestionValue}
-      inputProps={inputProps}
+      inputProps={{
+        entityId: this.props.value || null,
+        onChange: this.handleChange,
+        type: 'text',
+        value: this.state.textValue,
+      }}
       onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
       onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
       renderInputComponent={this.renderInput}
@@ -137,7 +136,8 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
       theme={styles} />;
   }
 
-  renderInput( inputProps ) {
+  @boundMethod
+  renderInput( inputProps : any ) {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "value" }] */
     const { value, onChange, ref, ...etc } = inputProps;
 
@@ -149,7 +149,7 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
       wikibaseItemInputRef={this.wikibaseItemInputRef} />;
   }
 
-  renderSuggestion( data ) {
+  renderSuggestion( data : string ) {
     return <Suggestion entityId={data} />;
   }
 }
@@ -158,5 +158,6 @@ const mapStateToProps = state => ( {
   cache: state.LABELDESCRIPTIONS.cache,
 } );
 
+// $FlowFixMe
 const AutocompleteModeConnected = connect( mapStateToProps )( AutocompleteMode );
 export default AutocompleteModeConnected;

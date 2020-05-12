@@ -3,7 +3,7 @@
 const MAX_ITEMS_TO_REMEMBER = 10;
 
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
-let dbConnection = null;
+let dbConnection : ?IDBDatabase = null;
 
 if ( indexedDB ) {
   const dbOpenRequest = indexedDB.open( 'WEF_WIKIBASE_ITEM_LRU', 1 );
@@ -16,27 +16,28 @@ if ( indexedDB ) {
     dbConnection = dbOpenRequest.result;
   };
   dbOpenRequest.onupgradeneeded = event => {
-    const db = event.target.result;
+    const db : IDBDatabase = event.target.result;
     db.createObjectStore( 'LRU' );
   };
 }
 
-export function findLastRecentlyUsed( propertyId ) {
-  if ( !indexedDB || !dbConnection ) return Promise.resolve( [] );
+export function findLastRecentlyUsed( propertyId : string ) : Promise< string[] > {
+  const currentConnection : ?IDBDatabase = dbConnection;
+  if ( !currentConnection ) return Promise.resolve( [] );
 
   return new Promise( ( resolve, reject ) => {
-    const transaction = dbConnection.transaction( [ 'LRU' ], 'readonly' );
-    const objectStore = transaction.objectStore( 'LRU' );
+    const transaction : IDBTransaction = currentConnection.transaction( [ 'LRU' ], 'readonly' );
+    const objectStore : IDBObjectStore = transaction.objectStore( 'LRU' );
     const request = objectStore.get( propertyId );
     request.onsuccess = () => resolve( Array.isArray( request.result )
       ? request.result.filter( item => item.match( /^Q\d+$/ ) )
-      : null );
+      : [] );
     request.onerror = () => reject( request.error );
   } );
 }
 
-export function addLastRecentlyUsed( propertyId : string, value : string ) {
-  if ( !indexedDB || !dbConnection ) return;
+export function addLastRecentlyUsed( propertyId : string, value : string ) : Promise< void > {
+  if ( !indexedDB || !dbConnection ) return Promise.resolve();
 
   const transaction = dbConnection.transaction( [ 'LRU' ], 'readwrite' );
   const objectStore = transaction.objectStore( 'LRU' );

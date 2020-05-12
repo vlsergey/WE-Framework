@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import { COLUMNS_FOR_DATA_VALUE_EDITOR } from 'components/TableColSpanConstants';
 import i18n from './core.i18n';
 import PropertyDescription from 'core/PropertyDescription';
@@ -8,7 +9,6 @@ import SelectSnakTypeButtonCell from './SelectSnakTypeButtonCell';
 import SnakValueEditorFactory from './SnakValueEditorFactory';
 import styles from './core.css';
 
-/* eslint react/default-props-match-prop-types: 0 */
 type PropsType = {
   onSnakChange : SnakType => any,
   propertyDescription : PropertyDescription,
@@ -25,12 +25,8 @@ export default class SnakEditorTableRowPart extends PureComponent<PropsType> {
     readOnly: false,
   };
 
-  constructor() {
-    super( ...arguments );
-    this.handleSnakTypeChange = this.handleSnakTypeChange.bind( this );
-  }
-
-  handleSnakTypeChange( snaktype ) {
+  @boundMethod
+  handleSnakTypeChange( snaktype : SnakTypeType ) {
     const { onSnakChange } = this.props;
     if ( onSnakChange ) {
       onSnakChange( {

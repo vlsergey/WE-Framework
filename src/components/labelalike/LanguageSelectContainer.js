@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import Controller from './Controller';
 import i18n from 'components/core.i18n';
 import LanguageSelect from './LanguageSelect';
@@ -18,10 +19,9 @@ export default class LanguageSelectContainer
     this.state = {
       language: mw.config.get( 'wgContentLanguage' ),
     };
-
-    this.handleLanguageChange = this.handleLanguageChange.bind( this );
   }
 
+  @boundMethod
   handleLanguageChange( langCode : string ) {
     this.setState( {
       language: langCode,

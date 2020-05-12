@@ -52,9 +52,6 @@ module.exports = {
         include: /src/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        options: {
-          cacheDirectory: true,
-        },
       },
       {
         // enforce: "pre",
@@ -63,7 +60,6 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'eslint-loader',
         options: {
-          cache: true,
           fix: true,
         },
       },

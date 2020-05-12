@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import compare from 'utils/compare';
+import type { EditorDefType } from 'editors/EditorDefModel';
 import { getEntityIdDeferred } from 'core/ApiUtils';
 import i18n from './i18n';
 import { onEditorLinkClick } from 'core/edit';
@@ -43,28 +44,26 @@ export default class EditorLinks extends PureComponent<PropsType, StateType> {
     }
   }
 
-  queryClassHierarchy( entityId ) {
+  async queryClassHierarchy( entityId : string ) {
     const url = this.SPARQL_ENDPOINT + '?query='
       + encodeURIComponent( `SELECT DISTINCT ?type WHERE { ${this.ENTITY_PREFIX}${entityId} ${this.INSTANCEOF_PROP} ?childClass . ?childClass ${this.SUBCLASS_PROP}* ?type }` );
-    return fetch( url, {
+
+    const body = await fetch( url, {
       headers: {
         Accept: 'application/sparql-results+json',
       },
-    } )
-      .then( body => body.json() )
-      .then( result => {
-        const [ columnName ] = result.head.vars;
+    } );
+    const result = await body.json();
+    const [ columnName ] = result.head.vars;
 
-        return result.results.bindings.map( binding => {
-          const { value } = binding[ columnName ];
-          return value.substr( this.ENTITY_URL_PREFIX.length );
-        } );
-      } ).then( classIds => {
-        this.setState( { classIds } );
-      } );
+    const classIds : string[] = result.results.bindings.map( binding => {
+      const { value } = binding[ columnName ];
+      return value.substr( this.ENTITY_URL_PREFIX.length );
+    } );
+    this.setState( { classIds } );
   }
 
-  handleEditorLinkClick( editorTemplate ) {
+  handleEditorLinkClick( editorTemplate : EditorDefType ) {
     return () => onEditorLinkClick( editorTemplate, this.state.entityId );
   }
 
@@ -79,7 +78,7 @@ export default class EditorLinks extends PureComponent<PropsType, StateType> {
       <li key="settings">
         <a onClick={start}>{i18n.linkText}</a>
       </li>
-      { sorted.map( editorTemplate => {
+      { sorted.map( ( editorTemplate : EditorDefType ) => {
         const recommended = ( editorTemplate.recommendedClasses || [] ).some( isEntityClass );
         const style = recommended ? { fontWeight: 'bolder' } : {};
 

@@ -1,43 +1,38 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ButtonCell from 'components/ButtonCell';
 import i18n from 'components/core.i18n';
 import Popup from 'semantic-ui-react/dist/commonjs/modules/Popup';
-import PropTypes from 'prop-types';
 import RankSelect from './RankSelect';
 import styles from './SelectRankButtonCell.css';
 
-const icons = {
+const ICONS : { [RankType] : string } = Object.freeze( {
   preferred: 'ui-icon-arrowthickstop-1-n',
   normal: 'ui-icon-arrowthick-2-n-s',
   deprecated: 'ui-icon-arrowthickstop-1-s',
+} );
+
+type PropsType = {
+  disabled : boolean,
+  onChange : RankType => any,
+  value : RankType,
 };
 
-export default class SelectRankButtonCell extends PureComponent {
-
-  static propTypes = {
-    disabled: PropTypes.bool,
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.oneOf( [ 'deprecated', 'normal', 'preferred' ] ),
-  };
+export default class SelectRankButtonCell extends PureComponent<PropsType> {
 
   static defaultProps = {
     disabled: false,
-    value: 'value',
+    value: 'normal',
   };
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleChange = this.handleChange.bind( this );
-  }
-
-  handleChange( value ) {
+  @boundMethod
+  handleChange( value : RankType ) {
     if ( value !== this.props.value ) {
       const { onChange } = this.props;
       if ( onChange )
-        onChange( ...arguments );
+        onChange( value );
     }
   }
 
@@ -47,9 +42,8 @@ export default class SelectRankButtonCell extends PureComponent {
     return <ButtonCell
       className={styles.selectRankButtonCell}
       disabled={disabled}
-      icon={icons[ value ]}
+      icon={ICONS[ value ]}
       label={i18n.rank[ value ]}
-      onClick={this.handleClick}
       text={false}>{ children => <Popup
         basic
         className={styles.selectRankPopup}

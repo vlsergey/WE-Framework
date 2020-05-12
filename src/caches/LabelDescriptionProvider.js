@@ -2,15 +2,15 @@
 
 import React, { PureComponent } from 'react';
 import CacheValueProvider from 'caches/CacheValueProvider';
+import LabelDescription from './LabelDescription';
 import labelDescriptionCache from './labelDescriptionCache';
-import PropTypes from 'prop-types';
 
-export default class LabelDescriptionProvider extends PureComponent {
+type PropsType = {
+  children : ?LabelDescription => any,
+  entityId : string,
+};
 
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    entityId: PropTypes.string.isRequired,
-  }
+export default class LabelDescriptionProvider extends PureComponent<PropsType> {
 
   render() {
     const { children, entityId } = this.props;

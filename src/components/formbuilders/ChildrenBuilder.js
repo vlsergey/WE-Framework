@@ -1,5 +1,6 @@
 // @flow
 
+import type { ChildrenContainerDefType, SpecialGroup } from 'editors/EditorDefModel';
 import React, { PureComponent } from 'react';
 import ErrorBoundary from './ErrorBoundary';
 import FieldsBuilder from './FieldsBuilder';
@@ -18,7 +19,7 @@ export default class ChildrenBuilder extends PureComponent<ChildrenContainerDefT
       }
     };
 
-    return Object.keys( this.props ).map( key =>
+    return Object.keys( this.props ).map<any>( key =>
       <div key={key}>{childRenderer( key )}</div>
     );
   }
@@ -28,7 +29,7 @@ export default class ChildrenBuilder extends PureComponent<ChildrenContainerDefT
     if ( !fieldsets || fieldsets.length === 0 )
       return null;
 
-    return fieldsets.map( ( fieldset, index ) =>
+    return fieldsets.map<any>( ( fieldset, index ) =>
       <ErrorBoundary description={'fieldset: ' + JSON.stringify( fieldset )} key={fieldset.key || 'fieldset-' + index}>
         <FieldsetBuilder fieldset={fieldset} />
       </ErrorBoundary>
@@ -40,8 +41,8 @@ export default class ChildrenBuilder extends PureComponent<ChildrenContainerDefT
     if ( !specials || specials.length === 0 )
       return null;
 
-    return specials.map( ( { key, type, ...etc } ) =>
-      <SpecialBuilder {...etc} key={key || type} type={type} />
+    return specials.map<any>( ( { key, ...etc } : SpecialGroup ) =>
+      <SpecialBuilder {...etc} key={key || etc.type} />
     );
   }
 

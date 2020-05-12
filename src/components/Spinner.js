@@ -2,20 +2,19 @@
 
 import React, { PureComponent } from 'react';
 import ClipLoader from 'react-spinners/ClipLoader';
-import PropTypes from 'prop-types';
 
-export default class Spinner extends PureComponent {
+type PropsType = {
+  size : number,
+};
 
-  static propTypes = {
-    size: PropTypes.number,
-  };
+export default class Spinner extends PureComponent<PropsType> {
 
   static defaultProps = {
     size: 50,
   };
 
   render() {
-    const { size, ...other } = this.props;
-    return <ClipLoader size={size / 1.4} {...other} />;
+    const { size, ...etc } = this.props;
+    return <ClipLoader {...etc} size={size / 1.4} />;
   }
 }

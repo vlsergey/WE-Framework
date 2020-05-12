@@ -1,8 +1,10 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import EditorTabsBuilder from './EditorTabsBuilder';
+import type { TabDefType } from 'editors/EditorDefModel';
 
 type PropsType = {
   tabs : TabDefType[],
@@ -10,20 +12,24 @@ type PropsType = {
 
 export default class DialogWithTabs extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
+  dialogRef = React.createRef();
 
-    this.dialogRef = React.createRef();
-    this.handleTabChange = this.handleTabChange.bind( this );
-
-    this.close = () => this.dialogRef.current.close();
-    this.open = () => this.dialogRef.current.open();
+  @boundMethod
+  close() {
+    if ( this.dialogRef.current )
+      this.dialogRef.current.close();
   }
 
+  @boundMethod
   handleTabChange() {
-    const dialogComponent = this.dialogRef.current;
-    if ( dialogComponent )
-      dialogComponent.resizeToFit();
+    if ( this.dialogRef.current )
+      this.dialogRef.current.resizeToFit();
+  }
+
+  @boundMethod
+  open() {
+    if ( this.dialogRef.current )
+      this.dialogRef.current.open();
   }
 
   render() {

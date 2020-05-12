@@ -5,6 +5,9 @@ untyped-import=off
 unclear-type=off
 
 [options]
+module.file_ext=.js
+esproposal.decorators=ignore
+
 module.name_mapper='^react\-bootstrap\/.*' -> 'react-bootstrap'
 module.name_mapper='^semantic\-ui\-css\/.*' -> 'semantic-ui-css'
 
@@ -18,3 +21,5 @@ module.name_mapper='^settings' ->'<PROJECT_ROOT>/src/settings'
 module.name_mapper='^sources' ->'<PROJECT_ROOT>/src/sources'
 module.name_mapper='^utils' ->'<PROJECT_ROOT>/src/utils'
 module.name_mapper='^wrappers' ->'<PROJECT_ROOT>/src/wrappers'
+
+module.name_mapper='^testUtils' ->'<PROJECT_ROOT>/test/testUtils'

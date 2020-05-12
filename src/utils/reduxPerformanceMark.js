@@ -1,5 +1,3 @@
-// @flow
-
 // https://gist.github.com/clarkbw/966732806e7a38f5b49fd770c62a6099
 
 const enabled = !!performance && typeof performance.mark === 'function';

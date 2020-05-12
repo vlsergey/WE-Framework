@@ -8,8 +8,8 @@ module.exports = function( api ) {
       // [ "flow-runtime", { "assert": true, "annotate": true } ],
       'flow-runtime',
       '@babel/plugin-syntax-dynamic-import',
-      [ '@babel/plugin-proposal-decorators', { legacy: true } ],
-      [ '@babel/plugin-proposal-class-properties', { loose: true } ],
+      [ '@babel/plugin-proposal-decorators', { "legacy": true } ],
+      '@babel/plugin-proposal-class-properties',
       '@babel/plugin-proposal-object-rest-spread',
     ],
     presets: [

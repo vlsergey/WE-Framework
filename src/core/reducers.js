@@ -2,7 +2,7 @@
 
 import cacheReducers from 'caches/reducers';
 import { combineReducers } from 'redux';
-import deepEqual from 'deep-equal';
+import deepEqual from 'utils/deepEqual';
 import generateRandomString from 'utils/generateRandomString';
 import { newStatementClaim } from 'model/Shapes';
 
@@ -38,7 +38,7 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
       datatype : string,
       propertyId : string } = action;
 
-    const claims : ClaimsType = entity.claims || {};
+    const claims : ClaimsType = entity.claims || ( {} : ClaimsType );
     const existingClaims : ?ClaimType[] = claims[ propertyId ];
     let newClaim : ClaimType = newStatementClaim( propertyId, datatype );
     newClaim = claimData ? { ...newClaim, ...claimData } : newClaim;
@@ -69,7 +69,7 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
       throw new Error( 'Provided claim to delete doesn\'t have propertyId in mainsnak' );
     }
 
-    const claims : ClaimsType = entity.claims || {};
+    const claims : ClaimsType = entity.claims || ( {} : ClaimsType );
     const existingClaims = claims[ propertyId ];
     const claimsToSave = existingClaims.filter( original => original.id !== claim.id );
 
@@ -86,7 +86,7 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
     const { claim } = action;
     const propertyId = claim.mainsnak.property;
 
-    const claims : ClaimsType = entity.claims || {};
+    const claims : ClaimsType = entity.claims || ( {} : ClaimsType );
     const existingClaims = claims[ propertyId ];
     const claimsToSave = !!existingClaims && existingClaims.length > 0
       ? existingClaims.map( original => original.id === claim.id ? claim : original )
@@ -121,13 +121,14 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
     let foundAndReplaced = false;
     const newClaims = existingClaims
       .map( claim => {
-        if ( !claim.mainsnak
-            || !claim.mainsnak.datavalue
-            || !claim.mainsnak.datavalue.value
-            || claim.mainsnak.datatype !== datatype
-            || claim.mainsnak.datavalue.type !== datavalue.type )
+        const mainsnak = claim.mainsnak;
+        if ( !mainsnak
+            || !mainsnak.datavalue
+            || !mainsnak.datavalue.value
+            || mainsnak.datatype !== datatype
+            || mainsnak.datavalue.type !== datavalue.type )
           return claim;
-        const oldValue = claim.mainsnak.datavalue.value;
+        const oldValue = mainsnak.datavalue.value;
         const normalized = normalizeF( oldValue );
         if ( !deepEqual( normalized, datavalue.value ) ) return claim;
 
@@ -135,9 +136,9 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
         return {
           ...claim,
           mainsnak: {
-            ...claim.mainsnak,
+            ...mainsnak,
             datavalue: {
-              ...claim.mainsnak.datavalue,
+              ...mainsnak.datavalue,
               value: normalized,
             },
           },
@@ -172,7 +173,7 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
   case 'CLAIMS_REORDER': {
     const { propertyId, claimIds } : {claimIds : string[], propertyId : string} = action;
 
-    const oldClaims : ClaimType[] = entity.claims[ propertyId ];
+    const oldClaims : ?( ClaimType[] ) = ( entity.claims || ( {} : ClaimsType ) )[ propertyId ];
     if ( !oldClaims || claimIds.length !== oldClaims.length ) {
       throw new Error( 'Supplied ordered claimIds must have the same length as entity claims array for ' + propertyId );
     }
@@ -223,6 +224,7 @@ const entityReducerF = unsavedEntity => ( entity : EntityType = unsavedEntity, a
 };
 
 export default function buildReducers( originalEntity : EntityType, unsavedEntity : EntityType ) {
+  // $FlowFixMe
   return combineReducers( {
     originalEntity: () => originalEntity,
     entity: entityReducerF( unsavedEntity || originalEntity ),

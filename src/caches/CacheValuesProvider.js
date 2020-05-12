@@ -24,7 +24,7 @@ class CacheValuesProvider extends PureComponent<PropsType> {
 
   previousResult = {}
 
-  memoizeResult( cacheData, cacheKeys ) {
+  memoizeResult( cacheData : any, cacheKeys : string[] ) {
     let hasChanges = false;
     const newResult = {};
     cacheKeys.forEach( key => {
@@ -51,7 +51,7 @@ class CacheValuesProvider extends PureComponent<PropsType> {
     return children( limitedCache );
   }
 
-  componentDidUpdate( prevProps ) {
+  componentDidUpdate( prevProps : PropsType ) {
     const { cacheData, cacheKeys, queue } = this.props;
 
     if ( prevProps.cacheKeys !== cacheKeys
@@ -70,5 +70,6 @@ const mapDispatchToProps = ( dispatch, ownProps ) => ( {
   queue: cacheKeys => dispatch( ownProps.cache.actionQueue( cacheKeys ) ),
 } );
 
+// $FlowFixMe
 const CacheValuesProviderConnected = connect( mapStateToProps, mapDispatchToProps )( CacheValuesProvider );
 export default CacheValuesProviderConnected;

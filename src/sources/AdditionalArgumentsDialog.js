@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import createTalkPageWithPlaceholder from './createTalkPageWithPlaceholder';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import { getServerApi } from 'core/ApiUtils';
@@ -32,25 +33,18 @@ type StateType = {
 export default class AdditionalArgumentsDialog
   extends PureComponent<PropsType, StateType> {
 
-  constructor() {
-    super( ...arguments );
+  state = {
+    part: '',
+    partUrl: '',
+    pages: '',
+    volume: '',
+    issue: '',
 
-    this.state = {
-      part: '',
-      partUrl: '',
-      pages: '',
-      volume: '',
-      issue: '',
-
-      insertAsRef: false,
-      addRefAuthor: true, refAuthor: '',
-      addRefYear: true, refYear: '',
-      addRefComment: true, refComment: '',
-    };
-
-    this.handleChange = this.handleChange.bind( this );
-    this.handleInsertClick = this.handleInsertClick.bind( this );
-  }
+    insertAsRef: false,
+    addRefAuthor: true, refAuthor: '',
+    addRefYear: true, refYear: '',
+    addRefComment: true, refComment: '',
+  };
 
   componentDidMount() {
     const { entityId } = this.props;
@@ -72,11 +66,12 @@ export default class AdditionalArgumentsDialog
       .then( text => this.setState( { [ stateKey ]: text } ) );
   }
 
-  handleChange( event ) {
-    const { name, value } = event.target;
+  @boundMethod
+  handleChange( { currentTarget: { name, value } } : SyntheticEvent< HTMLInputElement > ) {
     this.setState( { [ name ]: value } );
   }
 
+  @boundMethod
   handleInsertClick( ) {
     let textToInsert;
     if ( this.state.insertAsRef ) {

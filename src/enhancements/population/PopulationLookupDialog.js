@@ -1,12 +1,14 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import dataSources from './DataSources';
 import DialogWrapper from 'wrappers/DialogWrapper';
 import i18n from './i18n';
 import JQueryButton from 'wrappers/JQueryButton';
 import PropertyLabelCellById from 'components/PropertyLabelCellById';
 import styles from './styles.css';
+import { toWikibaseEntityIdValue } from 'model/ModelUtils';
 
 type PropsType = {
   onClaimAdd : any => any,
@@ -38,24 +40,23 @@ export default class PopulationLookupDialog
       result: [],
       selected: [],
     };
-
-    this.handleImport = this.handleImport.bind( this );
-    this.handleLoadFromSource = this.handleLoadFromSource.bind( this );
-    this.handleSelectAll = this.handleSelectAll.bind( this );
   }
 
-  handleLoadFromSource( sourceId, sourceFunction ) {
-    return () => {
+  @boundMethod
+  handleLoadFromSource( sourceId : string, sourceFunction : any => Promise< ResultItem[] > ) {
+    return async() => {
       this.setState( { queryState: 'SCHEDULED', queryScheduled: sourceId } );
-      sourceFunction()
-        .then( result => this.setState( { queryState: 'WAITING', queryScheduled: sourceId, result } ) )
-        .catch( exc => {
-          this.setState( { queryState: 'ERROR', queryScheduled: sourceId } );
-          console.log( exc );
-        } );
+      try {
+        const result : ResultItem[] = await sourceFunction();
+        this.setState( { queryState: 'WAITING', queryScheduled: sourceId, result } );
+      } catch ( exc ) {
+        this.setState( { queryState: 'ERROR', queryScheduled: sourceId } );
+        console.log( exc );
+      }
     };
   }
 
+  @boundMethod
   handleImport() {
     const { onClaimAdd, onClose } = this.props;
     const { selected, result } = this.state;
@@ -90,29 +91,27 @@ export default class PopulationLookupDialog
         property: 'P1082',
         snaktype: 'value',
       };
+      const newClaimQualifiers : QualifiersType = {
+        P585: [ pointInTimeQualifier ],
+      };
+      const newClaimQualifiersOrder : string[] = [ 'P585' ];
       const newClaim = {
         'mainsnak': populationSnak,
-        'qualifiers': {
-          P585: [ pointInTimeQualifier ],
-        },
-        'qualifiers-order': [ 'P585' ],
+        'qualifiers': newClaimQualifiers,
+        'qualifiers-order': newClaimQualifiersOrder,
       };
 
       if ( r.determinationMethod ) {
-        newClaim.qualifiers.P459 = [ {
+        newClaimQualifiers.P459 = [ {
           datatype: 'wikibase-item',
           datavalue: {
-            value: {
-              'entity-type': 'item',
-              'numeric-id': r.determinationMethod === 'census' ? '39825' : '791801',
-              'id': r.determinationMethod === 'census' ? 'Q39825' : 'Q791801',
-            },
+            value: toWikibaseEntityIdValue( r.determinationMethod === 'census' ? 'Q39825' : 'Q791801' ),
             type: 'wikibase-entityid',
           },
           property: 'P459',
           snaktype: 'value',
         } ];
-        newClaim[ 'qualifiers-order' ].push( 'P459' );
+        newClaimQualifiersOrder.push( 'P459' );
       }
 
       return newClaim;
@@ -122,7 +121,8 @@ export default class PopulationLookupDialog
     onClose();
   }
 
-  handleTriggerF( i ) {
+  @boundMethod
+  handleTriggerF( i : number ) {
     return () => this.setState( ( { selected } ) => ( {
       selected: selected.indexOf( i ) === -1
         ? [ ...selected, i ]
@@ -130,6 +130,7 @@ export default class PopulationLookupDialog
     } ) );
   }
 
+  @boundMethod
   handleSelectAll() {
     this.setState( ( { result } : { result : ResultItem[] } ) => ( {
       selected: result.map( ( v : ResultItem, i : number ) => i ),

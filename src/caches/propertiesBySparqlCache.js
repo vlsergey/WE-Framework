@@ -13,11 +13,11 @@ class PropertiesBySparqlCache extends AbstractQueuedCacheWithPostcheck {
     super( TYPE, true, 1 );
   }
 
-  notifyMessage( cacheKeys ) {
+  notifyMessage( cacheKeys : string[] ) : string {
     return 'Executing SPARQL query: ' + cacheKeys[ 0 ];
   }
 
-  buildRequestPromice( cacheKeys ) {
+  buildRequestPromice( cacheKeys : string[] ) : Promise< any > {
     const url = this.SPARQL_ENDPOINT + '?query='
       + encodeURIComponent( cacheKeys[ 0 ] );
     return fetch( url, {
@@ -28,7 +28,7 @@ class PropertiesBySparqlCache extends AbstractQueuedCacheWithPostcheck {
       .then( body => body.json() );
   }
 
-  convertResultToEntities( result, [ sparql ] ) {
+  convertResultToEntities( result : any, [ sparql ] : string[] ) : any {
     const [ columnName ] = result.head.vars;
 
     const propertyIds = result.results.bindings.map( binding => {

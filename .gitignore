@@ -4,6 +4,3 @@
 /coverage/
 .idea/
 yarn.lock
-
-/test/flow-report.json
-/test/filter-flow-report.out.js

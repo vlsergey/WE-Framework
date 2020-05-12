@@ -1,9 +1,10 @@
 // @flow
 
 import * as I18nUtils from 'utils/I18nUtils';
-import { filterClaimsByRank } from 'model/ModelUtils';
-
-const ok = x => typeof x !== 'undefined' && x != null;
+import { filterClaimsByRank, findClaimQualifiers, findEntityIdsFromClaims,
+  findEntityIdsFromQualifiers, findStringsFromClaims,
+  findStringsFromQualifiers, getStringFromSnak } from 'model/ModelUtils';
+import { values } from 'utils/ObjectUtils';
 
 function findSingleStatementByEntityIdValue( entity, property, entityId ) {
   if ( !entity.claims || !entity.claims[ property ] ) {
@@ -26,19 +27,14 @@ function findSingleStatementByEntityIdValue( entity, property, entityId ) {
   return null;
 }
 
-function getWikibaseItemRestrictions( propertyEntity, restrictionId, valuePropertyId ) {
+function getWikibaseItemRestrictions(
+    propertyEntity : PropertyType,
+    restrictionId : string,
+    valuePropertyId : string
+) : string[] {
   const statement = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', restrictionId );
-  if ( !statement )
-    return [];
-
-  if ( !statement.qualifiers || !statement.qualifiers[ valuePropertyId ] )
-    return [];
-
-  const ok = x => typeof x !== 'undefined' && x !== null;
-  return statement.qualifiers[ valuePropertyId ]
-    .map( qualifier => qualifier.datavalue ).filter( ok )
-    .map( datavalue => datavalue.value ).filter( ok )
-    .map( value => value.id ).filter( ok );
+  if ( !statement ) return [];
+  return findEntityIdsFromQualifiers( statement, valuePropertyId );
 }
 
 function getStringRestriction( propertyEntity, restrictionId, valuePropertyId ) {
@@ -61,30 +57,21 @@ class UrlFormatter {
   _format : ?string;
   _regexp : ?string;
 
-  constructor( statement ) {
-    this._format = statement.mainsnak.datavalue.value;
-
-    if ( statement.qualifiers
-        && statement.qualifiers.P1793
-        && statement.qualifiers.P1793.length === 0
-        && statement.qualifiers.P1793[ 0 ].datavalue
-        && statement.qualifiers.P1793[ 0 ].datavalue.value ) {
-      this._regexp = statement.qualifiers.P1793[ 0 ].datavalue.value;
-    } else {
-      this._regexp = null;
-    }
+  constructor( statement : ClaimType ) {
+    this._format = getStringFromSnak( statement.mainsnak ) || null;
+    this._regexp = findStringsFromQualifiers( statement, 'P1793' )[ 0 ] || null;
   }
 
   hasRegexp() {
     return !!this._regexp;
   }
 
-  isCompliant( value ) {
+  isCompliant( value : string ) {
     return !this._regexp || new RegExp( '^' + this._regexp + '$' ).test( value );
   }
 
-  format( value ) {
-    return this._format.replace( /\$1/g, value );
+  format( value : string ) : ?string {
+    return this._format ? this._format.replace( /\$1/g, value ) : null;
   }
 
 }
@@ -97,7 +84,7 @@ export default class PropertyDescription {
 
   static VERSION = 2;
 
-  static deserialize( json ) {
+  static deserialize( json : any ) {
     if ( json === undefined || json === null ) return json;
 
     Object.setPrototypeOf( json, PropertyDescription.prototype );
@@ -105,18 +92,33 @@ export default class PropertyDescription {
       json.urlFormatters.forEach( obj => Object.setPrototypeOf( obj, UrlFormatter.prototype ) );
   }
 
+  allowedQualifiers : string[];
+  countries : string[];
   countryFlags : ?string[];
   datatype : string;
+  description : ?string;
   id : string;
   label : ?string;
   languageCodes : string[];
   languageIds : string[];
-  quantityUnitEnabled : ?boolean;
+  lastrevid : ?number;
+  oneOf : ?( string[] );
+  pageid : ?number;
+  quantityUnitEnabled : ?boolean = false;
+  quantityUnits : ?( string[] );
   regexp : ?string;
   sourceWebsites : string[];
   sourceWebsitesLanguages : ?string[];
+  valueTypeConstraint : ?( {
+    instanceOf? : ?( string[] ),
+  } );
+
+  version : number;
+  urlFormatters : UrlFormatter[];
 
   constructor( propertyEntity : PropertyType ) {
+    if ( !propertyEntity.id ) throw new Error( 'Missing property id in PropertyType: ' + JSON.stringify( propertyEntity ) );
+
     this.id = propertyEntity.id;
     this.version = PropertyDescription.VERSION;
     this.datatype = propertyEntity.datatype;
@@ -126,7 +128,7 @@ export default class PropertyDescription {
     const translations = {};
 
     if ( propertyEntity.labels ) {
-      Object.values( propertyEntity.labels ).forEach( label => {
+      values( propertyEntity.labels ).forEach( ( label : LabelalikeType ) => {
         translations[ label.language ] = {
           ...translations[ label.language ],
           label: label.value,
@@ -135,7 +137,7 @@ export default class PropertyDescription {
     }
 
     if ( propertyEntity.descriptions ) {
-      Object.values( propertyEntity.descriptions ).forEach( description => {
+      values( propertyEntity.descriptions ).forEach( ( description : LabelalikeType ) => {
         translations[ description.language ] = {
           ...translations[ description.language ],
           description: description.value,
@@ -144,13 +146,11 @@ export default class PropertyDescription {
     }
 
     const translated = I18nUtils.localize( {}, translations );
-    Object.keys( translated ).forEach( k => this[ k ] = translated[ k ] );
+    if ( translated.label ) this.label = translated.label;
+    if ( translated.description ) this.description = translated.description;
 
     this.allowedQualifiers = getWikibaseItemRestrictions( propertyEntity, 'Q21510851', 'P2306' );
-
-    this.countries = filterClaimsByRank( propertyEntity.claims.P17 )
-      .filter( claimHasMainsnakValue )
-      .map( claim => claim.mainsnak.datavalue.value.id );
+    this.countries = findEntityIdsFromClaims( propertyEntity, 'P17' );
 
     this.languageIds = [];
     this.languageCodes = [];
@@ -165,58 +165,27 @@ export default class PropertyDescription {
 
     const oneOfConstrains = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', 'Q21510859' );
     if ( oneOfConstrains ) {
-      const oneOfSnaks =
-        [ oneOfConstrains.qualifiers ].filter( ok )
-          .flatMap( qualifiers => qualifiers.P2305 ).filter( ok );
-
-      this.oneOf = oneOfSnaks
-        .filter( qualifier => qualifier.snaktype === 'value' )
-        .map( qualifier => qualifier.datavalue ).filter( ok )
-        .map( datavalue => datavalue.value ).filter( ok )
-        .map( value => value.id ).filter( ok );
+      this.oneOf = findEntityIdsFromQualifiers( oneOfConstrains, 'P2305' );
     }
 
     const unitRestriction = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', 'Q21514353' );
     if ( unitRestriction ) {
-      const quantityUnitsSnaks =
-        [ unitRestriction.qualifiers ].filter( ok )
-          .flatMap( qualifiers => qualifiers.P2305 ).filter( ok );
-
-      this.quantityUnitEnabled = !( quantityUnitsSnaks.length === 1 && quantityUnitsSnaks[ 0 ].snaktype === 'novalue' );
-      this.quantityUnits = quantityUnitsSnaks
-        .filter( qualifier => qualifier.snaktype === 'value' )
-        .map( qualifier => qualifier.datavalue ).filter( ok )
-        .map( datavalue => datavalue.value ).filter( ok )
-        .map( value => value.id ).filter( ok );
+      const qualifiers : QualifierType[] = findClaimQualifiers( unitRestriction, 'P2305' );
+      this.quantityUnitEnabled = !( qualifiers.length === 1 && qualifiers[ 0 ].snaktype === 'novalue' );
+      this.quantityUnits = findEntityIdsFromQualifiers( unitRestriction, 'P2305' );
     }
 
     this.regexp = getStringRestriction( propertyEntity, 'Q21502404', 'P1793' );
 
-    this.sourceWebsites = ( ( filterClaimsByRank( ( propertyEntity.claims || {} ).P1896 )
-      .filter( claimHasMainsnakValue )
-      .map( statement => statement.mainsnak.datavalue.value ) : any ) : string[] );
-
+    this.sourceWebsites = findStringsFromClaims( propertyEntity, 'P1896' );
     this.sourceWebsitesLanguages = filterClaimsByRank( ( propertyEntity.claims || {} ).P1896 )
       .filter( claimHasMainsnakValue )
-      .filter( claim => claim.qualifiers && claim.qualifiers.P407 )
-      .map( claim => claim.qualifiers.P407 )
-      .flatMap( qualifiers => qualifiers
-        .filter( qualifier => qualifier && qualifier.datavalue && qualifier.datavalue.value && qualifier.datavalue.value.id )
-        .map( qualifier => qualifier.datavalue.value.id ) );
-
+      .flatMap( claim => findEntityIdsFromQualifiers( claim, 'P407' ) );
 
     const valueTypeConstraint = findSingleStatementByEntityIdValue( propertyEntity, 'P2302', 'Q21510865' );
     if ( valueTypeConstraint ) {
-      const classes =
-        [ valueTypeConstraint.qualifiers ].filter( ok )
-          .flatMap( qualifiers => qualifiers.P2308 ).filter( ok )
-          .filter( qualifier => qualifier && qualifier.datavalue && qualifier.datavalue.value && qualifier.datavalue.value.id )
-          .map( qualifier => qualifier.datavalue.value.id );
-      const relations =
-        [ valueTypeConstraint.qualifiers ].filter( ok )
-          .flatMap( qualifiers => qualifiers.P2309 ).filter( ok )
-          .filter( qualifier => qualifier && qualifier.datavalue && qualifier.datavalue.value && qualifier.datavalue.value.id )
-          .map( qualifier => qualifier.datavalue.value.id );
+      const classes : string[] = findEntityIdsFromQualifiers( valueTypeConstraint, 'P2308' );
+      const relations : string[] = findEntityIdsFromQualifiers( valueTypeConstraint, 'P2309' );
 
       // instance of
       if ( relations.length === 1 && relations[ 0 ] === 'Q21503252' && classes.length !== 0 ) {
@@ -227,7 +196,7 @@ export default class PropertyDescription {
     }
   }
 
-  formatUrl( value ) {
+  formatUrl( value : ?string ) {
     if ( value === null || value === '' )
       return '';
 
@@ -237,17 +206,6 @@ export default class PropertyDescription {
     const formatter = this.urlFormatters.find( formatter => formatter.isCompliant( value ) );
     if ( formatter )
       return formatter.format( value );
-  }
-
-  hasLookupUrl( entity ) {
-    return I18nUtils.DEFAULT_LANGUAGES.findFirst( code => !!entity.labels[ code ] ) != null && this.sourceWebsites.length > 0;
-  }
-
-  getLookupUrl( entity ) {
-    const langCode = I18nUtils.DEFAULT_LANGUAGES.findFirst( code => entity.labels && entity.labels[ code ] );
-    const label = entity.labels[ langCode ].value;
-
-    return 'https://www.google.ru/search?q=site%3A' + this.sourceWebsites[ 0 ] + ' ' + label;
   }
 
 }

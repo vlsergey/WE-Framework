@@ -2,6 +2,7 @@
 
 import * as ApiUtils from 'core/ApiUtils';
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import PropertyDescription from 'core/PropertyDescription';
 import styles from './UnsupportedDataValueEditor.css';
 
@@ -19,6 +20,8 @@ export default class UnsupportedDataValueEditor
 
   WIKIDATA_ROOT = '//www.wikidata.org/';
 
+  wikidataApi = ApiUtils.getWikidataApi();
+
   constructor() {
     super( ...arguments );
 
@@ -26,20 +29,18 @@ export default class UnsupportedDataValueEditor
       html: null,
     };
 
-    this.loadHtml = this.loadHtml.bind( this );
-    this.wikidataApi = ApiUtils.getWikidataApi();
-
     // initial loading
     this.loadHtml();
   }
 
-  componentDidUpdate( prevProps ) {
+  componentDidUpdate( prevProps : PropsType ) {
     if ( prevProps.datavalue !== this.props.datavalue ) {
       this.setState( { html: null } );
       this.loadHtml();
     }
   }
 
+  @boundMethod
   loadHtml() {
     const { datavalue, propertyDescription } = this.props;
     if ( !datavalue || !propertyDescription )

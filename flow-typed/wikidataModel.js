@@ -1,11 +1,22 @@
 
+export type AliasesType = {| [string] : LabelalikeType[] |};
+
+export type EditClaimType = {
+  id? : string,
+  mainsnak? : SnakType,
+  qualifiers? : QualifiersType,
+  rank? : RankType,
+  references? : ReferenceType[],
+  remove? : '',
+  type? : string,
+};
+
 export type ClaimType = {
   id : string,
   mainsnak? : SnakType,
-  qualifiers? : { [string] : QualifierType[] },
-  rank? : string,
+  qualifiers? : QualifiersType,
+  rank? : RankType,
   references? : ReferenceType[],
-  remove? : '',
   type? : string,
 };
 
@@ -16,39 +27,48 @@ export type DataValueType = {
   value? : ?any,
 };
 
+export type DescriptionsType = {| [string] : LabelalikeType |};
+
 export type EntityType = {
-  aliases? : { [string] : any },
+  aliases? : AliasesType,
   claims? : ClaimsType,
-  descriptions? : { [string] : any },
+  descriptions? : DescriptionsType,
+  // internal structure to hold non-commited aliases
+  draftAliases? : ?{| [string] : LabelalikeType |},
   id? : string,
-  labels? : { [string] : any },
+  labels? : LabelsType,
   lastrevid? : number,
   missing? : '',
   ns? : string,
   pageid? : number,
-  sitelinks? : { [string] : any },
+  sitelinks? : SiteLinksType,
   // may be missing for new item
   title? : string,
+};
+
+export type EntityTypeEnum = 'item' | 'property';
+
+export type ItemType = EntityType & {
+  id? : string,
   type : 'item',
 };
 
-export type PropertyType = {
-  aliases? : { [string] : any },
-  claims? : { [string] : ClaimType[] },
+export type LabelalikeType = {
+  language : string,
+  value : string,
+};
+
+export type LabelsType = {| [string] : LabelalikeType |};
+
+export type PropertyType = EntityType & {
   datatype : string,
-  descriptions? : { [string] : any },
-  id : string,
-  labels? : { [string] : any },
-  lastrevid? : number,
-  missing? : '',
-  ns? : string,
-  pageid? : number,
-  title? : string,
   type : 'property',
 };
 
 export type QualifierType = SnakType & {
 };
+
+export type QualifiersType = { [string] : QualifierType[] };
 
 export type QuantityValueType = {
   amount? : string,
@@ -57,11 +77,23 @@ export type QuantityValueType = {
   upperBound? : string,
 };
 
+export type RankType = 'preferred' | 'normal' | 'deprecated';
+
 export type ReferenceType = {
   hash? : string,
-  snaks : { [string] : SnakType[] },
+  snaks : SnaksType,
   ['snaks-order'] : ?string[],
 };
+
+export type SiteLinkType = {
+  badges : string[],
+  site : string,
+  title : string,
+};
+
+export type SiteLinksType = {| [string] : SiteLinkType |};
+
+export type SnakTypeType = 'value' | 'novalue' | 'somevalue';
 
 export type SnakType = {
   datatype? : string,
@@ -69,6 +101,14 @@ export type SnakType = {
   hash? : string,
   id? : string,
   property? : string,
-  snaktype? : 'value' | 'novalue' | 'somevalue',
+  snaktype? : SnakTypeType,
   type? : string,
+};
+
+export type SnaksType = {| [string] : SnakType[] |};
+
+export type WikibaseEntityIdValueType = {
+  'entity-type' : EntityTypeEnum,
+  'numeric-id' : number,
+  id? : ?string,
 };

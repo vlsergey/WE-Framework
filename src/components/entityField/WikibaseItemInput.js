@@ -1,14 +1,15 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 
 type PropsType = {
   entityId? : ?string,
   entityLabel? : ?string,
   inputRef? : any,
-  onBlur : () => any,
-  onChange : any => any,
-  onFocus : () => any,
+  onBlur : SyntheticEvent< HTMLInputElement > => any,
+  onChange : SyntheticEvent< HTMLInputElement > => any,
+  onFocus : SyntheticEvent< HTMLInputElement > => any,
   value? : string,
 };
 
@@ -19,7 +20,7 @@ type StateType = {
 
 export default class WikibaseItemInput extends PureComponent<PropsType, StateType> {
 
-  static getEtcProps( props ) {
+  static getEtcProps( props : PropsType ) {
     /* eslint no-unused-vars: 0 */
     const { entityId, entityLabel, inputRef, value, onBlur, onChange, onFocus, ...etc } = props;
     return etc;
@@ -31,32 +32,31 @@ export default class WikibaseItemInput extends PureComponent<PropsType, StateTyp
       focused: false,
       value: this.props.entityLabel || this.props.entityId || '',
     };
-
-    this.handleBlur = this.handleBlur.bind( this );
-    this.handleChange = this.handleChange.bind( this );
-    this.handleFocus = this.handleFocus.bind( this );
   }
 
-  handleChange( event ) {
+  @boundMethod
+  handleChange( event : SyntheticEvent< HTMLInputElement > ) {
     this.setState( {
       focused: true,
-      value: event.target.value,
+      value: event.currentTarget.value,
     } );
     this.props.onChange( event );
   }
 
-  handleFocus( ) {
+  @boundMethod
+  handleFocus( event : SyntheticEvent< HTMLInputElement > ) {
     this.setState( {
       focused: true,
     } );
-    this.props.onFocus();
+    this.props.onFocus( event );
   }
 
-  handleBlur( ) {
+  @boundMethod
+  handleBlur( event : SyntheticEvent< HTMLInputElement > ) {
     this.setState( {
       focused: false,
     } );
-    this.props.onBlur();
+    this.props.onBlur( event );
   }
 
   render() {
@@ -84,7 +84,8 @@ export default class WikibaseItemInput extends PureComponent<PropsType, StateTyp
       value={inputValue} />;
   }
 
-  setValue( value ) {
+  @boundMethod
+  setValue( value : string ) {
     this.setState( { value } );
   }
 }

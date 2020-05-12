@@ -2,18 +2,17 @@
 
 import React, { PureComponent } from 'react';
 import JQueryButton from 'wrappers/JQueryButton';
-import PropTypes from 'prop-types';
 import styles from './ButtonCell.css';
 
-export default class ButtonCell extends PureComponent {
+type PropsType = {
+  children? : ?( any => any ),
+  disabled? : ?boolean,
+  icon? : ?string,
+  label? : ?string,
+  onClick? : ?( any => any ),
+};
 
-  static propTypes = {
-    children: PropTypes.func,
-    disabled: PropTypes.bool,
-    icon: PropTypes.string.isRequired,
-    label: PropTypes.string,
-    onClick: PropTypes.func,
-  };
+export default class ButtonCell extends PureComponent<PropsType> {
 
   render() {
     const { children, icon, label, disabled, onClick } = this.props;

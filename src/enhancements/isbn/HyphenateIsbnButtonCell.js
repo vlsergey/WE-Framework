@@ -1,29 +1,24 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ButtonCell from 'components/ButtonCell';
 import i18n from './i18n';
 import { ISBN } from 'isbn';
-import PropTypes from 'prop-types';
 
-export default class HyphenateIsbnButtonCell extends PureComponent {
+type PropsType = {
+  isbn? : ?string,
+  mode : 'Isbn10' | 'Isbn13',
+  onHyphenate : any => any,
+};
 
-  static propTypes = {
-    isbn: PropTypes.string,
-    mode: PropTypes.oneOf( [ 'Isbn10', 'Isbn13' ] ),
-    onHyphenate: PropTypes.func.isRequired,
-  };
+export default class HyphenateIsbnButtonCell extends PureComponent<PropsType> {
 
   static defaultProps = {
     isbn: '',
   };
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleClick = this.handleClick.bind( this );
-  }
-
+  @boundMethod
   handleClick() {
     const { isbn, mode, onHyphenate } = this.props;
     const withoutHypens = ( isbn || '' ).replace( /[- ]/g, '' );

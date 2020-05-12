@@ -2,24 +2,34 @@
 
 import * as selectors from './selectors';
 import { DEFAULT_LANGUAGES, LANGUAGE_TITLES } from 'utils/I18nUtils';
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Autosuggest from 'react-autosuggest';
+import { boundMethod } from 'autobind-decorator';
 import { defaultMemoize } from 'reselect';
-import PropTypes from 'prop-types';
 import styles from './LanguageAutocomplete.css';
 
-export default class LanguageAutocomplete extends Component {
+type PropsType = {
+  onChange : string => any,
+  provided : string[],
+  value : string,
+};
 
-  static propTypes = {
-    provided: PropTypes.arrayOf( PropTypes.string ),
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.string,
-  };
+type StateType = {
+  suggestions : string[],
+  value : string,
+};
+
+export default class LanguageAutocomplete
+  extends PureComponent<PropsType, StateType> {
 
   static defaultProps = {
     provided: [],
     value: DEFAULT_LANGUAGES[ 0 ],
   };
+
+  emptySuggestions : string[];
+  getEmptySuggestions : string[] => string[];
+  inputPropsF : string => any;
 
   constructor() {
     super( ...arguments );
@@ -34,21 +44,16 @@ export default class LanguageAutocomplete extends Component {
       suggestions: this.emptySuggestions,
     };
 
-    this.handleChange = this.handleChange.bind( this );
-    this.paramsF = defaultMemoize( value => ( {
+    this.inputPropsF = defaultMemoize( value => ( {
       autoComplete: 'false',
       className: styles.wef_languageSelect,
       onChange: this.handleChange,
       type: 'text',
       value,
     } ) );
-
-    this.handleSuggestionsClearRequested = this.handleSuggestionsClearRequested.bind( this );
-    this.handleSuggestionsFetchRequested = this.handleSuggestionsFetchRequested.bind( this );
-    this.renderSuggestion = this.renderSuggestion.bind( this );
   }
 
-  componentDidUpdate( prevProps ) {
+  componentDidUpdate( prevProps : PropsType ) {
     if ( prevProps.provided !== this.props.provided ) {
       this.emptySuggestions = this.getEmptySuggestions( this.props.provided );
     }
@@ -59,11 +64,13 @@ export default class LanguageAutocomplete extends Component {
     }
   }
 
+  @boundMethod
   handleSuggestionsClearRequested() {
     this.setState( { suggestions: this.emptySuggestions } );
   }
 
-  handleSuggestionsFetchRequested( { value } ) {
+  @boundMethod
+  handleSuggestionsFetchRequested( { value } : { value : string } ) : void {
     const result = [ ...DEFAULT_LANGUAGES ];
     const added = new Set( result );
 
@@ -71,42 +78,46 @@ export default class LanguageAutocomplete extends Component {
     const add = code => { added.add( code ); result.push( code ); };
 
     // iterate over codes first
-    Object.keys( LANGUAGE_TITLES )
+    [ ...LANGUAGE_TITLES.keys() ]
       .filter( codeNotYetIncluded )
       .filter( code => code.startsWith( value ) )
       .forEach( add );
-    Object.keys( LANGUAGE_TITLES )
+    [ ...LANGUAGE_TITLES.keys() ]
       .filter( codeNotYetIncluded )
       .filter( code => code.includes( value ) )
       .forEach( add );
-    Object.entries( LANGUAGE_TITLES )
+    [ ...LANGUAGE_TITLES.entries() ]
       .filter( ( [ code, title ] ) => codeNotYetIncluded( code ) && !!title && title.includes( value ) )
       .forEach( ( [ code ] ) => add( code ) );
 
     this.setState( { suggestions: result } );
   }
 
-  getSuggestionValue( data ) {
+  getSuggestionValue( data : ?string ) {
     return data ? data : '';
   }
 
-  handleChange( event, { newValue } ) {
+  @boundMethod
+  handleChange(
+    event : SyntheticEvent< any >,
+    { newValue } : { newValue : ?string }
+  ) {
     this.setState( {
-      value: newValue,
+      value: newValue || '',
     } );
     if ( !!newValue
         // should be correct code: either in known languages or in provided array
-        && ( LANGUAGE_TITLES[ newValue ] || this.props.provided.indexOf( newValue ) !== -1 ) ) {
+        && ( LANGUAGE_TITLES.has( newValue ) || this.props.provided.indexOf( newValue ) !== -1 ) ) {
       this.props.onChange( newValue );
     }
   }
 
   render() {
-    const params = this.paramsF( this.state.value );
+    const inputProps = this.inputPropsF( this.state.value );
 
     return <Autosuggest
       getSuggestionValue={this.getSuggestionValue}
-      inputProps={params}
+      inputProps={inputProps}
       onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
       onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
       renderSuggestion={this.renderSuggestion}
@@ -114,8 +125,9 @@ export default class LanguageAutocomplete extends Component {
       theme={styles} />;
   }
 
-  renderSuggestion( data, { query } ) {
-    const string = data + ( LANGUAGE_TITLES[ data ] ? ' — ' + LANGUAGE_TITLES[ data ] : '' );
+  @boundMethod
+  renderSuggestion( data : string, { query } : {query : string} ) {
+    const string = data + ( LANGUAGE_TITLES.has( data ) ? ' — ' + ( LANGUAGE_TITLES.get( data ) || '' ) : '' );
     const spans = [];
     string.split( query ).forEach( ( substr, index, array ) => {
       if ( substr ) {

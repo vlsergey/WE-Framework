@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
+import { boundMethod } from 'autobind-decorator';
 import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import ClaimReferencesButtonCell from 'components/references/ClaimReferencesButtonCell';
@@ -34,25 +35,18 @@ export default class ClaimsTableRows
     displayLabel: true,
   };
 
-  constructor() {
-    super( ...arguments );
+  claimQualifiersTable : ReactObjRef< ClaimQualifiersTable > = React.createRef();
 
-    this.state = {
-      displayQualifierSelect: false,
-    };
+  state = {
+    displayQualifierSelect: false,
+  };
 
-    this.claimQualifiersTable = React.createRef();
-
-    this.handleClaimDelete = this.handleClaimDelete.bind( this );
-    this.handleQualifierSelect = this.handleQualifierSelect.bind( this );
-    this.handleRankChange = this.handleRankChange.bind( this );
-    this.handleSnakChange = this.handleSnakChange.bind( this );
-  }
-
+  @boundMethod
   handleClaimDelete() {
     return this.props.onClaimDelete( this.props.claim );
   }
 
+  @boundMethod
   handleQualifierSelect() {
     if ( this.claimQualifiersTable.current !== null ) {
       this.claimQualifiersTable.current.showQualifierSelect();
@@ -61,13 +55,15 @@ export default class ClaimsTableRows
     }
   }
 
-  handleRankChange( rank : string ) {
+  @boundMethod
+  handleRankChange( rank : RankType ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
       rank,
     } );
   }
 
+  @boundMethod
   handleSnakChange( snak : SnakType ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
@@ -105,7 +101,7 @@ export default class ClaimsTableRows
           disabled={!hasClaimDelete}
           onClaimDelete={this.handleClaimDelete}
           propertyId={propertyDescription.id}
-          propertyLabel={propertyDescription.label} />
+          propertyLabel={propertyDescription.label || propertyDescription.id} />
       </AnimatedTr>
       { ( displayQualifierSelect || claim.qualifiers ) && <tr>
         <td colSpan={2} />

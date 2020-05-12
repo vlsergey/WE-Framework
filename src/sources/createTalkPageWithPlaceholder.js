@@ -2,7 +2,7 @@
 
 import { getWikidataApi } from 'core/ApiUtils';
 
-export default function createTalkPageWithPlaceholder( entityId ) {
+export default function createTalkPageWithPlaceholder( entityId : string ) {
   const notifyOptions = {
     autoHide: true,
     tag: 'WEF-Sources Talkpage',

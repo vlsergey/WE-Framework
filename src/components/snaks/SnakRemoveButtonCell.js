@@ -1,29 +1,23 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ButtonCell from 'components/ButtonCell';
-import PropTypes from 'prop-types';
 
-export default class SnakRemoveButtonCell extends PureComponent {
+type PropsType = {
+  confirmMessage : string,
+  disabled : boolean,
+  label : string,
+  onClick : any => any,
+};
 
-  static propTypes = {
-    disabled: PropTypes.bool,
-    onClick: PropTypes.func.isRequired,
-
-    confirmMessage: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-  };
+export default class SnakRemoveButtonCell extends PureComponent<PropsType> {
 
   static defaultProps = {
     disabled: false,
   };
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleClick = this.handleClick.bind( this );
-  }
-
+  @boundMethod
   handleClick() {
     const { confirmMessage, onClick } = this.props;
 

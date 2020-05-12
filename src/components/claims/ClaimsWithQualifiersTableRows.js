@@ -2,6 +2,7 @@
 
 import React, { PureComponent } from 'react';
 import AnimatedTr from 'components/AnimatedTr';
+import { boundMethod } from 'autobind-decorator';
 import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
 import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import ClaimReferencesButtonCell from 'components/references/ClaimReferencesButtonCell';
@@ -27,32 +28,29 @@ type PropsType = {
 export default class ClaimsWithQualifiersTableRows
   extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
+  claimQualifiersTable : ReactObjRef< ClaimQualifiersTable > = React.createRef();
 
-    this.claimQualifiersTable = React.createRef();
-
-    this.handleClaimDelete = this.handleClaimDelete.bind( this );
-    this.handleQualifierSelect = this.handleQualifierSelect.bind( this );
-    this.handleRankChange = this.handleRankChange.bind( this );
-    this.handleSnakChange = this.handleSnakChange.bind( this );
-  }
-
+  @boundMethod
   handleClaimDelete() {
     return this.props.onClaimDelete( this.props.claim );
   }
 
+  @boundMethod
   handleQualifierSelect() {
-    this.claimQualifiersTable.current.showQualifierSelect();
+    if ( this.claimQualifiersTable.current ) {
+      this.claimQualifiersTable.current.showQualifierSelect();
+    }
   }
 
-  handleRankChange( rank : string ) {
+  @boundMethod
+  handleRankChange( rank : RankType ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
       rank,
     } );
   }
 
+  @boundMethod
   handleSnakChange( snak : SnakType ) {
     this.props.onClaimUpdate( {
       ...this.props.claim,
@@ -61,7 +59,7 @@ export default class ClaimsWithQualifiersTableRows
   }
 
   handleSnaksArrayUpdateF( propertyId : string ) {
-    return snaksArray => this.props.onClaimUpdate( {
+    return ( snaksArray : SnakType[] ) => this.props.onClaimUpdate( {
       ...this.props.claim,
       qualifiers: {
         ...( this.props.claim || {} ).qualifiers,
@@ -94,11 +92,11 @@ export default class ClaimsWithQualifiersTableRows
           disabled={!hasClaimDelete}
           onClaimDelete={this.handleClaimDelete}
           propertyId={propertyDescription.id}
-          propertyLabel={propertyDescription.label} />
+          propertyLabel={propertyDescription.label || propertyDescription.id} />
         <PropertyDescriptionsProvider propertyIds={columns}>
           { cache => columns.map( propertyId => {
-            const propertyDescription = cache[ propertyId ];
-            if ( typeof propertyDescription === 'undefined' ) {
+            const propertyDescription : ?PropertyDescription = cache.get( propertyId );
+            if ( !propertyDescription ) {
               return <td key={propertyId}>
                 <i>Loading property description of {propertyId}...</i>
               </td>;

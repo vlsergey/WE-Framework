@@ -2,22 +2,18 @@
 
 import React, { PureComponent } from 'react';
 import { get } from './LruStore';
-import PropTypes from 'prop-types';
 import SourceItem from './SourceItem';
 import styles from './styles.css';
 
-export default class LruTab extends PureComponent {
+type PropsType = {
+  onInsert : any => any,
+};
 
-  static propTypes = {
-    onInsert: PropTypes.func.isRequired,
-  };
+export default class LruTab extends PureComponent<PropsType> {
 
-  constructor() {
-    super( ...arguments );
-    this.lru = get();
-  }
+  lru : string[] = get();
 
-  handleClickF( entityId ) {
+  handleClickF( entityId : string ) {
     return () => this.props.onInsert( entityId );
   }
 

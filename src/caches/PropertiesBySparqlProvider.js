@@ -3,14 +3,13 @@
 import React, { PureComponent } from 'react';
 import CacheValueProvider from 'caches/CacheValueProvider';
 import propertiesBySparqlCache from './propertiesBySparqlCache';
-import PropTypes from 'prop-types';
 
-export default class PropertiesBySparqlProvider extends PureComponent {
+type PropsType = {
+  children : any => any,
+  sparql : string,
+};
 
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    sparql: PropTypes.string.isRequired,
-  }
+export default class PropertiesBySparqlProvider extends PureComponent<PropsType> {
 
   render() {
     const { children, sparql } = this.props;

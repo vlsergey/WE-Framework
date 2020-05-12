@@ -1,7 +1,6 @@
 // @flow
 
-import deepEqual from 'deep-equal';
-import expect from 'expect';
+import deepEqual from 'utils/deepEqual';
 import findByKeysInObjectStore from 'utils/findByKeysInObjectStore';
 
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
@@ -11,25 +10,22 @@ const PAUSE_BEFORE_REQUEUE = 100;
 
 export default class AbstractQueuedCache {
 
+  dispatch : any => void;
+  getState : void => any;
+
   type : string;
   maxBatch : number;
-  dbQueue : Set< string >;
-  requestQueue : Set< string >;
-  queueState : string;
-  queueHasNewElements : boolean;
-  nextBatch : Set< string >;
+  dbQueue : Set< string > = new Set();
+  requestQueue : Set< string > = new Set();
+  queueState : string = 'WAITING';
+  queueHasNewElements : boolean = false;
+  nextBatch : Set< string > = EMPTY_SET;
   useIndexedDb : boolean;
   dbConnection : ?IDBDatabase;
 
   constructor( type : string, useIndexedDb : boolean, maxBatch : number ) {
     this.type = type;
     this.maxBatch = maxBatch;
-
-    this.dbQueue = new Set();
-    this.requestQueue = new Set();
-    this.queueState = 'WAITING';
-    this.queueHasNewElements = false;
-    this.nextBatch = EMPTY_SET;
 
     this.useIndexedDb = useIndexedDb;
     this.dbConnection = null;
@@ -50,8 +46,12 @@ export default class AbstractQueuedCache {
     }
   }
 
-  changeState( expectedState, newState ) {
-    expect( this.queueState ).toEqual( expectedState );
+  assertState( expectedState : string ) : void {
+    if ( this.queueState !== expectedState ) throw new Error( 'Unexpected state: ' + this.queueState );
+  }
+
+  changeState( expectedState : string, newState : string ) {
+    this.assertState( expectedState );
     this.queueState = newState;
   }
 
@@ -60,54 +60,42 @@ export default class AbstractQueuedCache {
     return true;
   }
 
-  enchanceIndexedDbResult( cachedValue ) {
+  enchanceIndexedDbResult( cachedValue : any ) {
     /* eslint no-unused-vars: 0 */
     return cachedValue;
   }
 
-  notifyMessage( cacheKeys ) {
+  notifyMessage( cacheKeys : string[] ) {
     /* eslint no-unused-vars: 0 */
     throw new Error( 'Child class need to implement notifyMessage( cacheKeys ) function' );
   }
 
-  buildRequestPromice( cacheKeys ) : Promise< any > {
+  buildRequestPromice( cacheKeys : string[] ) : Promise< any > {
     /* eslint no-unused-vars: 0 */
     throw new Error( 'Child class need to implement buildRequestPromice( cacheKeys ) function' );
   }
 
-  convertResultToEntities( result, cacheKeys ) {
+  convertResultToEntities( result : any, cacheKeys : string[] ) {
     /* eslint no-unused-vars: 0 */
     throw new Error( 'Child class need to implement convertResultToEntities( result, cacheKeys ) function' );
   }
 
   getCache( ) {
-    expect( this.getState ).toBeA( 'function', 'Provided getState argument value is not a function' );
-
     const data = this.getState()[ this.type ];
-    expect( data ).toBeAn( 'object', 'Cache not found: ' + this.type );
-
     const { cache } = data;
-    expect( cache ).toBeAn( 'object', 'Cache not found: ' + this.type );
-
+    if ( !cache ) throw new Error( 'Cache not found: ' + this.type );
     return cache;
   }
 
-  putToCache( cacheUpdate ) {
-    expect( this.dispatch ).toBeA( 'function', 'Provided dispatch argument value is not a function' );
-    expect( cacheUpdate ).toBeAn( 'object', 'Provided cacheUpdate argument value is not a function' );
-
+  putToCache( cacheUpdate : any ) {
     this.dispatch( {
       type: 'CACHE_' + this.type + '_PUT',
       cacheUpdate,
     } );
   }
 
-  actionQueue( cacheKeys ) {
-    expect( cacheKeys ).toBeAn( 'array' );
-
-    return ( dispatch, getState ) => {
-      expect( dispatch ).toBeA( 'function' );
-      expect( getState ).toBeA( 'function' );
+  actionQueue( cacheKeys : string[] ) {
+    return ( dispatch : DispatchType, getState : GetStateType ) => {
       this.dispatch = dispatch;
       this.getState = getState;
 
@@ -132,7 +120,7 @@ export default class AbstractQueuedCache {
     };
   }
 
-  validateCacheKeys( cacheKeys ) {
+  validateCacheKeys( cacheKeys : string[] ) {
     /* eslint no-undef: 0 */
     if ( process.env.NODE_ENV !== 'production' ) {
       cacheKeys.forEach( cacheKey => {
@@ -143,10 +131,10 @@ export default class AbstractQueuedCache {
   }
 
   checkIfDatabaseScanRequired( ) {
-    expect( this.queueState ).toEqual( 'SCHEDULED' );
+    this.assertState( 'SCHEDULED' );
 
     const data = this.getState()[ this.type ];
-    expect( data ).toBeAn( 'object', 'Cache not found: ' + this.type );
+    if ( !data ) throw new Error( 'Cache not found: ' + this.type );
 
     if ( this.dbQueue.size !== 0 ) {
       if ( this.dbConnection ) {
@@ -169,13 +157,13 @@ export default class AbstractQueuedCache {
   }
 
   scanDatabase( ) {
-    expect( this.queueState ).toEqual( 'SCAN' );
+    this.assertState( 'SCAN' );
 
     const cacheKeys = [ ...this.dbQueue ];
     const setCopy = new Set( cacheKeys );
     this.scanDatabaseImpl( cacheKeys )
       .finally( () => {
-        expect( this.queueState ).toEqual( 'SCAN' );
+        if ( this.queueState !== 'SCAN' ) throw new Error( 'Unexpected state: ' + this.queueState );
 
         if ( [ ...this.dbQueue ].some( cacheKey => !setCopy.has( cacheKey ) ) ) {
           // TODO: possible optimization: scan only new keys
@@ -190,9 +178,9 @@ export default class AbstractQueuedCache {
       } );
   }
 
-  scanDatabaseImpl( cacheKeys ) {
-    expect( cacheKeys ).toBeAn( 'array' );
-    expect( this.queueState ).toEqual( 'SCAN' );
+  scanDatabaseImpl( cacheKeys : string[] ) {
+    this.assertState( 'SCAN' );
+    if ( !this.dbConnection ) throw new Error( 'DB not open' );
 
     const transaction : IDBTransaction = this.dbConnection.transaction( [ 'CACHE' ], 'readonly' );
     const objectStore : IDBObjectStore = transaction.objectStore( 'CACHE' );
@@ -225,7 +213,7 @@ export default class AbstractQueuedCache {
   }
 
   async queueNextBatch() {
-    expect( this.queueState ).toEqual( 'REQUEST' );
+    this.assertState( 'REQUEST' );
 
     if ( this.requestQueue.size === 0 ) {
       this.changeState( 'REQUEST', 'SCHEDULED' );
@@ -248,11 +236,9 @@ export default class AbstractQueuedCache {
     try {
       const result : any = await this.buildRequestPromice( nextBatch );
       console.info( notifyMessage + '… Success.' );
-      console.debug( 'Successfully received ' + nextBatch.length + ' cache ' + this.type + ' items: ' + nextBatch );
+      console.debug( `Successfully received ${String( nextBatch.length )} cache ${this.type} items: ${String( nextBatch )}` );
 
       const cacheUpdateReady = this.convertResultToEntities( result, nextBatch );
-      expect( cacheUpdateReady ).toBeAn( 'object' );
-
       const cache = this.getCache();
       const cacheUpdate = {};
       let hasUpdates = false;
@@ -277,7 +263,7 @@ export default class AbstractQueuedCache {
     } catch ( error ) {
       mw.notify( notifyMessage + '… Failure. See console log output for details.',
         { autoHide: true, tag: 'WE-F Cache: ' + this.type } );
-      mw.log.error( 'Unable to batch request following items: ' + nextBatch );
+      mw.log.error( `Unable to batch request following items: ${String( nextBatch )}` );
       mw.log.error( error );
 
       this.nextBatch = EMPTY_SET;
@@ -285,19 +271,19 @@ export default class AbstractQueuedCache {
     }
   }
 
-  decideNextAction( ) {
-    expect( this.queueState ).toEqual( 'REQUEST' );
+  decideNextAction() {
+    this.assertState( 'REQUEST' );
 
     if ( this.queueHasNewElements ) {
       this.queueHasNewElements = false;
       this.changeState( 'REQUEST', 'SCHEDULED' );
-      setTimeout( () => this.dispatch( this.actionDbScan() ), PAUSE_BEFORE_REQUEUE );
+      setTimeout( () => this.dispatch( this.checkIfDatabaseScanRequired() ), PAUSE_BEFORE_REQUEUE );
     } else {
       this.queueNextBatch( );
     }
   }
 
-  storeInIndexDb( cacheResult ) {
+  storeInIndexDb( cacheResult : any ) {
     if ( !this.dbConnection ) return;
     const objectStore = this.dbConnection
       .transaction( [ 'CACHE' ], 'readwrite' )
@@ -308,11 +294,11 @@ export default class AbstractQueuedCache {
     } );
   }
 
-  onCacheUpdateFromDatabase( cacheUpdate ) {
+  onCacheUpdateFromDatabase( cacheUpdate : any ) {
     /* eslint no-unused-vars: 0 */
   }
 
-  onCacheUpdateFromRequest( cacheUpdate ) {
+  onCacheUpdateFromRequest( cacheUpdate : any ) {
     /* eslint no-unused-vars: 0 */
   }
 }

@@ -3,14 +3,14 @@
 import React, { PureComponent } from 'react';
 import CacheValuesProvider from './CacheValuesProvider';
 import parentTypesCache from './parentTypesCache';
-import PropTypes from 'prop-types';
 
-export default class StringPropertyValuesProvider extends PureComponent {
+type PropsType = {
+  children : any => any,
+  typeIds : string[],
+};
 
-  static propTypes = {
-    children: PropTypes.func.isRequired,
-    typeIds: PropTypes.arrayOf( PropTypes.string ).isRequired,
-  }
+export default class StringPropertyValuesProvider
+  extends PureComponent<PropsType> {
 
   render() {
     const { children, typeIds } = this.props;

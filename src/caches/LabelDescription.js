@@ -1,14 +1,18 @@
 // @flow
 
 import * as I18nUtils from 'utils/I18nUtils';
+import { values } from 'utils/ObjectUtils';
 
 export default class LabelDescription {
 
-  constructor( entity ) {
+  description : ?string;
+  label : ?string;
+
+  constructor( entity : EntityType ) {
     const translations = {};
 
     if ( entity.labels ) {
-      Object.values( entity.labels ).forEach( label => {
+      values( entity.labels ).forEach( label => {
         translations[ label.language ] = {
           ...translations[ label.language ],
           label: label.value,
@@ -17,7 +21,7 @@ export default class LabelDescription {
     }
 
     if ( entity.descriptions ) {
-      Object.values( entity.descriptions ).forEach( description => {
+      values( entity.descriptions ).forEach( description => {
         translations[ description.language ] = {
           ...translations[ description.language ],
           description: description.value,
@@ -26,7 +30,8 @@ export default class LabelDescription {
     }
 
     const translated = I18nUtils.localize( {}, translations );
-    Object.keys( translated ).forEach( k => this[ k ] = translated[ k ] );
+    if ( translated.label ) this.label = translated.label;
+    if ( translated.description ) this.description = translated.description;
   }
 
 }

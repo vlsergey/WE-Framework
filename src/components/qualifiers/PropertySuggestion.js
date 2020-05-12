@@ -3,14 +3,13 @@
 import React, { PureComponent } from 'react';
 import EntityDescription from 'caches/EntityDescription';
 import EntityLabel from 'caches/EntityLabel';
-import PropTypes from 'prop-types';
 import styles from './NewQualifierAutosuggest.css';
 
-export default class PropertySuggestion extends PureComponent {
+type PropsType = {
+  propertyId : string,
+};
 
-  static propTypes = {
-    propertyId: PropTypes.string.isRequired,
-  };
+export default class PropertySuggestion extends PureComponent<PropsType> {
 
   render() {
     const { propertyId } = this.props;

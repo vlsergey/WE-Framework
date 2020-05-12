@@ -2,7 +2,6 @@
 
 import React, { PureComponent } from 'react';
 import i18n from 'components/core.i18n';
-import PropTypes from 'prop-types';
 import styles from './labelalike.css';
 import TagsInput from 'react-tagsinput';
 
@@ -18,14 +17,14 @@ const TAG_PROPS = {
   classNameRemove: styles[ 'react-tagsinput-remove' ],
 };
 
-export default class AliasesEditor extends PureComponent {
+type PropsType = {
+  draft : string,
+  onChange : ?( string[] ) => any,
+  onChangeDraft : ?string => any,
+  values : string[],
+};
 
-  static propTypes = {
-    draft: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
-    onChangeDraft: PropTypes.func.isRequired,
-    values: PropTypes.arrayOf( PropTypes.string ),
-  };
+export default class AliasesEditor extends PureComponent<PropsType> {
 
   static defaultProps = {
     draft: '',

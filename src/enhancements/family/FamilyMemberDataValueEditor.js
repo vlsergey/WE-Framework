@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ButtonCell from 'components/ButtonCell';
 import { connect } from 'react-redux';
 import generateRandomString from 'utils/generateRandomString';
@@ -9,9 +10,11 @@ import GoToWikidataButtonCell from 'components/dataValueEditors/wikibase-item/Go
 import i18n from './i18n';
 import { openEditor } from 'core/edit';
 import PersonEditorTemplate from 'editors/PersonEditorTemplate';
+import PropertyDescription from 'core/PropertyDescription';
+import { toWikibaseEntityIdValue } from 'model/ModelUtils';
 import WikibaseItemDataValueEditor from 'components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
 
-export function oppositeGender( entity ) {
+export function oppositeGender( entity : EntityType ) {
   return ( ( entity.claims || {} ).P21 || [] )
     .filter( claim => claim.rank === 'normal' || claim.rank === 'preferred' )
     .map( claim => ( ( ( claim.mainsnak || {} ).datavalue || {} ).value || {} ).id )
@@ -28,21 +31,17 @@ export function oppositeGender( entity ) {
 
 type PropsType = {
   datavalue? : ?DataValueType,
-  entity : any,
+  entity : EntityType,
   newEntityGenderEntityId : ( EntityType => ?string ) | string,
-  onDataValueChange : any => any,
-  propertiesMapping : any,
+  onDataValueChange : DataValueType => any,
+  propertiesMapping : {| [string] : string |}, // current entity property to new entity property mapping
+  propertyDescription : PropertyDescription,
   propertyIdSelfInto : string,
 };
 
 class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleCreateFamilyMember = this.handleCreateFamilyMember.bind( this );
-  }
-
+  @boundMethod
   handleCreateFamilyMember() {
     const { entity, propertiesMapping, propertyIdSelfInto } = this.props;
     const { newEntityGenderEntityId } = this.props;
@@ -60,18 +59,19 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
       actualNewEntityGenderEntityId = newEntityGenderEntityId;
     }
 
+    const newEntityClaims : ClaimsType = {};
     const newEntity : EntityType = {
-      claims: {},
+      claims: newEntityClaims,
       type: 'item',
     };
 
-    newEntity.claims.P31 = [ {
+    newEntityClaims.P31 = [ {
       mainsnak: {
         snaktype: 'value',
         property: 'P31',
         hash: generateRandomString(),
         datavalue: {
-          value: { 'entity-type': 'item', 'numeric-id': '5', 'id': 'Q5' },
+          value: toWikibaseEntityIdValue( 'Q5' ),
           type: 'wikibase-entityid',
         },
         datatype: 'wikibase-item',
@@ -82,17 +82,14 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
     } ];
 
     if ( actualNewEntityGenderEntityId ) {
-      newEntity.claims.P21 = [ {
+      newEntityClaims.P21 = [ {
         mainsnak: {
           snaktype: 'value',
           property: 'P21',
           hash: generateRandomString(),
           datavalue: {
             // male
-            value: { 'entity-type': 'item',
-              'numeric-id': actualNewEntityGenderEntityId.substr( 1 ),
-              'id': actualNewEntityGenderEntityId,
-            },
+            value: toWikibaseEntityIdValue( actualNewEntityGenderEntityId ),
             type: 'wikibase-entityid',
           },
           datatype: 'wikibase-item',
@@ -104,14 +101,15 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
     }
 
     // self into something
-    if ( !!propertyIdSelfInto && !!entity.id ) {
-      newEntity.claims[ propertyIdSelfInto ] = [ {
+    const currentEntityId : ?string = entity.id;
+    if ( !!propertyIdSelfInto && !!currentEntityId ) {
+      newEntityClaims[ propertyIdSelfInto ] = [ {
         mainsnak: {
           snaktype: 'value',
           property: propertyIdSelfInto,
           hash: generateRandomString(),
           datavalue: {
-            value: { 'entity-type': 'item', 'numeric-id': entity.id.substr( 1 ), 'id': entity.id },
+            value: toWikibaseEntityIdValue( currentEntityId ),
             type: 'wikibase-entityid',
           },
           datatype: 'wikibase-item',
@@ -122,10 +120,10 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
       } ];
     }
 
-    Object.keys( propertiesMapping ).forEach( sourcePropertyId => {
-      const targetPropertyId = propertiesMapping[ sourcePropertyId ];
+    Object.keys( propertiesMapping ).forEach( ( sourcePropertyId : string ) => {
+      const targetPropertyId : string = propertiesMapping[ sourcePropertyId ];
 
-      newEntity.claims[ targetPropertyId ] = ( ( entity.claims || {} )[ sourcePropertyId ] || [] )
+      newEntityClaims[ targetPropertyId ] = ( ( entity.claims || {} )[ sourcePropertyId ] || [] )
         .filter( claim => claim.rank === 'normal' || claim.rank === 'preferred' )
         .map( claim => ( ( ( claim.mainsnak || {} ).datavalue || {} ).value || {} ).id )
         .filter( id => !!id )
@@ -135,7 +133,7 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
             property: targetPropertyId,
             hash: generateRandomString(),
             datavalue: {
-              value: { 'entity-type': 'item', 'numeric-id': entityId.substr( 1 ), 'id': entityId },
+              value: toWikibaseEntityIdValue( entityId ),
               type: 'wikibase-entityid',
             },
             datatype: 'wikibase-item',
@@ -148,18 +146,22 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
 
     const oldEntity : EntityType = { type: 'item' };
     openEditor( PersonEditorTemplate, oldEntity, newEntity )
-      .then( entityId => super.handleCreate( entityId ) );
+      .then( entityId => this.props.onDataValueChange( ( {
+        value: toWikibaseEntityIdValue( entityId ),
+        type: 'wikibase-entityid',
+      } : DataValueType ) ) );
   }
 
   render() {
-    const { datavalue, onDataValueChange, ...etc } = this.props;
+    const { datavalue, onDataValueChange, propertyDescription, ...etc } = this.props;
     const entityId : ?string = ( ( datavalue || {} ).value || {} ).id || '';
 
     return <WikibaseItemDataValueEditor
       {...etc}
       buttons={this.renderButtons( entityId )}
       datavalue={datavalue}
-      onDataValueChange={onDataValueChange} />;
+      onDataValueChange={onDataValueChange}
+      propertyDescription={propertyDescription} />;
   }
 
   renderButtons( entityId : ?string ) {
@@ -181,5 +183,6 @@ const mapStateToProps = state => ( {
   entity: state.entity,
 } );
 
+// $FlowFixMe
 const FamilyMemberDataValueEditorConnected = connect( mapStateToProps )( FamilyMemberDataValueEditor );
 export default FamilyMemberDataValueEditorConnected;

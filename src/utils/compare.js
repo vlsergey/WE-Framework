@@ -1,6 +1,8 @@
 // @flow
 
-export default function compare( a, b ) {
+type Comparable = any;
+
+export default function compare( a : Comparable, b : Comparable ) {
   if ( typeof a === 'undefined' && typeof b === 'undefined' )
     return 0;
   if ( typeof a === 'undefined' && typeof b !== 'undefined' )
@@ -14,5 +16,4 @@ export default function compare( a, b ) {
     return 1;
   }
   return 0;
-
 }

@@ -2,6 +2,7 @@
 
 import AbstractQueuedCache from './AbstractQueuedCache';
 import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
+import { entries } from 'utils/ObjectUtils';
 import { getWikidataApi } from 'core/ApiUtils';
 import LabelDescription from './LabelDescription';
 
@@ -17,11 +18,11 @@ class LabelDescriptionCache extends AbstractQueuedCache {
     return typeof cacheKey === 'string' && !!cacheKey.match( /^[PQ](\d+)$/i );
   }
 
-  notifyMessage( cacheKeys ) {
+  notifyMessage( cacheKeys : string[] ) {
     return 'Fetching ' + cacheKeys.length + ' item(s) labels and descriptions from Wikidata';
   }
 
-  buildRequestPromice( cacheKeys ) {
+  buildRequestPromice( cacheKeys : string[] ) {
     return getWikidataApi()
       .getPromise( {
         action: 'wbgetentities',
@@ -32,12 +33,12 @@ class LabelDescriptionCache extends AbstractQueuedCache {
       } );
   }
 
-  convertResultToEntities( result ) {
+  convertResultToEntities( result : any ) {
     const cacheUpdate = {};
-    Object.values( result.entities ).forEach( entity => {
+    for ( const [ entityId, entity ] of entries( result.entities ) ) {
       const labelDescription = new LabelDescription( entity );
-      cacheUpdate[ entity.id ] = labelDescription;
-    } );
+      cacheUpdate[ entityId ] = labelDescription;
+    }
     return cacheUpdate;
   }
 

@@ -2,19 +2,19 @@
 
 import React, { PureComponent } from 'react';
 import DialogWrapper from 'wrappers/DialogWrapper';
+import type { EditorDefType } from 'editors/EditorDefModel';
 import i18n from './i18n';
-import PropTypes from 'prop-types';
 import styles from './SettingsDialog.css';
 
 const { localStorage } = window;
 
-export default class SettingsDialog extends PureComponent {
+type PropsType = {
+  editors : EditorDefType[],
+};
 
-  static propTypes = {
-    editors: PropTypes.arrayOf( PropTypes.object ).isRequired,
-  };
+export default class SettingsDialog extends PureComponent<PropsType> {
 
-  handleTrigger( editor ) {
+  handleTrigger( editor : EditorDefType ) {
     return () => {
       const key = 'WEF_DISABLED_EDITOR_' + editor.id;
       const value = !!localStorage.getItem( key );

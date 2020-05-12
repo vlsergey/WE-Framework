@@ -5,9 +5,8 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import LanguageAutocomplete from 'components/languages/LanguageAutocomplete';
-import PropTypes from 'prop-types';
 
-const EMPTY_OBJECT = {};
+const EMPTY_OBJECT : any = Object.freeze( {} );
 
 const listLabelalikeLanguages = createSelector(
   entity => Object.keys( entity.labels || EMPTY_OBJECT ),
@@ -32,17 +31,20 @@ const listLabelalikeLanguages = createSelector(
     return result;
   } );
 
-class LanguageSelect extends PureComponent {
+type PropsType = {
+  onChange : string => any,
+  provided : string[],
+  value : string,
+};
 
-  static propTypes = {
-    provided: PropTypes.arrayOf( PropTypes.string ),
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.string.isRequired,
-  }
+class LanguageSelect extends PureComponent<PropsType> {
 
   render() {
     const { onChange, provided, value } = this.props;
-    return <LanguageAutocomplete onChange={onChange} provided={provided} value={value} />;
+    return <LanguageAutocomplete
+      onChange={onChange}
+      provided={provided}
+      value={value} />;
   }
 }
 
@@ -50,6 +52,7 @@ const mapStateToProps = state => ( {
   provided: listLabelalikeLanguages( state.entity ),
 } );
 
+// $FlowFixMe
 const LanguageSelectConnected = connect( mapStateToProps )( LanguageSelect );
 export default LanguageSelectConnected;
 export { LanguageSelect as LanguageSelectImpl };

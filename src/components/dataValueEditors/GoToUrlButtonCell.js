@@ -3,19 +3,13 @@
 import React, { PureComponent } from 'react';
 import ButtonCell from 'components/ButtonCell';
 import i18n from './i18n';
-import PropTypes from 'prop-types';
 
-export default class GoToUrlButtonCell extends PureComponent {
+type PropsType = {
+  disabled? : ?boolean,
+  href? : ?string,
+};
 
-  static propTypes = {
-    disabled: PropTypes.bool,
-    href: PropTypes.string,
-  };
-
-  static defaultProps = {
-    disabled: false,
-    href: null,
-  };
+export default class GoToUrlButtonCell extends PureComponent<PropsType> {
 
   render() {
     const { disabled, href } = this.props;

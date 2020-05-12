@@ -1,18 +1,33 @@
 // @flow
 
 import { defaultMemoize } from 'reselect';
+import type { FieldDefType } from 'editors/EditorDefModel';
+import PropertyDescription from 'core/PropertyDescription';
 import { PureComponent } from 'react';
 
-const filterByTerm = defaultMemoize( ( cache, sorted, originalTerm ) => {
+type TempItemToFilter = {|
+  description? : ?string,
+  label? : ?string,
+  property : string,
+|};
+
+const EMPTY_OBJECT : any = Object.freeze( {} );
+
+const filterByTerm = defaultMemoize( (
+  cache : Map< string, PropertyDescription >,
+  sorted : FieldDefType[],
+  originalTerm : ?string
+) => {
   if ( !originalTerm || originalTerm.trim() === '' ) return sorted;
   const term = originalTerm.trim().toLowerCase();
 
-  let toFilter = sorted.map( field => ( {
-    ...field,
-    ...cache[ field.property ],
+  let toFilter : TempItemToFilter[] = sorted.map( field => ( {
+    property: field.property,
+    label: ( cache.get( field.property ) || EMPTY_OBJECT ).label,
+    description: ( cache.get( field.property ) || EMPTY_OBJECT ).description,
   } ) );
 
-  const result = [];
+  const result : FieldDefType[] = [];
 
   const filterImpl = ( fieldF, checkF ) => {
     toFilter = toFilter.filter( item => {
@@ -26,8 +41,10 @@ const filterByTerm = defaultMemoize( ( cache, sorted, originalTerm ) => {
   };
 
   // TODO: aliases? other languages?
+  filterImpl( item => item.property, value => value.startsWith( term ) );
   filterImpl( item => item.label, value => value.startsWith( term ) );
   filterImpl( item => item.description, value => value.startsWith( term ) );
+  filterImpl( item => item.property, value => value.indexOf( term ) !== -1 );
   filterImpl( item => item.label, value => value.indexOf( term ) !== -1 );
   filterImpl( item => item.description, value => value.indexOf( term ) !== -1 );
 
@@ -37,7 +54,7 @@ const filterByTerm = defaultMemoize( ( cache, sorted, originalTerm ) => {
 type PropsType = {
   children : any => any,
   fields : FieldDefType[],
-  propertyDescriptionCache : any,
+  propertyDescriptionCache : Map< string, PropertyDescription >,
   term : string,
 };
 

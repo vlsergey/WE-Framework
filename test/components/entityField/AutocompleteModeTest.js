@@ -3,14 +3,14 @@ import assert from 'assert';
 import AutocompleteMode from 'components/entityField/AutocompleteMode';
 import buildReducers from 'core/reducers';
 import LabelDescription from 'caches/LabelDescription';
-import Provider from 'ProviderWrapper';
+import Provider from 'testUtils/ProviderWrapper';
 import Q1367759 from '../../entities/Q1367759';
 import Q752285 from '../../entities/Q752285';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import Suggestion from 'components/entityField/Suggestion';
 import thunk from 'redux-thunk';
-import ValueHolder from '../../ValueHolder';
+import ValueHolder from 'testUtils/ValueHolder';
 import WikibaseItemInput from 'components/entityField/WikibaseItemInput';
 
 describe( 'components/dataValueEditors/wikibase-item', () => {

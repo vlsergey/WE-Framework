@@ -29,7 +29,7 @@ export default class ClaimsTableBody
     const { claims, displayLabel, propertyDescription,
       onClaimAdd, onClaimAddTwice, onClaimUpdate, onClaimDelete, onClaimsReorder } = this.props;
 
-    let children;
+    let children : any;
     if ( !claims || claims.length === 0 ) {
       const newClaim = newStatementClaim( propertyDescription.id, propertyDescription.datatype );
       children = [ <ClaimsTableRows
@@ -42,7 +42,7 @@ export default class ClaimsTableBody
         onClaimUpdate={onClaimUpdate}
         propertyDescription={propertyDescription} /> ];
     } else {
-      children = claims.map( ( claim, i ) => <ClaimsTableRows
+      children = claims.map<any>( ( claim, i ) => <ClaimsTableRows
         claim={claim}
         displayLabel={displayLabel}
         firstCell={i === 0

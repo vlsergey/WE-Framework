@@ -1,47 +1,42 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 
+const EMPTY_OBJECT : any = Object.freeze( {} );
 const ok = x => typeof x === 'string' && x.trim() !== '';
 
 type PropsType = {
   onValueChange : QuantityValueType => any,
-  readOnly? : boolean,
-  value? : ?QuantityValueType,
+  readOnly? : ?boolean,
+  value : QuantityValueType,
 };
 
 export default class PlusMinusValueEditor extends PureComponent<PropsType> {
 
   static defaultProps = {
-    value: null,
-    readOnly: false,
+    value: EMPTY_OBJECT,
   };
 
   static canBeUsedForValue( value : QuantityValueType ) : boolean {
-    const { amount, lowerBound, upperBound } = value || {};
+    const { amount, lowerBound, upperBound } = value || EMPTY_OBJECT;
 
     return !ok( lowerBound ) && !ok( upperBound )
       || Number( amount ) - Number( lowerBound ) === Number( upperBound ) - Number( amount );
   }
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleAmountChange = this.handleAmountChange.bind( this );
-    this.handlePlusMinusChange = this.handlePlusMinusChange.bind( this );
-  }
-
-  handleAmountChange( event ) {
+  @boundMethod
+  handleAmountChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
     const oldValue = this.props.value || {};
     if ( !ok( oldValue.lowerBound ) ) {
       this.props.onValueChange( {
         ...this.props.value,
-        amount: event.target.value,
+        amount: value,
       } );
       return;
     }
 
-    if ( !ok( event.target.value ) ) {
+    if ( !ok( value ) ) {
       // need to align boundaries around zero
       const oldAmount = ok( oldValue.amount ) ? Number( oldValue.amount ) : 0;
       const oldLowerBound = ok( oldValue.lowerBound ) ? Number( oldValue.lowerBound ) : oldAmount;
@@ -55,7 +50,7 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
       return;
     }
 
-    const newAmount = Number( event.target.value );
+    const newAmount = Number( value );
     const oldAmount = ok( oldValue.amount ) ? Number( oldValue.amount ) : 0;
     const oldLowerBound = ok( oldValue.lowerBound ) ? Number( oldValue.lowerBound ) : oldAmount;
     const oldPlusMinus = oldAmount - oldLowerBound;
@@ -67,11 +62,12 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
     } );
   }
 
-  handlePlusMinusChange( event ) {
+  @boundMethod
+  handlePlusMinusChange( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
     const oldValue = this.props.value || {};
     const oldAmount = Number( oldValue.amount ) || 0;
 
-    if ( event.target.value == null || event.target.value.trim() === '' ) {
+    if ( !value ) {
       const newValue : QuantityValueType = { ...this.props.value };
       delete newValue.lowerBound;
       delete newValue.upperBound;
@@ -79,7 +75,7 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
       return;
     }
 
-    const newPlusMinus = Number( event.target.value ) || 0;
+    const newPlusMinus = Number( value ) || 0;
 
     this.props.onValueChange( {
       ...this.props.value,

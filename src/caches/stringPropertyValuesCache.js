@@ -1,6 +1,7 @@
 // @flow
 
 import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
+import { entries } from 'utils/ObjectUtils';
 import { filterClaimsByRank } from 'model/ModelUtils';
 import { getWikidataApi } from 'core/ApiUtils';
 
@@ -16,29 +17,40 @@ const PROPERTIES_TO_CACHE = [
 const ok = variable => !!variable;
 const EMPTY_ARRAY = [];
 
-export const buildStringCacheValuesFromEntity = ( entity : ( PropertyType | EntityType ) ) => {
+type StringPropertyValuesCacheItem = {
+  P17? : ?string,
+  P37? : ?string,
+  P41? : ?string,
+  P424? : ?string,
+  lastrevid : ?number,
+  pageid : ?number,
+};
 
-  const entityResult = {};
-  entityResult.lastrevid = entity.lastrevid;
-  entityResult.pageid = entity.pageid;
+export const buildStringCacheValuesFromEntity = ( entity : EntityType ) => {
 
-  PROPERTIES_TO_CACHE.forEach( propertyId => {
+  const entityResult : StringPropertyValuesCacheItem = {
+    lastrevid: entity.lastrevid,
+    pageid: entity.pageid,
+  };
+
+  PROPERTIES_TO_CACHE.forEach( ( propertyId : string ) => {
     if ( !entity.claims ) {
       entityResult[ propertyId ] = EMPTY_ARRAY;
       return;
     }
 
-    const values = ( ( filterClaimsByRank( entity.claims[ propertyId ] )
-      .filter( ok )
+    const values : ( ?string )[] = ( ( filterClaimsByRank( entity.claims[ propertyId ] )
       .map( claim => claim.mainsnak ).filter( ok )
+      // $FlowFixMe
       .map( mainsnak => mainsnak.datavalue ).filter( ok )
+      // $FlowFixMe
       .filter( datavalue => datavalue.value ) : any ) : DataValueType[] )
       .map( datavalue => {
         switch ( datavalue.type ) {
         case 'string':
           return datavalue.value;
         case 'wikibase-entityid':
-          return datavalue.value.id;
+          return ( datavalue.value || {} ).id;
         default: null;
         }
       } );
@@ -58,11 +70,11 @@ class StringPropertyValuesCache extends AbstractQueuedCacheWithPostcheck {
     return typeof cacheKey === 'string' && !!cacheKey.match( /^[PQ](\d+)$/i );
   }
 
-  notifyMessage( cacheKeys ) {
+  notifyMessage( cacheKeys : string[] ) : string {
     return 'Fetching ' + cacheKeys.length + ' item(s) labels and descriptions from Wikidata';
   }
 
-  buildRequestPromice( cacheKeys ) {
+  buildRequestPromice( cacheKeys : string[] ) {
     return getWikidataApi()
       .getPromise( {
         action: 'wbgetentities',
@@ -71,13 +83,9 @@ class StringPropertyValuesCache extends AbstractQueuedCacheWithPostcheck {
       } );
   }
 
-  convertResultToEntities( result ) {
+  convertResultToEntities( result : any ) {
     const cacheUpdate = {};
-    const entities : ( EntityType | PropertyType )[] =
-      ( ( Object.values( result.entities ) : any ) : ( EntityType | PropertyType )[] );
-    entities.forEach( entity => {
-      const entityId : ?string = entity.id;
-      if ( !entityId ) return;
+    entries( result.entities ).forEach( ( [ entityId, entity ] : [string, EntityType] ) => {
       cacheUpdate[ entityId ] = buildStringCacheValuesFromEntity( entity );
     } );
     return cacheUpdate;

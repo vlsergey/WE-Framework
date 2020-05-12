@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import { DEFAULT_LANGUAGES } from 'utils/I18nUtils';
 import { getWikidataApi } from 'core/ApiUtils';
 import SourceItem from './SourceItem';
@@ -19,23 +20,21 @@ type StateType = {
   searchTermScheduled : string,
 };
 
-export default class SourceLookupTab extends PureComponent<PropsType, StateType> {
+export default class SourceLookupTab
+  extends PureComponent<PropsType, StateType> {
 
-  constructor() {
-    super( ...arguments );
+  state = {
+    searchInProgress: false,
+    searchTerm: '',
+    searchTermScheduled: '',
+    searchResult: [],
+  };
 
-    this.state = {
-      searchInProgress: false,
-      searchTerm: '',
-      searchTermScheduled: '',
-      searchResult: [],
-    };
-
-    this.handleChangeTerm = event => {
-      const newSearchTerm = event.target.value || '';
-      this.setState( { searchTerm: newSearchTerm } );
-      setTimeout( () => this.search( newSearchTerm.trim() ), 0.5 );
-    };
+  @boundMethod
+  handleChangeTerm( { currentTarget: { value } } : SyntheticEvent< HTMLInputElement > ) {
+    const newSearchTerm = value || '';
+    this.setState( { searchTerm: newSearchTerm } );
+    setTimeout( () => this.search( newSearchTerm.trim() ), 0.5 );
   }
 
   search( searchTerm : string ) {

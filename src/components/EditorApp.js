@@ -2,8 +2,10 @@
 
 import { closeWithoutSave, saveAndClose } from 'core/save';
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import { connect } from 'react-redux';
 import DialogWithTabs from 'components/formbuilders/DialogWithTabs';
+import type { EditorDefType } from 'editors/EditorDefModel';
 import i18n from './core.i18n';
 import ImportDataDialog from 'enhancements/importers/ImportDataDialog';
 import styles from './EditorApp.css';
@@ -22,24 +24,20 @@ type StateType = {
 
 class EditorApp extends PureComponent<PropsType, StateType> {
 
-  constructor() {
-    super( ...arguments );
+  dialogRef : ReactObjRef< DialogWithTabs > = React.createRef();
 
-    this.state = {
-      dialogOpen: false,
-    };
+  state = {
+    dialogOpen: false,
+  };
 
-    this.dialogRef = React.createRef();
-    this.handleCloseClick = this.handleCloseClick.bind( this );
-    this.triggerImportDataDialogOpen = this.triggerImportDataDialogOpen.bind( this );
-  }
-
+  @boundMethod
   handleCloseClick() {
     const { closeWithoutSave, reject } = this.props;
     closeWithoutSave( reject );
     return false;
   }
 
+  @boundMethod
   triggerImportDataDialogOpen() {
     this.setState( state => ( { ...state, dialogOpen: !state.dialogOpen } ) );
   }
@@ -94,5 +92,6 @@ const mapDispatchToProps = dispatch => ( {
   saveAndClose: ( resolve, reject ) => dispatch( saveAndClose( resolve, reject ) ),
 } );
 
+// $FlowFixMe
 const EditorAppConnected = connect( undefined, mapDispatchToProps )( EditorApp );
 export default EditorAppConnected;

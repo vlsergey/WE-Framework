@@ -1,33 +1,37 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import PropertyLabelCell from './PropertyLabelCell';
-import PropTypes from 'prop-types';
 import styles from './PropertyLabelCell.css';
 
-export default class PropertyLabelCellById extends PureComponent {
+const WIKIDATA_LINK_URL : string = '//www.wikidata.org/wiki/';
 
-  static propTypes = {
-    propertyId: PropTypes.string.isRequired,
-  };
+type PropsType = {
+  propertyId : string,
+};
 
-  WIKIDATA_LINK_URL = '//www.wikidata.org/wiki/';
+export default class PropertyLabelCellById extends PureComponent<PropsType> {
 
   render() {
     const { propertyId } = this.props;
 
     return <PropertyDescriptionsProvider propertyIds={[ propertyId ]}>
-      { cache => cache[ propertyId ]
-        ? <PropertyLabelCell propertyDescription={cache[ propertyId ]} />
-        : <th className={styles.wef_property_label}>
-          <a
-            href={`${this.WIKIDATA_LINK_URL}Property:${propertyId}`}
-            rel="noopener noreferrer"
-            target="_blank">
-            {propertyId}
-          </a>
-        </th>}
+      { cache => {
+        const propertyDescription : ?PropertyDescription = cache.get( propertyId );
+        if ( !propertyDescription ) {
+          return <th className={styles.wef_property_label}>
+            <a
+              href={`${WIKIDATA_LINK_URL}Property:${propertyId}`}
+              rel="noopener noreferrer"
+              target="_blank">
+              {propertyId}
+            </a>
+          </th>;
+        }
+        return <PropertyLabelCell propertyDescription={propertyDescription} />;
+      } }
     </PropertyDescriptionsProvider>;
   }
 

@@ -1,50 +1,32 @@
 // @flow
 
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
+import { boundMethod } from 'autobind-decorator';
 
-export default class BoundariesValueEditor extends PureComponent {
+const EMPTY_OBJECT : any = Object.freeze( {} );
 
-  static propTypes = {
-    onValueChange: PropTypes.func.isRequired,
-    readOnly: PropTypes.bool,
-    value: PropTypes.object,
-  };
+type PropsType = {
+  onValueChange : QuantityValueType => any,
+  readOnly? : ?boolean,
+  value : QuantityValueType,
+};
+
+export default class BoundariesValueEditor extends PureComponent<PropsType> {
 
   static defaultProps = {
-    value: null,
-    readOnly: false,
+    value: EMPTY_OBJECT,
   };
 
   static canBeUsedForValue() : boolean {
     return true;
   }
 
-  constructor() {
-    super( ...arguments );
-
-    this.handleAmountChange = this.handleAmountChange.bind( this );
-    this.handleLowerBoundChange = this.handleLowerBoundChange.bind( this );
-    this.handleUpperBoundChange = this.handleUpperBoundChange.bind( this );
-  }
-
-  handleFieldChange( field : string, event ) {
+  @boundMethod
+  handleChange( { currentTarget: { name, value } } : SyntheticEvent< HTMLInputElement > ) {
     this.props.onValueChange( {
       ...this.props.value,
-      [ field ]: event.target.value || '',
+      [ name ]: value || '',
     } );
-  }
-
-  handleAmountChange( event ) {
-    this.handleFieldChange( 'amount', event );
-  }
-
-  handleLowerBoundChange( event ) {
-    this.handleFieldChange( 'lowerBound', event );
-  }
-
-  handleUpperBoundChange( event ) {
-    this.handleFieldChange( 'upperBound', event );
   }
 
   render() {
@@ -61,15 +43,15 @@ export default class BoundariesValueEditor extends PureComponent {
 
     return <React.Fragment>
       <td>
-        <input onChange={this.handleLowerBoundChange} value={value.lowerBound || ''} />
+        <input name="lowerBound" onChange={this.handleChange} value={value.lowerBound || ''} />
       </td>
       <td>&nbsp;&lt;&nbsp;</td>
       <td>
-        <input onChange={this.handleAmountChange} value={value.amount || ''} />
+        <input name="amount" onChange={this.handleChange} value={value.amount || ''} />
       </td>
       <td>&nbsp;&lt;&nbsp;</td>
       <td>
-        <input onChange={this.handleUpperBoundChange} value={value.upperBound || ''} />
+        <input name="upperBound" onChange={this.handleChange} value={value.upperBound || ''} />
       </td>
     </React.Fragment>;
   }

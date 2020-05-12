@@ -1,5 +1,7 @@
 // @flow
 
+import { getEntityIdFromSnak } from 'model/ModelUtils';
+
 const localStorage = window.localStorage || {
   _cache: {},
   getItem( key ) { return this._cache[ key ]; },
@@ -27,13 +29,12 @@ function set( obj : any ) {
 
 const ok = x => x !== undefined && x !== null;
 
-export function onReferenceUpdate( reference ) {
+export function onReferenceUpdate( reference : ?ReferenceType ) {
   if ( !reference ) return;
 
-  const entityIds = ( ( reference.snaks || {} ).P248 || [] ).filter( ok )
-    .map( snak => snak.datavalue ).filter( ok )
-    .map( datavalue => datavalue.value ).filter( ok )
-    .map( value => value.id ).filter( ok );
+  const entityIds = ( ( reference.snaks || {} ).P248 || [] )
+    .map( snak => getEntityIdFromSnak( snak ) )
+    .filter( ok );
   if ( entityIds.length !== 1 ) return;
 
   const [ entityId ] = entityIds;

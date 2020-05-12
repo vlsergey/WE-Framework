@@ -1,6 +1,7 @@
 // @flow
 
 import React, { PureComponent } from 'react';
+import { boundMethod } from 'autobind-decorator';
 import ClaimReferencesEditorDialog from './ClaimReferencesEditorDialog';
 import { defaultMemoize } from 'reselect';
 import i18n from './i18n';
@@ -19,6 +20,8 @@ type StateType = {
 export default class ClaimReferencesButtonCell
   extends PureComponent<PropsType, StateType> {
 
+  labelMemoize : ClaimType => string;
+
   constructor() {
     super( ...arguments );
 
@@ -27,7 +30,11 @@ export default class ClaimReferencesButtonCell
     };
 
     this.labelMemoize = defaultMemoize( claim => '[' + ( ( claim || {} ).references || [] ).length + ']' );
-    this.handleClick = () => this.setState( state => ( { displayEditor: !state.displayEditor } ) );
+  }
+
+  @boundMethod
+  handleClick() {
+    this.setState( ( { displayEditor } ) => ( { displayEditor: !displayEditor } ) );
   }
 
   render() {
@@ -36,7 +43,6 @@ export default class ClaimReferencesButtonCell
     return <td className={styles.referencesButtonCell}>
       <JQueryButton
         className={styles.referencesButton}
-        icon={null}
         label={this.labelMemoize( claim )}
         onClick={this.handleClick}
         text

@@ -14,11 +14,11 @@ class ParentTypesCache extends AbstractQueuedCacheWithPostcheck {
     super( TYPE, true, 1 );
   }
 
-  notifyMessage( [ typeId ] ) {
+  notifyMessage( [ typeId ] : string[] ) {
     return 'Selecting parent types of ' + typeId;
   }
 
-  buildRequestPromice( [ typeId ] ) {
+  buildRequestPromice( [ typeId ] : string[] ) {
     const sparql = `SELECT DISTINCT ?type WHERE { ${this.ENTITY_PREFIX}${typeId} ${this.SUBCLASS_PROP}* ?type . }`;
     const url = this.SPARQL_ENDPOINT + '?query=' + encodeURIComponent( sparql );
     return fetch( url, {
@@ -29,7 +29,7 @@ class ParentTypesCache extends AbstractQueuedCacheWithPostcheck {
       .then( body => body.json() );
   }
 
-  convertResultToEntities( result, [ typeId ] ) {
+  convertResultToEntities( result : any, [ typeId ] : string[] ) {
     const [ columnName ] = result.head.vars;
 
     const typeIds = result.results.bindings.map( binding => {
