@@ -18,11 +18,11 @@ const ok = variable => !!variable;
 const EMPTY_ARRAY = [];
 
 type StringPropertyValuesCacheItem = {
+  lastrevid : ?number,
   P17? : ?string,
   P37? : ?string,
   P41? : ?string,
   P424? : ?string,
-  lastrevid : ?number,
   pageid : ?number,
 };
 

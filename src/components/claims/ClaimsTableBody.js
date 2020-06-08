@@ -13,8 +13,8 @@ type PropType = {
   onClaimAdd : any => any,
   onClaimAddTwice : any => any,
   onClaimDelete : ClaimType => any,
-  onClaimUpdate : ClaimType => any,
   onClaimsReorder : string[] => any,
+  onClaimUpdate : ClaimType => any,
   propertyDescription : PropertyDescription,
 };
 
