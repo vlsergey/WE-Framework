@@ -15,9 +15,9 @@ function sort( cache : { [string] : any }, oneOf : string[] ) {
 }
 
 type PropsType = {
+  oneOf : string[],
   onOtherSelect : () => any,
   onSelect : ?string => any,
-  oneOf : string[],
   value? : ?string,
 };
 

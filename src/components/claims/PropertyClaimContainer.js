@@ -14,8 +14,8 @@ type PropsType = {
   onClaimAdd : () => any,
   onClaimAddTwice : () => any,
   onClaimDelete : ClaimType => any,
-  onClaimUpdate : ClaimType => any,
   onClaimsReorder : string[] => any,
+  onClaimUpdate : ClaimType => any,
   propertyDescription : PropertyDescription,
 };
 
