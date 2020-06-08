@@ -8,10 +8,13 @@ const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexe
 const EMPTY_SET : Set< string > = Object.freeze( new Set() );
 const PAUSE_BEFORE_REQUEUE = 100;
 
+type KeyType = any;
+type KeyArrayType = any[];
+
 export default class AbstractQueuedCache {
 
-  dispatch : any => void;
-  getState : void => any;
+  dispatch : DispatchType;
+  getState : GetStateType;
 
   type : string;
   maxBatch : number;
@@ -46,7 +49,7 @@ export default class AbstractQueuedCache {
     }
   }
 
-  assertState( expectedState : string ) : void {
+  assertState( expectedState : KeyType ) : void {
     if ( this.queueState !== expectedState ) throw new Error( 'Unexpected state: ' + this.queueState );
   }
 
@@ -55,7 +58,7 @@ export default class AbstractQueuedCache {
     this.queueState = newState;
   }
 
-  isKeyValid( cacheKey : string ) : boolean {
+  isKeyValid( cacheKey : KeyType ) : boolean {
     /* eslint no-unused-vars: 0 */
     return true;
   }
@@ -65,17 +68,17 @@ export default class AbstractQueuedCache {
     return cachedValue;
   }
 
-  notifyMessage( cacheKeys : string[] ) {
+  notifyMessage( cacheKeys : KeyArrayType ) {
     /* eslint no-unused-vars: 0 */
     throw new Error( 'Child class need to implement notifyMessage( cacheKeys ) function' );
   }
 
-  buildRequestPromice( cacheKeys : string[] ) : Promise< any > {
+  buildRequestPromice( cacheKeys : KeyArrayType ) : Promise< any > {
     /* eslint no-unused-vars: 0 */
     throw new Error( 'Child class need to implement buildRequestPromice( cacheKeys ) function' );
   }
 
-  convertResultToEntities( result : any, cacheKeys : string[] ) {
+  convertResultToEntities( result : any, cacheKeys : KeyArrayType ) {
     /* eslint no-unused-vars: 0 */
     throw new Error( 'Child class need to implement convertResultToEntities( result, cacheKeys ) function' );
   }
@@ -94,7 +97,7 @@ export default class AbstractQueuedCache {
     } );
   }
 
-  actionQueue( cacheKeys : string[] ) {
+  actionQueue( cacheKeys : KeyArrayType ) {
     return ( dispatch : DispatchType, getState : GetStateType ) => {
       this.dispatch = dispatch;
       this.getState = getState;
@@ -120,7 +123,7 @@ export default class AbstractQueuedCache {
     };
   }
 
-  validateCacheKeys( cacheKeys : string[] ) {
+  validateCacheKeys( cacheKeys : KeyArrayType ) {
     /* eslint no-undef: 0 */
     if ( process.env.NODE_ENV !== 'production' ) {
       cacheKeys.forEach( cacheKey => {

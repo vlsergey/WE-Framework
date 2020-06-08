@@ -1,20 +1,20 @@
 // @flow
 
-const EMPTY_SET : Set< string > = Object.freeze( new Set() );
-const PAUSE_BEFORE_REQUEUE = 100;
-
 type QueueStateType = 'WAITING' | 'REQUEST';
 type KeyType = any;
 type ValueType = any;
 type CacheUpdateType = Map< KeyType, ValueType >;
 type CacheUpdateCallbackType = CacheUpdateType => any;
 
+const EMPTY_SET : Set< KeyType > = Object.freeze( new Set() );
+const PAUSE_BEFORE_REQUEUE = 100;
+
 export default class AbstractSelfStoredQueuedCache {
 
   type : string;
   maxBatch : number ;
 
-  queue : Set< KeyType >;
+  queue : Set< KeyType > = new Set();
   queueHasNewElements : boolean = false;
   queueState : QueueStateType = 'WAITING';
   nextBatch : Set< KeyType > = EMPTY_SET;
@@ -51,7 +51,7 @@ export default class AbstractSelfStoredQueuedCache {
     throw new Error( 'Child class need to implement convertResultToEntities( result, requestKeys ) function' );
   }
 
-  doQueue( cacheKeys : string[] ) {
+  doQueue( cacheKeys : KeyType[] ) {
     this.validateCacheKeys( cacheKeys );
 
     let queued = false;
