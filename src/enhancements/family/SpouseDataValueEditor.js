@@ -4,7 +4,7 @@ import FamilyMemberDataValueEditor, { oppositeGender } from './FamilyMemberDataV
 import React, { PureComponent } from 'react';
 import PropertyDescription from 'core/PropertyDescription';
 
-const EMPTY_OBJECT : any = Object.freeze( {} );
+const EMPTY_MAP : Map< string, string > = Object.freeze( new Map() );
 
 type PropsType = {
   datavalue? : ?DataValueType,
@@ -18,7 +18,7 @@ export default class SpouseDataValueEditor extends PureComponent<PropsType> {
     return <FamilyMemberDataValueEditor
       {...this.props}
       newEntityGenderEntityId={oppositeGender}
-      propertiesMapping={EMPTY_OBJECT}
+      propertiesMapping={EMPTY_MAP}
       propertyIdSelfInto="P26" />;
   }
 }

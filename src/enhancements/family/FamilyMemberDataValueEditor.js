@@ -34,7 +34,7 @@ type PropsType = {
   entity : EntityType,
   newEntityGenderEntityId : ( EntityType => ?string ) | string,
   onDataValueChange : DataValueType => any,
-  propertiesMapping : {| [string] : string |}, // current entity property to new entity property mapping
+  propertiesMapping : Map< string, string >, // current entity property to new entity property mapping
   propertyDescription : PropertyDescription,
   propertyIdSelfInto : string,
 };
@@ -120,8 +120,7 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
       } ];
     }
 
-    Object.keys( propertiesMapping ).forEach( ( sourcePropertyId : string ) => {
-      const targetPropertyId : string = propertiesMapping[ sourcePropertyId ];
+    [ ...propertiesMapping.entries() ].forEach( ( [ sourcePropertyId, targetPropertyId ] : [string, string] ) => {
 
       newEntityClaims[ targetPropertyId ] = ( ( entity.claims || {} )[ sourcePropertyId ] || [] )
         .filter( claim => claim.rank === 'normal' || claim.rank === 'preferred' )

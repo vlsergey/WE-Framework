@@ -8,10 +8,10 @@ const GENDER_MALE : string = 'Q6581097';
 
 const PROPERTY_MOTHER : string = 'P25';
 const PROPERTY_SPOUSE : string = 'P26';
-const PROPERTIES_MAPPING = Object.freeze( {
+const PROPERTIES_MAPPING : Map< string, string > = Object.freeze( new Map( [
   // by default mother of current entity will be spouse of new entity
-  [ PROPERTY_MOTHER ]: PROPERTY_SPOUSE
-} );
+  [ PROPERTY_MOTHER, PROPERTY_SPOUSE ]
+] ) );
 
 type PropsType = {
   datavalue? : ?DataValueType,
