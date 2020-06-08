@@ -7,40 +7,8 @@ import { connect } from 'react-redux';
 import ExternalIdDataValueEditor from 'components/dataValueEditors/external-id/ExternalIdDataValueEditor';
 import i18n from './i18n';
 import PropertyDescription from 'core/PropertyDescription';
+import queryViafProperties from './queryViafProperties';
 import ViafLookupDialog from './ViafLookupDialog';
-
-const VIAF_2_PROPERTY = {
-  DNB: 'P227',
-  LC: 'P244',
-  JPG: 'P245',
-  BNF: 'P268',
-  SUDOC: 'P269',
-  NDL: 'P349',
-  ICCU: 'P396',
-  NLA: 'P409',
-  BPN: 'P651',
-  NKC: 'P691',
-  SELIBR: 'P906',
-  RSL: 'P947',
-  BNE: 'P950',
-  NSZL: 'P951',
-  PTBNP: 'P1005',
-  NTA: 'P1006',
-  BIBSYS: 'P1015',
-  BAV: 'P1017',
-  NUKAT: 'P1207',
-  BNC: 'P1273',
-  EGAXA: 'P1309',
-  LNB: 'P1368',
-  NSK: 'P1375',
-  LAC: 'P1670',
-  NLP: 'P1695',
-  N6I: 'P1946',
-  B2Q: 'P3280',
-  DBC: 'P3846',
-  BLBNB: 'P4619',
-  KRNLK: 'P5034',
-};
 
 const DEFAULT_PATTERN = /^(.+)$/i;
 const DEFAULT_REPLACE = '$1';
@@ -49,10 +17,13 @@ const VIAF_PATTERNS = {
   BNC: /^\.?(a\d{7}\d|x)/,
   BNF: /^http:\/\/catalogue\.bnf\.fr\/ark:\/12148\/cb(\d{8}.)$/,
   DBC: /^(87\d+)\.?(\d+)$/,
-  EGAXA: /^vtls(\d+)$/,
   LAC: /^(\d+[A-Z]\d+[EF]?)$/,
   NLP: /^(A[0-9]{7}[0-9X])$/i,
+  // RU\NLR\AUTH\771614 => 771614
+  NLR: /[^0-9]*(\d+)$/i,
   NUKAT: /^(n\d+)$/,
+  // WorldCat, etc.
+  Identities: /^.*\/identities\/((viaf|lccn|np)-.+)$/,
   DNB: /^http:\/\/d-nb\.info\/gnd\/(\d+)$/,
   LNB: /^LNC10-(\d{9})$/,
   NLA: /^[0]*([^0]\d+)$/,
@@ -61,16 +32,19 @@ const VIAF_PATTERNS = {
 const VIAF_REPLACES = {
   DBC: '$1$2',
   NLP: x => x.toUpperCase(),
+  ISNI: x => x.replace( /^(\d{4})(\d{4})(\d{4})(\d{4})$/, '$1 $2 $3 $4' ),
 };
 
 export function parseJustLinks(
+    viaf2Property : Map< string, string >,
     justlinks : any,
     onPropertyValueFound : ( string, string ) => any ) {
   Object.keys( justlinks )
-    .filter( key => !!VIAF_2_PROPERTY[ key ] )
     .filter( key => Array.isArray( justlinks[ key ] ) )
     .forEach( key => {
-      const propertyId : string = VIAF_2_PROPERTY[ key ];
+      const propertyId : ?string = viaf2Property.get( key );
+      if ( !propertyId ) return;
+
       const pattern : RegExp = VIAF_PATTERNS[ key ] || DEFAULT_PATTERN;
       const replacement : string | ( string => string ) = VIAF_REPLACES[ key ] || DEFAULT_REPLACE;
       const values : string[] = justlinks[ key ];
@@ -124,17 +98,19 @@ class ViafPropertyDataValueEditor
 
     const { onClaimsFill } = this.props;
 
-    viafIds.forEach( ( viafid : string ) => {
+    viafIds.forEach( async( viafid : string ) => {
       onClaimsFill( 'P214', x => x, viafid );
       const onValue = ( propertyId, value ) => onClaimsFill( propertyId, x => x.trim(), value );
 
-      fetch( 'https://viaf.org/viaf/' + viafid + '/justlinks.json', {
+      const viaf2Property = await queryViafProperties();
+      const allLinksResponse = await fetch( 'https://viaf.org/viaf/' + viafid + '/justlinks.json', {
         headers: {
           Accept: 'application/vnd.oclc.links+json',
         },
-      } )
-        .then( body => body.json() )
-        .then( justlinks => parseJustLinks( justlinks, onValue ) );
+      } );
+      if ( !allLinksResponse.ok ) throw new Error( 'Unable to receive all-links JSON from viaf.org: ' + allLinksResponse.statusText );
+      const allLinksJson = await allLinksResponse.json();
+      await parseJustLinks( viaf2Property, allLinksJson, onValue );
     } );
   }
 
