@@ -11,6 +11,7 @@ import stableSort from 'utils/stableSort';
 const compareByLabel = ( a, b ) => compare( a.label, b.label );
 const compareByLanguageCodes = ( a, b ) => compareLanguageCodes( a.languageCodes, b.languageCodes );
 
+const EMPTY_ARRAY : any[] = Object.freeze( [] );
 const EMPTY_OBJECT : any = Object.freeze( {} );
 
 type TempItemToSort = {|
@@ -26,8 +27,8 @@ const sort = defaultMemoize( (
 ) => {
   const toSort : TempItemToSort[] = fields.map( field => ( {
     property: field.property,
-    label: ( cache.get( field.property ) || EMPTY_OBJECT ).label,
-    languageCodes: ( cache.get( field.property ) || EMPTY_OBJECT ).languageCodes,
+    label: ( cache.get( field.property ) || EMPTY_OBJECT ).label || '',
+    languageCodes: ( cache.get( field.property ) || EMPTY_OBJECT ).languageCodes || EMPTY_ARRAY,
   } ) );
 
   for ( let sortByIndex = sortBy.length - 1; sortByIndex >= 0; sortByIndex-- ) {
