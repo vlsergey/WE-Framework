@@ -3,6 +3,7 @@ import assert from 'assert';
 import buildReducers from 'core/reducers';
 import P21 from '../../../entities/P21';
 import P31 from '../../../entities/P31';
+import PropertyData from 'core/PropertyData';
 import PropertyDescription from 'core/PropertyDescription';
 import Provider from 'testUtils/ProviderWrapper';
 import Q1367759 from '../../../entities/Q1367759';
@@ -24,8 +25,8 @@ describe( 'components/dataValueEditors', () => {
 
   describe( 'WikibaseItemDataValueEditor', () => {
 
-    const p21Description = new PropertyDescription( P21 );
-    const p31Description = new PropertyDescription( P31 );
+    const p21Description = new PropertyDescription( new PropertyData( P21 ) );
+    const p31Description = new PropertyDescription( new PropertyData( P31 ) );
 
     it( 'can be rendered with empty datavalue for property with limited options and can be changed', () => {
       const rendered = ReactTestUtils.renderIntoDocument(

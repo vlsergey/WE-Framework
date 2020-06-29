@@ -5,12 +5,14 @@ import ClaimQualifiersTable from 'components/qualifiers/ClaimQualifiersTable';
 import CommonsMediaDataValueEditor from 'components/dataValueEditors/CommonsMediaDataValueEditor';
 import P51 from '../../entities/P51';
 import P85 from '../../entities/P85';
+import PropertyData from 'core/PropertyData';
 import PropertyDescription from 'core/PropertyDescription';
 import Provider from 'testUtils/ProviderWrapper';
 import Q30 from '../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import thunk from 'redux-thunk';
+import { TYPE } from 'caches/propertyDataCache';
 import ValueHolder from 'testUtils/ValueHolder';
 
 describe( 'components/qualifiers/ClaimQualifiersTable', () => {
@@ -24,7 +26,7 @@ describe( 'components/qualifiers/ClaimQualifiersTable', () => {
         <ValueHolder initialValue={Q30.claims.P85[ 0 ]}>{ ( value, onChange ) =>
           <ClaimQualifiersTable
             claim={value}
-            claimPropertyDescription={new PropertyDescription( P85 )}
+            claimPropertyDescription={new PropertyDescription( new PropertyData( P85 ) )}
             onClaimUpdate={onChange} />
         }</ValueHolder>
       </Provider>
@@ -38,9 +40,9 @@ describe( 'components/qualifiers/ClaimQualifiersTable', () => {
 
     // populate cache to see snak editors
     store.dispatch( {
-      type: 'CACHE_PROPERTYDESCRIPTIONS_PUT',
+      type: 'CACHE_' + TYPE + '_PUT',
       cacheUpdate: {
-        P51: new PropertyDescription( P51 ),
+        P51: new PropertyData( P51 ),
       },
     } );
 

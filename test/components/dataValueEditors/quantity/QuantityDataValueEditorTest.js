@@ -6,6 +6,7 @@ import ExactValueEditor from 'components/dataValueEditors/quantity/ExactValueEdi
 import ModeSelect from 'components/dataValueEditors/quantity/ModeSelect';
 import P1971 from '../../../entities/P1971';
 import PlusMinusValueEditor from 'components/dataValueEditors/quantity/PlusMinusValueEditor';
+import PropertyData from 'core/PropertyData';
 import PropertyDescription from 'core/PropertyDescription';
 import Provider from 'testUtils/ProviderWrapper';
 import Q1367759 from '../../../entities/Q30';
@@ -24,7 +25,7 @@ describe( 'components/dataValueEditors/quantity', () => {
 
   describe( 'QuantityDataValueEditor', () => {
 
-    const p1971Description = new PropertyDescription( P1971 );
+    const p1971Description = new PropertyDescription( new PropertyData( P1971 ) );
 
     it( 'can be rendered with undefined datavalue', () => {
       const rendered = ReactTestUtils.renderIntoDocument(

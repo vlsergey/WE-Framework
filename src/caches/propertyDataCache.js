@@ -3,23 +3,23 @@
 import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 import { API_PARAMETER_LANGUAGES } from 'utils/I18nUtils';
 import { getWikidataApi } from 'core/ApiUtils';
-import PropertyDescription from 'core/PropertyDescription';
+import PropertyData from 'core/PropertyData';
 
-const TYPE = 'PROPERTYDESCRIPTIONS';
+export const TYPE = 'PROPERTYDATA';
 
-class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
+class PropertyDataCache extends AbstractQueuedCacheWithPostcheck {
 
   constructor() {
     super( TYPE, true, 50 );
   }
 
-  isKeyValid( cacheKey : string ) : boolean {
-    return typeof cacheKey === 'string' && !!cacheKey.match( /^P(\d+)$/i );
+  enchanceIndexedDbResult( cachedValue : any ) {
+    Object.setPrototypeOf( cachedValue, PropertyData.prototype );
+    return cachedValue;
   }
 
-  enchanceIndexedDbResult( cachedValue : any ) {
-    PropertyDescription.deserialize( cachedValue );
-    return cachedValue;
+  isKeyValid( cacheKey : string ) : boolean {
+    return typeof cacheKey === 'string' && !!cacheKey.match( /^P(\d+)$/i );
   }
 
   notifyMessage( cacheKeys : string[] ) : string {
@@ -38,19 +38,19 @@ class PropertyDescriptionCache extends AbstractQueuedCacheWithPostcheck {
   }
 
   convertResultToEntities( result : any ) {
-    const cacheUpdate : {| [string] : PropertyDescription |} = ( {} : any );
+    const cacheUpdate : {| [string] : PropertyData |} = ( {} : any );
 
     const propertyTypes : PropertyType[] = ( Object.values( result.entities ) : any );
     propertyTypes
       .filter( ( entity : PropertyType ) => typeof entity.missing === 'undefined' )
       .forEach( ( entity : PropertyType ) => {
-        const propertyDescription = new PropertyDescription( entity );
-        cacheUpdate[ propertyDescription.id ] = Object.freeze( propertyDescription );
+        const propertyData : PropertyData = new PropertyData( entity );
+        cacheUpdate[ propertyData.id ] = Object.freeze( propertyData );
       } );
     return cacheUpdate;
   }
 
 }
 
-const instance = new PropertyDescriptionCache();
+const instance = new PropertyDataCache();
 export default instance;

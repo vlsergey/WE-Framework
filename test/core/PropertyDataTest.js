@@ -6,16 +6,15 @@ import P21 from '../entities/P21';
 import P345 from '../entities/P345';
 import P85 from '../entities/P85';
 import PropertyData from 'core/PropertyData';
-import PropertyDescription from 'core/PropertyDescription';
 
-describe( 'PropertyDescription', () => {
+describe( 'PropertyData', () => {
 
-  const pd21 = new PropertyDescription( new PropertyData( P21 ) );
-  const pd85 = new PropertyDescription( new PropertyData( P85 ) );
-  const pd345 = new PropertyDescription( new PropertyData( P345 ) );
-  const pd1670 = new PropertyDescription( new PropertyData( P1670 ) );
-  const pd1971 = new PropertyDescription( new PropertyData( P1971 ) );
-  const pd2044 = new PropertyDescription( new PropertyData( P2044 ) );
+  const pd21 = new PropertyData( P21 );
+  const pd85 = new PropertyData( P85 );
+  const pd345 = new PropertyData( P345 );
+  const pd1670 = new PropertyData( P1670 );
+  const pd1971 = new PropertyData( P1971 );
+  const pd2044 = new PropertyData( P2044 );
 
   it( 'allowedQualifiers: should provide', () => {
     assert.deepEqual(
@@ -27,22 +26,23 @@ describe( 'PropertyDescription', () => {
     assert.deepEqual( pd345.countries, [ 'Q30' ] );
   } );
 
-  it( 'formatUrl: P345 Correctly format URLs', () => {
-    assert.equal( pd345.formatUrl( null ), '' );
-    assert.equal( pd345.formatUrl( '' ), '' );
-    assert.equal( pd345.formatUrl( 'tt0068646' ),
-      'https://tools.wmflabs.org/wikidata-externalid-url/?p=345&url_prefix=http://www.imdb.com/&id=tt0068646' );
-  } );
-
-  it( 'formatUrl: P1670 Correctly format URLs', () => {
-    assert.equal( pd1670.formatUrl( null ), '' );
-    assert.equal( pd1670.formatUrl( '' ), '' );
-    assert.equal( pd1670.formatUrl( 'abc' ),
-      'https://www.collectionscanada.gc.ca/canadiana-authorities/index/view?index_name=cdnAutNbr&search_text=abc&page=1&cdnAutNbr=abc' );
+  describe( 'formatterUrls', () => {
+    it( 'provided by P345', () => {
+      assert.deepEqual( pd345.formatterUrls, [ {
+        urlTemplate: 'https://tools.wmflabs.org/wikidata-externalid-url/?p=345&url_prefix=http://www.imdb.com/&id=$1',
+        regexp: null,
+      } ] );
+    } );
+    it( 'provided by P1670', () => {
+      assert.deepEqual( pd1670.formatterUrls, [ {
+        urlTemplate: 'https://www.collectionscanada.gc.ca/canadiana-authorities/index/view?index_name=cdnAutNbr&search_text=$1&page=1&cdnAutNbr=$1',
+        regexp: null,
+      } ] );
+    } );
   } );
 
   it( 'label: shall provide', () => {
-    assert.equal( pd345.label, 'IMDb ID' );
+    assert.equal( pd345.labels.en, 'IMDb ID' );
   } );
 
   it( 'oneOf is undefined if no consrain', () => {

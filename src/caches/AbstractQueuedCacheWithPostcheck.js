@@ -10,22 +10,16 @@ import lastRevisionCache from './lastRevisionCache';
 */
 export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCache {
 
-  pageid2cacheKey : any = { };
-
   constructor( type : string, useIndexedDb : boolean, maxBatch : number ) {
     super( type, useIndexedDb, maxBatch );
-
-    if ( this.useIndexedDb ) {
-      lastRevisionCache.addCacheUpdateCallback( this.onLastRevisionsFetched.bind( this ) );
-    }
   }
 
   onCacheUpdateFromDatabase( cacheUpdate : any ) {
     if ( !this.dbConnection ) throw new Error( 'DB connection is not open' );
 
-    const lastRevisionsCacheData = lastRevisionCache.cache;
+    const pageIdsToCheck : number[] = [];
+    const cacheKeysToCheck : any[] = [];
 
-    const pageidsToQueue = [];
     Object.keys( cacheUpdate ).forEach( cacheKey => {
       const entity = cacheUpdate[ cacheKey ];
       const { pageid } = entity;
@@ -36,32 +30,49 @@ export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCach
         return;
       }
 
-      const realLastRevisionId = lastRevisionsCacheData[ pageid ];
-      if ( realLastRevisionId === undefined ) {
-        pageidsToQueue.push( pageid );
-        this.pageid2cacheKey[ pageid ] = cacheKey;
-      } else if ( realLastRevisionId !== dbLastRevisionId ) {
-        this.requestQueue.add( cacheKey );
-      }
+      pageIdsToCheck.push( pageid );
+      cacheKeysToCheck.push( cacheKey );
     } );
+
+    if ( this.useIndexedDb ) {
+      lastRevisionCache.queueAll( pageIdsToCheck )
+        .then( ( revisionIds : ( ?number )[] ) => {
+          this.onLastRevisionsFetched( cacheKeysToCheck, pageIdsToCheck, revisionIds );
+        } );
+    }
 
     if ( this.requestQueue.size !== 0 && this.queueState === 'WAITING' ) {
       this.queueState = 'REQUEST';
       this.queueNextBatch( );
     }
 
-    lastRevisionCache.doQueue( pageidsToQueue );
+    lastRevisionCache.queueAll( pageIdsToCheck );
   }
 
-  onLastRevisionsFetched( lastRevisionsFetched : any ) {
+  onLastRevisionsFetched(
+    cacheKeys : any[],
+    pageIds : number[],
+    lastRevisionsFetched : ( ?number )[]
+  ) {
     if ( !this.dbConnection ) return;
+
+    const lastRevisionsMap : Map< number, number > = new Map();
+    const cacheKeysToCheck : any[] = [];
+    for ( let i = 0; i < pageIds.length; i++ ) {
+      const cacheKey : any = cacheKeys[ i ];
+      if ( cacheKey === null || cacheKey === undefined ) {
+        continue;
+      }
+      const lastRevisionId : ?number = lastRevisionsFetched[ i ];
+      if ( lastRevisionId === null || lastRevisionId === undefined ) {
+        continue;
+      }
+      lastRevisionsMap.set( pageIds[ i ], lastRevisionId );
+      cacheKeysToCheck.push( cacheKey );
+    }
 
     const transaction = this.dbConnection.transaction( [ 'CACHE' ] );
     const objectStore = transaction.objectStore( 'CACHE' );
-
-    const cacheKeysToCheck = Object.keys( lastRevisionsFetched )
-      .map( pageid => this.pageid2cacheKey[ pageid ] )
-      .filter( x => x !== undefined );
 
     findByKeysInObjectStore( objectStore, cacheKeysToCheck )
       .then( result => {
@@ -69,7 +80,7 @@ export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCach
           const dbEntity = result[ cacheKey ];
           const dbpageid = dbEntity.pageid;
           const dblastrevid = dbEntity.lastrevid;
-          if ( !dbpageid || dblastrevid !== lastRevisionsFetched[ dbpageid ] ) {
+          if ( !dbpageid || dblastrevid !== lastRevisionsMap.get( dbpageid ) ) {
             this.requestQueue.add( cacheKey );
           }
         } );
@@ -79,9 +90,6 @@ export default class AbstractQueuedCacheWithPostcheck extends AbstractQueuedCach
           this.queueNextBatch( );
         }
       } );
-
-    Object.keys( lastRevisionsFetched )
-      .forEach( pageid => delete this.pageid2cacheKey[ pageid ] );
   }
 
 }

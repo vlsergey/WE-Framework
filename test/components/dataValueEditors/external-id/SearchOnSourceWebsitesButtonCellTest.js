@@ -6,8 +6,9 @@ import assert from 'assert';
 import buildReducers from 'core/reducers';
 import P1986 from '../../../entities/P1986';
 import P345 from '../../../entities/P345';
+import PropertyData from 'core/PropertyData';
+import propertyDataCache from 'caches/propertyDataCache';
 import PropertyDescription from 'core/PropertyDescription';
-import propertyDescriptionCache from 'caches/propertyDescriptionCache';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import Provider from 'testUtils/ProviderWrapper';
 import Q2262932 from '../../../entities/Q2262932';
@@ -21,13 +22,13 @@ import thunk from 'redux-thunk';
 describe( 'components/dataValueEditors/SearchOnSourceWebsitesButtonCell', () => {
 
   const linkIsCorrectFor = ( q, p, expected ) => () => {
-    const pDescription : PropertyDescription = new PropertyDescription( p );
+    const pData : PropertyData = new PropertyData( p );
     const reducers = buildReducers( q, q );
     const store = createStore( reducers, applyMiddleware( thunk ) );
 
-    propertyDescriptionCache.dispatch = store.dispatch;
-    propertyDescriptionCache.putToCache( {
-      [ p.id ]: pDescription,
+    propertyDataCache.dispatch = store.dispatch;
+    propertyDataCache.putToCache( {
+      [ p.id ]: pData,
     } );
 
     stringPropertyValuesCache.dispatch = store.dispatch;
@@ -38,7 +39,7 @@ describe( 'components/dataValueEditors/SearchOnSourceWebsitesButtonCell', () => 
     const rendered = ReactTestUtils.renderIntoDocument(
       <Provider store={store}>
         <PropertyDescriptionsProvider propertyIds={[ p.id ]}>
-          {cache => <TableTBodyTr>
+          {( cache : Map< string, PropertyDescription > ) => <TableTBodyTr>
             <SearchOnSourceWebsitesButtonCell
               languageCodes={( cache.get( p.id ) || {} ).languageCodes}
               sourceWebsites={( cache.get( p.id ) || {} ).sourceWebsites} />

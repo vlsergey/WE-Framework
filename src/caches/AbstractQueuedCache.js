@@ -11,6 +11,18 @@ const PAUSE_BEFORE_REQUEUE = 100;
 type KeyType = any;
 type KeyArrayType = any[];
 
+function flatten( obj : any ) : any {
+  if ( Array.isArray( obj ) ) {
+    return obj;
+  }
+
+  const result : any = {};
+  for ( const key in obj ) {
+    result[ key ] = obj[ key ];
+  }
+  return result;
+}
+
 export default class AbstractQueuedCache {
 
   dispatch : DispatchType;
@@ -293,7 +305,7 @@ export default class AbstractQueuedCache {
       .objectStore( 'CACHE' );
 
     Object.keys( cacheResult ).forEach( cacheKey => {
-      objectStore.put( cacheResult[ cacheKey ], cacheKey );
+      objectStore.put( flatten( cacheResult[ cacheKey ] ), cacheKey );
     } );
   }
 

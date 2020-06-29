@@ -2,6 +2,7 @@ import { applyMiddleware, createStore } from 'redux';
 import assert from 'assert';
 import buildReducers from 'core/reducers';
 import P345 from '../entities/P345';
+import PropertyData from 'core/PropertyData';
 import PropertyDescription from 'core/PropertyDescription';
 import PropertyDescriptionsProvider from 'caches/PropertyDescriptionsProvider';
 import Provider from 'testUtils/ProviderWrapper';
@@ -21,7 +22,7 @@ describe( 'PropertyDescriptionsProvider', () => {
   it( 'provides country flags', () => {
     const rendered = ReactTestUtils.renderIntoDocument( <Provider store={store}>
       <PropertyDescriptionsProvider propertyIds={[ 'P345' ]}>
-        {cache => <div>
+        {( cache : Map< string, PropertyDescription > ) => <div>
           <span className="P345_label">{( cache.get( 'P345' ) || {} ).label }</span>
           <span className="P345_description">{( cache.get( 'P345' ) || {} ).description}</span>
           <span className="P345_countries">{( ( cache.get( 'P345' ) || {} ).countries || [] ).join( ' ' )}</span>
@@ -48,9 +49,9 @@ describe( 'PropertyDescriptionsProvider', () => {
     assert.equal( p345LangCodes(), '' );
 
     store.dispatch( {
-      type: 'CACHE_PROPERTYDESCRIPTIONS_PUT',
+      type: 'CACHE_PROPERTYDATA_PUT',
       cacheUpdate: {
-        P345: new PropertyDescription( P345 ),
+        P345: new PropertyData( P345 ),
       },
     } );
 

@@ -5,7 +5,7 @@ import CacheValueProvider from 'caches/CacheValueProvider';
 import propertiesBySparqlCache from './propertiesBySparqlCache';
 
 type PropsType = {
-  children : any => any,
+  children : ( ?( string[] ) ) => any,
   sparql : string,
 };
 
@@ -17,7 +17,7 @@ export default class PropertiesBySparqlProvider extends PureComponent<PropsType>
     return <CacheValueProvider
       cache={propertiesBySparqlCache}
       cacheKey={sparql}>
-      {children}
+      {( data : ?( string[] ) ) => children( data )}
     </CacheValueProvider>;
   }
 }

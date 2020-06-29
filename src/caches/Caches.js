@@ -6,7 +6,7 @@ import labelDescriptionCache from './labelDescriptionCache';
 import localTitleCache from './localTitleCache';
 import parentTypesCache from './parentTypesCache';
 import propertiesBySparqlCache from './propertiesBySparqlCache';
-import propertyDescriptionCache from './propertyDescriptionCache';
+import propertyDataCache from './propertyDataCache';
 import stringPropertyValuesCache from './stringPropertyValuesCache';
 
 const caches = {};
@@ -19,7 +19,7 @@ registerCache( labelDescriptionCache );
 registerCache( localTitleCache );
 registerCache( parentTypesCache );
 registerCache( propertiesBySparqlCache );
-registerCache( propertyDescriptionCache );
+registerCache( propertyDataCache );
 registerCache( stringPropertyValuesCache );
 
 export default caches;

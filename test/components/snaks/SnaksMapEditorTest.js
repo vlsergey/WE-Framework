@@ -2,7 +2,7 @@ import { applyMiddleware, createStore } from 'redux';
 import assert from 'assert';
 import buildReducers from 'core/reducers';
 import P31 from '../../entities/P31';
-import PropertyDescription from 'core/PropertyDescription';
+import PropertyData from 'core/PropertyData';
 import Provider from 'testUtils/ProviderWrapper';
 import Q30 from '../../entities/Q30';
 import React from 'react';
@@ -38,9 +38,9 @@ describe( 'test/components/references', () => {
 
       // populate cache to see snak editors
       store.dispatch( {
-        type: 'CACHE_PROPERTYDESCRIPTIONS_PUT',
+        type: 'CACHE_PROPERTYDATA_PUT',
         cacheUpdate: {
-          P31: new PropertyDescription( P31 ),
+          P31: new PropertyData( P31 ),
         },
       } );
 

@@ -28,10 +28,10 @@ class PropertiesBySparqlCache extends AbstractQueuedCacheWithPostcheck {
       .then( body => body.json() );
   }
 
-  convertResultToEntities( result : any, [ sparql ] : string[] ) : any {
+  convertResultToEntities( result : any, [ sparql ] : string[] ) : {| [string] : string[] |} {
     const [ columnName ] = result.head.vars;
 
-    const propertyIds = result.results.bindings.map( binding => {
+    const propertyIds : string[] = result.results.bindings.map( binding => {
       const { type } = binding[ columnName ];
       if ( type != 'uri' ) {
         throw new Error( 'SPARQL result column type must be \'uri\'' );

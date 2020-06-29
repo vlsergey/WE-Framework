@@ -99,6 +99,9 @@ module.exports = {
   ],
 
   resolve: {
+    alias: {
+      'flow-runtime': path.resolve( __dirname, 'node_modules/@vlsergey/flow-runtime' ),
+    },
     modules: [
       path.resolve( __dirname, 'src' ),
       'node_modules',

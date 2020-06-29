@@ -1,9 +1,7 @@
 // @flow
 
-import AbstractSelfStoredQueuedCache from './AbstractSelfStoredQueuedCache';
+import Batcher from '@vlsergey/batcher';
 import { getWikidataApi } from 'core/ApiUtils';
-
-const TYPE = 'LASTREVISION';
 
 type ResultType = {
   query : {
@@ -19,44 +17,58 @@ type PageType = {
   }[]
 };
 
-class LastRevisionCache extends AbstractSelfStoredQueuedCache {
+class LastRevisionCache {
+
+  _batcher : Batcher;
+  _cache : Map< number, ?number > = new Map();
 
   constructor() {
-    super( TYPE, true, 50 );
+    this._batcher = new Batcher( this._batchFunction, { flattenArguments: true } );
   }
 
-  isKeyValid( pageId : ?number ) : boolean {
-    return typeof pageId === 'number' && Number.isInteger( pageId );
-  }
-
-  notifyMessage( cacheKeys : number[] ) : string {
-    return 'Fetching ' + cacheKeys.length + ' last revisions from Wikidata';
-  }
-
-  buildRequestPromice( pageIds : number[] ) {
-    return getWikidataApi()
+  async _batchFunction( pageIds : number[] ) : Promise< ( ?number )[] > {
+    const json : ResultType = await getWikidataApi()
       .getPromise( {
         action: 'query',
         prop: 'revisions',
         rvprop: 'ids',
         pageids: pageIds.join( '|' ),
       } );
-  }
 
-  convertResultToEntities( result : ResultType ) : Map< number, number > {
-    const cacheUpdate : Map< number, number > = new Map();
-    const pages : PageType[] = ( ( Object.values( result.query.pages ) : any ) : PageType[] );
+    const resultMap : Map< number, number > = new Map();
+    const pages : PageType[] = ( ( Object.values( json.query.pages ) : any ) : PageType[] );
     pages.forEach( page => {
       if ( page.missing !== undefined ) {
-        cacheUpdate.set( page.pageid, -1 );
+        resultMap.set( page.pageid, -1 );
       } else {
-        cacheUpdate.set( page.pageid, page.revisions[ 0 ].revid );
+        resultMap.set( page.pageid, page.revisions[ 0 ].revid );
       }
     } );
-    return cacheUpdate;
+
+    const resultArray : ( ?number )[] = pageIds.map( pageId => resultMap.get( pageId ) || null );
+    return resultArray;
+  }
+
+  queue( pageId : number ) : Promise< ?number > {
+    const previous = this._cache.get( pageId );
+    if ( previous != undefined && previous != null ) {
+      return Promise.resolve( previous );
+    }
+
+    return this._batcher.queue( pageId )
+      .then( ( revisionId : ?number ) => {
+        if ( revisionId != undefined && revisionId != null ) {
+          this._cache.set( pageId, revisionId );
+        }
+        return revisionId;
+      } );
+  }
+
+  queueAll( pageIds : number[] ) : Promise< ( ?number )[] > {
+    return Promise.all( pageIds.map( this.queue, this ) );
   }
 
 }
 
-const instance = new LastRevisionCache();
+const instance : LastRevisionCache = new LastRevisionCache();
 export default instance;

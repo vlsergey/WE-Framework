@@ -1,6 +1,7 @@
 import assert from 'assert';
 import MonolingualTextDataValueEditor from 'components/dataValueEditors/MonolingualTextDataValueEditor';
 import P18 from '../../entities/P18';
+import PropertyData from 'core/PropertyData';
 import PropertyDescription from 'core/PropertyDescription';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
@@ -13,7 +14,7 @@ describe( 'components/dataValueEditors', () => {
 
   describe( 'MonolingualTextDataValueEditor', () => {
 
-    const p18Description = new PropertyDescription( P18 );
+    const p18Description = new PropertyDescription( new PropertyData( P18 ) );
 
     it( 'can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
