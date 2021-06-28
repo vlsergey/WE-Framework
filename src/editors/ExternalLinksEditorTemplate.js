@@ -15,7 +15,7 @@ const editorDescription : EditorDefType = {
         { type: 'SparqlPropertyGroup',
           sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
-                    + '?property wdt:P31 wd:Q30041186 . ' /* Wikidata property related to online communities */
+                    + '?property wdt:P31/wdt:P279* wd:Q30041186 . ' /* Wikidata property related to online communities */
                     + '?property wikibase:propertyType wikibase:ExternalId . '
                     + '}' },
       ],
