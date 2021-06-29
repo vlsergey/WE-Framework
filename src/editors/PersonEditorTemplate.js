@@ -67,6 +67,7 @@ const editorDescription : EditorDefType = {
         },
         {
           fields: [
+            { property: 'P1050' } /* medical condition */,
             { property: 'P570' } /* death date */,
             { property: 'P20' } /* Death place */,
             { property: 'P509' } /* Death cause */,
@@ -117,6 +118,7 @@ const editorDescription : EditorDefType = {
         { property: 'P1971' } /* number of children */,
         { property: 'P40' } /* child */,
         { property: 'P1038' } /* relative */,
+        { property: 'P3342' } /* significant person */,     
       ],
     },
 
