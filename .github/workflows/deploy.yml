@@ -4,7 +4,7 @@ on:
   workflow_dispatch
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -12,13 +12,8 @@ jobs:
         with:
           node-version: 14
       - run: npm ci
-      - run: npm build
       - run: npm test
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
+      - run: npm build
       - run: node ./dist/deploy-to-wikipedia.out.js
         env:
           WIKIPEDIA_LGNAME: ${{secrets.DEPLOY_LOGIN}}
