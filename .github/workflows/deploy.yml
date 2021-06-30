@@ -1,0 +1,25 @@
+name: Deploy to Wikipedia
+
+on:
+  workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: npm ci
+      - run: npm build
+      - run: npm test
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: node ./dist/deploy-to-wikipedia.out.js
+        env:
+          WIKIPEDIA_LGNAME: ${{secrets.DEPLOY_LOGIN}}
+          WIKIPEDIA_LGPASSWORD: ${{secrets.DEPLOY_PASSWORD}}
