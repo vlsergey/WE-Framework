@@ -13,7 +13,7 @@ jobs:
           node-version: 14
       - run: npm ci
       - run: npm test
-      - run: npm build
+      - run: npm run build
       - run: node ./dist/deploy-to-wikipedia.out.js
         env:
           WIKIPEDIA_LGNAME: ${{secrets.DEPLOY_LOGIN}}
