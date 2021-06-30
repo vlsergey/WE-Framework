@@ -12,8 +12,10 @@ jobs:
         with:
           node-version: 14
       - run: npm ci
-      - run: npm test
-      - run: npm run build
+      - run: npx webpack
+        env:
+          NODE_ENV: production
+      - run: npx babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js
       - run: node ./dist/deploy-to-wikipedia.out.js
         env:
           WIKIPEDIA_LGNAME: ${{secrets.DEPLOY_LOGIN}}
