@@ -47,7 +47,7 @@
     "isbn": "git+https://github.com/AV-Forlaget/isbnjs.git#master",
     "isomorphic-fetch": "^2.2.1",
     "jsdom": "^16.2.2",
-    "karma": "^5.0.9",
+    "karma": "^6.3.14",
     "karma-chrome-launcher": "^3.1.0",
     "karma-jsdom-launcher": "^8.0.2",
     "karma-mocha": "^2.0.1",
