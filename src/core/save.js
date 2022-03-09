@@ -7,7 +7,6 @@ import i18n from './i18n';
 import preSaveTransformations from './preSaveTransformations';
 
 const EMPTY_OBJECT : any = Object.freeze( {} );
-const SUMMARY_PREFIX : string = 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ';
 const TAG : string = 'WE-Framework gadget';
 
 const notifyOptions = {
