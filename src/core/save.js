@@ -213,8 +213,7 @@ export function saveAndClose(
         notify( i18n.actionUpdateEntityDone );
         const entityId = result.entity.id;
 
-        return tagRevisions( entityId, true )
-          .then( () => resolve( entityId ) );
+        return entityId;
       } )
       .catch( error => {
         mw.log.error( i18n.errorUpdateEntity );
@@ -223,68 +222,5 @@ export function saveAndClose(
         alert( i18n.errorUpdateEntity + ': ' + JSON.stringify( error ) );
       } );
   };
-
-  function tagRevisions( entityId : string, displayNotifications : ?boolean ) {
-    const notifyOptions = {
-      autoHide: true,
-      tag: 'WE-F Revisions Tags',
-    };
-
-    function notify( text ) {
-      if ( displayNotifications )
-        mw.notify( '[WE-F] ' + text, notifyOptions );
-      else
-        console.log( '[WEF_Utils.tagRevisions] ' + text );
-    }
-
-    if ( displayNotifications )
-      notify( 'Query last 50 Wikidata entity revisions of ' + entityId );
-
-    return getWikidataApi().getPromise( {
-      action: 'query',
-      prop: 'revisions',
-      titles: entityId,
-      rvprop: 'comment|ids|tags',
-      rvlimit: 50,
-    } )
-
-      .then( result => {
-
-        notify( 'Received last Wikidata entity revisions of ' + entityId );
-        if ( result.query && result.query.pages ) {
-          const page = result.query.pages[ Object.keys( result.query.pages )[ 0 ] ];
-          if ( page && page.revisions ) {
-            notify( 'Received last ' + page.revisions.length + ' Wikidata entity revisions of ' + entityId );
-
-            return page.revisions
-              .filter( revision => !!revision.comment )
-              .filter( revision => revision.comment.indexOf( SUMMARY_PREFIX ) !== -1 )
-              .filter( revision => revision.tags.indexOf( TAG ) === -1 )
-              .map( revision => revision.revid );
-          }
-        }
-
-        return [];
-      } )
-
-      .then( revisions => {
-
-        if ( revisions.length === 0 ) {
-          notify( 'Nothing to update in revisions history of ' + entityId );
-          return;
-        }
-
-        return getWikidataApi().postWithEditTokenPromise( {
-          action: 'tag',
-          revid: revisions.join( '|' ),
-          add: TAG,
-        } );
-
-      } )
-
-      .then( () => {
-        notify( 'Sucessfully update tags to revisions history' );
-      } );
-  }
 
 }
