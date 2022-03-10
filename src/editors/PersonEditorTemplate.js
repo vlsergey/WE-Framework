@@ -118,7 +118,7 @@ const editorDescription : EditorDefType = {
         { property: 'P1971' } /* number of children */,
         { property: 'P40' } /* child */,
         { property: 'P1038' } /* relative */,
-        { property: 'P3342' } /* significant person */,     
+        { property: 'P3342' } /* significant person */,
       ],
     },
 
