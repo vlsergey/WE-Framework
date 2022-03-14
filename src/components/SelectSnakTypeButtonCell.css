@@ -19,4 +19,5 @@
 
 .selectSnakTypePopup {
   padding: 0 !important;
+  z-index: 2048;
 }

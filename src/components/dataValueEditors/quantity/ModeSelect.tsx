@@ -1,0 +1,37 @@
+import React, { ChangeEvent, PureComponent } from 'react';
+import i18n from './i18n';
+import { MODES } from './QuantityDataValueEditor';
+import type { ModeType } from './ModeType';
+import styles from './ModeSelect.css';
+
+type PropsType = {
+  mode : ModeType,
+  onSelect : (mode : ModeType) => any,
+  value : null | QuantityValueType,
+};
+
+export default class ModeSelect extends PureComponent<PropsType> {
+
+  handleModeChange( { target: { value } } : ChangeEvent<HTMLSelectElement> ) {
+    this.props.onSelect( value as ModeType );
+  }
+
+  override render() {
+    const { mode, value } = this.props;
+
+    return <select onChange={this.handleModeChange} value={mode}>
+      {Object.entries( MODES ).map( ([m, modeDef]) => {
+        const compatible = !!value && modeDef.canBeUsedForValue( value );
+        return <option
+          className={compatible ? styles.compatible : styles.incompatible}
+          disabled={!compatible}
+          key={m}
+          title={!compatible ? 'not compatble with current values' : ''}
+          value={m}>
+          {i18n.modes[ m ]}
+        </option>;
+      } )}
+    </select>;
+  }
+
+}

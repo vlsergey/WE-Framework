@@ -1,0 +1,8 @@
+
+.select {
+	width: 100%;
+}
+
+.select option {
+	padding: 0.25em;
+}

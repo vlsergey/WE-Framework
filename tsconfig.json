@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "jsx": "react",
+    "importHelpers" : true,
+    "lib": ["dom", "es5", "es6"],
+    "moduleResolution": "node",
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "./lib/",
+    "strict": true,
+    "target": "es5"
+  },
+  "include": [".eslintrc.js", "karma.conf.js"],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}

@@ -53,14 +53,6 @@
 	white-space: nowrap;
 }
 
-.wef-snaktypeselector-menu {
-	width: 100%;
-}
-
-.wef-snaktypeselector-menu option {
-	padding: 0.25em;
-}
-
 /* Snak value level -- per types */
 .wef_string, .wef_url {
 	width: 99%;

@@ -1,0 +1,35 @@
+import React, { ChangeEvent, PureComponent } from 'react';
+import { CALENDAR_MODELS } from './model';
+import i18n from './i18n';
+
+const EMPTY_STRING : string = '';
+
+type PropsType = {
+  onChange : (value : string) => any,
+  readOnly? : boolean,
+  value : string,
+};
+
+export default class CalendarModelSelect extends PureComponent<PropsType> {
+
+  handleChange = ( event : ChangeEvent< HTMLSelectElement > ) => {
+    this.props.onChange( event.currentTarget.value );
+    event.stopPropagation();
+  }
+
+  override render() {
+    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
+    const { onChange, readOnly, value, ...etc } = this.props;
+
+    return <select
+      {...etc}
+      disabled={readOnly}
+      onChange={this.handleChange}
+      value={value || EMPTY_STRING}>
+      { CALENDAR_MODELS.map( calendarModel =>
+        <option key={calendarModel} value={calendarModel}>
+          {i18n.calendarModel[ calendarModel ]}
+        </option> ) }
+    </select>;
+  }
+}

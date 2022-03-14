@@ -1,8 +1,6 @@
-import expect from 'expect';
-import fs from 'fs';
-import HttpsProxyAgent from 'https-proxy-agent';
-
 const fetchOriginal = require( 'node-fetch' );
+const fs = require('fs');
+const HttpsProxyAgent = require('https-proxy-agent');
 
 const cookieStorage = { fake: 'fake' };
 
@@ -50,8 +48,9 @@ if ( !lgname )
 if ( !lgpassword )
   throw new Error( 'environment variable WIKIPEDIA_LGPASSWORD is not specified...' );
 
+let content = fs.readFileSync( './dist/app.bundle.js', 'utf-8' );
+content = content.replaceAll("//fb.me", "//fb-removeme.me")
 
-const content = fs.readFileSync( './dist/app.bundle.js' );
 const defaultFetchOptions = {
   method: 'POST',
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -71,10 +70,6 @@ const loginTokenPromise = fetch( 'https://ru.wikipedia.org/w/api.php?action=quer
   .then( json => json.query.tokens.logintoken );
 
 const loginPromise = loginTokenPromise.then( logintoken => {
-  expect( lgname ).toBeA( 'string' );
-  expect( lgpassword ).toBeA( 'string' );
-  expect( logintoken ).toBeA( 'string' );
-
   console.log( 'Login ' + lgname + ' with token ' + logintoken + '...' );
 
   return fetch( 'https://ru.wikipedia.org/w/api.php', {
