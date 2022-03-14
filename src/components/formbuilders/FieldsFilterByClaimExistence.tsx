@@ -1,50 +1,51 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { defaultMemoize } from 'reselect';
-import type { FieldDefType } from '../../editors/EditorDefModel';
+import React, {PureComponent} from 'react';
+import {connect} from 'react-redux';
+import {defaultMemoize} from 'reselect';
+
+import {FieldDefType} from '../../editors/EditorDefModel';
 
 const EMPTY_OBJECT = {};
 
-const hasPropertyIdSet = defaultMemoize( (allClaims : ClaimsType) =>
-  new Set( Object.keys( allClaims ).filter( key => !!allClaims[ key ]?.length ) ) );
+const hasPropertyIdSet = defaultMemoize((allClaims: ClaimsType) =>
+  new Set(Object.keys(allClaims).filter(key => !!allClaims[key]?.length)));
 
-type FieldsFilterByClaimExistencePropsType = {
-  children : (filtered?:FieldDefType[]) => any,
-  claims : any,
-  fields : FieldDefType[],
-};
+interface FieldsFilterByClaimExistencePropsType {
+  children: (filtered?: FieldDefType[]) => any;
+  claims: any;
+  fields: FieldDefType[];
+}
 
 class FieldsFilterByClaimExistence
   extends PureComponent<FieldsFilterByClaimExistencePropsType> {
 
-  override render() {
-    const { children, claims, fields } = this.props;
+  override render () {
+    const {children, claims, fields} = this.props;
 
-    const set = hasPropertyIdSet( claims );
-    const filtered = fields.filter( field => set.has( field.property ) );
-    return children( filtered );
+    const set = hasPropertyIdSet(claims);
+    const filtered = fields.filter(field => set.has(field.property));
+    return children(filtered);
   }
 }
 
-const mapStateToProps = (state : any) => ( {
+const mapStateToProps = (state: any) => ({
   claims: state.entity.claims || EMPTY_OBJECT,
-} );
+});
 
-const FilterConnected = connect( mapStateToProps )( FieldsFilterByClaimExistence );
+const FilterConnected = connect(mapStateToProps)(FieldsFilterByClaimExistence);
 
-type FilterPropsType = {
-  children : (fields? : FieldDefType[]) => any,
-  enabled : boolean,
-  fields : FieldDefType[],
-};
+interface FilterPropsType {
+  children: (fields?: FieldDefType[]) => any;
+  enabled: boolean;
+  fields: FieldDefType[];
+}
 
 export default class Filter extends PureComponent<FilterPropsType> {
 
-  override render() {
-    const { children, enabled, fields } = this.props;
+  override render () {
+    const {children, enabled, fields} = this.props;
 
     return enabled
       ? <FilterConnected fields={fields} key="FieldsFilterByClaimExistence">{children}</FilterConnected>
-      : <div key="FieldsFilterByClaimExistence">{children( fields )}</div>;
+      : <div key="FieldsFilterByClaimExistence">{children(fields)}</div>;
   }
 }

@@ -1,39 +1,39 @@
-import type { EditorDefType } from './EditorDefModel';
+import {EditorDefType} from './EditorDefModel';
 import i18n from './i18n';
 
-const editorDescription : EditorDefType = {
+const editorDescription: EditorDefType = {
   id: 'FrbrWork',
   linkText: i18n.frbrWorkLinkText,
   dialogTitle: i18n.frbrWorkDialogTitle,
   newEntityInstanceOf: 'Q386724',
-  recommendedClasses: [ 'Q386724' ],
+  recommendedClasses: ['Q386724'],
   tabs: [
     {
       label: i18n.tabGeneral,
       specials: [
-        { type: 'LabelsAndDescriptionArea' },
+        {type: 'LabelsAndDescriptionArea'},
       ],
       fieldsets: [
         {
           fields: [
-            { property: 'P31' } /* instance of */,
-            { property: 'P18' } /* image */,
+            {property: 'P31'} /* instance of */,
+            {property: 'P18'} /* image */,
           ],
         },
         {
           fields: [
-            { property: 'P50' } /* author */,
-            { property: 'P767' } /* collaborator */,
-            { property: 'P98' } /* editor */,
+            {property: 'P50'} /* author */,
+            {property: 'P767'} /* collaborator */,
+            {property: 'P98'} /* editor */,
           ],
         },
         {
           fields: [
-            { property: 'P1476' } /* title */,
-            { property: 'P1680' } /* subtitle */,
-            { property: 'P407' } /* language of work or name */,
-            { property: 'P571' } /* date of foundation or creation */,
-            { property: 'P577' } /* date of publication */,
+            {property: 'P1476'} /* title */,
+            {property: 'P1680'} /* subtitle */,
+            {property: 'P407'} /* language of work or name */,
+            {property: 'P571'} /* date of foundation or creation */,
+            {property: 'P577'} /* date of publication */,
           ],
         },
       ],
@@ -43,23 +43,23 @@ const editorDescription : EditorDefType = {
       fieldsets: [
         {
           fields: [
-            { property: 'P135' } /* movement */,
-            { property: 'P136' } /* genre */,
-            { property: 'P921' } /* subject heading */,
-            { property: 'P1922' } /* first line */,
+            {property: 'P135'} /* movement */,
+            {property: 'P136'} /* genre */,
+            {property: 'P921'} /* subject heading */,
+            {property: 'P1922'} /* first line */,
           ],
         },
         {
           fields: [
-            { property: 'P155' } /* follows */,
-            { property: 'P156' } /* followed by */,
-            { property: 'P179' } /* series */,
+            {property: 'P155'} /* follows */,
+            {property: 'P156'} /* followed by */,
+            {property: 'P179'} /* series */,
           ],
         },
         {
           fields: [
-            { property: 'P144' } /* based on */,
-            { property: 'P941' } /* inspired by */,
+            {property: 'P144'} /* based on */,
+            {property: 'P941'} /* inspired by */,
           ],
         },
       ],
@@ -70,7 +70,7 @@ const editorDescription : EditorDefType = {
         {
           labelEntityId: 'P674' /* characters */,
           fields: [
-            { property: 'P674' } /* characters */,
+            {property: 'P674'} /* characters */,
           ],
         },
       ],
@@ -81,7 +81,7 @@ const editorDescription : EditorDefType = {
         {
           labelEntityId: 'P166' /* award received */,
           fields: [
-            { property: 'P166' } /* award received */,
+            {property: 'P166'} /* award received */,
           ],
         },
       ],
@@ -92,7 +92,7 @@ const editorDescription : EditorDefType = {
         {
           labelEntityId: 'P747' /* edition */,
           fields: [
-            { property: 'P747' } /* edition */,
+            {property: 'P747'} /* edition */,
           ],
         },
       ],
@@ -100,12 +100,12 @@ const editorDescription : EditorDefType = {
     {
       labelEntityId: 'Q36524' /* authority control */,
       specials: [
-        { type: 'SparqlPropertyGroup',
+        {type: 'SparqlPropertyGroup',
           sparql: 'SELECT DISTINCT ?property '
                     + 'WHERE { '
                     + '?property wdt:P31 wd:Q19833377 . '
                     + '?property wikibase:propertyType wikibase:ExternalId . '
-                    + '}' },
+                    + '}'},
       ],
     },
 

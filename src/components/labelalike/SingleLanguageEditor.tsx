@@ -1,18 +1,19 @@
-import React, { ChangeEvent, PureComponent } from 'react';
-import AliasesEditor from './AliasesEditor';
-import i18n from '../core.i18n';
-import styles from '../core.css';
+import React, {ChangeEvent, PureComponent} from 'react';
 
-type PropsType = {
-  aliases : string[],
-  description : string,
-  draftAlias : string,
-  label : string,
-  onAliasesChange : (aliases: string[] | null ) => any,
-  onDescriptionChange : ( descriptions: string | null ) => any,
-  onDraftAliasChange : (draft : string | null) => any,
-  onLabelChange : ( label: string | null ) => any,
-};
+import styles from '../core.css';
+import i18n from '../core.i18n';
+import AliasesEditor from './AliasesEditor';
+
+interface PropsType {
+  aliases: string[];
+  description: string;
+  draftAlias: string;
+  label: string;
+  onAliasesChange: (aliases: string[] | null) => any;
+  onDescriptionChange: (descriptions: string | null) => any;
+  onDraftAliasChange: (draft: string | null) => any;
+  onLabelChange: (label: string | null) => any;
+}
 
 export default class SingleLanguageEditor extends PureComponent<PropsType> {
 
@@ -23,18 +24,18 @@ export default class SingleLanguageEditor extends PureComponent<PropsType> {
     draftAlias: '',
   };
 
-  handleLabelChange = ( { currentTarget: { value } } : ChangeEvent< HTMLInputElement > ) => {
-    this.props.onLabelChange( value || '' );
-  }
+  handleLabelChange = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
+    this.props.onLabelChange(value || '');
+  };
 
-  handleDescriptionChange= ( { currentTarget: { value } } : ChangeEvent< HTMLInputElement > ) => {
-    this.props.onDescriptionChange( value || '' );
-  }
+  handleDescriptionChange = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
+    this.props.onDescriptionChange(value || '');
+  };
 
-  override render() {
+  override render () {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*Change" }] */
-    const { label, description, draftAlias, aliases, onLabelChange,
-      onDescriptionChange, onDraftAliasChange, onAliasesChange, ...etc } = this.props;
+    const {label, description, draftAlias, aliases, onLabelChange,
+      onDescriptionChange, onDraftAliasChange, onAliasesChange, ...etc} = this.props;
 
     return <table
       {...etc}

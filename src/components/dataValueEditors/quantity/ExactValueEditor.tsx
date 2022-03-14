@@ -1,13 +1,13 @@
-import React, { ChangeEvent, PureComponent } from 'react';
+import React, {ChangeEvent, PureComponent} from 'react';
 
-const EMPTY_OBJECT = Object.freeze( {} );
-const ok = (x : any) => typeof x === 'string' && x.trim() !== '';
+const EMPTY_OBJECT = Object.freeze({});
+const ok = (x: any) => typeof x === 'string' && x.trim() !== '';
 
-type PropsType = {
-  onValueChange : (value : QuantityValueType) => any,
-  readOnly? : boolean,
-  value : QuantityValueType,
-};
+interface PropsType {
+  onValueChange: (value: QuantityValueType) => any;
+  readOnly?: boolean;
+  value: QuantityValueType;
+}
 
 export default class ExactValueEditor extends PureComponent<PropsType> {
 
@@ -15,27 +15,27 @@ export default class ExactValueEditor extends PureComponent<PropsType> {
     value: EMPTY_OBJECT,
   };
 
-  static canBeUsedForValue( value : QuantityValueType ) : boolean {
-    const { amount, lowerBound, upperBound } = value;
+  static canBeUsedForValue (value: QuantityValueType): boolean {
+    const {amount, lowerBound, upperBound} = value;
 
-    return !ok( lowerBound ) && !ok( upperBound )
-      || Number( lowerBound ) === Number( amount ) && Number( upperBound ) === Number( amount );
+    return !ok(lowerBound) && !ok(upperBound)
+      || Number(lowerBound) === Number(amount) && Number(upperBound) === Number(amount);
   }
 
-  handleChange = ( { currentTarget: { value } } : ChangeEvent< HTMLInputElement > ) => {
+  handleChange = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
     /* eslint no-unused-vars: 0 */
-    const { lowerBound, amount, upperBound, ...etc } = this.props.value;
-    this.props.onValueChange( {
+    const {lowerBound, amount, upperBound, ...etc} = this.props.value;
+    this.props.onValueChange({
       ...etc,
       amount: value || '',
-    } );
-  }
+    });
+  };
 
-  override render() {
-    const { readOnly, value } = this.props;
+  override render () {
+    const {readOnly, value} = this.props;
 
-    if ( readOnly ) {
-      if ( !value ) {
+    if (readOnly) {
+      if (!value) {
         return null;
       }
       return value.amount || null;

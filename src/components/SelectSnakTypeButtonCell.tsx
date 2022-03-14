@@ -1,15 +1,16 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
+import {Popup} from 'semantic-ui-react';
+
 import ButtonCell from './ButtonCell';
 import i18n from './core.i18n';
-import {Popup} from 'semantic-ui-react';
-import SnakTypeSelect from './SnakTypeSelect';
 import styles from './SelectSnakTypeButtonCell.css';
+import SnakTypeSelect from './SnakTypeSelect';
 
-type PropsType = {
-  disabled : boolean,
-  onChange? : (value : SnakTypeType) => any,
-  value : SnakTypeType,
-};
+interface PropsType {
+  disabled: boolean;
+  onChange?: (value: SnakTypeType) => any;
+  value: SnakTypeType;
+}
 
 export default class SnakTypeSelectButtonCell extends PureComponent<PropsType> {
 
@@ -18,23 +19,23 @@ export default class SnakTypeSelectButtonCell extends PureComponent<PropsType> {
     value: 'value',
   };
 
-  handleChange = ( value : SnakTypeType ) => {
-    if ( value !== this.props.value ) {
-      const { onChange } = this.props;
-      if ( onChange ) onChange( value );
+  handleChange = (value: SnakTypeType) => {
+    if (value !== this.props.value) {
+      const {onChange} = this.props;
+      if (onChange) onChange(value);
     }
-  }
+  };
 
-  override render() {
-    const { disabled, value } = this.props;
-    // @ts-ignore
-    const iconClassname = styles[ 'ui-icon-wef-snaktype-' + value ]
+  override render () {
+    const {disabled, value} = this.props;
+    // @ts-expect-error
+    const iconClassname = styles['ui-icon-wef-snaktype-' + value];
 
     return <ButtonCell
       disabled={disabled}
       icon={iconClassname}
-      label={i18n.snakType[ value ]}>
-      {(children : any) =>
+      label={i18n.snakType[value]}>
+      {(children: any) =>
         <Popup
           basic
           className={styles.selectSnakTypePopup}

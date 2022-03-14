@@ -1,21 +1,22 @@
-import React, { ChangeEvent, PureComponent } from 'react';
-import { DEFAULT_LANGUAGES } from '../utils/I18nUtils';
-import { getWikidataApi } from '../core/ApiUtils';
+import React, {ChangeEvent, PureComponent} from 'react';
+
+import {getWikidataApi} from '../core/ApiUtils';
+import {DEFAULT_LANGUAGES} from '../utils/I18nUtils';
 import SourceItem from './SourceItem';
 import styles from './styles.css';
 
 const MAX_ITEMS = 15;
 
-type PropsType = {
-  onInsert : (entityId : string) => any,
-};
+interface PropsType {
+  onInsert: (entityId: string) => any;
+}
 
-type StateType = {
-  searchInProgress : boolean,
-  searchResult : string[],
-  searchTerm : string,
-  searchTermScheduled : string,
-};
+interface StateType {
+  searchInProgress: boolean;
+  searchResult: string[];
+  searchTerm: string;
+  searchTermScheduled: string;
+}
 
 export default class SourceLookupTab
   extends PureComponent<PropsType, StateType> {
@@ -27,61 +28,61 @@ export default class SourceLookupTab
     searchResult: [],
   };
 
-  handleChangeTerm = ( { currentTarget: { value } } : ChangeEvent< HTMLInputElement > ) => {
+  handleChangeTerm = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
     const newSearchTerm = value || '';
-    this.setState( { searchTerm: newSearchTerm } );
-    setTimeout( () => this.search( newSearchTerm.trim() ), 0.5 );
-  }
+    this.setState({searchTerm: newSearchTerm});
+    setTimeout(() => { this.search(newSearchTerm.trim()); }, 0.5);
+  };
 
-  search( searchTerm : string ) {
-    const { searchTermScheduled } = this.state;
-    if ( searchTerm === searchTermScheduled ) return;
-    this.setState( {
+  search (searchTerm: string) {
+    const {searchTermScheduled} = this.state;
+    if (searchTerm === searchTermScheduled) return;
+    this.setState({
       searchInProgress: true,
       searchTermScheduled: searchTerm,
-    } );
+    });
 
-    if ( searchTerm === '' ) this.setState( {
+    if (searchTerm === '') this.setState({
       searchInProgress: false,
       searchResult: [],
-    } );
+    });
 
     const result = [] as string[];
     const resultSet = new Set();
 
     const wikidataApi = getWikidataApi();
-    const allPromises = DEFAULT_LANGUAGES.map( languageCode => wikidataApi.getPromise( {
+    const allPromises = DEFAULT_LANGUAGES.map(languageCode => wikidataApi.getPromise({
       action: 'wbsearchentities',
       language: languageCode,
       strictlanguage: false,
       type: 'item',
       limit: MAX_ITEMS,
       search: searchTerm,
-    } ).then( ( { search } : any ) => {
-      search.forEach( ( { id } : any ) => {
-        if ( !resultSet.has( id ) ) {
-          result.push( id );
-          resultSet.add( id );
+    }).then(({search}: any) => {
+      search.forEach(({id}: any) => {
+        if (!resultSet.has(id)) {
+          result.push(id);
+          resultSet.add(id);
         }
-      } );
+      });
 
-      if ( this.state.searchTermScheduled !== searchTerm ) return;
-      this.setState( { searchResult: result } );
-    } ) );
+      if (this.state.searchTermScheduled !== searchTerm) return;
+      this.setState({searchResult: result});
+    }));
 
-    Promise.all( allPromises ).then(
-      () => this.setState( {
+    Promise.all(allPromises).then(
+      () => { this.setState({
         searchInProgress: false,
-      } )
+      }); }
     );
   }
 
-  handleClickF( entityId : string ) {
-    return () => this.props.onInsert( entityId );
+  handleClickF (entityId: string) {
+    return () => this.props.onInsert(entityId);
   }
 
-  override render() {
-    const { searchTerm, searchInProgress, searchTermScheduled, searchResult } = this.state;
+  override render () {
+    const {searchTerm, searchInProgress, searchTermScheduled, searchResult} = this.state;
 
     return <div className={styles.sourceLookupTab}>
       <input
@@ -90,17 +91,17 @@ export default class SourceLookupTab
         placeholder="Текст (название, описание) для поиска существующего источника в Викиданных"
         value={searchTerm} />
       { searchInProgress
-        ? <div style={{ padding: '1em' }}>{'Идёт поиск источников по строке «' + searchTermScheduled + '»'}</div>
+        ? <div style={{padding: '1em'}}>{'Идёт поиск источников по строке «' + searchTermScheduled + '»'}</div>
         : searchResult.length !== 0
           ? null
           : searchTerm
-            ? <div style={{ padding: '1em' }}>{'Источников по строке «' + searchTermScheduled + '» не найдено'}</div>
+            ? <div style={{padding: '1em'}}>{'Источников по строке «' + searchTermScheduled + '» не найдено'}</div>
             : null}
-      { searchResult.map( entityId =>
+      { searchResult.map(entityId =>
         <SourceItem
           entityId={entityId}
           key={entityId}
-          onClick={this.handleClickF( entityId )} />
+          onClick={this.handleClickF(entityId)} />
       ) }
     </div>;
   }

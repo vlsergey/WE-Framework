@@ -1,16 +1,17 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
+
 import CacheValueProvider from './CacheValueProvider';
 import flagImageHtmlCache from './flagImageHtmlCache';
 
-type PropsType = {
-  children : (flagImageHtml? : string) => any,
-  fileName : string,
-};
+interface PropsType {
+  children: (flagImageHtml?: string) => any;
+  fileName: string;
+}
 
 export default class FlagImageHtmlProvider extends PureComponent<PropsType> {
 
-  override render() {
-    const { children, fileName } = this.props;
+  override render () {
+    const {children, fileName} = this.props;
 
     return <CacheValueProvider<string>
       cache={flagImageHtmlCache}

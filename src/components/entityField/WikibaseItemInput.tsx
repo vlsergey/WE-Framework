@@ -1,65 +1,65 @@
-import React, { ChangeEventHandler, FocusEventHandler, PureComponent } from 'react';
+import React, {ChangeEventHandler, FocusEventHandler, PureComponent} from 'react';
 
-type PropsType = {
-  entityId : string | null,
-  entityLabel : string | null,
-  inputRef? : any,
-  onBlur : FocusEventHandler< HTMLInputElement >,
-  onChange : ChangeEventHandler< HTMLInputElement >,
-  onFocus : FocusEventHandler< HTMLInputElement >,
-  value? : string,
-};
+interface PropsType {
+  entityId: string | null;
+  entityLabel: string | null;
+  inputRef?: any;
+  onBlur: FocusEventHandler< HTMLInputElement >;
+  onChange: ChangeEventHandler< HTMLInputElement >;
+  onFocus: FocusEventHandler< HTMLInputElement >;
+  value?: string;
+}
 
-type StateType = {
-  focused : boolean,
-  value : string,
-};
+interface StateType {
+  focused: boolean;
+  value: string;
+}
 
 export default class WikibaseItemInput extends PureComponent<PropsType, StateType> {
 
-  static getEtcProps( props : PropsType ) {
+  static getEtcProps (props: PropsType) {
     /* eslint no-unused-vars: 0 */
-    const { entityId, entityLabel, inputRef, value, onBlur, onChange, onFocus, ...etc } = props;
+    const {entityId, entityLabel, inputRef, value, onBlur, onChange, onFocus, ...etc} = props;
     return etc;
   }
 
-  constructor(props : PropsType) {
-    super( props );
+  constructor (props: PropsType) {
+    super(props);
     this.state = {
       focused: false,
       value: this.props.entityLabel || this.props.entityId || '',
     };
   }
 
-  handleChange : ChangeEventHandler<HTMLInputElement> = event => {
-    this.setState( {
+  handleChange: ChangeEventHandler<HTMLInputElement> = event => {
+    this.setState({
       focused: true,
       value: event.currentTarget.value,
-    } );
-    this.props.onChange( event );
-  }
+    });
+    this.props.onChange(event);
+  };
 
-  handleFocus : FocusEventHandler<HTMLInputElement> = event => {
-    this.setState( { focused: true } );
-    this.props.onFocus( event );
-  }
+  handleFocus: FocusEventHandler<HTMLInputElement> = event => {
+    this.setState({focused: true});
+    this.props.onFocus(event);
+  };
 
-  handleBlur : FocusEventHandler<HTMLInputElement> = event => {
-    this.setState( { focused: false } );
-    this.props.onBlur( event );
-  }
+  handleBlur: FocusEventHandler<HTMLInputElement> = event => {
+    this.setState({focused: false});
+    this.props.onBlur(event);
+  };
 
-  override render() {
-    const { entityId, entityLabel, inputRef } = this.props;
-    const etc = WikibaseItemInput.getEtcProps( this.props );
-    const { focused, value } = this.state;
+  override render () {
+    const {entityId, entityLabel, inputRef} = this.props;
+    const etc = WikibaseItemInput.getEtcProps(this.props);
+    const {focused, value} = this.state;
 
     let inputValue;
-    if ( focused ) {
+    if (focused) {
       inputValue = value;
-    } else if ( entityId && entityLabel ) {
+    } else if (entityId && entityLabel) {
       inputValue = entityLabel + ' (' + entityId + ')';
-    } else if ( entityId ) {
+    } else if (entityId) {
       inputValue = entityId;
     } else {
       inputValue = '';
@@ -74,5 +74,5 @@ export default class WikibaseItemInput extends PureComponent<PropsType, StateTyp
       value={inputValue} />;
   }
 
-  setValue = ( value : string ) => this.setState( { value } );
+  setValue = (value: string) => { this.setState({value}); };
 }

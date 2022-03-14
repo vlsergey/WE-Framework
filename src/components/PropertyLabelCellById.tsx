@@ -1,23 +1,24 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
+
 import PropertyDescriptionsProvider from '../caches/PropertyDescriptionsProvider';
 import PropertyLabelCell from './PropertyLabelCell';
 import styles from './PropertyLabelCell.css';
 
-const WIKIDATA_LINK_URL : string = '//www.wikidata.org/wiki/';
+const WIKIDATA_LINK_URL = '//www.wikidata.org/wiki/';
 
-type PropsType = {
-  propertyId : string,
-};
+interface PropsType {
+  propertyId: string;
+}
 
 export default class PropertyLabelCellById extends PureComponent<PropsType> {
 
-  override render() {
-    const { propertyId } = this.props;
+  override render () {
+    const {propertyId} = this.props;
 
-    return <PropertyDescriptionsProvider propertyIds={[ propertyId ]}>
+    return <PropertyDescriptionsProvider propertyIds={[propertyId]}>
       { cache => {
         const propertyDescription = cache[propertyId];
-        if ( !propertyDescription ) {
+        if (!propertyDescription) {
           return <th className={styles.wef_property_label}>
             <a
               href={`${WIKIDATA_LINK_URL}Property:${propertyId}`}

@@ -1,26 +1,27 @@
-import { closeWithoutSave, saveAndClose } from '../core/save';
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import React, {PureComponent} from 'react';
+import {connect} from 'react-redux';
+
 import DialogWithTabs from '../components/formbuilders/DialogWithTabs';
-import type { EditorDefType } from '../editors/EditorDefModel';
-import i18n from './core.i18n';
+import {closeWithoutSave, saveAndClose} from '../core/save';
+import {EditorDefType} from '../editors/EditorDefModel';
 import ImportDataDialog from '../enhancements/importers/ImportDataDialog';
+import i18n from './core.i18n';
 import styles from './EditorApp.css';
 
-type ResolveType =  (reason : string) => any;
-type RejectType =  (reason : string) => any;
+type ResolveType = (reason: string) => any;
+type RejectType = (reason: string) => any;
 
-type PropsType = {
-  closeWithoutSave : (callback : ((_ : string) => any )) => any,
-  description : EditorDefType,
-  reject : RejectType,
-  resolve : ResolveType,
-  saveAndClose : ( resolve : ResolveType, reject : RejectType ) => any,
-};
+interface PropsType {
+  closeWithoutSave: (callback : ((_: string) => any)) => any;
+  description: EditorDefType;
+  reject: RejectType;
+  resolve: ResolveType;
+  saveAndClose: (resolve: ResolveType, reject: RejectType) => any;
+}
 
-type StateType = {
-  dialogOpen : boolean
-};
+interface StateType {
+  dialogOpen: boolean;
+}
 
 class EditorApp extends PureComponent<PropsType, StateType> {
 
@@ -31,41 +32,41 @@ class EditorApp extends PureComponent<PropsType, StateType> {
   };
 
   handleCloseClick = () => {
-    const { closeWithoutSave, reject } = this.props;
-    closeWithoutSave( reject );
+    const {closeWithoutSave, reject} = this.props;
+    closeWithoutSave(reject);
     return false;
-  }
+  };
 
   triggerImportDataDialogOpen = () =>
-    this.setState( state => ( { ...state, dialogOpen: !state.dialogOpen } ) );
+  { this.setState(state => ({...state, dialogOpen: !state.dialogOpen})); };
 
-  override render() {
-    const { description, closeWithoutSave, saveAndClose, resolve, reject } = this.props;
+  override render () {
+    const {description, closeWithoutSave, saveAndClose, resolve, reject} = this.props;
 
     const buttons = [];
 
-    buttons.push( {
+    buttons.push({
       class: styles.importDataButton,
       text: i18n.dialogButtonImportDataText,
       title: i18n.dialogButtonImportDataTitle,
       click: this.triggerImportDataDialogOpen,
-    } );
+    });
 
-    buttons.push( {
+    buttons.push({
       text: i18n.dialogButtonSaveText,
       title: i18n.dialogButtonSaveTitle,
       click: () => {
-        saveAndClose( resolve, reject );
+        saveAndClose(resolve, reject);
       },
-    } );
+    });
 
-    buttons.push( {
+    buttons.push({
       text: i18n.dialogButtonCancelText,
       title: i18n.dialogButtonCancelTitle,
-      click() {
-        closeWithoutSave( reject );
+      click () {
+        closeWithoutSave(reject);
       },
-    } );
+    });
 
     return [
       <DialogWithTabs
@@ -84,10 +85,10 @@ class EditorApp extends PureComponent<PropsType, StateType> {
 
 }
 
-const mapDispatchToProps = (dispatch : any) => ( {
-  closeWithoutSave: (reject : RejectType) => dispatch( closeWithoutSave( reject ) ),
-  saveAndClose: ( resolve : ResolveType, reject : RejectType ) => dispatch( saveAndClose( resolve, reject ) ),
-} );
+const mapDispatchToProps = (dispatch: any) => ({
+  closeWithoutSave: (reject: RejectType) => dispatch(closeWithoutSave(reject)),
+  saveAndClose: (resolve: ResolveType, reject: RejectType) => dispatch(saveAndClose(resolve, reject)),
+});
 
-const EditorAppConnected = connect( undefined, mapDispatchToProps )( EditorApp );
+const EditorAppConnected = connect(undefined, mapDispatchToProps)(EditorApp);
 export default EditorAppConnected;

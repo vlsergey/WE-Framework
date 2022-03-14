@@ -1,8 +1,8 @@
-export default function getDefaultQualifierSnak( propertyId : string ) : null | SnakType {
-  if ( propertyId !== 'P813' ) return null;
+export default function getDefaultQualifierSnak (propertyId: string): null | SnakType {
+  if (propertyId !== 'P813') return null;
 
-  const today = '+' + new Date().toISOString().replace( /T.*$/, 'T00:00:00Z' );
-  const result : SnakType = {
+  const today = '+' + new Date().toISOString().replace(/T.*$/, 'T00:00:00Z');
+  const result: SnakType = {
     property: propertyId,
     datatype: 'time',
     datavalue: {

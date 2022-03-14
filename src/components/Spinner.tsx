@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import ClipLoader from 'react-spinners/ClipLoader';
 
-type PropsType = {
-  size : number,
-};
+interface PropsType {
+  size: number;
+}
 
 export default class Spinner extends PureComponent<PropsType> {
 
@@ -11,8 +11,8 @@ export default class Spinner extends PureComponent<PropsType> {
     size: 50,
   };
 
-  override render() {
-    const { size, ...etc } = this.props;
+  override render () {
+    const {size, ...etc} = this.props;
     return <ClipLoader {...etc} size={size / 1.4} />;
   }
 }

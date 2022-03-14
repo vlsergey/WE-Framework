@@ -1,20 +1,21 @@
-import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
 import React, {ChangeEvent} from 'react';
-import styles from '../core.css';
 
-const EMPTY_OBJECT : any = Object.freeze( {} );
+import styles from '../core.css';
+import AbstractStringBasedDataValueEditor from './AbstractStringBasedDataValueEditor';
+
+const EMPTY_OBJECT: any = Object.freeze({});
 
 export default class StringDataValueEditor extends AbstractStringBasedDataValueEditor {
 
-  handleChange = ( { currentTarget: { value } } : ChangeEvent< HTMLInputElement > ) =>
-    this.handleValueChange( value );
+  handleChange = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) =>
+  { this.handleValueChange(value); };
 
-  override render() {
+  override render () {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*" }] */
-    const { datavalue, propertyDescription, readOnly } = this.props;
+    const {datavalue, propertyDescription, readOnly} = this.props;
 
-    if ( readOnly ) {
-      if ( datavalue && datavalue.value ) {
+    if (readOnly) {
+      if (datavalue && datavalue.value) {
         return <td colSpan={12}>
           <span>{datavalue.value}</span>
         </td>;
@@ -25,11 +26,11 @@ export default class StringDataValueEditor extends AbstractStringBasedDataValueE
 
     return <td colSpan={12}>
       <input
-        className={(styles as unknown as {[key: string] : string})[ 'wef_' + propertyDescription.datatype ] }
+        className={(styles as unknown as Record<string, string>)['wef_' + propertyDescription.datatype]}
         onChange={this.handleChange}
         pattern={propertyDescription.regexp || undefined}
         type="text"
-        value={( datavalue || EMPTY_OBJECT ).value || ''} />
+        value={(datavalue || EMPTY_OBJECT).value || ''} />
     </td>;
   }
 

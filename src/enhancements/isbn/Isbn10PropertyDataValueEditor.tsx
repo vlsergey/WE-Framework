@@ -1,35 +1,36 @@
-import React, { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import React, {PureComponent} from 'react';
+import {connect} from 'react-redux';
+
 import ExternalIdDataValueEditor from '../../components/dataValueEditors/external-id/ExternalIdDataValueEditor';
+import PropertyDescription from '../../core/PropertyDescription';
 import FillSisterIsbnClaimButtonCell from './FillSisterIsbnClaimButtonCell';
 import HyphenateIsbnButtonCell from './HyphenateIsbnButtonCell';
-import PropertyDescription from '../../core/PropertyDescription';
 
-type NormalizeFunction = (str : null | string) => null | string;
+type NormalizeFunction = (str: null | string) => null | string;
 
-type PropsType = {
-  datavalue? : DataValueType,
-  onClaimsFill : ( normalizeF : NormalizeFunction, value : string ) => any,
-  onDataValueChange : (datavalue : DataValueType | null) => any,
-  propertyDescription : PropertyDescription,
-  readOnly? : boolean,
-};
+interface PropsType {
+  datavalue?: DataValueType;
+  onClaimsFill: (normalizeF: NormalizeFunction, value: string) => any;
+  onDataValueChange: (datavalue: DataValueType | null) => any;
+  propertyDescription: PropertyDescription;
+  readOnly?: boolean;
+}
 
 class Isbn10PropertyDataValueEditor extends PureComponent<PropsType> {
 
-  handleValueChange = ( value : string ) => {
-    this.props.onDataValueChange( value.length !== 0
+  handleValueChange = (value: string) => {
+    this.props.onDataValueChange(value.length !== 0
       ? {
         ...this.props.datavalue,
         type: 'string',
         value,
       }
-      : null );
-  }
+      : null);
+  };
 
-  override render() {
-    const { datavalue, onClaimsFill, onDataValueChange, ...etc } = this.props;
-    const isbn = ( datavalue || {} ).value || '';
+  override render () {
+    const {datavalue, onClaimsFill, onDataValueChange, ...etc} = this.props;
+    const isbn = (datavalue || {}).value || '';
 
     const buttons = [
       <HyphenateIsbnButtonCell
@@ -54,15 +55,15 @@ class Isbn10PropertyDataValueEditor extends PureComponent<PropsType> {
 
 }
 
-const mapDispatchToProps = (dispatch : any) => ( {
-  onClaimsFill: ( normalizeF : NormalizeFunction, newValue : string ) => dispatch( {
+const mapDispatchToProps = (dispatch: any) => ({
+  onClaimsFill: (normalizeF: NormalizeFunction, newValue: string) => dispatch({
     type: 'CLAIMS_FILL',
     property: 'P212',
     datatype: 'external-id',
-    datavalue: { type: 'string', value: newValue },
+    datavalue: {type: 'string', value: newValue},
     normalizeF,
-  } ),
-} );
+  }),
+});
 
-const Isbn10PropertyDataValueEditorConnected = connect( undefined, mapDispatchToProps )( Isbn10PropertyDataValueEditor );
+const Isbn10PropertyDataValueEditorConnected = connect(undefined, mapDispatchToProps)(Isbn10PropertyDataValueEditor);
 export default Isbn10PropertyDataValueEditorConnected;

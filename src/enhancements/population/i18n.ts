@@ -1,4 +1,4 @@
-import { localize } from '../../utils/I18nUtils';
+import {localize} from '../../utils/I18nUtils';
 
 const en = {
   buttonLabelPopulationLookup: 'Import population data',
@@ -38,5 +38,5 @@ const ru = {
   sourceButtonLabel_Численность_населенияTemplate: 'Данные из шаблона «Численность населения»',
 };
 
-const result = localize( {}, { en, ru } );
+const result = localize({}, {en, ru});
 export default result;

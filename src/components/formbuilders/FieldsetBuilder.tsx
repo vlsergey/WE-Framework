@@ -1,17 +1,18 @@
-import React, { PureComponent } from 'react';
-import ChildrenBuilder from './ChildrenBuilder';
-import EntityLabel from '../../caches/EntityLabel';
-import type { FieldsetDefType } from '../../editors/EditorDefModel';
+import React, {PureComponent} from 'react';
 
-type PropsType = {
-  fieldset : FieldsetDefType,
-};
+import EntityLabel from '../../caches/EntityLabel';
+import {FieldsetDefType} from '../../editors/EditorDefModel';
+import ChildrenBuilder from './ChildrenBuilder';
+
+interface PropsType {
+  fieldset: FieldsetDefType;
+}
 
 export default class FieldsetBuilder extends PureComponent<PropsType> {
 
-  override render() {
-    const { fieldset } = this.props;
-    const { label, labelEntityId, ...etc } = fieldset;
+  override render () {
+    const {fieldset} = this.props;
+    const {label, labelEntityId, ...etc} = fieldset;
 
     return <fieldset>
       { label && <legend>{label}</legend> }

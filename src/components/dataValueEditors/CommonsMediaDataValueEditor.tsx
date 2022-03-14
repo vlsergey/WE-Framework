@@ -1,28 +1,29 @@
-import * as ApiUtils from '../../core/ApiUtils';
-import React, { ChangeEvent, PureComponent } from 'react';
+import React, {ChangeEvent, PureComponent} from 'react';
 import Autosuggest from 'react-autosuggest';
-import MediawikiPreview from '../MediawikiPreview';
+
+import * as ApiUtils from '../../core/ApiUtils';
 import PropertyDescription from '../../core/PropertyDescription';
+import MediawikiPreview from '../MediawikiPreview';
 import styles from './CommonsMediaDataValueEditor.css';
 
-type PropsType = {
-  datavalue? : DataValueType,
-  onDataValueChange : (dataValue : DataValueType | null) => any,
-  propertyDescription : PropertyDescription,
-  readOnly? : boolean,
-};
+interface PropsType {
+  datavalue?: DataValueType;
+  onDataValueChange: (dataValue: DataValueType | null) => any;
+  propertyDescription: PropertyDescription;
+  readOnly?: boolean;
+}
 
-type StateType = {
-  suggestions : string[],
-};
+interface StateType {
+  suggestions: string[];
+}
 
-const EMPTY_OBJECT : any = Object.freeze( {} );
+const EMPTY_OBJECT: any = Object.freeze({});
 
 export default class CommonsMediaDataValueEditor
   extends PureComponent<PropsType, StateType> {
 
   static DATATYPE = 'commonsMedia';
-  static DATAVALUE_TYPE : string = 'string';
+  static DATAVALUE_TYPE = 'string';
 
   commonsApi = ApiUtils.getCommonsApi();
 
@@ -31,52 +32,52 @@ export default class CommonsMediaDataValueEditor
   };
 
   handleSuggestionsClearRequested = () => {
-    this.setState( { suggestions: [] } );
-  }
+    this.setState({suggestions: []});
+  };
 
-  handleSuggestionsFetchRequested = ( { value } : { value : string | null } ) => {
-    this.commonsApi.post( {
+  handleSuggestionsFetchRequested = ({value}: {value: string | null}) => {
+    this.commonsApi.post({
       action: 'query',
       list: 'prefixsearch',
       psnamespace: '6',
       pslimit: '10',
       pssearch: value,
       format: 'json',
-    } ).then( (result : any) => {
-      const suggestions = result.query.prefixsearch.map( (p : any) => p.title.substring( 'File:'.length ) );
-      this.setState( { suggestions } );
-    } );
-  }
+    }).then((result: any) => {
+      const suggestions = result.query.prefixsearch.map((p: any) => p.title.substring('File:'.length));
+      this.setState({suggestions});
+    });
+  };
 
-  getSuggestionValue( data : string ) : string {
+  getSuggestionValue (data: string): string {
     return data ? data : '';
   }
 
   handleChange = (
-    _event : ChangeEvent< any >,
-    { newValue } : { newValue : string | null }
-  ) => this.handleValueChange( newValue );
+    _event: ChangeEvent< any >,
+    {newValue}: {newValue: string | null}
+  ) => { this.handleValueChange(newValue); };
 
-  handleValueChange = ( value : string | null ) => {
-    const { datavalue, onDataValueChange } = this.props;
+  handleValueChange = (value: string | null) => {
+    const {datavalue, onDataValueChange} = this.props;
 
-    if ( value ) {
-      onDataValueChange( {
+    if (value) {
+      onDataValueChange({
         ...datavalue,
         type: CommonsMediaDataValueEditor.DATAVALUE_TYPE,
         value,
-      } );
+      });
     } else {
-      onDataValueChange( null );
+      onDataValueChange(null);
     }
-  }
+  };
 
-  override render() {
-    const { datavalue, propertyDescription, readOnly } = this.props;
+  override render () {
+    const {datavalue, propertyDescription, readOnly} = this.props;
     const className = styles.wef_datavalue_commonsMedia;
 
-    if ( readOnly ) {
-      if ( datavalue && datavalue.value ) {
+    if (readOnly) {
+      if (datavalue && datavalue.value) {
         return <td className={className} colSpan={12}>
           <a
             href={'https://commons.wikimedia.org/wiki/File:' + datavalue.value}
@@ -95,7 +96,7 @@ export default class CommonsMediaDataValueEditor
         inputProps={{
           type: 'text',
           pattern: propertyDescription.regexp || undefined,
-          value: ( datavalue || EMPTY_OBJECT ).value || '',
+          value: (datavalue || EMPTY_OBJECT).value || '',
           onChange: this.handleChange
         }}
         onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
@@ -106,7 +107,7 @@ export default class CommonsMediaDataValueEditor
     </td>;
   }
 
-  renderSuggestion( data : string ) : any {
+  renderSuggestion (data: string): any {
     return <div className={styles.suggestionContent}>
       <div className={styles.suggestionContentPreviewOuter}>
         <div className={styles.suggestionContentPreviewInner}>

@@ -1,22 +1,23 @@
-import { addLastRecentlyUsed, findLastRecentlyUsed } from './LruCache';
-import React, { PureComponent } from 'react';
-import AutocompleteMode from './AutocompleteMode';
+import React, {PureComponent} from 'react';
+
 import EntityLabel from '../../caches/EntityLabel';
+import AutocompleteMode from './AutocompleteMode';
+import {addLastRecentlyUsed, findLastRecentlyUsed} from './LruCache';
 import SelectMode from './SelectMode';
 
-type PropsType = {
-  lruKey? : string,
-  onChange : (entityId: null | string ) => any,
-  oneOf? : string[],
-  readOnly? : boolean,
-  value : null | string,
-};
+interface PropsType {
+  lruKey?: string;
+  onChange: (entityId: null | string) => any;
+  oneOf?: string[];
+  readOnly?: boolean;
+  value: null | string;
+}
 
-type StateType = {
-  lruFromCache : null | string[],
-  selectMode : boolean,
-  selectOptions : string[],
-};
+interface StateType {
+  lruFromCache: null | string[];
+  selectMode: boolean;
+  selectOptions: string[];
+}
 
 export default class EntityField extends PureComponent<PropsType, StateType> {
 
@@ -26,8 +27,8 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
 
   WIKIDATA_LINK_URL = 'https://www.wikidata.org/wiki/';
 
-  constructor(props : PropsType) {
-    super( props );
+  constructor (props: PropsType) {
+    super(props);
 
     this.state = {
       lruFromCache: null,
@@ -35,51 +36,51 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
       selectOptions: [],
     };
 
-    if ( !this.props.oneOf && this.props.lruKey ) {
-      findLastRecentlyUsed( this.props.lruKey ).then( arr => {
-        if ( Array.isArray( arr ) && arr.length !== 0 ) {
-          this.setState( { lruFromCache: arr, selectMode: true } );
+    if (!this.props.oneOf && this.props.lruKey) {
+      findLastRecentlyUsed(this.props.lruKey).then(arr => {
+        if (Array.isArray(arr) && arr.length !== 0) {
+          this.setState({lruFromCache: arr, selectMode: true});
         }
-      } );
+      });
     }
   }
 
-  static getDerivedStateFromProps( props : PropsType, state : StateType ) {
-    if ( state.selectMode ) {
+  static getDerivedStateFromProps (props: PropsType, state: StateType) {
+    if (state.selectMode) {
       const currentValue = props.value;
-      if ( props.oneOf ) {
-        if ( !!currentValue && props.oneOf.indexOf( currentValue ) === -1 ) {
-          return { selectOptions: [ ...props.oneOf, currentValue ] };
+      if (props.oneOf) {
+        if (!!currentValue && !props.oneOf.includes(currentValue)) {
+          return {selectOptions: [...props.oneOf, currentValue]};
         }
-        return { selectOptions: props.oneOf };
+        return {selectOptions: props.oneOf};
 
-      } else if ( state.lruFromCache ) {
-        if ( !!currentValue && state.lruFromCache.indexOf( currentValue ) === -1 ) {
-          return { selectOptions: [ ...state.lruFromCache, currentValue ] };
+      } else if (state.lruFromCache) {
+        if (!!currentValue && !state.lruFromCache.includes(currentValue)) {
+          return {selectOptions: [...state.lruFromCache, currentValue]};
         }
-        return { selectOptions: state.lruFromCache };
+        return {selectOptions: state.lruFromCache};
       }
-      throw new Error( 'Unsupported state: both oneOf and lruFromCache are null or empty' );
+      throw new Error('Unsupported state: both oneOf and lruFromCache are null or empty');
     }
     return null;
   }
 
-  handleOtherSelect = () => this.setState( { selectMode: false } );
+  handleOtherSelect = () => { this.setState({selectMode: false}); };
 
-  handleSelect = ( entityId : string | null ) => {
-    const { lruKey, onChange } = this.props;
-    onChange( entityId );
+  handleSelect = (entityId: string | null) => {
+    const {lruKey, onChange} = this.props;
+    onChange(entityId);
 
-    if ( !!lruKey && !!entityId && entityId.trim() !== '' )
-      addLastRecentlyUsed( lruKey, entityId );
-  }
+    if (!!lruKey && !!entityId && entityId.trim() !== '')
+      addLastRecentlyUsed(lruKey, entityId);
+  };
 
-  override render() {
+  override render () {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "(lruKey|onChange|oneOf)" }] */
-    const { value, onChange, lruKey, oneOf, readOnly, ...etc } = this.props;
+    const {value, onChange, lruKey, oneOf, readOnly, ...etc} = this.props;
 
-    if ( readOnly ) {
-      if ( value ) {
+    if (readOnly) {
+      if (value) {
         return <a href={this.WIKIDATA_LINK_URL + value}>
           <EntityLabel entityId={value} />
         </a>;

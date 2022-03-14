@@ -1,29 +1,30 @@
-import * as ApiUtils from '../../core/ApiUtils';
-import React, { ChangeEvent, PureComponent } from 'react';
+import React, {ChangeEvent, PureComponent} from 'react';
 import Autosuggest from 'react-autosuggest';
-import { DEFAULT_LANGUAGES } from '../../utils/I18nUtils';
+
+import * as ApiUtils from '../../core/ApiUtils';
+import {DEFAULT_LANGUAGES} from '../../utils/I18nUtils';
 import i18n from './i18n';
-import PropertySuggestion from './PropertySuggestion';
 import styles from './NewQualifierAutosuggest.css';
+import PropertySuggestion from './PropertySuggestion';
 
 const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
 
-type PropsType = {
-  onSelect : (value : string) => any,
-};
+interface PropsType {
+  onSelect: (value: string) => any;
+}
 
-type StateType = {
-  suggestions : string[],
-  textValue : string,
-};
+interface StateType {
+  suggestions: string[];
+  textValue: string;
+}
 
 export default class NewQualifierAutosuggest
   extends PureComponent<PropsType, StateType> {
 
-  wikidataApi : any;
+  wikidataApi: any;
 
-  constructor( props : PropsType) {
-    super( props );
+  constructor (props: PropsType) {
+    super(props);
     this.wikidataApi = ApiUtils.getWikidataApi();
 
     this.state = {
@@ -33,52 +34,52 @@ export default class NewQualifierAutosuggest
   }
 
   handleChange = (
-    _event : ChangeEvent< any >,
-    { method, newValue } : { method : string, newValue : string | null }
+    _event: ChangeEvent< any >,
+    {method, newValue}: {method: string; newValue: string | null}
   ) => {
-    switch ( method ) {
+    switch (method) {
     case 'enter':
     case 'click':
     {
-      if ( newValue ) {
-        this.props.onSelect( newValue );
+      if (newValue) {
+        this.props.onSelect(newValue);
       }
       break;
     }
     default:
       // typed or up/down
-      this.setState( {
+      this.setState({
         textValue: newValue || '',
-      } );
+      });
     }
-  }
+  };
 
   handleSuggestionsClearRequested = () =>
-    this.setState( { suggestions: [] } );
+  { this.setState({suggestions: []}); };
 
-  handleSuggestionsFetchRequested = ( { value } : { value : string } ) => {
-    const resultSet : Set<string> = new Set();
-    DEFAULT_LANGUAGES.forEach( language => {
-      this.wikidataApi.get( {
+  handleSuggestionsFetchRequested = ({value}: {value: string}) => {
+    const resultSet: Set<string> = new Set();
+    DEFAULT_LANGUAGES.forEach(language => {
+      this.wikidataApi.get({
         action: 'wbsearchentities',
         language,
         limit: NUMBER_OF_SUGGESTIONS_PER_LANGUAGE,
         search: value,
         type: 'property',
-      } ).then( (result : any) => {
-        result.search.forEach( (item : any) => resultSet.add( item.id as string ) );
-        this.setState( {
-          suggestions: [ ...resultSet ],
-        } );
-      } );
-    } );
-  }
+      }).then((result: any) => {
+        result.search.forEach((item: any) => resultSet.add(item.id as string));
+        this.setState({
+          suggestions: [...resultSet],
+        });
+      });
+    });
+  };
 
-  getSuggestionValue( data : string | null ) {
+  getSuggestionValue (data: string | null) {
     return data || '';
   }
 
-  override render() {
+  override render () {
     return <Autosuggest
       getSuggestionValue={this.getSuggestionValue}
       inputProps={{
@@ -94,6 +95,6 @@ export default class NewQualifierAutosuggest
       theme={styles} />;
   }
 
-  renderSuggestion = ( propertyId : string ) =>
-    <PropertySuggestion propertyId={propertyId} />
+  renderSuggestion = (propertyId: string) =>
+    <PropertySuggestion propertyId={propertyId} />;
 }

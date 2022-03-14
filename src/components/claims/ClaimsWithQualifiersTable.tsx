@@ -1,39 +1,40 @@
-import React, { PureComponent } from 'react';
-import ClaimAddButtonCell from './ClaimAddButtonCell';
-import ClaimsWithQualifiersTableRows from './ClaimsWithQualifiersTableRows';
+import React, {PureComponent} from 'react';
+
 import EntityLabel from '../../caches/EntityLabel';
-import { newStatementClaim } from '../../model/Shapes';
 import PropertyDescription from '../../core/PropertyDescription';
-import SortClaimsButtonCell from './sort/SortClaimsButtonCell';
+import {newStatementClaim} from '../../model/Shapes';
+import ClaimAddButtonCell from './ClaimAddButtonCell';
 import styles from './ClaimsWithQualifiers.css';
+import ClaimsWithQualifiersTableRows from './ClaimsWithQualifiersTableRows';
+import SortClaimsButtonCell from './sort/SortClaimsButtonCell';
 
-const QUALIFIER_COLUMNS_WIDTH = [ '0%', '33%', '25%', '20%', '17%' ];
+const QUALIFIER_COLUMNS_WIDTH = ['0%', '33%', '25%', '20%', '17%'];
 
-type PropsType = {
-  claims? : ClaimType[],
-  columns : readonly string[],
-  displayEmpty? : boolean,
-  onClaimAdd : () => any,
-  onClaimAddTwice : () => any,
-  onClaimDelete : (claim : ClaimType) => any,
-  onClaimsReorder : (claimIds : string[]) => any,
-  onClaimUpdate : (claim : ClaimType) => any,
-  propertyDescription : PropertyDescription,
-};
+interface PropsType {
+  claims?: ClaimType[];
+  columns: readonly string[];
+  displayEmpty?: boolean;
+  onClaimAdd: () => any;
+  onClaimAddTwice: () => any;
+  onClaimDelete: (claim: ClaimType) => any;
+  onClaimsReorder: (claimIds: string[]) => any;
+  onClaimUpdate: (claim: ClaimType) => any;
+  propertyDescription: PropertyDescription;
+}
 
 export default class ClaimsWithQualifiersTable
   extends PureComponent<PropsType> {
 
-  override render() {
-    const { claims, columns, displayEmpty, propertyDescription,
-      onClaimAdd, onClaimAddTwice, onClaimUpdate, onClaimDelete, onClaimsReorder } = this.props;
+  override render () {
+    const {claims, columns, displayEmpty, propertyDescription,
+      onClaimAdd, onClaimAddTwice, onClaimUpdate, onClaimDelete, onClaimsReorder} = this.props;
 
-    let children : JSX.Element[];
-    if ( !claims || claims.length === 0 ) {
-      if ( !displayEmpty ) return null;
+    let children: JSX.Element[];
+    if (!claims || claims.length === 0) {
+      if (!displayEmpty) return null;
 
-      const newClaim = newStatementClaim( propertyDescription.id, propertyDescription.datatype );
-      children = [ <ClaimsWithQualifiersTableRows
+      const newClaim = newStatementClaim(propertyDescription.id, propertyDescription.datatype);
+      children = [<ClaimsWithQualifiersTableRows
         claim={newClaim}
         columns={columns}
         firstCell={<ClaimAddButtonCell onClick={onClaimAddTwice} />}
@@ -41,9 +42,9 @@ export default class ClaimsWithQualifiersTable
         key={newClaim.id}
         onClaimDelete={onClaimDelete}
         onClaimUpdate={onClaimUpdate}
-        propertyDescription={propertyDescription} /> ];
+        propertyDescription={propertyDescription} />];
     } else {
-      children = claims.map( ( claim, i ) => <ClaimsWithQualifiersTableRows
+      children = claims.map((claim, i) => <ClaimsWithQualifiersTableRows
         claim={claim}
         columns={columns}
         firstCell={i === 0
@@ -55,7 +56,7 @@ export default class ClaimsWithQualifiersTable
         key={claim.id}
         onClaimDelete={onClaimDelete}
         onClaimUpdate={onClaimUpdate}
-        propertyDescription={propertyDescription} /> );
+        propertyDescription={propertyDescription} />);
     }
 
     return <table className={styles.claims_with_qualifiers}>
@@ -64,9 +65,9 @@ export default class ClaimsWithQualifiersTable
           <th colSpan={18} key="_mainsnak">
             {propertyDescription.label || propertyDescription.id}
           </th>
-          { columns.map( column =>
-            // @ts-ignore
-            <th key={column} width={QUALIFIER_COLUMNS_WIDTH[ columns.length ] }>
+          { columns.map(column =>
+            // @ts-expect-error
+            <th key={column} width={QUALIFIER_COLUMNS_WIDTH[columns.length]}>
               <EntityLabel entityId={column} />
             </th>
           ) }

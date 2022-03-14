@@ -1,50 +1,51 @@
-import { applyMiddleware, createStore } from 'redux';
-import { getWikidataApi, purge } from './ApiUtils';
-import buildReducers from './reducers';
-import EditorApp from '../components/EditorApp';
-import type { EditorDefType } from '../editors/EditorDefModel';
-import generateRandomString from '../utils/generateRandomString';
-import { getBody } from '../utils/DomUtils';
-import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import reduxPerformanceMark from '../utils/reduxPerformanceMark';
+import {Provider} from 'react-redux';
+import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
-import { toWikibaseEntityIdValue } from '../model/ModelUtils';
 
-export function destroyEditor( appDiv : HTMLDivElement ) {
-  ReactDOM.unmountComponentAtNode( appDiv );
-  getBody().removeChild( appDiv );
+import EditorApp from '../components/EditorApp';
+import {EditorDefType} from '../editors/EditorDefModel';
+import {toWikibaseEntityIdValue} from '../model/ModelUtils';
+import {getBody} from '../utils/DomUtils';
+import generateRandomString from '../utils/generateRandomString';
+import reduxPerformanceMark from '../utils/reduxPerformanceMark';
+import {getWikidataApi, purge} from './ApiUtils';
+import buildReducers from './reducers';
+
+export function destroyEditor (appDiv: HTMLDivElement) {
+  ReactDOM.unmountComponentAtNode(appDiv);
+  getBody().removeChild(appDiv);
 }
 
-export function renderEditor(
-    resolve : (entityId : string) => any,
-    reject : (reason : string) => any,
-    editorDescription : EditorDefType,
-    oldEntity : EntityType,
-    newEntity : EntityType ) : HTMLDivElement {
-  const appDiv = document.createElement( 'div' );
-  getBody().appendChild( appDiv );
+export function renderEditor (
+    resolve: (entityId: string) => any,
+    reject: (reason: string) => any,
+    editorDescription: EditorDefType,
+    oldEntity: EntityType,
+    newEntity: EntityType): HTMLDivElement {
+  const appDiv = document.createElement('div');
+  getBody().appendChild(appDiv);
 
-  const reducers = buildReducers( oldEntity, newEntity );
-  const store = createStore( reducers, applyMiddleware( reduxPerformanceMark, thunk ) );
+  const reducers = buildReducers(oldEntity, newEntity);
+  const store = createStore(reducers, applyMiddleware(reduxPerformanceMark, thunk));
 
-  ReactDOM.render( <Provider store={store}>
+  ReactDOM.render(<Provider store={store}>
     <EditorApp
       description={editorDescription}
       reject={reject}
       resolve={resolve} />
-  </Provider>, appDiv );
+  </Provider>, appDiv);
 
   return appDiv;
 }
 
-export async function openEditor(
-    editorDescription : EditorDefType,
-    oldEntity : EntityType,
-    newEntity : EntityType
-) : Promise< string > {
-  let appDiv : HTMLDivElement | null = null;
+export async function openEditor (
+    editorDescription: EditorDefType,
+    oldEntity: EntityType,
+    newEntity: EntityType
+): Promise< string > {
+  let appDiv: HTMLDivElement | null = null;
   try {
     const entityId = await new Promise<string>((resolve, reject) => {
       appDiv = renderEditor(resolve, reject, editorDescription, oldEntity, newEntity);
@@ -60,21 +61,21 @@ export async function openEditor(
   }
 }
 
-export function onNewElementClick(
-    editorDescription : EditorDefType,
-    classEntityId : string | null | undefined ) : Promise< string > {
-  const oldEntity : EntityType = {};
-  const newEntity : EntityType = {};
+export function onNewElementClick (
+    editorDescription: EditorDefType,
+    classEntityId: string | null | undefined): Promise< string > {
+  const oldEntity: EntityType = {};
+  const newEntity: EntityType = {};
 
-  if ( classEntityId ) {
+  if (classEntityId) {
     newEntity.claims = {
-      P31: [ {
+      P31: [{
         mainsnak: {
           snaktype: 'value',
           property: 'P31',
           hash: generateRandomString(),
           datavalue: {
-            value: toWikibaseEntityIdValue( classEntityId ),
+            value: toWikibaseEntityIdValue(classEntityId),
             type: 'wikibase-entityid',
           },
           datatype: 'wikibase-item',
@@ -82,30 +83,30 @@ export function onNewElementClick(
         type: 'statement',
         id: generateRandomString(),
         rank: 'normal',
-      } ],
+      }],
     };
   }
 
-  return openEditor( editorDescription, oldEntity, newEntity );
+  return openEditor(editorDescription, oldEntity, newEntity);
 }
 
-export function onEditorLinkClick(
-    editorDescription : EditorDefType,
-    entityId? : string | null ) {
+export function onEditorLinkClick (
+    editorDescription: EditorDefType,
+    entityId?: string | null) {
 
-  if ( !entityId ) {
+  if (!entityId) {
     const oldEntity = {};
-    const newEntity : any = {
+    const newEntity: any = {
       labels: {
-        [ mw.config.get( 'wgContentLanguage' ) ]: {
-          language: mw.config.get( 'wgContentLanguage' ),
-          value: mw.config.get( 'wgTitle' ),
+        [mw.config.get('wgContentLanguage')]: {
+          language: mw.config.get('wgContentLanguage'),
+          value: mw.config.get('wgTitle'),
         },
       },
       sitelinks: {
-        [ mw.config.get( 'wgDBname' ) ]: {
-          site: mw.config.get( 'wgDBname' ),
-          title: mw.config.get( 'wgPageName' ),
+        [mw.config.get('wgDBname')]: {
+          site: mw.config.get('wgDBname'),
+          title: mw.config.get('wgPageName'),
           badges: [],
         },
       },
@@ -113,15 +114,15 @@ export function onEditorLinkClick(
     };
 
     const instanceOf = editorDescription.newEntityInstanceOf;
-    if ( instanceOf ) {
+    if (instanceOf) {
       newEntity.claims = {
-        P31: [ {
+        P31: [{
           mainsnak: {
             snaktype: 'value',
             property: 'P31',
             hash: generateRandomString(),
             datavalue: {
-              value: toWikibaseEntityIdValue( instanceOf ),
+              value: toWikibaseEntityIdValue(instanceOf),
               type: 'wikibase-entityid',
             },
             datatype: 'wikibase-item',
@@ -129,32 +130,32 @@ export function onEditorLinkClick(
           type: 'statement',
           id: generateRandomString(),
           rank: 'normal',
-        } ],
+        }],
       };
     }
 
-    openEditor( editorDescription, oldEntity, newEntity )
-      .then( purge );
+    openEditor(editorDescription, oldEntity, newEntity)
+      .then(purge);
 
   } else {
-    mw.notify( 'Get Wikidata entity content for ' + entityId + '...' );
-    getWikidataApi().getPromise( {
+    mw.notify('Get Wikidata entity content for ' + entityId + '...');
+    getWikidataApi().getPromise({
       action: 'wbgetentities',
       ids: entityId,
       format: 'json',
-    } ).then( (result : any) => {
-      if ( typeof result === 'undefined'
+    }).then((result: any) => {
+      if (typeof result === 'undefined'
       || typeof result.entities === 'undefined'
-      || typeof result.entities[ entityId ] === 'undefined'
-      || typeof result.entities[ entityId ].claims === 'undefined'
+      || typeof result.entities[entityId] === 'undefined'
+      || typeof result.entities[entityId].claims === 'undefined'
       ) {
-        mw.notify( 'Wikidata answer format is not expected one' );
-        throw new Error( 'Wikidata answer format is not expected one' );
+        mw.notify('Wikidata answer format is not expected one');
+        throw new Error('Wikidata answer format is not expected one');
       }
-      return result.entities[ entityId ];
-    } )
-      .then( (entity : EntityType) => openEditor( editorDescription, entity, entity ) )
-      .then( purge );
+      return result.entities[entityId];
+    })
+      .then((entity: EntityType) => openEditor(editorDescription, entity, entity))
+      .then(purge);
 
   }
 }

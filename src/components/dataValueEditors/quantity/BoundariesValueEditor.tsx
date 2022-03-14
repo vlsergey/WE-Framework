@@ -1,12 +1,12 @@
-import React, { ChangeEvent, PureComponent } from 'react';
+import React, {ChangeEvent, PureComponent} from 'react';
 
-const EMPTY_OBJECT : any = Object.freeze( {} );
+const EMPTY_OBJECT: any = Object.freeze({});
 
-type PropsType = {
-  onValueChange : (value : QuantityValueType) => any,
-  readOnly? : boolean,
-  value : QuantityValueType,
-};
+interface PropsType {
+  onValueChange: (value: QuantityValueType) => any;
+  readOnly?: boolean;
+  value: QuantityValueType;
+}
 
 export default class BoundariesValueEditor extends PureComponent<PropsType> {
 
@@ -14,27 +14,27 @@ export default class BoundariesValueEditor extends PureComponent<PropsType> {
     value: EMPTY_OBJECT,
   };
 
-  static canBeUsedForValue() : boolean {
+  static canBeUsedForValue (): boolean {
     return true;
   }
 
-  handleChange = ( { currentTarget: { name, value } } : ChangeEvent< HTMLInputElement > ) => {
-    this.props.onValueChange( {
+  handleChange = ({currentTarget: {name, value}}: ChangeEvent< HTMLInputElement >) => {
+    this.props.onValueChange({
       ...this.props.value,
-      [ name ]: value || '',
-    } );
-  }
+      [name]: value || '',
+    });
+  };
 
-  override render() {
-    const { readOnly, value } = this.props;
+  override render () {
+    const {readOnly, value} = this.props;
 
-    if ( readOnly ) {
-      if ( !value || !value.amount )
+    if (readOnly) {
+      if (!value || !value.amount)
         return null;
 
-      return ( value.lowerBound || '?' )
-        + ' < ' + ( value.amount || '?' )
-        + ' < ' + ( value.upperBound || '?' );
+      return (value.lowerBound || '?')
+        + ' < ' + (value.amount || '?')
+        + ' < ' + (value.upperBound || '?');
     }
 
     return <>

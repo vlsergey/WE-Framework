@@ -1,4 +1,4 @@
-import { localize } from '../../utils/I18nUtils';
+import {localize} from '../../utils/I18nUtils';
 
 const en = {
   buttonLabelAddQualifier: 'add qualifier',
@@ -30,6 +30,6 @@ const ru = {
   optionSuffixUnsupported: ' (не поддерживается)',
 };
 
-const translations = { en, ru };
-const result = localize( {}, translations );
+const translations = {en, ru};
+const result = localize({}, translations);
 export default result;

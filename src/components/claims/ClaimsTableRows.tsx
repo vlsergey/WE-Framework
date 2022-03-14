@@ -1,29 +1,30 @@
-import React, { PureComponent } from 'react';
-import AnimatedTr from '../AnimatedTr';
-import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
-import ClaimQualifiersTable from '../qualifiers/ClaimQualifiersTable';
-import ClaimReferencesButtonCell from '../references/ClaimReferencesButtonCell';
-import { COLUMNS_FOR_CLAIMS_EDITOR } from '../TableColSpanConstants';
-import FlagCell from './FlagCell';
+import React, {PureComponent} from 'react';
+
 import PropertyDescription from '../../core/PropertyDescription';
+import AnimatedTr from '../AnimatedTr';
 import PropertyLabelCell from '../PropertyLabelCell';
+import ClaimQualifiersTable from '../qualifiers/ClaimQualifiersTable';
 import QualifierSelectButtonCell from '../qualifiers/QualifierSelectButtonCell';
-import SelectRankButtonCell from './SelectRankButtonCell';
+import ClaimReferencesButtonCell from '../references/ClaimReferencesButtonCell';
 import SnakEditorTableRowPart from '../SnakEditorTableRowPart';
+import {COLUMNS_FOR_CLAIMS_EDITOR} from '../TableColSpanConstants';
+import ClaimDeleteButtonCell from './ClaimDeleteButtonCell';
+import FlagCell from './FlagCell';
+import SelectRankButtonCell from './SelectRankButtonCell';
 
-type PropsType = {
-  claim : ClaimType,
-  displayLabel? : boolean,
-  firstCell : any,
-  hasClaimDelete : boolean,
-  onClaimDelete : (claim : ClaimType) => any,
-  onClaimUpdate : (claim : ClaimType) => any,
-  propertyDescription : PropertyDescription,
-};
+interface PropsType {
+  claim: ClaimType;
+  displayLabel?: boolean;
+  firstCell: any;
+  hasClaimDelete: boolean;
+  onClaimDelete: (claim: ClaimType) => any;
+  onClaimUpdate: (claim: ClaimType) => any;
+  propertyDescription: PropertyDescription;
+}
 
-type StateType = {
-  displayQualifierSelect : boolean,
-};
+interface StateType {
+  displayQualifierSelect: boolean;
+}
 
 export default class ClaimsTableRows
   extends PureComponent<PropsType, StateType> {
@@ -39,35 +40,35 @@ export default class ClaimsTableRows
   };
 
   handleClaimDelete = () =>
-    this.props.onClaimDelete( this.props.claim );
+    this.props.onClaimDelete(this.props.claim);
 
   handleQualifierSelect = () => {
-    if ( this.claimQualifiersTable.current !== null ) {
+    if (this.claimQualifiersTable.current !== null) {
       this.claimQualifiersTable.current.showQualifierSelect();
     } else {
-      this.setState( { displayQualifierSelect: true } );
+      this.setState({displayQualifierSelect: true});
     }
-  }
+  };
 
-  handleRankChange = ( rank : RankType ) => {
-    this.props.onClaimUpdate( {
+  handleRankChange = (rank: RankType) => {
+    this.props.onClaimUpdate({
       ...this.props.claim,
       rank,
-    } );
-  }
+    });
+  };
 
-  handleSnakChange = ( snak : SnakType ) => {
-    this.props.onClaimUpdate( {
+  handleSnakChange = (snak: SnakType) => {
+    this.props.onClaimUpdate({
       ...this.props.claim,
       mainsnak: snak,
-    } );
-  }
+    });
+  };
 
-  override render() {
+  override render () {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*" }] */
-    const { claim, displayLabel, firstCell, hasClaimDelete, onClaimDelete, onClaimUpdate, propertyDescription, ...other } = this.props;
-    const { displayQualifierSelect } = this.state;
-    const flagImage = propertyDescription.countryFlags[ 0 ];
+    const {claim, displayLabel, firstCell, hasClaimDelete, onClaimDelete, onClaimUpdate, propertyDescription, ...other} = this.props;
+    const {displayQualifierSelect} = this.state;
+    const flagImage = propertyDescription.countryFlags[0];
 
     return <React.Fragment>
       <AnimatedTr {...other}>
@@ -93,7 +94,7 @@ export default class ClaimsTableRows
           propertyId={propertyDescription.id}
           propertyLabel={propertyDescription.label || propertyDescription.id} />
       </AnimatedTr>
-      { ( displayQualifierSelect || claim.qualifiers ) && <tr>
+      { (displayQualifierSelect || claim.qualifiers) && <tr>
         <td colSpan={2} />
         <td colSpan={COLUMNS_FOR_CLAIMS_EDITOR - 2}>
           <ClaimQualifiersTable

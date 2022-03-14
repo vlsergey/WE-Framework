@@ -1,18 +1,19 @@
-import React, { PureComponent } from 'react';
-import AnimatedTr from '../AnimatedTr';
+import React, {PureComponent} from 'react';
+
 import PropertyDescription from '../../core/PropertyDescription';
+import AnimatedTr from '../AnimatedTr';
 import PropertyLabelCell from '../PropertyLabelCell';
 import SnakEditorTableRowPart from '../SnakEditorTableRowPart';
 
-type PropsType = {
-  displayLabel : boolean,
-  firstCell : any,
-  lastCell : any,
-  onSnakChange : (snak : SnakType) => any,
-  propertyDescription : PropertyDescription,
-  readOnly : boolean,
-  snak? : SnakType,
-};
+interface PropsType {
+  displayLabel: boolean;
+  firstCell: any;
+  lastCell: any;
+  onSnakChange: (snak: SnakType) => any;
+  propertyDescription: PropertyDescription;
+  readOnly: boolean;
+  snak?: SnakType;
+}
 
 export default class SnakTableRow extends PureComponent<PropsType> {
 
@@ -21,8 +22,8 @@ export default class SnakTableRow extends PureComponent<PropsType> {
     readOnly: false,
   };
 
-  override render() {
-    const { firstCell, displayLabel, lastCell, onSnakChange, propertyDescription, snak, readOnly } = this.props;
+  override render () {
+    const {firstCell, displayLabel, lastCell, onSnakChange, propertyDescription, snak, readOnly} = this.props;
 
     return <AnimatedTr>
       {firstCell}

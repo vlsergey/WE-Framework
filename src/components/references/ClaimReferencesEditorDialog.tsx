@@ -1,22 +1,23 @@
-import React, { PureComponent } from 'react';
-import ClaimReferencesEditorContent from './ClaimReferencesEditorContent';
-import DialogWrapper from '../../wrappers/DialogWrapper';
+import React, {PureComponent} from 'react';
+
 import generateRandomString from '../../utils/generateRandomString';
+import DialogWrapper from '../../wrappers/DialogWrapper';
+import ClaimReferencesEditorContent from './ClaimReferencesEditorContent';
 import i18n from './i18n';
 
-type PropsType = {
-  claim : ClaimType,
-  onClaimUpdate : (claim : ClaimType) => any,
-  onCloseClick : () => any,
-};
+interface PropsType {
+  claim: ClaimType;
+  onClaimUpdate: (claim: ClaimType) => any;
+  onCloseClick: () => any;
+}
 
 export default class ClaimReferencesEditorDialog
   extends PureComponent<PropsType> {
 
   handleReferenceAdd = () => {
-    const { claim, onClaimUpdate } = this.props;
+    const {claim, onClaimUpdate} = this.props;
     const references = claim.references || [];
-    onClaimUpdate( {
+    onClaimUpdate({
       ...claim,
       references: [
         ...references,
@@ -25,11 +26,11 @@ export default class ClaimReferencesEditorDialog
           snaks: {},
         },
       ],
-    } );
-  }
+    });
+  };
 
-  override render() {
-    const { claim, onClaimUpdate } = this.props;
+  override render () {
+    const {claim, onClaimUpdate} = this.props;
 
     return <DialogWrapper
       buttons={[

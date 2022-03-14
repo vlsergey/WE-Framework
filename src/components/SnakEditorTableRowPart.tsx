@@ -1,16 +1,17 @@
-import React, { PureComponent } from 'react';
-import { COLUMNS_FOR_DATA_VALUE_EDITOR } from './TableColSpanConstants';
-import i18n from './core.i18n';
+import React, {PureComponent} from 'react';
+
 import PropertyDescription from '../core/PropertyDescription';
+import i18n from './core.i18n';
 import SelectSnakTypeButtonCell from './SelectSnakTypeButtonCell';
 import SnakValueEditorFactory from './SnakValueEditorFactory';
+import {COLUMNS_FOR_DATA_VALUE_EDITOR} from './TableColSpanConstants';
 
-type PropsType = {
-  onSnakChange : (snak : SnakType) => any,
-  propertyDescription : PropertyDescription,
-  readOnly : boolean,
-  snak : SnakType,
-};
+interface PropsType {
+  onSnakChange: (snak: SnakType) => any;
+  propertyDescription: PropertyDescription;
+  readOnly: boolean;
+  snak: SnakType;
+}
 
 export default class SnakEditorTableRowPart extends PureComponent<PropsType> {
 
@@ -21,20 +22,20 @@ export default class SnakEditorTableRowPart extends PureComponent<PropsType> {
     readOnly: false,
   };
 
-  handleSnakTypeChange = ( snaktype : SnakTypeType ) => {
-    const { onSnakChange } = this.props;
-    if ( onSnakChange ) {
-      onSnakChange( {
+  handleSnakTypeChange = (snaktype: SnakTypeType) => {
+    const {onSnakChange} = this.props;
+    if (onSnakChange) {
+      onSnakChange({
         ...this.props.snak,
         snaktype,
-      } );
+      });
     }
-  }
+  };
 
-  override render() {
-    const { onSnakChange, propertyDescription, readOnly, snak } = this.props;
+  override render () {
+    const {onSnakChange, propertyDescription, readOnly, snak} = this.props;
 
-    if ( readOnly ) {
+    if (readOnly) {
       return snak.snaktype === 'value'
         ? <React.Fragment>
           <td />
@@ -70,8 +71,8 @@ export default class SnakEditorTableRowPart extends PureComponent<PropsType> {
 
 const NotAValueSnakReplacementCell = ({
   snaktype = 'value',
-} : {
-  snaktype? : SnakTypeType,
-}) => <td colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR} title={i18n.snakTypeTitle[ snaktype ]}>
-  <span>{i18n.snakType[ snaktype ]}</span>
-</td>
+}: {
+  snaktype?: SnakTypeType;
+}) => <td colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR} title={i18n.snakTypeTitle[snaktype]}>
+  <span>{i18n.snakType[snaktype]}</span>
+</td>;

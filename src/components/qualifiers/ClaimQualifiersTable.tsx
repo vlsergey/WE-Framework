@@ -1,27 +1,28 @@
-import React, { PureComponent } from 'react';
-import AnimatedTr from '../AnimatedTr';
-import generateRandomString from '../../utils/generateRandomString';
+import React, {PureComponent} from 'react';
+
+import PropertyDescription from '../../core/PropertyDescription';
 import getDefaultQualifierSnak from '../../enhancements/getDefaultQualifierSnak';
+import generateRandomString from '../../utils/generateRandomString';
+import AnimatedTr from '../AnimatedTr';
+import SnaksMapEditor from '../snaks/SnaksMapEditor';
+import styles from './ClaimQualifiersTable.css';
 import i18n from './i18n';
 import NewQualifierAutosuggest from './NewQualifierAutosuggest';
 import NewQualifierSelect from './NewQualifierSelect';
-import PropertyDescription from '../../core/PropertyDescription';
-import SnaksMapEditor from '../snaks/SnaksMapEditor';
-import styles from './ClaimQualifiersTable.css';
 
-type PropsType = {
-  allowedQualifiers : readonly string[],
-  claim : ClaimType,
-  claimPropertyDescription : PropertyDescription,
-  defaultAddQuailifier? : boolean,
-  disabledQualifiers? : readonly string[],
-  onClaimUpdate : (claim : ClaimType) => any,
-};
+interface PropsType {
+  allowedQualifiers: readonly string[];
+  claim: ClaimType;
+  claimPropertyDescription: PropertyDescription;
+  defaultAddQuailifier?: boolean;
+  disabledQualifiers?: readonly string[];
+  onClaimUpdate: (claim: ClaimType) => any;
+}
 
-type StateType = {
-  addQualifierMode : 'SELECT' | 'AUTOSUGGEST' | 'HIDDEN',
-  hiddenBehindLabel : boolean,
-};
+interface StateType {
+  addQualifierMode: 'SELECT' | 'AUTOSUGGEST' | 'HIDDEN';
+  hiddenBehindLabel: boolean;
+}
 
 export default class ClaimQualifiersTable
   extends PureComponent<PropsType, StateType> {
@@ -32,10 +33,10 @@ export default class ClaimQualifiersTable
     disabledQualifiers: [],
   };
 
-  confirmRemoveQualifierTemplate : string;
+  confirmRemoveQualifierTemplate: string;
 
-  constructor(props : PropsType) {
-    super( props );
+  constructor (props: PropsType) {
+    super(props);
 
     this.state = {
       hiddenBehindLabel: true,
@@ -44,82 +45,82 @@ export default class ClaimQualifiersTable
         : 'HIDDEN',
     };
 
-    const { claimPropertyDescription } = this.props;
+    const {claimPropertyDescription} = this.props;
     this.confirmRemoveQualifierTemplate = i18n.confirmRemoveQualifierTemplate
-      .replace( '{claimPropertyId}', claimPropertyDescription.id )
-      .replace( '{claimPropertyLabel}', claimPropertyDescription.label || claimPropertyDescription.id );
+      .replace('{claimPropertyId}', claimPropertyDescription.id)
+      .replace('{claimPropertyLabel}', claimPropertyDescription.label || claimPropertyDescription.id);
   }
 
-  handleQualifierAdd = ( propertyId : string ) => {
-    if ( propertyId === 'OTHER' ) {
+  handleQualifierAdd = (propertyId: string) => {
+    if (propertyId === 'OTHER') {
       // switch from simple select to complex autosuggest
-      this.setState( {
+      this.setState({
         addQualifierMode: 'AUTOSUGGEST',
-      } );
+      });
       return;
     }
 
-    const { claim } = this.props;
+    const {claim} = this.props;
     const qualifiers = claim.qualifiers || {};
-    const propertyQualifiers = qualifiers[ propertyId ] || [];
+    const propertyQualifiers = qualifiers[propertyId] || [];
 
-    this.setState( {
+    this.setState({
       addQualifierMode: 'HIDDEN',
-    } );
+    });
 
-    const defaultSnak = getDefaultQualifierSnak( propertyId );
-    const snak : SnakType = defaultSnak
-      ? { ...defaultSnak, hash: generateRandomString() }
-      : { hash: generateRandomString(), property: propertyId, snaktype: 'value' };
+    const defaultSnak = getDefaultQualifierSnak(propertyId);
+    const snak: SnakType = defaultSnak
+      ? {...defaultSnak, hash: generateRandomString()}
+      : {hash: generateRandomString(), property: propertyId, snaktype: 'value'};
 
-    this.props.onClaimUpdate( {
+    this.props.onClaimUpdate({
       ...claim,
       qualifiers: {
         ...qualifiers,
-        [ propertyId ]: [
+        [propertyId]: [
           ...propertyQualifiers,
           snak,
         ],
       },
-    } );
-  }
+    });
+  };
 
   showFromBehindLabel = () => {
-    if ( this.state.hiddenBehindLabel ) {
-      this.setState( {
+    if (this.state.hiddenBehindLabel) {
+      this.setState({
         hiddenBehindLabel: false,
-      } );
+      });
     }
-  }
+  };
 
   showQualifierSelect = () => {
-    const { allowedQualifiers } = this.props;
-    this.setState( {
+    const {allowedQualifiers} = this.props;
+    this.setState({
       addQualifierMode: allowedQualifiers.length > 0 ? 'SELECT' : 'AUTOSUGGEST',
-    } );
-  }
+    });
+  };
 
-  handleQualifiersUpdate = ( qualifiers : QualifiersType ) => {
-    this.props.onClaimUpdate( {
+  handleQualifiersUpdate = (qualifiers: QualifiersType) => {
+    this.props.onClaimUpdate({
       ...this.props.claim,
       qualifiers,
-    } );
-  }
+    });
+  };
 
-  removeButtonConfirmMessageF = ( qualifierPropertyDescription : PropertyDescription ) =>
+  removeButtonConfirmMessageF = (qualifierPropertyDescription: PropertyDescription) =>
     this.confirmRemoveQualifierTemplate
-      .replace( '{qualifierPropertyId}', qualifierPropertyDescription.id )
-      .replace( '{qualifierPropertyLabel}', qualifierPropertyDescription.label || qualifierPropertyDescription.id );
+      .replace('{qualifierPropertyId}', qualifierPropertyDescription.id)
+      .replace('{qualifierPropertyLabel}', qualifierPropertyDescription.label || qualifierPropertyDescription.id);
 
-  override render() {
-    const { allowedQualifiers, claim, disabledQualifiers } = this.props;
-    const { addQualifierMode, hiddenBehindLabel } = this.state;
+  override render () {
+    const {allowedQualifiers, claim, disabledQualifiers} = this.props;
+    const {addQualifierMode, hiddenBehindLabel} = this.state;
 
     const qualifiers = claim.qualifiers || {};
     const alreadyPresentQualifiers =
-      Object.entries( qualifiers )
-      .filter( ([_, qs]) => qs.length > 0 )
-      .map( ([propertyId]) => propertyId );
+      Object.entries(qualifiers)
+        .filter(([_, qs]) => qs.length > 0)
+        .map(([propertyId]) => propertyId);
 
     return <table
       className={styles.wef_claim_qualifiers_table}

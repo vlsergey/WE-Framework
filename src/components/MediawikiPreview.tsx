@@ -1,15 +1,16 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
+
 import Spinner from '../components/Spinner';
 
-type PropsType = {
-  className?: string,
-  spinnerSize? : number,
-  wikitext : string,
-};
+interface PropsType {
+  className?: string;
+  spinnerSize?: number;
+  wikitext: string;
+}
 
-type StateType = {
-  html : string | null,
-};
+interface StateType {
+  html: string | null;
+}
 
 export default class MediawikiPreview
   extends PureComponent<PropsType, StateType> {
@@ -18,24 +19,24 @@ export default class MediawikiPreview
     html: null,
   };
 
-  override componentDidMount() {
+  override componentDidMount () {
     // initial loading
     this.loadHtml();
   }
 
-  override componentDidUpdate( prevProps : PropsType ) {
-    if ( prevProps.wikitext !== this.props.wikitext ) {
-      this.setState( { html: null } );
+  override componentDidUpdate (prevProps: PropsType) {
+    if (prevProps.wikitext !== this.props.wikitext) {
+      this.setState({html: null});
       this.loadHtml();
     }
   }
 
-  loadHtml() {
-    if ( !this.props.wikitext )
+  loadHtml () {
+    if (!this.props.wikitext)
       return;
 
-    const { wikitext } = this.props;
-    new mw.Api().post( {
+    const {wikitext} = this.props;
+    new mw.Api().post({
       action: 'parse',
       contentmodel: 'wikitext',
       disablelimitreport: true,
@@ -43,25 +44,25 @@ export default class MediawikiPreview
       format: 'json',
       prop: 'text',
       text: wikitext,
-    } ).then( (result : any) => {
-      if ( result.error ) {
-        console.log( result );
-        mw.notify( 'Unable to expand templates: ' + result.error.info );
+    }).then((result: any) => {
+      if (result.error) {
+        console.log(result);
+        mw.notify('Unable to expand templates: ' + result.error.info);
         return;
       }
 
-      if ( this.props.wikitext === wikitext ) {
-        this.setState( { html: result.parse.text[ '*' ] } );
+      if (this.props.wikitext === wikitext) {
+        this.setState({html: result.parse.text['*']});
       }
-    } );
+    });
   }
 
-  override render() {
+  override render () {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "wikitext" }] */
-    const { spinnerSize, wikitext, ...etc } = this.props;
+    const {spinnerSize, wikitext, ...etc} = this.props;
 
-    if ( this.state.html ) {
-      return <div {...etc} dangerouslySetInnerHTML={{ __html: this.state.html }} />;
+    if (this.state.html) {
+      return <div {...etc} dangerouslySetInnerHTML={{__html: this.state.html}} />;
     }
 
     return <Spinner {...etc} size={spinnerSize} />;

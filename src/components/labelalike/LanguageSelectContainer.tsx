@@ -1,28 +1,29 @@
-import React, { PureComponent } from 'react';
-import Controller from './Controller';
-import i18n from '../core.i18n';
-import LanguageSelect from './LanguageSelect';
-import styles from '../core.css';
+import React, {PureComponent} from 'react';
 
-type StateType = {
-  language : string | null,
-};
+import styles from '../core.css';
+import i18n from '../core.i18n';
+import Controller from './Controller';
+import LanguageSelect from './LanguageSelect';
+
+interface StateType {
+  language: string | null;
+}
 
 export default class LanguageSelectContainer
   extends PureComponent<any, StateType> {
 
   override state = {
-    language: mw.config.get( 'wgContentLanguage' ),
+    language: mw.config.get('wgContentLanguage'),
   };
 
-  handleLanguageChange = ( langCode : string ) => {
-    this.setState( {
+  handleLanguageChange = (langCode: string) => {
+    this.setState({
       language: langCode,
-    } );
-  }
+    });
+  };
 
-  override render() {
-    const { language } = this.state;
+  override render () {
+    const {language} = this.state;
 
     return (
       <fieldset className={styles.wef_fieldset + ' ' + styles.wef_labels_description_area}>

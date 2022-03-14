@@ -1,4 +1,4 @@
-import { localize } from '../../utils/I18nUtils';
+import {localize} from '../../utils/I18nUtils';
 
 const en = {
   buttonLabelViafLookup: 'Find and download VIAF data',
@@ -32,5 +32,5 @@ const ru = {
   },
 };
 
-const result = localize( {}, { en, fr, ru } );
+const result = localize({}, {en, fr, ru});
 export default result;

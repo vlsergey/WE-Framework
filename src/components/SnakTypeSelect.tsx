@@ -1,11 +1,12 @@
-import React, { ChangeEvent, PureComponent } from 'react';
+import React, {ChangeEvent, PureComponent} from 'react';
+
 import i18n from './core.i18n';
 import styles from './SnakTypeSelect.css';
 
-type PropsType = {
-  onChange : (value : SnakTypeType) => any,
-  value : SnakTypeType,
-};
+interface PropsType {
+  onChange: (value: SnakTypeType) => any;
+  value: SnakTypeType;
+}
 
 export default class SnakTypeSelect extends PureComponent<PropsType> {
 
@@ -15,21 +16,21 @@ export default class SnakTypeSelect extends PureComponent<PropsType> {
 
   ref = React.createRef< HTMLSelectElement >();
 
-  override componentDidMount() {
-    if ( this.ref.current ) {
+  override componentDidMount () {
+    if (this.ref.current) {
       this.ref.current.focus();
     }
   }
 
-  handleChange = ( event : ChangeEvent< HTMLSelectElement > ) => {
+  handleChange = (event: ChangeEvent< HTMLSelectElement >) => {
     const snakType = event.currentTarget.value as SnakTypeType;
-    this.props.onChange( snakType );
+    this.props.onChange(snakType);
     event.stopPropagation();
-  }
+  };
 
-  override render() {
+  override render () {
     /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
-    const { onChange, value, ...etc } = this.props;
+    const {onChange, value, ...etc} = this.props;
 
     return <select
       {...etc}

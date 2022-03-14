@@ -63,6 +63,6 @@ const ru = {
   ],
 };
 
-const translations = { en, ru };
-const result = I18nUtils.localize( {}, translations );
+const translations = {en, ru};
+const result = I18nUtils.localize({}, translations);
 export default result;

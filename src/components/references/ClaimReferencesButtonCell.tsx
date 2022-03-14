@@ -1,39 +1,40 @@
-import React, { PureComponent } from 'react';
-import ClaimReferencesEditorDialog from './ClaimReferencesEditorDialog';
-import { defaultMemoize } from 'reselect';
-import i18n from './i18n';
+import React, {PureComponent} from 'react';
+import {defaultMemoize} from 'reselect';
+
 import JQueryButton from '../../wrappers/JQueryButton';
+import ClaimReferencesEditorDialog from './ClaimReferencesEditorDialog';
+import i18n from './i18n';
 import styles from './references.css';
 
-type PropsType = {
-  claim : ClaimType,
-  onClaimUpdate : (claim : ClaimType) => any,
-};
+interface PropsType {
+  claim: ClaimType;
+  onClaimUpdate: (claim: ClaimType) => any;
+}
 
-type StateType = {
-  displayEditor : boolean,
-};
+interface StateType {
+  displayEditor: boolean;
+}
 
 export default class ClaimReferencesButtonCell
   extends PureComponent<PropsType, StateType> {
 
-  labelMemoize : (claim : ClaimType) => string
-    = defaultMemoize( claim => '[' + ( ( claim || {} ).references || [] ).length + ']' );
+  labelMemoize: (claim: ClaimType) => string
+    = defaultMemoize(claim => '[' + ((claim || {}).references || []).length + ']');
 
   override state = {
     displayEditor: false,
   };
 
   handleClick = () =>
-    this.setState( ( { displayEditor } ) => ( { displayEditor: !displayEditor } ) );
+  { this.setState(({displayEditor}) => ({displayEditor: !displayEditor})); };
 
-  override render() {
-    const { claim, onClaimUpdate } = this.props;
+  override render () {
+    const {claim, onClaimUpdate} = this.props;
 
     return <td className={styles.referencesButtonCell}>
       <JQueryButton
         className={styles.referencesButton}
-        label={this.labelMemoize( claim )}
+        label={this.labelMemoize(claim)}
         onClick={this.handleClick}
         text
         title={i18n.buttonTitleReferences} />

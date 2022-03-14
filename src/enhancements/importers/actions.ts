@@ -1,4 +1,4 @@
-export function showImportDataDialog() {
+export function showImportDataDialog () {
   return {
     type: 'showImportDataDialog',
   };

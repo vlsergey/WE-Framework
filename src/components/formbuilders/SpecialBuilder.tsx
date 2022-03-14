@@ -1,5 +1,6 @@
-import type { LabelsAndDescriptionAreaSpecialGroup, SparqlSpecialGroup } from '../../editors/EditorDefModel';
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
+
+import {LabelsAndDescriptionAreaSpecialGroup, SparqlSpecialGroup} from '../../editors/EditorDefModel';
 import LanguageSelectContainer from '../labelalike/LanguageSelectContainer';
 import SparqlPropertyGroup from './SparqlPropertyGroup';
 
@@ -7,10 +8,10 @@ type PropsType = SparqlSpecialGroup | LabelsAndDescriptionAreaSpecialGroup;
 
 export default class SpecialBuilder extends PureComponent<PropsType> {
 
-  override render() {
+  override render () {
     const params = this.props;
 
-    switch ( params.type ) {
+    switch (params.type) {
     case 'LabelsAndDescriptionArea': {
       return <LanguageSelectContainer />;
     }

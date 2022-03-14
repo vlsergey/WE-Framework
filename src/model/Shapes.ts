@@ -1,9 +1,9 @@
 let claimIdCounters = 0;
 
-export function newStatementClaim(
-    propertyId : string,
-    datatype : string
-) : ClaimType {
+export function newStatementClaim (
+    propertyId: string,
+    datatype: string
+): ClaimType {
   return {
     id: 'new#' + claimIdCounters++,
     mainsnak: {

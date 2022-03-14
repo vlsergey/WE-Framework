@@ -1,35 +1,36 @@
-import * as ApiUtils from '../../../core/ApiUtils';
-import React, { ChangeEvent, ComponentProps, PureComponent } from 'react';
-import DetailsArea from './DetailsArea';
+import React, {ChangeEvent, ComponentProps, PureComponent} from 'react';
 import Popup from 'semantic-ui-react/dist/commonjs/modules/Popup';
+
+import * as ApiUtils from '../../../core/ApiUtils';
+import DetailsArea from './DetailsArea';
 import styles from './Time.css';
 
-const POPUP_ON_CLICK_FOCUS : ComponentProps<typeof Popup>["on"] = [ 'click', 'focus' ];
+const POPUP_ON_CLICK_FOCUS: ComponentProps<typeof Popup>['on'] = ['click', 'focus'];
 
-type PropsType = {
-  datavalue : DataValueType | null,
-  onDataValueChange : (datavalue : DataValueType | null) => any,
-  readOnly? : boolean,
-};
+interface PropsType {
+  datavalue: DataValueType | null;
+  onDataValueChange: (datavalue: DataValueType | null) => any;
+  readOnly?: boolean;
+}
 
-type StateType = {
-  calendarModel : string | null,
-  error : string | null,
-  parsing : boolean,
-  precision : number | null,
-  renderedAsHtml : string,
-  rendering : boolean,
-  text : string | null,
-};
+interface StateType {
+  calendarModel: string | null;
+  error: string | null;
+  parsing: boolean;
+  precision: number | null;
+  renderedAsHtml: string;
+  rendering: boolean;
+  text: string | null;
+}
 
 export default class TimeDataValueEditor
   extends PureComponent<PropsType, StateType> {
 
   wikidataApi = ApiUtils.getWikidataApi();
 
-  constructor(props : PropsType) {
-    super( props );
-    const text = ( ( this.props.datavalue || {} ).value || {} ).time || '';
+  constructor (props: PropsType) {
+    super(props);
+    const text = ((this.props.datavalue || {}).value || {}).time || '';
 
     this.state = {
       parsing: false,
@@ -42,141 +43,141 @@ export default class TimeDataValueEditor
     };
   }
 
-  override componentDidMount() {
-    this.requestRender( true );
+  override componentDidMount () {
+    this.requestRender(true);
   }
 
-  handleChangeManualCalendarModel = ( calendarModel : null | string ) => {
-    this.setState( { calendarModel } );
-    this.requestParsing( );
-  }
+  handleChangeManualCalendarModel = (calendarModel: null | string) => {
+    this.setState({calendarModel});
+    this.requestParsing();
+  };
 
-  handleChangeManualPrecision = ( precision : number | null ) => {
-    this.setState( { precision } );
-    this.requestParsing( );
-  }
+  handleChangeManualPrecision = (precision: number | null) => {
+    this.setState({precision});
+    this.requestParsing();
+  };
 
   handleToggleManualCalendarModel = () => {
-    const valueCalendarModel = ( ( this.props.datavalue || {} ).value || {} ).calendarmodel;
-    if ( this.state.calendarModel === null && !!valueCalendarModel ) {
-      this.setState( { calendarModel: valueCalendarModel } );
+    const valueCalendarModel = ((this.props.datavalue || {}).value || {}).calendarmodel;
+    if (this.state.calendarModel === null && !!valueCalendarModel) {
+      this.setState({calendarModel: valueCalendarModel});
     } else {
-      this.setState( { calendarModel: null } );
+      this.setState({calendarModel: null});
     }
-    this.requestParsing( );
-  }
+    this.requestParsing();
+  };
 
   handleToggleManualPrecision = () => {
-    const valuePrecision = ( ( this.props.datavalue || {} ).value || {} ).precision;
-    if ( this.state.precision === null && valuePrecision !== null ) {
-      this.setState( { precision: valuePrecision } );
+    const valuePrecision = ((this.props.datavalue || {}).value || {}).precision;
+    if (this.state.precision === null && valuePrecision !== null) {
+      this.setState({precision: valuePrecision});
     } else {
-      this.setState( { precision: null } );
+      this.setState({precision: null});
     }
-    this.requestParsing( );
-  }
+    this.requestParsing();
+  };
 
-  handleTextChange= ( { currentTarget: { value } } : ChangeEvent< HTMLInputElement > ) => {
-    this.setState( { text: value } );
-    this.requestParsing( );
-  }
+  handleTextChange = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
+    this.setState({text: value});
+    this.requestParsing();
+  };
 
-  requestParsing( ) {
+  requestParsing () {
     // we need to be sure that changes to state are applied
-    setTimeout( () => this.requestParsingImpl( ), 0 );
+    setTimeout(() => { this.requestParsingImpl(); }, 0);
   }
 
-  requestParsingImpl( ) {
-    const { datavalue, onDataValueChange } = this.props;
+  requestParsingImpl () {
+    const {datavalue, onDataValueChange} = this.props;
     const value = this.state.text;
-    this.setState( { parsing: true } );
+    this.setState({parsing: true});
 
-    this.wikidataApi.get( {
+    this.wikidataApi.get({
       action: 'wbparsevalue',
       datatype: 'time',
       values: value,
-      options: JSON.stringify( {
-        lang: mw.config.get( 'wgUserLanguage' ),
+      options: JSON.stringify({
+        lang: mw.config.get('wgUserLanguage'),
         precision: this.state.precision || undefined,
         calendar: this.state.calendarModel || undefined,
-      } ),
-    } ).catch( ( _code : string, { error } : any ) => {
+      }),
+    }).catch((_code: string, {error}: any) => {
       // are still in sync?
-      if ( value !== this.state.text ) return;
-      this.setState( { parsing: false, error: error.info } );
-      throw new Error( error.info );
-    } ).then( (response : any) => {
+      if (value !== this.state.text) return;
+      this.setState({parsing: false, error: error.info});
+      throw new Error(error.info);
+    }).then((response: any) => {
       // are still in sync?
-      if ( value !== this.state.text ) return;
+      if (value !== this.state.text) return;
 
-      this.setState( { parsing: false, error: null } );
-      onDataValueChange( {
+      this.setState({parsing: false, error: null});
+      onDataValueChange({
         ...datavalue,
-        value: response.results.length !== 0 ? response.results[ 0 ].value : null,
+        value: response.results.length !== 0 ? response.results[0].value : null,
         type: 'time',
-      } );
-      this.requestRender( false );
-    } ).catch( (error : any) => {
-      mw.warn( 'Unable to parse time value: ' + error );
-    } );
+      });
+      this.requestRender(false);
+    }).catch((error: any) => {
+      mw.warn('Unable to parse time value: ' + error);
+    });
   }
 
-  requestRender( renderToText : boolean ) {
+  requestRender (renderToText: boolean) {
     // we need to be sure that changes to state are applied
-    setTimeout( () => this.requestRenderImpl( renderToText ), 0 );
+    setTimeout(() => { this.requestRenderImpl(renderToText); }, 0);
   }
 
-  requestRenderImpl( renderToText : boolean ) {
-    const { datavalue } = this.props;
-    if ( !this.props.datavalue ) {
-      this.setState( { rendering: false, renderedAsHtml: '' } );
+  requestRenderImpl (renderToText: boolean) {
+    const {datavalue} = this.props;
+    if (!this.props.datavalue) {
+      this.setState({rendering: false, renderedAsHtml: ''});
       return;
     }
 
     const parameters = {
       action: 'wbformatvalue',
       datatype: 'time',
-      datavalue: JSON.stringify( datavalue ),
-      options: JSON.stringify( {
-        lang: mw.config.get( 'wgUserLanguage' ),
-      } ),
+      datavalue: JSON.stringify(datavalue),
+      options: JSON.stringify({
+        lang: mw.config.get('wgUserLanguage'),
+      }),
     };
 
-    this.setState( { rendering: true } );
-    this.wikidataApi.get( {
+    this.setState({rendering: true});
+    this.wikidataApi.get({
       ...parameters,
       generate: 'text/html',
-    } ).then( (result : any) => {
-      this.setState( { rendering: false, renderedAsHtml: result.result } );
-    } );
+    }).then((result: any) => {
+      this.setState({rendering: false, renderedAsHtml: result.result});
+    });
 
-    if ( renderToText ) {
-      this.wikidataApi.get( {
+    if (renderToText) {
+      this.wikidataApi.get({
         ...parameters,
         generate: 'text/plain',
-      } ).then( (result : any) => {
-        this.setState( { text: result.result } );
-      } );
+      }).then((result: any) => {
+        this.setState({text: result.result});
+      });
     }
   }
 
-  override render() {
-    const { datavalue, readOnly } = this.props;
-    const { calendarModel,
+  override render () {
+    const {datavalue, readOnly} = this.props;
+    const {calendarModel,
       // focused,
-      parsing, rendering, error, precision, renderedAsHtml, text } = this.state;
-    const value = ( datavalue || {} ).value || {};
+      parsing, rendering, error, precision, renderedAsHtml, text} = this.state;
+    const value = (datavalue || {}).value || {};
 
-    if ( readOnly ) {
-      if ( rendering ) {
+    if (readOnly) {
+      if (rendering) {
         return <td className={styles.time} colSpan={12}>{text}</td>;
       }
-      return <td className={styles.time} colSpan={12} dangerouslySetInnerHTML={{ __html: renderedAsHtml }} />;
+      return <td className={styles.time} colSpan={12} dangerouslySetInnerHTML={{__html: renderedAsHtml}} />;
     }
 
     const input = <input
       onChange={this.handleTextChange}
-      value={text || ""} />;
+      value={text || ''} />;
 
     const details = <DetailsArea
       error={error}

@@ -1,4 +1,4 @@
-import { localize } from '../../utils/I18nUtils';
+import {localize} from '../../utils/I18nUtils';
 
 const en = {
   buttonLabelFillSisterIsbn: 'Fill „sister“ ISBN property with corresponding value',
@@ -10,5 +10,5 @@ const ru = {
   buttonLabelHyphenate: 'Форматировать значение ISBN',
 };
 
-const result = localize( {}, { en, ru } );
+const result = localize({}, {en, ru});
 export default result;

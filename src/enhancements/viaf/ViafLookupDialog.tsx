@@ -1,22 +1,23 @@
-import React, { ChangeEvent, ComponentProps, PureComponent } from 'react';
-import DialogWrapper from '../../wrappers/DialogWrapper';
 import fetchJsonp from 'fetch-jsonp';
+import React, {ChangeEvent, ComponentProps, PureComponent} from 'react';
+
+import DialogWrapper from '../../wrappers/DialogWrapper';
 import i18n from './i18n';
 import styles from './styles.css';
 
-type PropsType = {
-  defaultQuery? : string | null,
-  onSelect : (viafIds : string[]) => any,
-  onClose? : ComponentProps<typeof DialogWrapper>["onClose"],
-};
+interface PropsType {
+  defaultQuery?: string | null;
+  onSelect: (viafIds: string[]) => any;
+  onClose?: ComponentProps<typeof DialogWrapper>['onClose'];
+}
 
-type StateType = {
-  autoSuggestResult : any,
-  query : string | null,
-  queryScheduled : string,
-  queryState : 'WAITING' | 'SCHEDULED',
-  selected : any[],
-};
+interface StateType {
+  autoSuggestResult: any;
+  query: string | null;
+  queryScheduled: string;
+  queryState: 'WAITING' | 'SCHEDULED';
+  selected: any[];
+}
 
 export default class ViafLookupDialog extends PureComponent<PropsType, StateType> {
 
@@ -24,8 +25,8 @@ export default class ViafLookupDialog extends PureComponent<PropsType, StateType
     defaultQuery: '',
   };
 
-  constructor(props : PropsType) {
-    super( props );
+  constructor (props: PropsType) {
+    super(props);
 
     this.state = {
       query: this.props.defaultQuery || null,
@@ -36,79 +37,79 @@ export default class ViafLookupDialog extends PureComponent<PropsType, StateType
     };
   }
 
-  doLookup = ( query : string ) => {
-    const { queryScheduled } = this.state;
-    if ( query === queryScheduled ) return;
-    this.setState( { queryScheduled: query } );
+  doLookup = (query: string) => {
+    const {queryScheduled} = this.state;
+    if (query === queryScheduled) return;
+    this.setState({queryScheduled: query});
 
-    if ( query === '' ) {
-      this.setState( { autoSuggestResult: [] } );
+    if (query === '') {
+      this.setState({autoSuggestResult: []});
       return;
     }
 
-    this.setState( { queryState: 'SCHEDULED' } );
-    const url = '//viaf.org/viaf/AutoSuggest?query=' + encodeURIComponent( query );
-    fetchJsonp( url, {
+    this.setState({queryState: 'SCHEDULED'});
+    const url = '//viaf.org/viaf/AutoSuggest?query=' + encodeURIComponent(query);
+    fetchJsonp(url, {
       jsonpCallback: 'callback',
-    } )
-      .then( response => response.json() )
-      .then( data => {
-        if ( this.state.queryScheduled !== query ) return;
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (this.state.queryScheduled !== query) return;
 
-        const grouped = ( data.result || [] )
-          .filter( (entity : any) => typeof entity.viafid === 'string' )
-          .filter( (entity : any) => entity.viafid.trim() !== '' )
-          .reduce( ( acc : any, cur: any ) => ( {
+        const grouped = (data.result || [])
+          .filter((entity: any) => typeof entity.viafid === 'string')
+          .filter((entity: any) => entity.viafid.trim() !== '')
+          .reduce((acc: any, cur: any) => ({
             ...acc,
-            [ cur.viafid ]: acc[ cur.viafid ]
-              ? [ ...acc[ cur.viafid ], cur ]
-              : [ cur ],
-          } ), {} );
+            [cur.viafid]: acc[cur.viafid]
+              ? [...acc[cur.viafid], cur]
+              : [cur],
+          }), {});
 
-        this.setState( {
+        this.setState({
           autoSuggestResult: grouped,
           queryState: 'WAITING',
-        } );
-      } );
-  }
+        });
+      });
+  };
 
-  handleChange = ( { currentTarget: { value } } : ChangeEvent< HTMLInputElement > ) => {
+  handleChange = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
     const newQuery = value || '';
-    this.setState( { query: newQuery } );
+    this.setState({query: newQuery});
 
-    setTimeout( () => this.doLookup( newQuery.trim() ), 0.5 );
-  }
+    setTimeout(() => { this.doLookup(newQuery.trim()); }, 0.5);
+  };
 
   handleSelect = () => {
-    const { onSelect } = this.props;
-    const { autoSuggestResult, selected } = this.state;
+    const {onSelect} = this.props;
+    const {autoSuggestResult, selected} = this.state;
 
-    const viafIds = Object.keys( autoSuggestResult )
-      .filter( viafId => selected.indexOf( viafId ) !== -1 );
-    onSelect( viafIds );
+    const viafIds = Object.keys(autoSuggestResult)
+      .filter(viafId => selected.includes(viafId));
+    onSelect(viafIds);
+  };
+
+  handleTrigger (viafid: string) {
+    return () => { this.setState(({selected}) => ({
+      selected: !selected.includes(viafid)
+        ? [...selected, viafid]
+        : selected.filter(item => item !== viafid),
+    })); };
   }
 
-  handleTrigger( viafid : string ) {
-    return () => this.setState( ( { selected } ) => ( {
-      selected: selected.indexOf( viafid ) === -1
-        ? [ ...selected, viafid ]
-        : selected.filter( item => item !== viafid ),
-    } ) );
-  }
-
-  override render() {
+  override render () {
     const {onClose} = this.props;
-    const { autoSuggestResult, query, queryScheduled, queryState } = this.state;
+    const {autoSuggestResult, query, queryScheduled, queryState} = this.state;
 
     const buttons = [];
 
-    buttons.push( {
+    buttons.push({
       text: i18n.buttonLabelSelect,
       label: i18n.buttonLabelSelect,
       click: () => {
-        this.handleSelect( );
+        this.handleSelect();
       },
-    } );
+    });
 
     return <DialogWrapper
       buttons={buttons}
@@ -120,22 +121,22 @@ export default class ViafLookupDialog extends PureComponent<PropsType, StateType
         className={styles.queryInput}
         onChange={this.handleChange}
         type="text"
-        value={query || ""} />
-      { Object.keys( autoSuggestResult ).map( ( viafid : string ) => <div className={styles.entry} key={viafid}>
+        value={query || ''} />
+      { Object.keys(autoSuggestResult).map((viafid: string) => <div className={styles.entry} key={viafid}>
         <label>
           <input
-            checked={this.state.selected.indexOf( viafid ) !== -1}
-            onChange={this.handleTrigger( viafid )}
+            checked={this.state.selected.includes(viafid)}
+            onChange={this.handleTrigger(viafid)}
             type="checkbox" />
           <a href={'http://www.viaf.org/viaf/' + viafid}>VIAF: {viafid}</a>
-          { autoSuggestResult[ viafid ].map( (entry : any) => <div className={styles.entryTerm} key={entry.term}>
+          { autoSuggestResult[viafid].map((entry: any) => <div className={styles.entryTerm} key={entry.term}>
             { entry.nametype && <i>{entry.nametype + ': '}</i>}
             {entry.term}
-          </div> ) }
+          </div>) }
         </label>
-      </div> ) }
+      </div>) }
       <div className={styles.queryStateDiv}>
-        {( i18n.queryState[ queryState ] || '' ).replace( '$1', queryScheduled )}
+        {(i18n.queryState[queryState] || '').replace('$1', queryScheduled)}
       </div>
     </DialogWrapper>;
   }

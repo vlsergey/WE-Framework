@@ -3,11 +3,11 @@
 const enabled = !!performance && typeof performance.mark === 'function';
 
 const timing = () => (next: any) => (action: any) => {
-  if ( !enabled ) return next( action );
+  if (!enabled) return next(action);
 
-  performance.mark( `${action.type}_start` );
-  const result = next( action );
-  performance.mark( `${action.type}_end` );
+  performance.mark(`${action.type}_start`);
+  const result = next(action);
+  performance.mark(`${action.type}_end`);
   performance.measure(
     `${action.type}`,
     `${action.type}_start`,
@@ -16,7 +16,7 @@ const timing = () => (next: any) => (action: any) => {
   return result;
 };
 
-const NOOP = () => (next: any) => (action: any) => next( action );
+const NOOP = () => (next: any) => (action: any) => next(action);
 
 /* eslint no-undef: 0 */
 const result = enabled && process.env.NODE_ENV !== 'production' ? timing : NOOP;

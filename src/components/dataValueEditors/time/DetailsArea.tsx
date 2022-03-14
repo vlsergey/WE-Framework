@@ -1,29 +1,30 @@
-import { DEFAULT_CALENDAR_MODEL, DEFAULT_PRECISION } from './model';
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
+
+import Spinner from '../../Spinner';
 import CalendarModelSelect from './CalendarModelSelect';
 import i18n from './i18n';
+import {DEFAULT_CALENDAR_MODEL, DEFAULT_PRECISION} from './model';
 import PrecisionSelect from './PrecisionSelect';
-import Spinner from '../../Spinner';
 import styles from './Time.css';
 
-type PropsType = {
-  error : string | null,
-  manualCalendarModel : string | null,
-  manualPrecision : number | null,
-  onManualCalendarModelChange : (value : string | null) => any,
-  onManualCalendarModelToggle : () => any,
-  onManualPrecisionChange : (value : number | null) => any,
-  onManualPrecisionToggle : () => any,
-  parsedCalendarModel : string | null,
-  parsedPrecision : number | null,
-  preview : string | null,
-  spinner : boolean,
-};
+interface PropsType {
+  error: string | null;
+  manualCalendarModel: string | null;
+  manualPrecision: number | null;
+  onManualCalendarModelChange: (value: string | null) => any;
+  onManualCalendarModelToggle: () => any;
+  onManualPrecisionChange: (value: number | null) => any;
+  onManualPrecisionToggle: () => any;
+  parsedCalendarModel: string | null;
+  parsedPrecision: number | null;
+  preview: string | null;
+  spinner: boolean;
+}
 
 export default class DetailsArea extends PureComponent<PropsType> {
 
-  override render() {
-    const { spinner, error, preview,
+  override render () {
+    const {spinner, error, preview,
       manualCalendarModel, manualPrecision,
       parsedCalendarModel, parsedPrecision,
       onManualCalendarModelToggle, onManualPrecisionToggle,
@@ -44,7 +45,7 @@ export default class DetailsArea extends PureComponent<PropsType> {
               ? <Spinner size={15} />
               : error
                 ? <span className={styles.timeError}>{error}</span>
-                : preview && <span dangerouslySetInnerHTML={{ __html: preview }} />
+                : preview && <span dangerouslySetInnerHTML={{__html: preview}} />
           }</td>
         </tr>
         <tr>

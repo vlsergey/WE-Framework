@@ -1,23 +1,24 @@
-import AbstractStringBasedDataValueEditor from '../AbstractStringBasedDataValueEditor';
-import { COLUMNS_FOR_DATA_VALUE_EDITOR } from '../../TableColSpanConstants';
 import React, {ChangeEventHandler} from 'react';
+
+import {COLUMNS_FOR_DATA_VALUE_EDITOR} from '../../TableColSpanConstants';
+import AbstractStringBasedDataValueEditor from '../AbstractStringBasedDataValueEditor';
 import SearchOnSourceWebsitesButtonCell from './SearchOnSourceWebsitesButtonCell';
 import styles from './styles.css';
 
-const EMPTY_OBJECT : any = Object.freeze( {} );
+const EMPTY_OBJECT: any = Object.freeze({});
 
 export default class ExternalIdDataValueEditor extends AbstractStringBasedDataValueEditor {
 
-  handleChange : ChangeEventHandler<HTMLInputElement> = ( { currentTarget: { value } }) =>
-    this.handleValueChange( value );
+  handleChange: ChangeEventHandler<HTMLInputElement> = ({currentTarget: {value}}) =>
+  { this.handleValueChange(value); };
 
-  override render() {
-    const { datavalue, propertyDescription, readOnly } = this.props;
-    const url = datavalue && datavalue.value ? propertyDescription.formatUrl( datavalue.value ) : null;
+  override render () {
+    const {datavalue, propertyDescription, readOnly} = this.props;
+    const url = datavalue && datavalue.value ? propertyDescription.formatUrl(datavalue.value) : null;
 
-    if ( readOnly ) {
-      if ( datavalue && datavalue.value ) {
-        if ( url ) {
+    if (readOnly) {
+      if (datavalue && datavalue.value) {
+        if (url) {
           return <td colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR}>
             <a
               href={url}
@@ -32,7 +33,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
       return null;
     }
 
-    const buttons : any[] = this.props.buttons || this.renderButtonCells();
+    const buttons: any[] = this.props.buttons || this.renderButtonCells();
     return <React.Fragment>
       <td className={styles.externalIdTableCell} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - buttons.length}>
         <div className={styles.container}>
@@ -41,7 +42,7 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
             onChange={this.handleChange}
             pattern={propertyDescription.regexp || undefined}
             type="text"
-            value={( datavalue || EMPTY_OBJECT ).value || ''} />
+            value={(datavalue || EMPTY_OBJECT).value || ''} />
           {url ? <a className={styles.urlLink} href={url} rel="noopener noreferrer" target="_blank">{url}</a> : ''}
         </div>
       </td>
@@ -49,8 +50,8 @@ export default class ExternalIdDataValueEditor extends AbstractStringBasedDataVa
     </React.Fragment>;
   }
 
-  renderButtonCells() : any[] {
-    const { propertyDescription } = this.props;
+  renderButtonCells (): any[] {
+    const {propertyDescription} = this.props;
 
     return [
       propertyDescription.sourceWebsites && propertyDescription.languageCodes

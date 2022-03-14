@@ -1,20 +1,21 @@
-import React, { PureComponent } from 'react';
-import generateRandomString from '../../utils/generateRandomString';
+import React, {PureComponent} from 'react';
+
 import PropertyDescription from '../../core/PropertyDescription';
+import generateRandomString from '../../utils/generateRandomString';
 import SnakAddButtonCell from './SnakAddButtonCell';
 import SnakRemoveButtonCell from './SnakRemoveButtonCell';
 import SnakTableRow from './SnakTableRow';
 
-type PropsType = {
-  displayEmpty : boolean,
-  displayLabels : boolean,
-  onSnaksArrayUpdate : (snaksArray: null | SnakType[]) => any,
-  propertyDescription : PropertyDescription,
-  readOnly : boolean,
-  removeButtonConfirmMessage : string,
-  removeButtonLabel : string,
-  snaksArray? : SnakType[],
-};
+interface PropsType {
+  displayEmpty: boolean;
+  displayLabels: boolean;
+  onSnaksArrayUpdate: (snaksArray: null | SnakType[]) => any;
+  propertyDescription: PropertyDescription;
+  readOnly: boolean;
+  removeButtonConfirmMessage: string;
+  removeButtonLabel: string;
+  snaksArray?: SnakType[];
+}
 
 export default class SnaksArrayEditor extends PureComponent<PropsType> {
 
@@ -23,37 +24,37 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
     displayLabels: true,
   };
 
-  emptySnakHash : string = generateRandomString();
+  emptySnakHash: string = generateRandomString();
 
-  handleEmptySnakChange = ( snak : SnakType ) => {
-    const { datatype, id } = this.props.propertyDescription;
+  handleEmptySnakChange = (snak: SnakType) => {
+    const {datatype, id} = this.props.propertyDescription;
 
-    this.props.onSnaksArrayUpdate( [ {
+    this.props.onSnaksArrayUpdate([{
       ...snak,
       property: id,
       datatype,
-    } ] );
-  }
+    }]);
+  };
 
   handleSnakAdd = () => {
-    const { datatype, id } = this.props.propertyDescription;
+    const {datatype, id} = this.props.propertyDescription;
 
-    this.props.onSnaksArrayUpdate( [
-      ...( this.props.snaksArray || [] ),
+    this.props.onSnaksArrayUpdate([
+      ...this.props.snaksArray || [],
       {
         snaktype: 'value',
         property: id,
         hash: generateRandomString(),
         datatype,
       },
-    ] );
-  }
+    ]);
+  };
 
   handleSnakAddTwice = () => {
-    const { datatype, id } = this.props.propertyDescription;
+    const {datatype, id} = this.props.propertyDescription;
 
-    this.props.onSnaksArrayUpdate( [
-      ...( this.props.snaksArray || [] ),
+    this.props.onSnaksArrayUpdate([
+      ...this.props.snaksArray || [],
       {
         snaktype: 'value',
         property: id,
@@ -66,36 +67,36 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
         hash: generateRandomString(),
         datatype,
       },
-    ] );
-  }
+    ]);
+  };
 
-  handleSnakChangeF( index : number ) {
-    const { datatype, id } = this.props.propertyDescription;
+  handleSnakChangeF (index: number) {
+    const {datatype, id} = this.props.propertyDescription;
 
-    return ( snak : SnakType ) => this.props.onSnaksArrayUpdate(
-      ( this.props.snaksArray || [] ).map( ( item, i ) => i === index ? {
+    return (snak: SnakType) => this.props.onSnaksArrayUpdate(
+      (this.props.snaksArray || []).map((item, i) => i === index ? {
         ...snak,
         property: id,
         datatype,
-      } : item )
+      } : item)
     );
   }
 
-  handleSnakRemoveF( indexToDelete : number ) {
-    return () => this.props.onSnaksArrayUpdate( ( this.props.snaksArray || [] )
-      .filter( ( _item, i ) => i !== indexToDelete ) );
+  handleSnakRemoveF (indexToDelete: number) {
+    return () => this.props.onSnaksArrayUpdate((this.props.snaksArray || [])
+      .filter((_item, i) => i !== indexToDelete));
   }
 
-  override render() {
-    const { displayEmpty, displayLabels, propertyDescription, readOnly,
-      removeButtonLabel, removeButtonConfirmMessage, snaksArray } = this.props;
+  override render () {
+    const {displayEmpty, displayLabels, propertyDescription, readOnly,
+      removeButtonLabel, removeButtonConfirmMessage, snaksArray} = this.props;
 
-    if ( !snaksArray || snaksArray.length === 0 ) {
-      if ( !displayEmpty )
+    if (!snaksArray || snaksArray.length === 0) {
+      if (!displayEmpty)
         return null;
 
-      const { datatype, id } = this.props.propertyDescription;
-      const snak : SnakType = {
+      const {datatype, id} = this.props.propertyDescription;
+      const snak: SnakType = {
         snaktype: 'value',
         property: id,
         hash: this.emptySnakHash,
@@ -114,7 +115,7 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
     }
 
     return <tbody>
-      { snaksArray.map( ( snak, index ) =>
+      { snaksArray.map((snak, index) =>
         <SnakTableRow
           displayLabel={displayLabels}
           firstCell={index === 0
@@ -124,8 +125,8 @@ export default class SnaksArrayEditor extends PureComponent<PropsType> {
           lastCell={<SnakRemoveButtonCell
             confirmMessage={removeButtonConfirmMessage}
             label={removeButtonLabel}
-            onClick={this.handleSnakRemoveF( index )} />}
-          onSnakChange={this.handleSnakChangeF( index )}
+            onClick={this.handleSnakRemoveF(index)} />}
+          onSnakChange={this.handleSnakChangeF(index)}
           propertyDescription={propertyDescription}
           readOnly={readOnly}
           snak={snak} />

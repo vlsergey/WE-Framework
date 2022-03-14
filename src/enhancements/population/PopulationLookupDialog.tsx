@@ -1,55 +1,54 @@
-import React, { PureComponent } from 'react';
-import dataSources, {ResultItem} from './DataSources';
-import DialogWrapper from '../../wrappers/DialogWrapper';
-import i18n from './i18n';
-import generateRandomString from '../../utils/generateRandomString';
-import JQueryButton from '../../wrappers/JQueryButton';
+import React, {PureComponent} from 'react';
+
 import PropertyLabelCellById from '../../components/PropertyLabelCellById';
+import {toWikibaseEntityIdValue} from '../../model/ModelUtils';
+import generateRandomString from '../../utils/generateRandomString';
+import DialogWrapper from '../../wrappers/DialogWrapper';
+import JQueryButton from '../../wrappers/JQueryButton';
+import dataSources, {ResultItem} from './DataSources';
+import i18n from './i18n';
 import styles from './styles.css';
-import { toWikibaseEntityIdValue } from '../../model/ModelUtils';
 
-type PropsType = {
-  onClaimAdd : (claimData : ClaimType) => any,
-  onClose : () => any,
-};
+interface PropsType {
+  onClaimAdd: (claimData: ClaimType) => any;
+  onClose: () => any;
+}
 
-type StateType = {
-  queryScheduled : string,
-  queryState : 'WAITING' | 'SCHEDULED' | 'ERROR',
-  result : ResultItem[],
-  selected : number[],
-};
+interface StateType {
+  queryScheduled: string;
+  queryState: 'WAITING' | 'SCHEDULED' | 'ERROR';
+  result: ResultItem[];
+  selected: number[];
+}
 
 export default class PopulationLookupDialog
   extends PureComponent<PropsType, StateType> {
 
-  override state : StateType = {
+  override state: StateType = {
     queryScheduled: '',
     queryState: 'WAITING',
     result: [],
     selected: [],
   };
 
-  handleLoadFromSource = ( sourceId : string, sourceFunction : () => Promise< ResultItem[] > ) => {
-    return async() => {
-      this.setState( { queryState: 'SCHEDULED', queryScheduled: sourceId } );
-      try {
-        const result : ResultItem[] = await sourceFunction();
-        this.setState( { queryState: 'WAITING', queryScheduled: sourceId, result } );
-      } catch ( exc ) {
-        this.setState( { queryState: 'ERROR', queryScheduled: sourceId } );
-        console.log( exc );
-      }
-    };
-  }
+  handleLoadFromSource = (sourceId: string, sourceFunction: () => Promise< ResultItem[] >) => async () => {
+    this.setState({queryState: 'SCHEDULED', queryScheduled: sourceId});
+    try {
+      const result: ResultItem[] = await sourceFunction();
+      this.setState({queryState: 'WAITING', queryScheduled: sourceId, result});
+    } catch (exc) {
+      this.setState({queryState: 'ERROR', queryScheduled: sourceId});
+      console.log(exc);
+    }
+  };
 
   handleImport = () => {
-    const { onClaimAdd, onClose } = this.props;
-    const { selected, result } = this.state;
-    const toImport = selected.map( i => result[ i ] );
+    const {onClaimAdd, onClose} = this.props;
+    const {selected, result} = this.state;
+    const toImport = selected.map(i => result[i]);
 
-    toImport.map<ClaimType>( (r : any) => {
-      const pointInTimeQualifier : QualifierType = {
+    toImport.map<ClaimType>((r: any) => {
+      const pointInTimeQualifier: QualifierType = {
         datatype: 'time',
         datavalue: {
           type: 'time',
@@ -65,7 +64,7 @@ export default class PopulationLookupDialog
         property: 'P585',
         snaktype: 'value',
       };
-      const populationSnak : SnakType = {
+      const populationSnak: SnakType = {
         datatype: 'quantity',
         datavalue: {
           type: 'quantity',
@@ -77,52 +76,50 @@ export default class PopulationLookupDialog
         property: 'P1082',
         snaktype: 'value',
       };
-      const newClaimQualifiers : QualifiersType = {
-        P585: [ pointInTimeQualifier ],
+      const newClaimQualifiers: QualifiersType = {
+        P585: [pointInTimeQualifier],
       };
-      const newClaimQualifiersOrder : string[] = [ 'P585' ];
-      const newClaim : ClaimType = {
-        id: generateRandomString(),
+      const newClaimQualifiersOrder: string[] = ['P585'];
+      const newClaim: ClaimType = {
+        'id': generateRandomString(),
         'mainsnak': populationSnak,
         'qualifiers': newClaimQualifiers,
         'qualifiers-order': newClaimQualifiersOrder,
       };
 
-      if ( r.determinationMethod ) {
-        newClaimQualifiers.P459 = [ {
+      if (r.determinationMethod) {
+        newClaimQualifiers.P459 = [{
           datatype: 'wikibase-item',
           datavalue: {
-            value: toWikibaseEntityIdValue( r.determinationMethod === 'census' ? 'Q39825' : 'Q791801' ),
+            value: toWikibaseEntityIdValue(r.determinationMethod === 'census' ? 'Q39825' : 'Q791801'),
             type: 'wikibase-entityid',
           },
           property: 'P459',
           snaktype: 'value',
-        } ];
-        newClaimQualifiersOrder.push( 'P459' );
+        }];
+        newClaimQualifiersOrder.push('P459');
       }
 
       return newClaim;
-    } )
-      .forEach( onClaimAdd );
+    })
+      .forEach(onClaimAdd);
 
     onClose();
-  }
+  };
 
-  handleTriggerF = ( i : number ) => {
-    return () => this.setState( ( { selected } ) => ( {
-      selected: selected.indexOf( i ) === -1
-        ? [ ...selected, i ]
-        : selected.filter( item => item !== i ),
-    } ) );
-  }
+  handleTriggerF = (i: number) => () => { this.setState(({selected}) => ({
+    selected: !selected.includes(i)
+      ? [...selected, i]
+      : selected.filter(item => item !== i),
+  })); };
 
   handleSelectAll = () =>
-    this.setState( ( { result } : { result : ResultItem[] } ) => ( {
-      selected: result.map( ( _ : ResultItem, i : number ) => i ),
-    } ) );
+  { this.setState(({result}: {result: ResultItem[]}) => ({
+    selected: result.map((_: ResultItem, i: number) => i),
+  })); };
 
-  override render() {
-    const { queryScheduled, queryState, result, selected } = this.state;
+  override render () {
+    const {queryScheduled, queryState, result, selected} = this.state;
 
     const buttons = [];
 
@@ -145,11 +142,11 @@ export default class PopulationLookupDialog
       minWidth={400}
       title={i18n.dialogTitle}>
 
-      { Object.entries( dataSources ).map( ([dataSourceKey, dataSource]) =>
+      { Object.entries(dataSources).map(([dataSourceKey, dataSource]) =>
         <JQueryButton
           key={dataSourceKey}
-          label={i18n[ 'sourceButtonLabel_' + dataSourceKey ]}
-          onClick={this.handleLoadFromSource( dataSourceKey, dataSource )}
+          label={i18n['sourceButtonLabel_' + dataSourceKey]}
+          onClick={this.handleLoadFromSource(dataSourceKey, dataSource)}
           text />
       ) }
 
@@ -162,11 +159,11 @@ export default class PopulationLookupDialog
           </tr>
         </thead>
         <tbody>
-          { result.map( ( resultItem, i ) =>
-            <tr className={styles.resultTableRow} key={i} onClick={this.handleTriggerF( i )}>
+          { result.map((resultItem, i) =>
+            <tr className={styles.resultTableRow} key={i} onClick={this.handleTriggerF(i)}>
               <td>
                 <input
-                  checked={selected.indexOf( i ) !== -1}
+                  checked={selected.includes(i)}
                   readOnly
                   type="checkbox" />
               </td>
@@ -177,7 +174,7 @@ export default class PopulationLookupDialog
         </tbody>
       </table>
       <div className={styles.queryStateDiv}>
-        {( i18n.queryState[ queryState ] || '' ).replace( '$1', queryScheduled )}
+        {(i18n.queryState[queryState] || '').replace('$1', queryScheduled)}
       </div>
     </DialogWrapper>;
   }

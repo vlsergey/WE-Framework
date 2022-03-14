@@ -1,49 +1,50 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
+import {connect} from 'react-redux';
+
 import ButtonCell from '../../components/ButtonCell';
-import { connect } from 'react-redux';
+import QuantityDataValueEditor from '../../components/dataValueEditors/quantity/QuantityDataValueEditor';
+import PropertyDescription from '../../core/PropertyDescription';
 import i18n from './i18n';
 import PopulationLookupDialog from './PopulationLookupDialog';
-import PropertyDescription from '../../core/PropertyDescription';
-import QuantityDataValueEditor from '../../components/dataValueEditors/quantity/QuantityDataValueEditor';
 
-interface ExternalProps  {
-  datavalue : null | DataValueType
-  onDataValueChange : (datavalue : null | DataValueType) => any
-  propertyDescription : PropertyDescription
-  readOnly? : boolean
+interface ExternalProps {
+  datavalue: null | DataValueType;
+  onDataValueChange: (datavalue: null | DataValueType) => any;
+  propertyDescription: PropertyDescription;
+  readOnly?: boolean;
 }
 
 interface PropsType extends ExternalProps {
-  onClaimAdd : (claimData : ClaimType) => any
-};
+  onClaimAdd: (claimData: ClaimType) => any;
+}
 
-type StateType = {
-  dialogOpen : boolean,
-};
+interface StateType {
+  dialogOpen: boolean;
+}
 
 class PopulationDataValueEditor extends PureComponent<PropsType, StateType> {
 
   static defaultProps = {
     readOnly: false,
-  }
+  };
 
   override state = {
     dialogOpen: false,
-  }
+  };
 
-  handleClick = () => this.setState( { dialogOpen: true } );
+  handleClick = () => { this.setState({dialogOpen: true}); };
 
-  handleDialogClose = () => this.setState( { dialogOpen: false } );
+  handleDialogClose = () => { this.setState({dialogOpen: false}); };
 
-  override render() {
-    const { ...etc } = this.props;
+  override render () {
+    const {...etc} = this.props;
     return <QuantityDataValueEditor
       {...etc}
       buttonCells={this.renderButtonCells()} />;
   }
 
-  renderButtonCells() {
-    const dialogOpen : boolean = this.state.dialogOpen;
+  renderButtonCells () {
+    const dialogOpen: boolean = this.state.dialogOpen;
 
     return [
       <ButtonCell
@@ -51,7 +52,7 @@ class PopulationDataValueEditor extends PureComponent<PropsType, StateType> {
         key="PopulationLookup"
         label={i18n.buttonLabelPopulationLookup}
         onClick={this.handleClick}>
-        {(children : any) => <>
+        {(children: any) => <>
           {children}
           { dialogOpen && <PopulationLookupDialog
             onClaimAdd={this.props.onClaimAdd}
@@ -62,9 +63,9 @@ class PopulationDataValueEditor extends PureComponent<PropsType, StateType> {
   }
 }
 
-const mapDispatchToProps = ( dispatch : any, ownProps : ExternalProps ) => ( {
-  onClaimAdd: (claimData : ClaimType) => dispatch( { type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription, claimData } ),
-} );
+const mapDispatchToProps = (dispatch: any, ownProps: ExternalProps) => ({
+  onClaimAdd: (claimData: ClaimType) => dispatch({type: 'CLAIM_ADD', propertyDescription: ownProps.propertyDescription, claimData}),
+});
 
-const PopulationDataValueEditorConnected = connect( undefined, mapDispatchToProps )( PopulationDataValueEditor );
+const PopulationDataValueEditorConnected = connect(undefined, mapDispatchToProps)(PopulationDataValueEditor);
 export default PopulationDataValueEditorConnected;

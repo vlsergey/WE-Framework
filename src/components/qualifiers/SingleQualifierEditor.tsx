@@ -1,44 +1,45 @@
-import React, { PureComponent } from 'react';
-import i18n from './i18n';
+import React, {PureComponent} from 'react';
+
 import PropertyDescription from '../../core/PropertyDescription';
 import SnaksArrayEditor from '../snaks/SnaksArrayEditor';
+import i18n from './i18n';
 
-type PropsType = {
-  claim : ClaimType,
-  claimPropertyDescription : PropertyDescription,
-  onClaimUpdate : (claim : ClaimType) => any,
-  qualifierPropertyDescription : PropertyDescription,
-};
+interface PropsType {
+  claim: ClaimType;
+  claimPropertyDescription: PropertyDescription;
+  onClaimUpdate: (claim: ClaimType) => any;
+  qualifierPropertyDescription: PropertyDescription;
+}
 
 export default class SingleQualifierEditor extends PureComponent<PropsType> {
 
-  confirmRemoveQualifierMessage : string;
+  confirmRemoveQualifierMessage: string;
 
-  constructor(props : PropsType) {
-    super( props );
+  constructor (props: PropsType) {
+    super(props);
 
-    const { claimPropertyDescription, qualifierPropertyDescription } = this.props;
+    const {claimPropertyDescription, qualifierPropertyDescription} = this.props;
     this.confirmRemoveQualifierMessage = i18n.confirmRemoveQualifierTemplate
-      .replace( '{claimPropertyId}', claimPropertyDescription.id )
-      .replace( '{claimPropertyLabel}', claimPropertyDescription.label || claimPropertyDescription.id )
-      .replace( '{qualifierPropertyId}', qualifierPropertyDescription.id )
-      .replace( '{qualifierPropertyLabel}', qualifierPropertyDescription.label || qualifierPropertyDescription.id );
+      .replace('{claimPropertyId}', claimPropertyDescription.id)
+      .replace('{claimPropertyLabel}', claimPropertyDescription.label || claimPropertyDescription.id)
+      .replace('{qualifierPropertyId}', qualifierPropertyDescription.id)
+      .replace('{qualifierPropertyLabel}', qualifierPropertyDescription.label || qualifierPropertyDescription.id);
   }
 
-  handleSnaksArrayUpdate = ( snaksArray : null | SnakType[] ) => {
+  handleSnaksArrayUpdate = (snaksArray: null | SnakType[]) => {
     const qualifierPropertyId = this.props.qualifierPropertyDescription.id;
-    const newClaim : ClaimType = {
+    const newClaim: ClaimType = {
       ...this.props.claim,
       qualifiers: {
-        ...( this.props.claim || {} ).qualifiers,
-        [ qualifierPropertyId ]: snaksArray || [],
+        ...(this.props.claim || {}).qualifiers,
+        [qualifierPropertyId]: snaksArray || [],
       },
-    }
-    this.props.onClaimUpdate( newClaim );
-  }
+    };
+    this.props.onClaimUpdate(newClaim);
+  };
 
-  override render() {
-    const { claim, qualifierPropertyDescription } = this.props;
+  override render () {
+    const {claim, qualifierPropertyDescription} = this.props;
     const propertyId = qualifierPropertyDescription.id;
 
     return <SnaksArrayEditor
@@ -49,7 +50,7 @@ export default class SingleQualifierEditor extends PureComponent<PropsType> {
       readOnly={false}
       removeButtonConfirmMessage={this.confirmRemoveQualifierMessage}
       removeButtonLabel={i18n.buttonLabelRemoveQualifier}
-      snaksArray={( claim.qualifiers || {} )[ propertyId ]} />;
+      snaksArray={(claim.qualifiers || {})[propertyId]} />;
   }
 
 }

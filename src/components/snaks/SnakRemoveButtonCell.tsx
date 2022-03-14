@@ -1,12 +1,13 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
+
 import ButtonCell from '../ButtonCell';
 
-type PropsType = {
-  confirmMessage : string,
-  disabled : boolean,
-  label : string,
-  onClick : () => any,
-};
+interface PropsType {
+  confirmMessage: string;
+  disabled: boolean;
+  label: string;
+  onClick: () => any;
+}
 
 export default class SnakRemoveButtonCell extends PureComponent<PropsType> {
 
@@ -15,15 +16,15 @@ export default class SnakRemoveButtonCell extends PureComponent<PropsType> {
   };
 
   handleClick = () => {
-    const { confirmMessage, onClick } = this.props;
+    const {confirmMessage, onClick} = this.props;
 
-    if ( confirm( confirmMessage ) ) {
+    if (confirm(confirmMessage)) {
       onClick();
     }
-  }
+  };
 
-  override render() {
-    const { disabled, label } = this.props;
+  override render () {
+    const {disabled, label} = this.props;
 
     return <ButtonCell
       disabled={disabled}

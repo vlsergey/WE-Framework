@@ -1,15 +1,16 @@
-import React, { PureComponent, HTMLAttributes } from 'react';
+import React, {HTMLAttributes, PureComponent} from 'react';
+
 import MediawikiPreview from '../components/MediawikiPreview';
 import styles from './styles.css';
 
 type PropsType = HTMLAttributes<HTMLButtonElement> & {
-  entityId : string,
+  entityId: string;
 };
 
 export default class SourceItem extends PureComponent<PropsType> {
 
-  override render() {
-    const { entityId, ...etc } = this.props;
+  override render () {
+    const {entityId, ...etc} = this.props;
 
     const wikitext1 = '{{#statements:P31|from=' + entityId + '}}';
     const wikitext2 = '{{source|' + entityId + '}}';

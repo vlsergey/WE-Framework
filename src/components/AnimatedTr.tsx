@@ -1,14 +1,15 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
+
 import animations from './animations.css';
 
-type PropsType = {
-  children : any,
-  className? : string,
-};
+interface PropsType {
+  children: any;
+  className?: string;
+}
 
 export default class AnimatedTr extends PureComponent<PropsType> {
-  override render() {
-    const { children, className, ...etc } = this.props;
+  override render () {
+    const {children, className, ...etc} = this.props;
 
     const resultClassName = className
       ? className + ' ' + animations.animatedFateIn

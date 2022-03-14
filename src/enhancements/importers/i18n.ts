@@ -1,4 +1,4 @@
-import { localize } from '../../utils/I18nUtils';
+import {localize} from '../../utils/I18nUtils';
 
 const en = {
   buttonCloseText: 'Close',
@@ -24,5 +24,5 @@ const ru = {
   state_NO_SUPPORTED_IMPORTERS: 'XML-дерево содержания страницы загружено и проанализировано. К сожалению не найдено доступных механизмов импорта данных.',
 };
 
-const result = localize( {}, { en, ru } );
+const result = localize({}, {en, ru});
 export default result;

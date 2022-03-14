@@ -1,16 +1,17 @@
 import React from 'react';
+
 import EntityDescription from '../../caches/EntityDescription';
 import EntityLabel from '../../caches/EntityLabel';
 import MediawikiPreview from '../MediawikiPreview';
 import styles from './styles.css';
 
-type PropsType = {
-  entityId : string,
-};
+interface PropsType {
+  entityId: string;
+}
 
 const Suggestion = ({
   entityId
-} : PropsType) => {
+}: PropsType) => {
   const wikitext = '{{#if:{{#property:P18|from=' + entityId + '}}|[[File:{{#property:P18|from=' + entityId + '}}|45x45px|frameless|link=]]}}';
   return <table className={styles.suggestionContainer}>
     <tbody>
@@ -26,6 +27,6 @@ const Suggestion = ({
       </tr>
     </tbody>
   </table>;
-}
+};
 
 export default React.memo(Suggestion);

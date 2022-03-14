@@ -1,38 +1,38 @@
 
-const ok = (x : any) => typeof x !== 'undefined' && x !== null;
+const ok = (x: any) => typeof x !== 'undefined' && x !== null;
 
-function filterEmptyAliases( aliases : AliasesType ) : AliasesType {
+function filterEmptyAliases (aliases: AliasesType): AliasesType {
   const result = {} as AliasesType;
-  Object.entries( aliases ).forEach( ( [ langCode, langCodeAliases ] ) => {
-    if ( ! Array.isArray( langCodeAliases ) )
+  Object.entries(aliases).forEach(([langCode, langCodeAliases]) => {
+    if (! Array.isArray(langCodeAliases))
       return;
 
     const langAliases = langCodeAliases
-      .filter( alias => typeof alias.value === 'string' )
-      .filter( alias => alias.value.trim() !== '' );
-    if ( langAliases.length > 0 ) {
-      result[ langCode ] = langAliases;
+      .filter(alias => typeof alias.value === 'string')
+      .filter(alias => alias.value.trim() !== '');
+    if (langAliases.length > 0) {
+      result[langCode] = langAliases;
     }
-  } );
+  });
   return result;
 }
 
-function filterEmptyClaims( claims : ClaimsType ) : ClaimsType {
-  const result : ClaimsType = {};
-  Object.entries(claims).forEach( ( [ propertyId, claimsArray ] ) => {
-    if ( !Array.isArray( claimsArray ) )
+function filterEmptyClaims (claims: ClaimsType): ClaimsType {
+  const result: ClaimsType = {};
+  Object.entries(claims).forEach(([propertyId, claimsArray]) => {
+    if (!Array.isArray(claimsArray))
       return;
 
     const propertyClaims = claimsArray
-      .filter( claim => !isSnakEmtpy( claim.mainsnak ) )
-      .map<ClaimType>( claim => {
+      .filter(claim => !isSnakEmtpy(claim.mainsnak))
+      .map<ClaimType>(claim => {
         const oldQualifiers = claim.qualifiers;
-        if ( typeof oldQualifiers !== 'object' )
+        if (typeof oldQualifiers !== 'object')
           return claim;
 
-        const newQualifiers = filterSnaksMap( claim.qualifiers || null );
-        if ( !newQualifiers || Object.keys( newQualifiers ).length === 0 ) {
-          const newClaim = { ...claim };
+        const newQualifiers = filterSnaksMap(claim.qualifiers || null);
+        if (!newQualifiers || Object.keys(newQualifiers).length === 0) {
+          const newClaim = {...claim};
           delete newClaim.qualifiers;
           return newClaim;
         }
@@ -41,20 +41,20 @@ function filterEmptyClaims( claims : ClaimsType ) : ClaimsType {
           qualifiers: newQualifiers,
         } as ClaimType;
       })
-      .map<ClaimType>( claim => {
+      .map<ClaimType>(claim => {
         const oldReferences = claim.references;
-        if ( !oldReferences ) return claim;
+        if (!oldReferences) return claim;
 
         const newReferences = oldReferences
-          .filter( ok )
-          .map<ReferenceType | undefined>( ref => {
-            const snaks = filterSnaksMap( ref.snaks );
-            if ( !snaks ) return;
-            return { ...ref, snaks };
-          } )
-          .filter( ok ) as ReferenceType[];
-        if ( newReferences.length === 0 ) {
-          const newClaim = { ...claim };
+          .filter(ok)
+          .map<ReferenceType | undefined>(ref => {
+            const snaks = filterSnaksMap(ref.snaks);
+            if (!snaks) return;
+            return {...ref, snaks};
+          })
+          .filter(ok) as ReferenceType[];
+        if (newReferences.length === 0) {
+          const newClaim = {...claim};
           delete newClaim.references;
           return newClaim;
         }
@@ -62,86 +62,86 @@ function filterEmptyClaims( claims : ClaimsType ) : ClaimsType {
           ...claim,
           references: newReferences,
         };
-      } );
+      });
 
-    if ( propertyClaims.length > 0 ) {
-      result[ propertyId ] = propertyClaims;
+    if (propertyClaims.length > 0) {
+      result[propertyId] = propertyClaims;
     }
-  } );
+  });
   return result;
 }
 
-function filterEmptyLabelalikes<T extends DescriptionsType | LabelsType>( labelalikes : T ) : T {
+function filterEmptyLabelalikes<T extends DescriptionsType | LabelsType> (labelalikes: T): T {
   const result = {} as T;
-  Object.entries( labelalikes ).forEach( ([langCode, labelalike]) => {
-    if ( typeof labelalike.value === 'string'
-        && labelalike.value.trim() !== '' ) {
-      result[ langCode ] = labelalike;
+  Object.entries(labelalikes).forEach(([langCode, labelalike]) => {
+    if (typeof labelalike.value === 'string'
+        && labelalike.value.trim() !== '') {
+      result[langCode] = labelalike;
     }
-  } );
+  });
   return result;
 }
 
-function filterSnaksMap<T extends QualifiersType | SnaksType >( snaksMap : null | T ) : T | null {
-  if ( !snaksMap ) return null;
+function filterSnaksMap<T extends QualifiersType | SnaksType > (snaksMap: null | T): T | null {
+  if (!snaksMap) return null;
 
   const result = {} as T;
   let resultIsEmpty = true;
-  Object.entries( snaksMap ).forEach( ( [ propertyId, snaksArray ] ) => {
-    if ( !Array.isArray( snaksArray ) ) return;
+  Object.entries(snaksMap).forEach(([propertyId, snaksArray]) => {
+    if (!Array.isArray(snaksArray)) return;
 
     const propertySnaks = snaksArray
-      .filter( snak => !isSnakEmtpy( snak ) );
+      .filter(snak => !isSnakEmtpy(snak));
 
-    if ( propertySnaks.length > 0 ) {
-      result[ propertyId ] = propertySnaks;
+    if (propertySnaks.length > 0) {
+      result[propertyId] = propertySnaks;
       resultIsEmpty = false;
     }
-  } );
+  });
 
-  if ( resultIsEmpty ) return null; // undefined
+  if (resultIsEmpty) return null; // undefined
   return result;
 }
 
-export default function filterEmptyEntityStructures( entity : EntityType ) {
+export default function filterEmptyEntityStructures (entity: EntityType) {
   return {
     ...entity,
-    labels: entity.labels ? filterEmptyLabelalikes( entity.labels ) : undefined,
-    descriptions: entity.descriptions ? filterEmptyLabelalikes( entity.descriptions ) : undefined,
-    aliases: entity.aliases ? filterEmptyAliases( entity.aliases ) : undefined,
-    claims: entity.claims ? filterEmptyClaims( entity.claims ) : undefined,
+    labels: entity.labels ? filterEmptyLabelalikes(entity.labels) : undefined,
+    descriptions: entity.descriptions ? filterEmptyLabelalikes(entity.descriptions) : undefined,
+    aliases: entity.aliases ? filterEmptyAliases(entity.aliases) : undefined,
+    claims: entity.claims ? filterEmptyClaims(entity.claims) : undefined,
   };
 }
 
-function isStringBlank( str : null | string ) {
-  if ( !str ) return true;
+function isStringBlank (str: null | string) {
+  if (!str) return true;
   return str.trim() === '';
 }
 
-function isNumberDefined( number : number | null ) {
+function isNumberDefined (number: number | null) {
   return typeof number !== 'undefined' && number !== null;
 }
 
-function isSnakEmtpy( snak? : SnakType | null ) {
-  if ( !snak ) return true;
-  if ( snak.snaktype !== 'value' )
+function isSnakEmtpy (snak?: SnakType | null) {
+  if (!snak) return true;
+  if (snak.snaktype !== 'value')
     return false;
 
-  const { datavalue } = snak;
-  if ( !datavalue ) return true;
+  const {datavalue} = snak;
+  if (!datavalue) return true;
 
   const value = datavalue.value;
-  if ( !datavalue || !value ) return true;
+  if (!datavalue || !value) return true;
 
-  switch ( datavalue.type ) {
+  switch (datavalue.type) {
   case 'monolingualtext':
-    return isStringBlank( value.text ) || isStringBlank( value.language );
+    return isStringBlank(value.text) || isStringBlank(value.language);
   case 'string':
-    return isStringBlank( value );
+    return isStringBlank(value);
   case 'time':
-    return isStringBlank( value.time ) || isStringBlank( value.calendarmodel );
+    return isStringBlank(value.time) || isStringBlank(value.calendarmodel);
   case 'wikibase-entityid':
-    return !isNumberDefined( value[ 'numeric-id' ] ) || isStringBlank( value[ 'entity-type' ] );
+    return !isNumberDefined(value['numeric-id']) || isStringBlank(value['entity-type']);
   default:
     return false;
   }

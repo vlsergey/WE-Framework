@@ -1,2 +1,2 @@
 
-declare module "isbn"
+declare module 'isbn'

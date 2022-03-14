@@ -2,18 +2,18 @@ import caches from './Caches';
 
 type CacheType = Record<number | string, any>;
 interface StateType {
-  cache: CacheType,
+  cache: CacheType;
 }
 
-const initialState : StateType = {
+const initialState: StateType = {
   cache: {},
 };
 
-function cacheReducerBuilder( type : string ) {
-  return ( state : StateType = initialState , action : any ) : StateType => {
-    switch ( action.type ) {
+function cacheReducerBuilder (type: string) {
+  return (state: StateType = initialState, action: any): StateType => {
+    switch (action.type) {
     case 'CACHE_' + type + '_PUT': {
-      const cacheUpdate : CacheType = action.cacheUpdate;
+      const cacheUpdate: CacheType = action.cacheUpdate;
       return {
         ...state,
         cache: {
@@ -29,8 +29,8 @@ function cacheReducerBuilder( type : string ) {
 
 }
 
-const reducers : Record<string, ReturnType<typeof cacheReducerBuilder>> = {};
-Object.keys( caches ).forEach( key => {
-  reducers[ key ] = cacheReducerBuilder( key );
-} );
+const reducers: Record<string, ReturnType<typeof cacheReducerBuilder>> = {};
+Object.keys(caches).forEach(key => {
+  reducers[key] = cacheReducerBuilder(key);
+});
 export default reducers;

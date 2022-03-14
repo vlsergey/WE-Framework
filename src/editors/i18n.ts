@@ -1,4 +1,4 @@
-import { localize } from '../utils/I18nUtils';
+import {localize} from '../utils/I18nUtils';
 
 const en = {
 
@@ -131,6 +131,6 @@ const ru = {
 
 };
 
-const translations = { en, fr, ru };
-const result = localize( {}, translations );
+const translations = {en, fr, ru};
+const result = localize({}, translations);
 export default result;

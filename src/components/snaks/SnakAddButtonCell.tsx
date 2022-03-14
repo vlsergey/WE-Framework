@@ -1,20 +1,21 @@
 import React from 'react';
+
 import ButtonCell from '../ButtonCell';
 import i18n from './i18n';
 
-type PropsType = {
-  disabled? : boolean,
-  onClick : () => any,
-};
+interface PropsType {
+  disabled?: boolean;
+  onClick: () => any;
+}
 
-const SnakAddButtonCell = ( {
+const SnakAddButtonCell = ({
   disabled = false,
   onClick
-} : PropsType ) =>
+}: PropsType) =>
   <ButtonCell
     disabled={disabled}
     icon="ui-icon-plus"
     label={i18n.buttonLabelAdd}
-    onClick={onClick} />
+    onClick={onClick} />;
 
-export default React.memo(SnakAddButtonCell)
+export default React.memo(SnakAddButtonCell);

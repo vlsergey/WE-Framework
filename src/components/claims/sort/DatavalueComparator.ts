@@ -1,13 +1,13 @@
 export interface DatavalueComparator {
 
-  code : string,
+  code: string;
 
-  compare(
-    dv1 : DataValueType | null | undefined,
-    dv2 : DataValueType | null | undefined,
-    sortEmptyCompareConstant : number,
-    sortOrderCompareConstant : number ) : number,
+  compare: (
+    dv1: DataValueType | null | undefined,
+    dv2: DataValueType | null | undefined,
+    sortEmptyCompareConstant: number,
+    sortOrderCompareConstant: number) => number;
 
-  supports( propertyId : string, exampleSnake : SnakType ) : boolean | null,
+  supports: (propertyId: string, exampleSnake: SnakType) => boolean | null;
 
 }

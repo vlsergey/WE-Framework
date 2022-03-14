@@ -204,6 +204,6 @@ const ru = {
   timePrecisionOther: 'другое',
 };
 
-const translations = { en, fr, ru };
-const result = I18nUtils.localize( {}, translations );
+const translations = {en, fr, ru};
+const result = I18nUtils.localize({}, translations);
 export default result;

@@ -1,23 +1,23 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 
-type PropsType = {
-  buttons? : any[],
-  children? : any,
-  className? : string,
-  height? : ( number | string ),
-  maxHeight? : number,
-  maxWidth? : number,
-  minHeight? : number,
-  minWidth? : number,
-  onBeforeClose? : () => any,
-  onClose? : () => any,
-  title? : string,
-  width? : number | string,
-};
+interface PropsType {
+  buttons?: any[];
+  children?: any;
+  className?: string;
+  height? : (number | string);
+  maxHeight?: number;
+  maxWidth?: number;
+  minHeight?: number;
+  minWidth?: number;
+  onBeforeClose?: () => any;
+  onClose?: () => any;
+  title?: string;
+  width?: number | string;
+}
 
-type StateType = {
-  manuallyResized : boolean,
-};
+interface StateType {
+  manuallyResized: boolean;
+}
 
 export default class DialogWrapper extends PureComponent<PropsType, StateType> {
 
@@ -27,11 +27,11 @@ export default class DialogWrapper extends PureComponent<PropsType, StateType> {
     manuallyResized: false
   };
 
-  override componentDidMount() {
-    const { buttons, className, height, maxHeight, maxWidth, minHeight, minWidth, onBeforeClose, onClose, width } = this.props;
+  override componentDidMount () {
+    const {buttons, className, height, maxHeight, maxWidth, minHeight, minWidth, onBeforeClose, onClose, width} = this.props;
 
-    if ( this.ref.current ) {
-      jQuery( this.ref.current ).dialog( {
+    if (this.ref.current) {
+      jQuery(this.ref.current).dialog({
         autoOpen: true,
         autoResize: true,
         beforeClose: onBeforeClose,
@@ -48,32 +48,32 @@ export default class DialogWrapper extends PureComponent<PropsType, StateType> {
         resizeStart: this.handleResize,
         // workaround for content shrinking bug in jQuery
         // inspired by https://stackoverflow.com/a/49965986/1885756
-        resize() {
-          jQuery( this ).closest( '.ui-dialog-content' ).css( 'width', 'unset' );
+        resize () {
+          jQuery(this).closest('.ui-dialog-content').css('width', 'unset');
         },
-      } );
+      });
     }
   }
 
-  override componentWillUnmount() {
-    if ( this.ref.current )
-      jQuery( this.ref.current ).dialog( 'destroy' );
+  override componentWillUnmount () {
+    if (this.ref.current)
+      jQuery(this.ref.current).dialog('destroy');
   }
 
-  close() {
-    if ( this.ref.current )
-      jQuery( this.ref.current ).dialog( 'close' );
+  close () {
+    if (this.ref.current)
+      jQuery(this.ref.current).dialog('close');
   }
 
-  open() {
-    if ( this.ref.current )
-      jQuery( this.ref.current ).dialog( 'open' );
+  open () {
+    if (this.ref.current)
+      jQuery(this.ref.current).dialog('open');
   }
 
-  handleResize = () => this.setState( { manuallyResized: true } );
+  handleResize = () => { this.setState({manuallyResized: true}); };
 
-  override render() {
-    const { children, title } = this.props;
+  override render () {
+    const {children, title} = this.props;
 
     return <div ref={this.ref} title={title}>
       {children}
@@ -81,12 +81,12 @@ export default class DialogWrapper extends PureComponent<PropsType, StateType> {
   }
 
   resizeToFit = () => {
-    if ( !this.state.manuallyResized ) {
-      const wrapped = jQuery( this.ref.current );
-      if ( wrapped.parent().height() > jQuery( window ).height() ) {
-        wrapped.height( jQuery( window ).height() * 0.7 );
+    if (!this.state.manuallyResized) {
+      const wrapped = jQuery(this.ref.current);
+      if (wrapped.parent().height() > jQuery(window).height()) {
+        wrapped.height(jQuery(window).height() * 0.7);
       }
     }
-  }
+  };
 
 }

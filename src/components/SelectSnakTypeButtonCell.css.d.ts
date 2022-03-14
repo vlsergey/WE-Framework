@@ -1,9 +1,9 @@
 declare namespace SelectSnakTypeButtonCellCssNamespace {
   export interface ISelectSnakTypeButtonCellCss {
     selectSnakTypePopup: string;
-    "ui-icon-wef-snaktype-novalue": string;
-    "ui-icon-wef-snaktype-somevalue": string;
-    "ui-icon-wef-snaktype-value": string;
+    'ui-icon-wef-snaktype-novalue': string;
+    'ui-icon-wef-snaktype-somevalue': string;
+    'ui-icon-wef-snaktype-value': string;
   }
 }
 

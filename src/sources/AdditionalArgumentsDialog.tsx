@@ -1,31 +1,32 @@
-import React, { ChangeEvent, PureComponent } from 'react';
-import createTalkPageWithPlaceholder from './createTalkPageWithPlaceholder';
+import React, {ChangeEvent, PureComponent} from 'react';
+
+import {getServerApi} from '../core/ApiUtils';
 import DialogWrapper from '../wrappers/DialogWrapper';
-import { getServerApi } from '../core/ApiUtils';
+import createTalkPageWithPlaceholder from './createTalkPageWithPlaceholder';
 import styles from './styles.css';
 
-const isBlank = (str : string | null) => str === undefined || str === null || str.trim() === '';
+const isBlank = (str: string | null) => str === undefined || str === null || str.trim() === '';
 
-type PropsType= {
-  entityId : string,
-  onClose : () => any,
-  onInsert : ( enittyId: string ) => any,
-};
+interface PropsType {
+  entityId: string;
+  onClose: () => any;
+  onInsert: (enittyId: string) => any;
+}
 
-type StateType = {
-  addRefAuthor : boolean,
-  addRefComment : boolean,
-  addRefYear : boolean,
-  insertAsRef : boolean,
-  issue : string,
-  pages : string,
-  part : string,
-  partUrl : string,
-  refAuthor : string,
-  refComment : string,
-  refYear : string,
-  volume : string,
-};
+interface StateType {
+  addRefAuthor: boolean;
+  addRefComment: boolean;
+  addRefYear: boolean;
+  insertAsRef: boolean;
+  issue: string;
+  pages: string;
+  part: string;
+  partUrl: string;
+  refAuthor: string;
+  refComment: string;
+  refYear: string;
+  volume: string;
+}
 
 export default class AdditionalArgumentsDialog
   extends PureComponent<PropsType, StateType> {
@@ -43,34 +44,34 @@ export default class AdditionalArgumentsDialog
     addRefComment: true, refComment: '',
   };
 
-  override componentDidMount() {
-    const { entityId } = this.props;
+  override componentDidMount () {
+    const {entityId} = this.props;
 
-    this.expandtemplates( 'Sources-authors', 'renderSourceAuthors', entityId, 'refAuthor' );
-    this.expandtemplates( 'Sources-year', 'renderSourceYear', entityId, 'refYear' );
-    this.expandtemplates( 'Sources-title', 'renderSourceTitle', entityId, 'refComment' );
+    this.expandtemplates('Sources-authors', 'renderSourceAuthors', entityId, 'refAuthor');
+    this.expandtemplates('Sources-year', 'renderSourceYear', entityId, 'refYear');
+    this.expandtemplates('Sources-title', 'renderSourceTitle', entityId, 'refComment');
   }
 
-  expandtemplates( renderModule : string, renderFunction : string, entityId : string, stateKey : 'refAuthor' | 'refYear' | 'refComment' ) {
+  expandtemplates (renderModule: string, renderFunction: string, entityId: string, stateKey: 'refAuthor' | 'refYear' | 'refComment') {
     getServerApi()
-      .postPromise( {
+      .postPromise({
         action: 'expandtemplates',
         format: 'json',
         prop: 'wikitext',
         text: '{' + '{#invoke:' + renderModule + ' | ' + renderFunction + ' | ' + entityId + '}}',
-      } )
-      .then( (result : any) => result.expandtemplates.wikitext )
-      // @ts-ignore
-      .then( (text : string) => this.setState( { [ stateKey ]: text } ) );
+      })
+      .then((result: any) => result.expandtemplates.wikitext)
+      // @ts-expect-error
+      .then((text: string) => { this.setState({[stateKey]: text}); });
   }
 
-  handleChange = ( { currentTarget: { name, value } } : ChangeEvent< HTMLInputElement > ) =>
-    // @ts-ignore
-    this.setState( { [ name ]: value } );
+  handleChange = ({currentTarget: {name, value}}: ChangeEvent< HTMLInputElement >) =>
+  // @ts-expect-error
+  { this.setState({[name]: value}); };
 
-  handleInsertClick = ( ) => {
-    let textToInsert : string;
-    if ( this.state.insertAsRef ) {
+  handleInsertClick = () => {
+    let textToInsert: string;
+    if (this.state.insertAsRef) {
       textToInsert = '{{source-ref|';
     } else {
       textToInsert = '{{source|';
@@ -78,41 +79,41 @@ export default class AdditionalArgumentsDialog
 
     textToInsert += this.props.entityId;
 
-    [ 'part', 'partUrl', 'pages', 'volume', 'issue' ].forEach( key => {
-      // @ts-ignore
-      if ( !isBlank( this.state[ key ] ) ) {
-        // @ts-ignore
-        textToInsert += '|' + key + '=' + this.state[ key ];
+    ['part', 'partUrl', 'pages', 'volume', 'issue'].forEach(key => {
+      // @ts-expect-error
+      if (!isBlank(this.state[key])) {
+        // @ts-expect-error
+        textToInsert += '|' + key + '=' + this.state[key];
       }
-    } );
+    });
 
-    if ( this.state.addRefAuthor && !isBlank( this.state.refAuthor ) )
+    if (this.state.addRefAuthor && !isBlank(this.state.refAuthor))
       textToInsert += '|ref=' + this.state.refAuthor;
-    if ( this.state.addRefYear && !isBlank( this.state.refYear ) )
+    if (this.state.addRefYear && !isBlank(this.state.refYear))
       textToInsert += '|ref-year=' + this.state.refYear;
 
     textToInsert += '}}';
 
-    if ( this.state.addRefComment && !isBlank( this.state.refComment ) ) {
+    if (this.state.addRefComment && !isBlank(this.state.refComment)) {
       textToInsert += ' <!-- ' + this.state.refComment + ' -->';
     }
 
-    this.props.onInsert( textToInsert );
+    this.props.onInsert(textToInsert);
 
     // TODO: WEF_LatestUsedSources.add( entityId );
-    createTalkPageWithPlaceholder( this.props.entityId );
-  }
+    createTalkPageWithPlaceholder(this.props.entityId);
+  };
 
-  override render() {
-    const { onClose } = this.props;
+  override render () {
+    const {onClose} = this.props;
 
     const buttons = [];
 
-    buttons.push( {
+    buttons.push({
       text: 'Добавить',
       label: 'Добавить',
       click: this.handleInsertClick,
-    } );
+    });
 
     return <DialogWrapper
       buttons={buttons}

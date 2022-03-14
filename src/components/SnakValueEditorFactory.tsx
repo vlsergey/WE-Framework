@@ -1,9 +1,10 @@
-import React, { Component, PureComponent } from 'react';
-import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
+import React, {Component, PureComponent} from 'react';
+
+import PropertyDescription from '../core/PropertyDescription';
 import enhancementsFactory from '../enhancements/enhancementsFactory';
+import CommonsMediaDataValueEditor from './dataValueEditors/CommonsMediaDataValueEditor';
 import ExternalIdDataValueEditor from './dataValueEditors/external-id/ExternalIdDataValueEditor';
 import MonolingualTextDataValueEditor from './dataValueEditors/MonolingualTextDataValueEditor';
-import PropertyDescription from '../core/PropertyDescription';
 import QuantityDataValueEditor from './dataValueEditors/quantity/QuantityDataValueEditor';
 import StringDataValueEditor from './dataValueEditors/StringDataValueEditor';
 import TimeDataValueEditor from './dataValueEditors/time/TimeDataValueEditor';
@@ -22,14 +23,14 @@ const STANDARD = {
   'wikibase-item': WikibaseItemDataValueEditor,
 };
 
-export const SUPPORTED_DATATYPES : string[] = Object.keys( STANDARD );
+export const SUPPORTED_DATATYPES: string[] = Object.keys(STANDARD);
 
-type PropsType = {
-  onSnakChange : (snak : SnakType) => any,
-  propertyDescription : PropertyDescription,
-  readOnly? : boolean,
-  snak : SnakType,
-};
+interface PropsType {
+  onSnakChange: (snak: SnakType) => any;
+  propertyDescription: PropertyDescription;
+  readOnly?: boolean;
+  snak: SnakType;
+}
 
 export default class SnakValueEditorFactory extends PureComponent<PropsType> {
 
@@ -37,18 +38,18 @@ export default class SnakValueEditorFactory extends PureComponent<PropsType> {
     readOnly: false,
   };
 
-  handleDataValueChange = ( datavalue : DataValueType ) => {
-    const { propertyDescription, snak } = this.props;
+  handleDataValueChange = (datavalue: DataValueType) => {
+    const {propertyDescription, snak} = this.props;
 
-    this.props.onSnakChange( {
+    this.props.onSnakChange({
       ...snak,
       datavalue,
       datatype: propertyDescription.datatype,
-    } );
-  }
+    });
+  };
 
-  override render() {
-    const { propertyDescription, readOnly, snak } = this.props;
+  override render () {
+    const {propertyDescription, readOnly, snak} = this.props;
     const dataType = propertyDescription.datatype;
 
     const dataValueEditorProps = {
@@ -58,15 +59,15 @@ export default class SnakValueEditorFactory extends PureComponent<PropsType> {
       propertyDescription,
     };
 
-    const enhancedDataValueEditorClass = enhancementsFactory.findDataValueEditor( propertyDescription );
-    // @ts-ignore
-    const standardDataValueEditorClass = STANDARD[ dataType ] as Component<any>;
+    const enhancedDataValueEditorClass = enhancementsFactory.findDataValueEditor(propertyDescription);
+    // @ts-expect-error
+    const standardDataValueEditorClass = STANDARD[dataType] as Component<any>;
     const dataValueEditorClass = enhancedDataValueEditorClass || standardDataValueEditorClass || null;
-    if ( dataValueEditorClass === null ) {
+    if (dataValueEditorClass === null) {
       return <UnsupportedDataValueEditor datavalue={snak.datavalue} propertyDescription={propertyDescription} />;
     }
 
-    return React.createElement( dataValueEditorClass, dataValueEditorProps );
+    return React.createElement(dataValueEditorClass, dataValueEditorProps);
   }
 
 }
