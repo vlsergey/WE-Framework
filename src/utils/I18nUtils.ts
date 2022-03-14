@@ -1,6 +1,5 @@
 export const DEFAULT_LANGUAGES = [] as string[];
 
-// @ts-expect-error
 [mw.config.get('wgUserLanguage'), mw.config.get('wgContentLanguage'), 'en', 'ru']
   .forEach(code => { if (!DEFAULT_LANGUAGES.includes(code)) DEFAULT_LANGUAGES.push(code); });
 
@@ -24,7 +23,6 @@ function getTitleFromOptions (allLanguagesData: any, languageCode: string): stri
 }
 
 export const LANGUAGE_TITLES: Map< string, string > = (() => {
-  // @ts-expect-error
   const ulsDataLanguages = jQuery.uls.data.languages;
   const result: Map< string, string > = new Map(
     Object.keys(ulsDataLanguages)
