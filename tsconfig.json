@@ -17,6 +17,6 @@
     "strict": true,
     "target": "es5"
   },
-  "include": [".eslintrc.js", "karma.conf.js"],
+  "include": [".eslintrc.js", "deploy-to-wikipedia.js", "karma.conf.js", "webpack.config.js"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
