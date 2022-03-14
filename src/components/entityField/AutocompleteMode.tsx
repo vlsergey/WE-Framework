@@ -131,7 +131,6 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
   }
 
   renderInput = (inputProps: any) => {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "value" }] */
     const {value, onChange, ref, ...etc} = inputProps;
 
     return <LocalizedWikibaseItemInput

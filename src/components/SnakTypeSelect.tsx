@@ -29,7 +29,6 @@ export default class SnakTypeSelect extends PureComponent<PropsType> {
   };
 
   override render () {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onChange" }]*/
     const {onChange, value, ...etc} = this.props;
 
     return <select

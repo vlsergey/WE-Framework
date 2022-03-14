@@ -11,7 +11,6 @@ export default class StringDataValueEditor extends AbstractStringBasedDataValueE
   { this.handleValueChange(value); };
 
   override render () {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*" }] */
     const {datavalue, propertyDescription, readOnly} = this.props;
 
     if (readOnly) {

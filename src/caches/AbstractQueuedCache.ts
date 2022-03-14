@@ -70,12 +70,10 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
   }
 
   isKeyValid (_cacheKey: string): boolean {
-    /* eslint no-unused-vars: 0 */
     return true;
   }
 
   enchanceIndexedDbResult (cachedValue: DatabaseValue): Value {
-    /* eslint no-unused-vars: 0 */
     return cachedValue as unknown as Value;
   }
 
@@ -297,10 +295,8 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
   }
 
   onCacheUpdateFromDatabase (_cacheUpdate: CacheType<Value>) {
-    /* eslint no-unused-vars: 0 */
   }
 
   onCacheUpdateFromRequest (_cacheUpdate: CacheType<Value>) {
-    /* eslint no-unused-vars: 0 */
   }
 }

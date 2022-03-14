@@ -57,7 +57,6 @@ export default class WikibaseItemDataValueEditor
   };
 
   override render () {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "onDataValueChange" }] */
     const {datavalue, onDataValueChange, propertyDescription, readOnly, ...etc} = this.props;
 
     const currentValue = ((datavalue || {}).value || {}).id || '';

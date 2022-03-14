@@ -58,7 +58,6 @@ export default class MediawikiPreview
   }
 
   override render () {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "wikitext" }] */
     const {spinnerSize, wikitext, ...etc} = this.props;
 
     if (this.state.html) {

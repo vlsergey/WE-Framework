@@ -57,7 +57,6 @@ export default class UnsupportedDataValueEditor
   };
 
   override render () {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "datavalue" }] */
     const {datavalue, propertyDescription, ...etc} = this.props;
     const {datatype} = propertyDescription;
 

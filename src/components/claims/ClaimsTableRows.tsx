@@ -65,7 +65,6 @@ export default class ClaimsTableRows
   };
 
   override render () {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*" }] */
     const {claim, displayLabel, firstCell, hasClaimDelete, onClaimDelete, onClaimUpdate, propertyDescription, ...other} = this.props;
     const {displayQualifierSelect} = this.state;
     const flagImage = propertyDescription.countryFlags[0];

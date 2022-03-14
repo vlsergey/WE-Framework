@@ -33,7 +33,6 @@ export default class SingleLanguageEditor extends PureComponent<PropsType> {
   };
 
   override render () {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*Change" }] */
     const {label, description, draftAlias, aliases, onLabelChange,
       onDescriptionChange, onDraftAliasChange, onAliasesChange, ...etc} = this.props;
 

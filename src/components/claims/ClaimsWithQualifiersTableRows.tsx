@@ -60,7 +60,6 @@ export default class ClaimsWithQualifiersTableRows
   }
 
   override render () {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "on.*" }] */
     const {claim, columns, firstCell, hasClaimDelete, onClaimDelete, onClaimUpdate, propertyDescription, ...other} = this.props;
 
     const claimPropertyDescription = propertyDescription;

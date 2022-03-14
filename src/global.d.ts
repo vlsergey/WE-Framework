@@ -63,13 +63,12 @@ export type AliasesType = Record<string, LabelalikeType[]>;
 
   type LabelsType = Record<string, LabelalikeType>;
 
-  type PropertyType = EntityType & {
+  interface PropertyType extends EntityType {
     datatype: string;
     type: 'property';
-  };
+  }
 
-  type QualifierType = SnakType & {
-  };
+  type QualifierType = SnakType;
 
   type QualifiersType = Record<string, QualifierType[]>;
 
@@ -118,10 +117,10 @@ export type AliasesType = Record<string, LabelalikeType[]>;
     id?: string | null | undefined;
   }
 
-  var jQuery: any;
-  var mw: any;
-  var OO: any;
-  var ve: any;
+  const jQuery: any;
+  const mw: any;
+  const OO: any;
+  const ve: any;
 }
 
 export {};

@@ -39,7 +39,6 @@ class LocalizedWikibaseItemInput extends PureComponent<PropsType> {
   }
 
   override render () {
-    /* eslint no-unused-vars: 0 */
     const {cache, entityId, queue, wikibaseItemInputRef, ...etc} = this.props;
 
     if (!entityId) {

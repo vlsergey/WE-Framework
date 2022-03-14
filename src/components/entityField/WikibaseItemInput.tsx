@@ -18,7 +18,6 @@ interface StateType {
 export default class WikibaseItemInput extends PureComponent<PropsType, StateType> {
 
   static getEtcProps (props: PropsType) {
-    /* eslint no-unused-vars: 0 */
     const {entityId, entityLabel, inputRef, value, onBlur, onChange, onFocus, ...etc} = props;
     return etc;
   }

@@ -76,7 +76,6 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
   };
 
   override render () {
-    /* eslint no-unused-vars: ["error", { "varsIgnorePattern": "(lruKey|onChange|oneOf)" }] */
     const {value, onChange, lruKey, oneOf, readOnly, ...etc} = this.props;
 
     if (readOnly) {
