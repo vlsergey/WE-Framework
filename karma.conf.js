@@ -1,11 +1,14 @@
 /* eslint-env node */
-const path = require( 'path' );
 
-module.exports = function( config ) {
-  config.set( {
-    browsers: [ 'jsdom' ],
+// eslint-disable-next-line
+const path = require('path');
+
+module.exports = function (config) {
+  // eslint-disable-next-line
+  config.set({
+    browsers: ['jsdom'],
     browserNoActivityTimeout: 60000,
-    frameworks: [ 'mocha' ],
+    frameworks: ['mocha'],
 
     plugins: [
       'karma-chrome-launcher',
@@ -22,8 +25,8 @@ module.exports = function( config ) {
     ],
 
     preprocessors: {
-      'src/**/*.js': [ 'webpack', 'sourcemap' ],
-      'test/**/*.js': [ 'webpack', 'sourcemap' ],
+      'src/**/*.js': ['webpack', 'sourcemap'],
+      'test/**/*.js': ['webpack', 'sourcemap'],
     },
 
     reporters: [
@@ -44,8 +47,8 @@ module.exports = function( config ) {
           },
           {
             test: /\.css$/,
-            include: /semantic\-ui\-css/,
-            use: [ 'style-loader', 'css-loader', 'postcss-loader' ],
+            include: /semantic-ui-css/,
+            use: ['style-loader', 'css-loader', 'postcss-loader'],
           },
           {
             test: /\.css$/,
@@ -78,11 +81,11 @@ module.exports = function( config ) {
       },
       resolve: {
         modules: [
-          path.resolve( __dirname, 'src' ),
-          path.resolve( __dirname, 'test' ),
+          path.resolve(__dirname, 'src'),
+          path.resolve(__dirname, 'test'),
           'node_modules',
         ],
       },
     },
-  } );
+  });
 };
