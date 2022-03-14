@@ -1,7 +1,7 @@
 declare namespace ButtonCellCssNamespace {
   export interface IButtonCellCss {
     buttonCell: string;
-    'ui-button': string;
+    "ui-button": string;
   }
 }
 

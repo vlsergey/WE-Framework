@@ -7,6 +7,7 @@ module.exports = {
       './test/tsconfig.json',
     ],
   },
+  ignorePatterns: ['**/src/*.css.d.ts'],
   extends: ['./node_modules/@vlsergey/js-config/src/eslint'],
   rules: {
     // Allow to use ! assertion, because TypeScript strict mode is enabled

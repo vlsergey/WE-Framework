@@ -1,6 +1,6 @@
 declare namespace CoreCssNamespace {
   export interface ICoreCss {
-    'wef-rankselector-menu': string;
+    "wef-rankselector-menu": string;
     wef_columns_table: string;
     wef_editor_dialog: string;
     wef_editor_menu: string;
@@ -23,9 +23,9 @@ declare namespace CoreCssNamespace {
     wef_snak_table_value_editor_cell: string;
     wef_snak_type_label: string;
     wef_snak_value_editor_time: string;
-    'wef_snak_value_editor_time-days': string;
-    'wef_snak_value_editor_time-months': string;
-    'wef_snak_value_editor_time-years': string;
+    "wef_snak_value_editor_time-days": string;
+    "wef_snak_value_editor_time-months": string;
+    "wef_snak_value_editor_time-years": string;
     wef_string: string;
     wef_time_day: string;
     wef_time_oldstyle_span: string;

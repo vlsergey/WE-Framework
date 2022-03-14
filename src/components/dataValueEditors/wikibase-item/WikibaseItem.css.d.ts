@@ -1,7 +1,7 @@
 declare namespace WikibaseItemCssNamespace {
   export interface IWikibaseItemCss {
-    'wef_datavalue_wikibase-item': string;
-    'wef_datavalue_wikibase-item_readonly': string;
+    "wef_datavalue_wikibase-item": string;
+    "wef_datavalue_wikibase-item_readonly": string;
   }
 }
 
