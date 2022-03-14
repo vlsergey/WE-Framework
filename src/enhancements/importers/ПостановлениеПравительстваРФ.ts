@@ -14,8 +14,8 @@ class Importer {
   key = 'ПостановлениеПравительстваРФ';
   label = '{{' + SUPPORTED_TEMPLATE_NAME + '}}';
 
-  canImport (dom: any) {
-    return dom.getChildByClass(Template)
+  canImport (dom: Root) {
+    return dom.getChildrenByClassR(Template)
       .filter(isTemplateSupported)
       .length !== 0;
   }
