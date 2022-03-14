@@ -1,16 +1,19 @@
 /* eslint-env node */
+/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
 const mode = process.env.NODE_ENV || 'development';
-const packageJson = require( './package.json' );
-const path = require( 'path' );
-const webpack = require( 'webpack' );
+const packageJson = require('./package.json');
+const path = require('path');
+const webpack = require('webpack');
 
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
-const TerserJSPlugin = require( 'terser-webpack-plugin' );
+const TerserJSPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-  mode: mode,
+  mode,
 
   entry: './src/index.tsx',
 
@@ -31,7 +34,7 @@ module.exports = {
         include: /src/,
         exclude: /node_modules/,
         use: [
-          "style-loader",
+          'style-loader',
           '@teamsupercell/typings-for-css-modules-loader',
           {
             loader: 'css-loader',
@@ -48,8 +51,8 @@ module.exports = {
         loader: 'ts-loader',
         options: {
           compilerOptions: {
-            "declaration": mode == 'development',
-            "declarationMap": mode == 'development',
+            declaration: mode == 'development',
+            declarationMap: mode == 'development',
           },
         },
       },
@@ -72,16 +75,16 @@ module.exports = {
 
   optimization: {
     minimizer: [
-      new TerserJSPlugin( {
+      new TerserJSPlugin({
         extractComments: true,
         parallel: true,
-      } ),
+      }),
       new CssMinimizerPlugin(),
     ],
   },
 
   output: {
-    path: path.resolve( __dirname, 'dist' ),
+    path: path.resolve(__dirname, 'dist'),
     filename: 'app.bundle.js',
   },
 
