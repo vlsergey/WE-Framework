@@ -22,9 +22,9 @@ function getTitleFromOptions (allLanguagesData: any, languageCode: string): stri
      + JSON.stringify(languageOptions));
 }
 
-var languageTitlesCache : Map< string, string > | null = null;
+let languageTitlesCache: Map< string, string > | null = null;
 
-export function getLanguageTitles(): Map< string, string >{
+export function getLanguageTitles (): Map< string, string > {
   if (languageTitlesCache != null) return languageTitlesCache;
 
   const ulsDataLanguages = jQuery.uls.data.languages;
@@ -33,7 +33,7 @@ export function getLanguageTitles(): Map< string, string >{
       .map(languageCode => [languageCode, getTitleFromOptions(ulsDataLanguages, languageCode)])
   );
   return languageTitlesCache;
-};
+}
 
 export function localize (prototypeDictionaty: any, translations: any) {
   let result = {...prototypeDictionaty};

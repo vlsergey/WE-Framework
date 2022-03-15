@@ -25,7 +25,6 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 0,
     '@typescript-eslint/no-confusing-void-expression': 0,
     '@typescript-eslint/no-floating-promises': 0,
-    '@typescript-eslint/no-empty-function': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-misused-promises': 0,
     '@typescript-eslint/no-unsafe-argument': 0,

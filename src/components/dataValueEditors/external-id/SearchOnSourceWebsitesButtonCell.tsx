@@ -8,7 +8,6 @@ import ButtonCell from '../../ButtonCell';
 import i18n from './i18n';
 
 const EMPTY_OBJECT = Object.freeze({});
-const NOOP = () => {};
 
 interface PropsType {
   disabled?: boolean;
@@ -60,8 +59,7 @@ class SearchOnSourceWebsitesButtonCell extends PureComponent<PropsType> {
     return <ButtonCell
       disabled={disabled || !url}
       icon="ui-icon-search"
-      label={i18n.buttonSearchOnWebsites}
-      onClick={NOOP}>
+      label={i18n.buttonSearchOnWebsites}>
       { (children: any) => <a href={url ? url : '#'}
         rel="noopener noreferrer"
         target="_blank">{children}</a>}

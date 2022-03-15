@@ -295,8 +295,10 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
   }
 
   onCacheUpdateFromDatabase (_cacheUpdate: CacheType<Value>) {
+    /* NOOP, can be overriden by child class */
   }
 
   onCacheUpdateFromRequest (_cacheUpdate: CacheType<Value>) {
+    /* NOOP, can be overriden by child class */
   }
 }
