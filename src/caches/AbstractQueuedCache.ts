@@ -4,7 +4,7 @@ import findByKeysInObjectStore from '../utils/findByKeysInObjectStore';
 // @ts-expect-error
 const indexedDB: IDBFactory = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
-const EMPTY_SET = Object.freeze(new Set());
+const EMPTY_STRINGS_SET = Object.freeze(new Set<string>());
 const PAUSE_BEFORE_REQUEUE = 100;
 
 type CacheType<V> = Record<string, V>;
@@ -20,7 +20,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
   requestQueue: Set< string > = new Set();
   queueState = 'WAITING';
   queueHasNewElements = false;
-  nextBatch: Set< string > = EMPTY_SET;
+  nextBatch: Readonly<Set< string >> = EMPTY_STRINGS_SET;
   useIndexedDb: boolean;
   dbConnection: IDBDatabase | null;
 
@@ -258,7 +258,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
         this.onCacheUpdateFromRequest(cacheUpdate);
       }
 
-      this.nextBatch = EMPTY_SET;
+      this.nextBatch = EMPTY_STRINGS_SET;
       this.decideNextAction();
     } catch (error) {
       mw.notify(notifyMessage + '… Failure. See console log output for details.',
@@ -266,7 +266,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
       mw.log.error(`Unable to batch request following items: ${String(nextBatch)}`);
       mw.log.error(error);
 
-      this.nextBatch = EMPTY_SET;
+      this.nextBatch = EMPTY_STRINGS_SET;
       this.decideNextAction();
     }
   }
