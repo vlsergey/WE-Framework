@@ -18,9 +18,9 @@ describe('I18nUtils', () => {
 
   describe('languageTitles', () => {
     it('is correct', () => {
-      assert.equal(I18nUtils.LANGUAGE_TITLES.get('en'), 'English');
-      assert.equal(I18nUtils.LANGUAGE_TITLES.get('kk'), 'қазақша');
-      assert.equal(I18nUtils.LANGUAGE_TITLES.get('ru'), 'русский');
+      assert.equal(I18nUtils.getLanguageTitles().get('en'), 'English');
+      assert.equal(I18nUtils.getLanguageTitles().get('kk'), 'қазақша');
+      assert.equal(I18nUtils.getLanguageTitles().get('ru'), 'русский');
     });
   });
 

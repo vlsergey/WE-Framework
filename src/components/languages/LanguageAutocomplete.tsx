@@ -2,7 +2,7 @@ import React, {ChangeEvent, PureComponent} from 'react';
 import Autosuggest from 'react-autosuggest';
 import {defaultMemoize} from 'reselect';
 
-import {DEFAULT_LANGUAGES, LANGUAGE_TITLES} from '../../utils/I18nUtils';
+import {DEFAULT_LANGUAGES, getLanguageTitles} from '../../utils/I18nUtils';
 import styles from './LanguageAutocomplete.css';
 import * as selectors from './selectors';
 
@@ -26,6 +26,8 @@ export default class LanguageAutocomplete
     provided: [],
     value: DEFAULT_LANGUAGES[0],
   };
+
+  languageTitles = getLanguageTitles();
 
   emptySuggestions: string[];
   getEmptySuggestions: (_: string[]) => string[];
@@ -74,15 +76,15 @@ export default class LanguageAutocomplete
     const add = (code: string) => { added.add(code); result.push(code); };
 
     // iterate over codes first
-    [...LANGUAGE_TITLES.keys()]
+    [...this.languageTitles.keys()]
       .filter(codeNotYetIncluded)
       .filter(code => code.startsWith(value))
       .forEach(add);
-    [...LANGUAGE_TITLES.keys()]
+    [...this.languageTitles.keys()]
       .filter(codeNotYetIncluded)
       .filter(code => code.includes(value))
       .forEach(add);
-    [...LANGUAGE_TITLES.entries()]
+    [...this.languageTitles.entries()]
       .filter(([code, title]) => codeNotYetIncluded(code) && !!title && title.includes(value))
       .forEach(([code]) => { add(code); });
 
@@ -98,7 +100,7 @@ export default class LanguageAutocomplete
     });
     if (!!newValue
         // should be correct code: either in known languages or in provided array
-        && (LANGUAGE_TITLES.has(newValue) || this.props.provided.includes(newValue))) {
+        && (this.languageTitles.has(newValue) || this.props.provided.includes(newValue))) {
       this.props.onChange(newValue);
     }
   };
@@ -117,7 +119,7 @@ export default class LanguageAutocomplete
   }
 
   renderSuggestion = (data: string, {query}: {query: string}) => {
-    const string = data + (LANGUAGE_TITLES.has(data) ? ' — ' + (LANGUAGE_TITLES.get(data) || '') : '');
+    const string = data + (this.languageTitles.has(data) ? ' — ' + (this.languageTitles.get(data) || '') : '');
     const spans: JSX.Element[] = [];
     string.split(query).forEach((substr, index, array) => {
       if (substr) {

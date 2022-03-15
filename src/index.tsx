@@ -30,7 +30,7 @@ function deepRenameId (element: Element, idSuffix: string, idNewSuffix: string) 
   }
 }
 
-mw.loader.using(['jquery.ui', 'jquery.uls.data', 'mediawiki.ForeignApi'], () => {
+mw.loader.using(['jquery.ui', 'jquery.uls', 'jquery.uls.data', 'mediawiki.ForeignApi'], () => {
 
   require('fetch-polyfill');
   loadSemanticUiCss();
