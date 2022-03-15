@@ -5,14 +5,13 @@
   "main": "src/app.js",
   "browserslist": ">0.1%, safari >= 10, ie >= 11",
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack && eslint ./deploy-to-wikipedia.js --fix",
+    "build": "cross-env NODE_ENV=production webpack",
     "build:watch": "cross-env NODE_ENV=development tsc -w -p ./src",
     "deploy": "npm run build && node ./deploy-to-wikipedia.js",
     "eslint:check": "eslint --ignore-pattern \"!.eslintrc.js\" .eslintrc.js deploy-to-wikipedia.js karma.conf.js webpack.config.js src/**/*.ts* test/.eslintrc.js test/**/*.ts*",
     "eslint:fix": "eslint --ignore-pattern \"!.eslintrc.js\" --fix .eslintrc.js deploy-to-wikipedia.js karma.conf.js webpack.config.js src/**/*.ts* test/.eslintrc.js test/**/*.ts*",
     "serve": "cross-env NODE_ENV=development webpack-dev-server",
-    "test": "npm run eslint:check && npm run flow:check && npm run test:karma",
-    "test:karma": "cross-env NODE_ENV=development karma start karma.conf.js --single-run",
+    "test": "cross-env NODE_ENV=development karma start karma.conf.js --single-run",
     "test:watch": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run",
     "test:watch:chrome": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run --browsers Chrome"
   },
