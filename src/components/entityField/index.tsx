@@ -6,7 +6,7 @@ import {addLastRecentlyUsed, findLastRecentlyUsed} from './LruCache';
 import SelectMode from './SelectMode';
 
 interface PropsType
-  extends Omit<React.ComponentPropsWithoutRef<typeof AutocompleteMode>,'value'|'onChange'|'lruKey'|'oneOf'|'onSelect'|'readOnly'|'value'>{
+  extends Omit<React.ComponentPropsWithoutRef<typeof AutocompleteMode>, 'value' | 'onChange' | 'lruKey' | 'oneOf' | 'onSelect' | 'readOnly' | 'value'>{
   lruKey?: string;
   onChange: (entityId: null | string) => any;
   oneOf?: string[];
@@ -49,7 +49,7 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
   static getDerivedStateFromProps (props: PropsType, state: StateType) {
     if (state.selectMode) {
       const currentValue = props.value;
-      if (!!props.oneOf?.length) {
+      if (props.oneOf?.length) {
         if (!!currentValue && !props.oneOf.includes(currentValue)) {
           return {selectOptions: [...props.oneOf, currentValue]};
         }

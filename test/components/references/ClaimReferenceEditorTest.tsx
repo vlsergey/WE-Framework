@@ -1,29 +1,30 @@
-import { applyMiddleware, createStore } from 'redux';
 import {assert} from 'chai';
-import buildReducers from '../../../src/core/reducers';
-import ClaimReferencesEditorContent from '../../../src/components/references/ClaimReferencesEditorContent';
-import Provider from '../../testUtils/ProviderWrapper';
-import Q30 from '../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
-import SnaksMapEditor from '../../../src/components/snaks/SnaksMapEditor';
+import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
+
+import ClaimReferencesEditorContent from '../../../src/components/references/ClaimReferencesEditorContent';
+import SnaksMapEditor from '../../../src/components/snaks/SnaksMapEditor';
+import buildReducers from '../../../src/core/reducers';
+import Q30 from '../../entities/Q30';
+import Provider from '../../testUtils/ProviderWrapper';
 
 const NOOP = () => {};
 
-describe( 'test/components/references', () => {
+describe('test/components/references', () => {
 
-  describe( 'ClaimReferenceEditor', () => {
+  describe('ClaimReferenceEditor', () => {
 
-    const reducers = buildReducers( Q30 );
-    const store = createStore( reducers, applyMiddleware( thunk ) );
+    const reducers = buildReducers(Q30);
+    const store = createStore(reducers, applyMiddleware(thunk));
 
-    Object.values( Q30.claims as ClaimsType)
-      .flatMap( arr => arr )
-      .filter( claim => !!claim.references )
-      .forEach( (claim: ClaimType) => {
+    Object.values(Q30.claims as ClaimsType)
+      .flatMap(arr => arr)
+      .filter(claim => !!claim.references)
+      .forEach((claim: ClaimType) => {
 
-        it( 'References of claim ' + claim.id + ' be rendered', () => {
+        it('References of claim ' + claim.id + ' be rendered', () => {
           const rendered = ReactTestUtils.renderIntoDocument(
             <Provider store={store}>
               <ClaimReferencesEditorContent
@@ -32,12 +33,12 @@ describe( 'test/components/references', () => {
             </Provider>
           ) as unknown as Provider;
 
-          const snaksMapEditors = ReactTestUtils.scryRenderedComponentsWithType( rendered, SnaksMapEditor ) as SnaksMapEditor[];
-          assert.equal( snaksMapEditors.length, claim?.references?.length );
-        } );
+          const snaksMapEditors = ReactTestUtils.scryRenderedComponentsWithType(rendered, SnaksMapEditor);
+          assert.equal(snaksMapEditors.length, claim?.references?.length);
+        });
 
-      } );
+      });
 
-  } );
+  });
 
-} );
+});

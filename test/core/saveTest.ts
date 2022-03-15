@@ -1,32 +1,33 @@
-import { collectClaimUpdates, collectEntityUpdates } from '../../src/core/save';
 import {assert} from 'chai';
+
+import {collectClaimUpdates, collectEntityUpdates} from '../../src/core/save';
 import Q2262932 from '../entities/Q2262932';
 
-describe( 'save.js', () => {
+describe('save.js', () => {
 
-  it( 'Should be able to report no changes for same objects', () => {
+  it('Should be able to report no changes for same objects', () => {
 
-    const data = collectEntityUpdates( Q2262932, Q2262932 );
-    assert.deepEqual( data, {} );
+    const data = collectEntityUpdates(Q2262932, Q2262932);
+    assert.deepEqual(data, {});
 
-  } );
+  });
 
-  it( 'Should be able to report no changes in claims for same objects', () => {
+  it('Should be able to report no changes in claims for same objects', () => {
 
-    const noChanges = collectClaimUpdates( Q2262932, Q2262932 );
-    assert.deepEqual( noChanges, [] );
+    const noChanges = collectClaimUpdates(Q2262932, Q2262932);
+    assert.deepEqual(noChanges, []);
 
-  } );
+  });
 
-  it( 'Should be able to report no changes in claims for same empty objects', () => {
+  it('Should be able to report no changes in claims for same empty objects', () => {
 
-    const noChanges = collectClaimUpdates( {}, {} );
-    assert.deepEqual( noChanges, [] );
+    const noChanges = collectClaimUpdates({}, {});
+    assert.deepEqual(noChanges, []);
 
-  } );
+  });
 
-  it( 'Should be able to report changes in aliases', () => {
-    const oneChange = collectEntityUpdates( {}, {
+  it('Should be able to report changes in aliases', () => {
+    const oneChange = collectEntityUpdates({}, {
       aliases: {
         en: [
           {
@@ -35,8 +36,8 @@ describe( 'save.js', () => {
           },
         ],
       },
-    } );
-    assert.deepEqual( oneChange, {
+    });
+    assert.deepEqual(oneChange, {
       aliases: {
         en: [
           {
@@ -45,10 +46,10 @@ describe( 'save.js', () => {
           },
         ],
       },
-    } );
-  } );
+    });
+  });
 
-  it( 'Should be able to report changes in existing description', () => {
+  it('Should be able to report changes in existing description', () => {
 
     const newEntity = {
       ...Q2262932,
@@ -61,31 +62,31 @@ describe( 'save.js', () => {
       },
     };
 
-    const data = collectEntityUpdates( Q2262932, newEntity );
-    assert.deepEqual( data, {
+    const data = collectEntityUpdates(Q2262932, newEntity);
+    assert.deepEqual(data, {
       descriptions: {
         en: {
           language: 'en',
           value: 'Some new description',
         },
       },
-    } );
+    });
 
-  } );
+  });
 
-  it( 'Should be able to save without changes if datavalue is different instance with the same values', () => {
+  it('Should be able to save without changes if datavalue is different instance with the same values', () => {
     const newEntity = {
       ...Q2262932,
       claims: {
         ...Q2262932.claims,
         P345: [
           {
-            ...Q2262932.claims.P345[ 0 ],
+            ...Q2262932.claims.P345[0],
             mainsnak: {
-              ...Q2262932.claims.P345[ 0 ]!.mainsnak,
+              ...Q2262932.claims.P345[0]!.mainsnak,
               datavalue: {
-                ...Q2262932.claims.P345[ 0 ]!.mainsnak.datavalue,
-                value: Q2262932.claims.P345[ 0 ]!.mainsnak.datavalue.value,
+                ...Q2262932.claims.P345[0]!.mainsnak.datavalue,
+                value: Q2262932.claims.P345[0]!.mainsnak.datavalue.value,
               },
             },
           },
@@ -93,12 +94,12 @@ describe( 'save.js', () => {
       },
     };
 
-    const noChanges = collectClaimUpdates( Q2262932, newEntity as unknown as ItemType );
-    assert.deepEqual( noChanges, [] );
+    const noChanges = collectClaimUpdates(Q2262932, newEntity as unknown as ItemType);
+    assert.deepEqual(noChanges, []);
 
-  } );
+  });
 
-  it( 'Should be able to find updated claim', () => {
+  it('Should be able to find updated claim', () => {
 
     const newEntity = {
       ...Q2262932,
@@ -106,11 +107,11 @@ describe( 'save.js', () => {
         ...Q2262932.claims,
         P345: [
           {
-            ...Q2262932.claims.P345[ 0 ]!,
+            ...Q2262932.claims.P345[0]!,
             mainsnak: {
-              ...Q2262932.claims.P345[ 0 ]!.mainsnak,
+              ...Q2262932.claims.P345[0]!.mainsnak,
               datavalue: {
-                ...Q2262932.claims.P345[ 0 ]!.mainsnak!.datavalue,
+                ...Q2262932.claims.P345[0]!.mainsnak.datavalue,
                 value: 'tt9999999',
                 type: 'string',
               },
@@ -120,12 +121,12 @@ describe( 'save.js', () => {
       },
     };
 
-    const singleChange = collectClaimUpdates( Q2262932, newEntity as unknown as EntityType );
-    assert.equal( 1, singleChange.length );
-    assert.equal( 'tt9999999', singleChange?.[ 0 ]?.mainsnak?.datavalue?.value );
-  } );
+    const singleChange = collectClaimUpdates(Q2262932, newEntity as unknown as EntityType);
+    assert.equal(1, singleChange.length);
+    assert.equal('tt9999999', singleChange?.[0]?.mainsnak?.datavalue?.value);
+  });
 
-  it( 'Should be able to find replaced claim', () => {
+  it('Should be able to find replaced claim', () => {
 
     const newEntity = {
       ...Q2262932,
@@ -133,12 +134,12 @@ describe( 'save.js', () => {
         ...Q2262932.claims,
         P345: [
           {
-            ...Q2262932.claims.P345[ 0 ],
+            ...Q2262932.claims.P345[0],
             id: 'somenewnonexistingid',
             mainsnak: {
-              ...Q2262932.claims.P345[ 0 ]!.mainsnak,
+              ...Q2262932.claims.P345[0]!.mainsnak,
               datavalue: {
-                ...Q2262932.claims.P345[ 0 ]!.mainsnak.datavalue,
+                ...Q2262932.claims.P345[0]!.mainsnak.datavalue,
                 value: 'tt9999999',
               },
             },
@@ -147,14 +148,14 @@ describe( 'save.js', () => {
       },
     };
 
-    const singleChange = collectClaimUpdates( Q2262932, newEntity as unknown as EntityType );
-    assert.equal( 2, singleChange.length );
+    const singleChange = collectClaimUpdates(Q2262932, newEntity as unknown as EntityType);
+    assert.equal(2, singleChange.length);
     // new claim
-    assert.equal( 'undefined', typeof singleChange[ 0 ]!.id );
-    assert.equal( 'tt9999999', singleChange[ 0 ]!.mainsnak!.datavalue!.value );
+    assert.equal('undefined', typeof singleChange[0]!.id);
+    assert.equal('tt9999999', singleChange[0]!.mainsnak!.datavalue!.value);
     // deleted claim
-    assert.equal( Q2262932.claims.P345[ 0 ]!.id, singleChange[ 1 ]!.id );
-    assert.equal( '', singleChange[ 1 ]!.remove );
-  } );
+    assert.equal(Q2262932.claims.P345[0]!.id, singleChange[1]!.id);
+    assert.equal('', singleChange[1]!.remove);
+  });
 
-} );
+});

@@ -1,37 +1,38 @@
-import { applyMiddleware, createStore } from 'redux';
 import {assert} from 'chai';
-import buildReducers from '../../../../src/core/reducers';
-import P21 from '../../../entities/P21';
-import P31 from '../../../entities/P31';
-import PropertyData from '../../../../src/core/PropertyData';
-import PropertyDescription from '../../../../src/core/PropertyDescription';
-import Provider from '../../../testUtils/ProviderWrapper';
-import Q1367759 from '../../../entities/Q1367759';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ReactTestUtils from 'react-dom/test-utils';
-import {className as SuggestionClassName} from '../../../../src/components/entityField/Suggestion';
-import TableTBodyTr from '../TableTBodyTr';
+import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
-import ValueHolder from '../../../testUtils/ValueHolder';
+
 import WikibaseItemDataValueEditor from '../../../../src/components/dataValueEditors/wikibase-item/WikibaseItemDataValueEditor';
+import {className as SuggestionClassName} from '../../../../src/components/entityField/Suggestion';
+import PropertyData from '../../../../src/core/PropertyData';
+import PropertyDescription from '../../../../src/core/PropertyDescription';
+import buildReducers from '../../../../src/core/reducers';
+import P21 from '../../../entities/P21';
+import P31 from '../../../entities/P31';
+import Q1367759 from '../../../entities/Q1367759';
+import Provider from '../../../testUtils/ProviderWrapper';
+import ValueHolder from '../../../testUtils/ValueHolder';
+import TableTBodyTr from '../TableTBodyTr';
 
 const NOOP = () => {};
 
-describe( 'components/dataValueEditors', () => {
+describe('components/dataValueEditors', () => {
 
-  const reducers = buildReducers( Q1367759 );
-  const store = createStore( reducers, applyMiddleware( thunk ) );
+  const reducers = buildReducers(Q1367759);
+  const store = createStore(reducers, applyMiddleware(thunk));
 
-  describe( 'WikibaseItemDataValueEditor', () => {
+  describe('WikibaseItemDataValueEditor', () => {
 
-    const p21Description = new PropertyDescription( new PropertyData( P21 ) );
-    const p31Description = new PropertyDescription( new PropertyData( P31 ) );
+    const p21Description = new PropertyDescription(new PropertyData(P21));
+    const p31Description = new PropertyDescription(new PropertyData(P31));
 
-    it( 'can be rendered with empty datavalue for property with limited options and can be changed', () => {
+    it('can be rendered with empty datavalue for property with limited options and can be changed', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <ValueHolder<any> initialValue={{}}>{( value, onChange ) =>
+          <ValueHolder<any> initialValue={{}}>{(value, onChange) =>
             <TableTBodyTr>
               <WikibaseItemDataValueEditor
                 datavalue={value}
@@ -41,20 +42,20 @@ describe( 'components/dataValueEditors', () => {
           }</ValueHolder>
         </Provider>
       ) as unknown as Provider;
-      assert.ok( rendered );
-      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder ) as ValueHolder<any>;
+      assert.ok(rendered);
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType(rendered, ValueHolder) as ValueHolder<any>;
 
-      const select = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'select' ) as HTMLSelectElement;
-      assert.ok( select );
-      assert.equal( select.value, '' );
+      const select = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'select') as HTMLSelectElement;
+      assert.ok(select);
+      assert.equal(select.value, '');
 
       select.value = 'Q6581072';
-      ReactTestUtils.Simulate.change( select );
-      assert( valueHolder.getValue().value.id, 'Q6581072' );
-    } );
+      ReactTestUtils.Simulate.change(select);
+      assert(valueHolder.getValue().value.id, 'Q6581072');
+    });
 
-    it( 'can be rendered with non-empty datavalue for property with limited options and can be changed', () => {
-      const initialDataValue : WikibaseEntityIdDataValue = {
+    it('can be rendered with non-empty datavalue for property with limited options and can be changed', () => {
+      const initialDataValue: WikibaseEntityIdDataValue = {
         value: {
           'entity-type': 'item',
           'numeric-id': 6581072,
@@ -65,7 +66,7 @@ describe( 'components/dataValueEditors', () => {
 
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
-          <ValueHolder<any> initialValue={initialDataValue}>{( value, onChange ) =>
+          <ValueHolder<any> initialValue={initialDataValue}>{(value, onChange) =>
             <TableTBodyTr>
               <WikibaseItemDataValueEditor
                 datavalue={value}
@@ -75,19 +76,19 @@ describe( 'components/dataValueEditors', () => {
           }</ValueHolder>
         </Provider>
       ) as unknown as Provider;
-      assert.ok( rendered );
-      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder ) as ValueHolder<any>;
+      assert.ok(rendered);
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType(rendered, ValueHolder) as ValueHolder<any>;
 
-      const select = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'select' ) as HTMLSelectElement;
-      assert.ok( select );
-      assert.equal( select.value, 'Q6581072' );
+      const select = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'select') as HTMLSelectElement;
+      assert.ok(select);
+      assert.equal(select.value, 'Q6581072');
 
       select.value = 'Q6581097';
-      ReactTestUtils.Simulate.change( select );
-      assert( valueHolder.getValue()?.value?.id, 'Q6581097' );
-    } );
+      ReactTestUtils.Simulate.change(select);
+      assert(valueHolder.getValue()?.value?.id, 'Q6581097');
+    });
 
-    it( 'can be rendered with empty datavalue for generic property', () => {
+    it('can be rendered with empty datavalue for generic property', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <TableTBodyTr>
@@ -98,14 +99,14 @@ describe( 'components/dataValueEditors', () => {
           </TableTBodyTr>
         </Provider>
       ) as unknown as Provider;
-      assert.ok( rendered );
+      assert.ok(rendered);
 
-      const input = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'input' ) as HTMLInputElement;
-      assert.ok( input );
-      assert.equal( input.value, '' );
-    } );
+      const input = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'input') as HTMLInputElement;
+      assert.ok(input);
+      assert.equal(input.value, '');
+    });
 
-    it( 'can be rendered', () => {
+    it('can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <Provider store={store}>
           <TableTBodyTr>
@@ -123,15 +124,15 @@ describe( 'components/dataValueEditors', () => {
           </TableTBodyTr>
         </Provider>
       ) as unknown as Provider;
-      assert.ok( rendered );
+      assert.ok(rendered);
 
-      const input = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'input' ) as HTMLInputElement;
-      assert.ok( input );
-      assert.equal( input.value, 'Q35120' );
-    } );
+      const input = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'input') as HTMLInputElement;
+      assert.ok(input);
+      assert.equal(input.value, 'Q35120');
+    });
 
-    it( 'click; type; select; clear', () => {
-      const datavalue : DataValueType = {
+    it('click; type; select; clear', () => {
+      const datavalue: DataValueType = {
         value: {
           'entity-type': 'item',
           'numeric-id': 35120,
@@ -139,14 +140,14 @@ describe( 'components/dataValueEditors', () => {
         },
         type: 'wikibase-entityid',
       };
-      const onDataValueChange = (newDataValue : null | DataValueType) => {
-        Object.keys( datavalue ).forEach( key => datavalue[ key as keyof DataValueType ] = newDataValue![ key as keyof DataValueType] );
-        Object.keys( newDataValue! ).forEach( key => datavalue[ key as keyof DataValueType ] = newDataValue![ key as keyof DataValueType] );
+      const onDataValueChange = (newDataValue: null | DataValueType) => {
+        Object.keys(datavalue).forEach(key => datavalue[key as keyof DataValueType] = newDataValue![key as keyof DataValueType]);
+        Object.keys(newDataValue!).forEach(key => datavalue[key as keyof DataValueType] = newDataValue![key as keyof DataValueType]);
       };
 
-      function testSuggestionsProvider( value : string ) {
-        if ( value == '222' ) {
-          return [ 'Q222111', 'Q222222' ];
+      function testSuggestionsProvider (value: string) {
+        if (value == '222') {
+          return ['Q222111', 'Q222222'];
         }
         return [];
       }
@@ -162,33 +163,33 @@ describe( 'components/dataValueEditors', () => {
           </TableTBodyTr>
         </Provider>
       ) as unknown as Provider;
-      assert.ok( rendered );
+      assert.ok(rendered);
 
-      const input = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'input' ) as HTMLInputElement;
-      assert.ok( input );
-      assert.equal( input.value, 'Q35120' );
+      const input = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'input') as HTMLInputElement;
+      assert.ok(input);
+      assert.equal(input.value, 'Q35120');
 
       input.focus();
-      ReactTestUtils.Simulate.focus( input );
+      ReactTestUtils.Simulate.focus(input);
 
       input.value = '222';
-      ReactTestUtils.Simulate.change( input );
+      ReactTestUtils.Simulate.change(input);
 
       // we don't have API, so suggestions are same
-      const suggestionComponents = ReactTestUtils.scryRenderedDOMComponentsWithClass( rendered, SuggestionClassName ) as Element[];
-      assert.ok( suggestionComponents );
-      assert.equal( suggestionComponents.length, 2 );
+      const suggestionComponents = ReactTestUtils.scryRenderedDOMComponentsWithClass(rendered, SuggestionClassName);
+      assert.ok(suggestionComponents);
+      assert.equal(suggestionComponents.length, 2);
 
       // after click we need to see item label
-      ReactTestUtils.Simulate.click( ReactDOM.findDOMNode( suggestionComponents[ 0 ]! ) as Element );
-      assert.equal( input.value, 'Q222111' );
+      ReactTestUtils.Simulate.click(ReactDOM.findDOMNode(suggestionComponents[0]) as Element);
+      assert.equal(input.value, 'Q222111');
 
       // last check -- that we can DELETE value
       input.value = '';
-      ReactTestUtils.Simulate.change( input );
+      ReactTestUtils.Simulate.change(input);
 
-      assert.equal( input.value, '' );
-      assert.equal( datavalue.value, null );
-    } );
-  } );
-} );
+      assert.equal(input.value, '');
+      assert.equal(datavalue.value, null);
+    });
+  });
+});

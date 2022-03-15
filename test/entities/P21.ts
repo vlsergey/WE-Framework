@@ -1,4 +1,4 @@
-const data : PropertyType = {
+const data: PropertyType = {
   pageid: 3917971,
   ns: 120,
   title: 'Property:P21',

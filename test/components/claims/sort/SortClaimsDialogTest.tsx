@@ -1,24 +1,25 @@
-import { applyMiddleware, createStore } from 'redux';
 import {assert} from 'chai';
-import buildReducers from '../../../../src/core/reducers';
-import Provider from '../../../testUtils/ProviderWrapper';
-import Q30 from '../../../entities/Q30';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
-import SortClaimsDialog from '../../../../src/components/claims/sort/SortClaimsDialog';
+import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
+
+import SortClaimsDialog from '../../../../src/components/claims/sort/SortClaimsDialog';
 import TimeComparator from '../../../../src/components/claims/sort/TimeComparator';
+import buildReducers from '../../../../src/core/reducers';
+import Q30 from '../../../entities/Q30';
+import Provider from '../../../testUtils/ProviderWrapper';
 
 const NOOP = () => {};
 
-describe( 'components/claims/sort/SortClaimsDialog', () => {
+describe('components/claims/sort/SortClaimsDialog', () => {
 
-  it( 'renders', () => {
-    const reducers = buildReducers( Q30 );
-    const store = createStore( reducers, applyMiddleware( thunk ) );
+  it('renders', () => {
+    const reducers = buildReducers(Q30);
+    const store = createStore(reducers, applyMiddleware(thunk));
 
     const comparators = new Map();
-    comparators.set( 'P580', [ new TimeComparator() ] );
+    comparators.set('P580', [new TimeComparator()]);
 
     const rendered = ReactTestUtils.renderIntoDocument(
       <Provider store={store}>
@@ -29,7 +30,7 @@ describe( 'components/claims/sort/SortClaimsDialog', () => {
           propertyIdToComparators={comparators} />
       </Provider>
     );
-    assert.ok( rendered );
-  } );
+    assert.ok(rendered);
+  });
 
-} );
+});

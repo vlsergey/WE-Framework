@@ -1,15 +1,16 @@
-import * as selectors from '../../../src/components/languages/selectors';
 import {assert} from 'chai';
 
-describe( 'components/languages/selectors', () => {
+import * as selectors from '../../../src/components/languages/selectors';
 
-  describe( 'createEmptySuggestionsSelector', () => {
+describe('components/languages/selectors', () => {
 
-    it( 'provides correct variants', () => {
-      const result = selectors.createEmptySuggestionsSelector()( [ 'fr', 'en', 'ru' ] );
-      assert.deepEqual( result, [ 'en', 'ru', 'fr' ] );
-    } );
+  describe('createEmptySuggestionsSelector', () => {
 
-  } );
+    it('provides correct variants', () => {
+      const result = selectors.createEmptySuggestionsSelector()(['fr', 'en', 'ru']);
+      assert.deepEqual(result, ['en', 'ru', 'fr']);
+    });
 
-} );
+  });
+
+});

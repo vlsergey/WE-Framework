@@ -1,4 +1,4 @@
-import isOkay from "../utils/isOkay";
+import isOkay from '../utils/isOkay';
 
 function filterEmptyAliases (aliases: AliasesType): AliasesType {
   const result = {} as AliasesType;

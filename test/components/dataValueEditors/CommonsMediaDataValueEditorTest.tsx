@@ -1,22 +1,23 @@
 import {assert} from 'chai';
-import CommonsMediaDataValueEditor from '../../../src/components/dataValueEditors/CommonsMediaDataValueEditor';
-import P18 from '../../entities/P18';
-import PropertyData from '../../../src/core/PropertyData';
-import PropertyDescription from '../../../src/core/PropertyDescription';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
-import TableTBodyTr from './TableTBodyTr';
+
+import CommonsMediaDataValueEditor from '../../../src/components/dataValueEditors/CommonsMediaDataValueEditor';
+import PropertyData from '../../../src/core/PropertyData';
+import PropertyDescription from '../../../src/core/PropertyDescription';
+import P18 from '../../entities/P18';
 import ValueHolder from '../../testUtils/ValueHolder';
+import TableTBodyTr from './TableTBodyTr';
 
 const NOOP = () => {};
 
-describe( 'components/dataValueEditors', () => {
+describe('components/dataValueEditors', () => {
 
-  describe( 'CommonsMediaDataValueEditor', () => {
+  describe('CommonsMediaDataValueEditor', () => {
 
-    const p18Description = new PropertyDescription( new PropertyData( P18 ) );
+    const p18Description = new PropertyDescription(new PropertyData(P18));
 
-    it( 'can be rendered', () => {
+    it('can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <TableTBodyTr>
           <CommonsMediaDataValueEditor
@@ -28,12 +29,12 @@ describe( 'components/dataValueEditors', () => {
             propertyDescription={p18Description} />
         </TableTBodyTr>
       );
-      assert.ok( rendered );
-    } );
+      assert.ok(rendered);
+    });
 
-    it( 'can be changed via keyboard', () => {
+    it('can be changed via keyboard', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <ValueHolder<CommonsMediaDataValue|null> initialValue={{ value: 'Image.jpg', type: 'string' }}>{ ( value, onChange ) =>
+        <ValueHolder<CommonsMediaDataValue | null> initialValue={{value: 'Image.jpg', type: 'string'}}>{ (value, onChange) =>
           <TableTBodyTr>
             <CommonsMediaDataValueEditor
               datavalue={value}
@@ -42,18 +43,18 @@ describe( 'components/dataValueEditors', () => {
           </TableTBodyTr>
         }</ValueHolder>
       ) as unknown as ValueHolder<CommonsMediaDataValue>;
-      assert.ok( rendered );
-      const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder ) as ValueHolder<any>;
+      assert.ok(rendered);
+      const valueHolder = ReactTestUtils.findRenderedComponentWithType(rendered, ValueHolder) as ValueHolder<any>;
 
-      const input = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'input' ) as HTMLInputElement;
-      assert.ok( input );
+      const input = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'input') as HTMLInputElement;
+      assert.ok(input);
 
       input.value = 'NewImage.gif';
-      ReactTestUtils.Simulate.change( input );
+      ReactTestUtils.Simulate.change(input);
 
-      assert.equal( valueHolder.getValue().value, 'NewImage.gif' );
-    } );
+      assert.equal(valueHolder.getValue().value, 'NewImage.gif');
+    });
 
-  } );
+  });
 
-} );
+});

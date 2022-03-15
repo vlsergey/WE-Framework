@@ -30,8 +30,8 @@ export type AliasesType = Record<string, LabelalikeType[]>;
   type ClaimsType = Record<string, ClaimType[]>;
 
   interface CommonsMediaDataValue extends BaseDataValue {
-    type: 'string',
-    value: string,
+    type: 'string';
+    value: string;
   }
 
   interface DataValueType {
@@ -75,13 +75,13 @@ export type AliasesType = Record<string, LabelalikeType[]>;
   type LabelsType = Record<string, LabelalikeType>;
 
   interface MonolingualTextDataValue extends BaseDataValue {
-    type: 'monolingualtext',
-    value: MonolingualTextValue,
+    type: 'monolingualtext';
+    value: MonolingualTextValue;
   }
 
   interface MonolingualTextValue {
-    language: string,
-    text?:string,
+    language: string;
+    text?: string;
   }
 
   interface PropertyType extends EntityType {
@@ -95,8 +95,8 @@ export type AliasesType = Record<string, LabelalikeType[]>;
   type QualifiersType = Record<string, QualifierType[]>;
 
   interface QuantityDataValue extends DataValueType {
-    type: 'quantity',
-    value? : QuantityValue,
+    type: 'quantity';
+    value?: QuantityValue;
   }
 
   interface QuantityValue {
@@ -139,8 +139,8 @@ export type AliasesType = Record<string, LabelalikeType[]>;
   type SnaksType = Record<string, SnakType[]>;
 
   interface WikibaseEntityIdDataValue extends BaseDataValue {
-    type: 'wikibase-entityid',
-    value: WikibaseEntityIdValueType,
+    type: 'wikibase-entityid';
+    value: WikibaseEntityIdValueType;
   }
 
   interface WikibaseEntityIdValueType {

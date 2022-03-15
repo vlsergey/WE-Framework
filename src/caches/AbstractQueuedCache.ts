@@ -4,7 +4,7 @@ import findByKeysInObjectStore from '../utils/findByKeysInObjectStore';
 // @ts-expect-error
 const indexedDB: IDBFactory = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
-const EMPTY_SET = Object.freeze(new Set() as Set<string>);
+const EMPTY_SET = Object.freeze(new Set());
 const PAUSE_BEFORE_REQUEUE = 100;
 
 type CacheType<V> = Record<string, V>;
@@ -20,7 +20,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
   requestQueue: Set< string > = new Set();
   queueState = 'WAITING';
   queueHasNewElements = false;
-  nextBatch:  Set< string > = EMPTY_SET;
+  nextBatch: Set< string > = EMPTY_SET;
   useIndexedDb: boolean;
   dbConnection: IDBDatabase | null;
 

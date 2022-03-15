@@ -15,7 +15,7 @@ export default class ModeSelect extends PureComponent<PropsType> {
 
   handleModeChange = ({target: {value}}: ChangeEvent<HTMLSelectElement>) => {
     this.props.onSelect(value as ModeType);
-  }
+  };
 
   override render () {
     const {mode, value} = this.props;

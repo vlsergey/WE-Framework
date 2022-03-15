@@ -1,4 +1,4 @@
-const data : ItemType = {
+const data: ItemType = {
   pageid: 707827,
   ns: 0,
   title: 'Q752285',

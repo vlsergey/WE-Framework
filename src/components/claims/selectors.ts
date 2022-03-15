@@ -1,6 +1,6 @@
 import {defaultMemoize} from 'reselect';
-import isOkay from '../../utils/isOkay';
 
+import isOkay from '../../utils/isOkay';
 import stableSort from '../../utils/stableSort';
 
 const EMPTY_ARRAY = Object.freeze([]);

@@ -1,13 +1,14 @@
 import {assert} from 'chai';
+
 import commitDraftAliases from '../../src/core/commitDraftAliases';
 
-describe( 'core/commitDraftAliases', () => {
+describe('core/commitDraftAliases', () => {
 
-  it( 'works with empty objects', () => {
-    assert.deepEqual( commitDraftAliases( {} ), {} );
-  } );
+  it('works with empty objects', () => {
+    assert.deepEqual(commitDraftAliases({}), {});
+  });
 
-  it( 'correctly moves draft to aliases', () => {
+  it('correctly moves draft to aliases', () => {
     const withDrafts = {
       aliases: {
         lang1: [
@@ -50,7 +51,7 @@ describe( 'core/commitDraftAliases', () => {
       },
     };
 
-    assert.deepEqual( commitDraftAliases( withDrafts ), expected );
-  } );
+    assert.deepEqual(commitDraftAliases(withDrafts), expected);
+  });
 
-} );
+});

@@ -1,4 +1,4 @@
-const data : ItemType = {
+const data: ItemType = {
   type: 'item',
   claims: {
     P31: [

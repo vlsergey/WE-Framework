@@ -1,31 +1,32 @@
 import {assert} from 'chai';
-import LanguageAutocomplete from '../../../src/components/languages/LanguageAutocomplete';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 
+import LanguageAutocomplete from '../../../src/components/languages/LanguageAutocomplete';
+
 const NOOP = () => {};
 
-describe( 'components/languages', () => {
+describe('components/languages', () => {
 
-  describe( 'LanguageAutocomplete', () => {
+  describe('LanguageAutocomplete', () => {
 
-    it( 'can be rendered', () => {
+    it('can be rendered', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <LanguageAutocomplete
           onChange={NOOP}
           provided={[]}
           value="en" />
       ) as unknown as LanguageAutocomplete;
-      assert.ok( rendered );
+      assert.ok(rendered);
 
-      const input  = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'input' ) as HTMLInputElement;
-      assert.ok( input );
-      assert.equal( input.value, 'en' );
-    } );
+      const input = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'input') as HTMLInputElement;
+      assert.ok(input);
+      assert.equal(input.value, 'en');
+    });
 
-    it( 'can be changed via keyboard', () => {
+    it('can be changed via keyboard', () => {
       let value = 'en';
-      const onChange = (newValue : string) => { value = newValue; };
+      const onChange = (newValue: string) => { value = newValue; };
 
       const rendered = ReactTestUtils.renderIntoDocument(
         <LanguageAutocomplete
@@ -33,16 +34,16 @@ describe( 'components/languages', () => {
           provided={[]}
           value="en" />
       ) as unknown as LanguageAutocomplete;
-      assert.ok( rendered );
+      assert.ok(rendered);
 
-      const input = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'input' ) as HTMLInputElement;
-      assert.ok( input );
+      const input = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'input') as HTMLInputElement;
+      assert.ok(input);
 
       input.value = 'ru';
-      ReactTestUtils.Simulate.change( input );
-      assert.equal( value, 'ru' );
-    } );
+      ReactTestUtils.Simulate.change(input);
+      assert.equal(value, 'ru');
+    });
 
-  } );
+  });
 
-} );
+});
