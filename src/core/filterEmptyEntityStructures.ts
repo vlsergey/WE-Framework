@@ -1,5 +1,4 @@
-
-const ok = (x: any) => typeof x !== 'undefined' && x !== null;
+import isOkay from "../utils/isOkay";
 
 function filterEmptyAliases (aliases: AliasesType): AliasesType {
   const result = {} as AliasesType;
@@ -46,13 +45,12 @@ function filterEmptyClaims (claims: ClaimsType): ClaimsType {
         if (!oldReferences) return claim;
 
         const newReferences = oldReferences
-          .filter(ok)
           .map<ReferenceType | undefined>(ref => {
             const snaks = filterSnaksMap(ref.snaks);
             if (!snaks) return;
             return {...ref, snaks};
           })
-          .filter(ok) as ReferenceType[];
+          .filter(isOkay);
         if (newReferences.length === 0) {
           const newClaim = {...claim};
           delete newClaim.references;
@@ -88,8 +86,6 @@ function filterSnaksMap<T extends QualifiersType | SnaksType > (snaksMap: null |
   const result = {} as T;
   let resultIsEmpty = true;
   Object.entries(snaksMap).forEach(([propertyId, snaksArray]) => {
-    if (!Array.isArray(snaksArray)) return;
-
     const propertySnaks = snaksArray
       .filter(snak => !isSnakEmtpy(snak));
 

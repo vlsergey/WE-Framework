@@ -1,6 +1,7 @@
 import {getWikidataApi} from '../core/ApiUtils';
 import {filterClaimsByRank} from '../model/ModelUtils';
 import isNotNull from '../utils/isNotNull';
+import isOkay from '../utils/isOkay';
 import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 
 const TYPE = 'STRINGPROPERTYVALUES';
@@ -14,7 +15,6 @@ const PROPERTIES_TO_CACHE: SUPORTED_PROPERTY_ID[] = [
   'P424', // Wikimedia language code
 ];
 
-const ok = (variable: any) => !!variable;
 const EMPTY_ARRAY = Object.freeze([]);
 
 export type Item = Partial<Record<SUPORTED_PROPERTY_ID, string[]>> & {
@@ -36,9 +36,9 @@ export const buildStringCacheValuesFromEntity = (entity: EntityType) => {
       return;
     }
 
-    const values: string[] = (filterClaimsByRank(entity?.claims?.[propertyId])
-      .map(claim => claim.mainsnak).filter(ok)
-      .map(mainsnak => mainsnak.datavalue).filter(ok) as DataValueType[])
+    const values: string[] = filterClaimsByRank(entity?.claims?.[propertyId])
+      .map(claim => claim.mainsnak).filter(isOkay)
+      .map(mainsnak => mainsnak.datavalue).filter(isOkay)
       .map(datavalue => {
         switch (datavalue.type) {
         case 'string':

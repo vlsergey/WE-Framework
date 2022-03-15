@@ -37,7 +37,7 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
       selectOptions: [],
     };
 
-    if (!this.props.oneOf && this.props.lruKey) {
+    if (!this.props.oneOf?.length && this.props.lruKey) {
       findLastRecentlyUsed(this.props.lruKey).then(arr => {
         if (Array.isArray(arr) && arr.length !== 0) {
           this.setState({lruFromCache: arr, selectMode: true});
@@ -49,7 +49,7 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
   static getDerivedStateFromProps (props: PropsType, state: StateType) {
     if (state.selectMode) {
       const currentValue = props.value;
-      if (props.oneOf) {
+      if (!!props.oneOf?.length) {
         if (!!currentValue && !props.oneOf.includes(currentValue)) {
           return {selectOptions: [...props.oneOf, currentValue]};
         }

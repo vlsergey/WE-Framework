@@ -1,8 +1,8 @@
 import {defaultMemoize} from 'reselect';
+import isOkay from '../../utils/isOkay';
 
 import stableSort from '../../utils/stableSort';
 
-const ok = (x: any) => x !== undefined && x !== null;
 const EMPTY_ARRAY = Object.freeze([]);
 
 const MAX_COLUMNS = 2;
@@ -33,7 +33,7 @@ export const claimColumnsF = () => {
 
     const qualifierStats: Map< string, number > = new Map();
     claims
-      .map(claim => claim.qualifiers).filter(ok)
+      .map(claim => claim.qualifiers).filter(isOkay)
       .forEach(qualifiers => { Object.entries(qualifiers || {})
         .forEach(([propertyId, qualifiersArray]) => {
           const plus = (qualifiersArray || EMPTY_ARRAY).length > 0 ? 1 : 0;

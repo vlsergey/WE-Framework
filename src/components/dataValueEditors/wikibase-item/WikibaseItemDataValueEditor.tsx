@@ -80,7 +80,7 @@ export default class WikibaseItemDataValueEditor
           {...etc}
           lruKey={propertyDescription.id}
           onChange={this.handleChange}
-          oneOf={propertyDescription.oneOf || undefined}
+          oneOf={propertyDescription.oneOf}
           value={currentValue} />
       </td>
       { buttonCells }
