@@ -6,9 +6,9 @@ import {COLUMNS_FOR_SNAK_ROW} from '../TableColSpanConstants';
 import SnaksArrayEditor from './SnaksArrayEditor';
 
 interface PropsType {
-  ignorePropertyIds: readonly string[];
-  onSnaksMapUpdate: (value: SnaksMap) => any;
-  readOnly: boolean;
+  ignorePropertyIds?: readonly string[];
+  onSnaksMapUpdate?: (value: SnaksMap) => any;
+  readOnly?: boolean;
   removeButtonConfirmMessageF: (pd: PropertyDescription) => string;
   removeButtonLabel: string;
   snaksMap?: SnaksMap;
@@ -16,13 +16,10 @@ interface PropsType {
 
 export default class SnaksMapEditor extends PureComponent<PropsType> {
 
-  static defaultProps = {
-    ignorePropertyIds: [],
-    readOnly: false,
-  };
-
   handleSnaksArrayUpdateF (propertyDescription: PropertyDescription) {
     return (snaksArray: null | SnakType[]) => {
+      if (!this.props.onSnaksMapUpdate) return;
+
       if (snaksArray == null) {
         const newMap = {...this.props.snaksMap};
         delete newMap[propertyDescription.id];
@@ -41,8 +38,8 @@ export default class SnaksMapEditor extends PureComponent<PropsType> {
 
     if (!snaksMap) return null;
 
-    const propertyIds = Object.keys(snaksMap)
-      .filter(propertyId => !ignorePropertyIds.includes(propertyId));
+    const propertyIds = ignorePropertyIds === undefined ? Object.keys(snaksMap) :
+      Object.keys(snaksMap).filter(propertyId => !ignorePropertyIds.includes(propertyId));
     return <PropertyDescriptionsProvider propertyIds={propertyIds}>
       {cache => propertyIds.map(propertyId => {
         const propertyDescription = cache[propertyId];

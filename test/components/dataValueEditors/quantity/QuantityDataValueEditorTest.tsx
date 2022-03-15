@@ -174,7 +174,7 @@ describe('components/dataValueEditors/quantity', () => {
       {
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag(rendered, 'input') as HTMLInputElement[];
         assert.equal(inputs.length, 3);
-        inputs.forEach(input => ReactTestUtils.Simulate.change(input));
+        inputs.forEach(input => { ReactTestUtils.Simulate.change(input); });
         assert.deepEqual(valueHolder.getValue(),
           {type: 'quantity', value: {lowerBound: '-1', amount: '1', upperBound: '3', unit: '1'}});
 

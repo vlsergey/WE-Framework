@@ -77,7 +77,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
     return cachedValue as unknown as Value;
   }
 
-  abstract notifyMessage (cacheKeys: string[]): void;
+  abstract notifyMessage (cacheKeys: string[]): string;
 
   abstract buildRequestPromice (cacheKeys: string[]): Promise< RequestResult >;
 
@@ -116,8 +116,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
 
       if (queued && this.queueState === 'WAITING') {
         this.changeState('WAITING', 'SCHEDULED');
-        setTimeout(() => { this.checkIfDatabaseScanRequired(); },
-          PAUSE_BEFORE_REQUEUE);
+        setTimeout(this.checkIfDatabaseScanRequired, PAUSE_BEFORE_REQUEUE);
       }
     };
   }
@@ -132,7 +131,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
     }
   }
 
-  checkIfDatabaseScanRequired () {
+  checkIfDatabaseScanRequired = () => {
     this.assertState('SCHEDULED');
 
     const data = this.getState()[this.type];
@@ -156,7 +155,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
     }
 
     this.changeState('SCHEDULED', 'WAITING');
-  }
+  };
 
   scanDatabase () {
     this.assertState('SCAN');
@@ -232,11 +231,11 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
     }
 
     const notifyMessage = this.notifyMessage(nextBatch);
-    console.debug(notifyMessage + '…');
+    console.debug(`${notifyMessage}…`);
 
     try {
       const result: any = await this.buildRequestPromice(nextBatch);
-      console.info(notifyMessage + '… Success.');
+      console.info(`${notifyMessage}… Success.`);
       console.debug(`Successfully received ${String(nextBatch.length)} cache ${this.type} items: ${String(nextBatch)}`);
 
       const cacheUpdateReady = this.convertResultToEntities(result, nextBatch);
@@ -261,7 +260,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
       this.nextBatch = EMPTY_STRINGS_SET;
       this.decideNextAction();
     } catch (error) {
-      mw.notify(notifyMessage + '… Failure. See console log output for details.',
+      mw.notify(`${notifyMessage}… Failure. See console log output for details.`,
         {autoHide: true, tag: 'WE-F Cache: ' + this.type});
       mw.log.error(`Unable to batch request following items: ${String(nextBatch)}`);
       mw.log.error(error);
@@ -277,7 +276,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
     if (this.queueHasNewElements) {
       this.queueHasNewElements = false;
       this.changeState('REQUEST', 'SCHEDULED');
-      setTimeout(() => this.dispatch(this.checkIfDatabaseScanRequired()), PAUSE_BEFORE_REQUEUE);
+      setTimeout(this.checkIfDatabaseScanRequired, PAUSE_BEFORE_REQUEUE);
     } else {
       this.queueNextBatch();
     }

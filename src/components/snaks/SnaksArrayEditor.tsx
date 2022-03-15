@@ -11,7 +11,7 @@ interface PropsType {
   displayLabels: boolean;
   onSnaksArrayUpdate: (snaksArray: null | SnakType[]) => any;
   propertyDescription: PropertyDescription;
-  readOnly: boolean;
+  readOnly?: boolean;
   removeButtonConfirmMessage: string;
   removeButtonLabel: string;
   snaksArray?: SnakType[];

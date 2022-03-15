@@ -9,9 +9,9 @@ describe('core/trimStringValues', () => {
 
   describe('shall not change "normalized" entities returned by API', () => {
 
-    it('does not change Q30', () => assert.equal(trimStringValues(Q30), Q30));
-    it('does not change Q1367759', () => assert.equal(trimStringValues(Q1367759), Q1367759));
-    it('does not change Q2262932', () => assert.equal(trimStringValues(Q2262932), Q2262932));
+    it('does not change Q30', () => { assert.equal(trimStringValues(Q30), Q30); });
+    it('does not change Q1367759', () => { assert.equal(trimStringValues(Q1367759), Q1367759); });
+    it('does not change Q2262932', () => { assert.equal(trimStringValues(Q2262932), Q2262932); });
 
   });
 
@@ -43,7 +43,7 @@ describe('core/trimStringValues', () => {
 
     // array is still array
     Object.values(trimmed.claims!)
-      .forEach(claims => assert(Array.isArray(claims), 'Claims shall be an array: ' + JSON.stringify(claims)));
+      .forEach(claims => { assert(Array.isArray(claims), 'Claims shall be an array: ' + JSON.stringify(claims)); });
 
     const expected: EntityType = {
       claims: {

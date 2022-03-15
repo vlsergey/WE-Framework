@@ -12,7 +12,7 @@ describe('enhancements/viaf/ViafPropertyDataValueEditor', () => {
     it('Can parse Puskin result', () => {
       const viaf2Property = parseResponse(wqsResponse);
       parseJustLinks(viaf2Property, viafResponse, (propertyId, value) =>
-        console.debug('For property ' + propertyId + ' new value is ' + value));
+      { console.debug('For property ' + propertyId + ' new value is ' + value); });
     });
 
   });

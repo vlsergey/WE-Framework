@@ -22,9 +22,9 @@ class Api {
 mw.ForeignApi = Api;
 mw.Api = Api;
 
-mw.log = (text: string) => console.log(text);
-mw.log.error = (text: string) => console.error(text);
-mw.notify = (text: string) => console.log(text);
+mw.log = (text: string) => { console.log(text); };
+mw.log.error = (text: string) => { console.error(text); };
+mw.notify = (text: string) => { console.log(text); };
 
 const jQuery = () => ({
   button: () => ({}),

@@ -14,10 +14,10 @@ function assertOk (entity: EntityType) {
 }
 
 describe('Flow Definitions', () => {
-  it('Q1367759 conforms to EntityType flow definition', () => assertOk(Q1367759));
-  it('Q2262932 conforms to EntityType flow definition', () => assertOk(Q2262932));
-  it('Q30 conforms to EntityType flow definition', () => assertOk(Q30));
-  it('Q56222548 conforms to EntityType flow definition', () => assertOk(Q56222548));
-  it('Q652 conforms to EntityType flow definition', () => assertOk(Q652));
-  it('Q752285 conforms to EntityType flow definition', () => assertOk(Q752285));
+  it('Q1367759 conforms to EntityType flow definition', () => { assertOk(Q1367759); });
+  it('Q2262932 conforms to EntityType flow definition', () => { assertOk(Q2262932); });
+  it('Q30 conforms to EntityType flow definition', () => { assertOk(Q30); });
+  it('Q56222548 conforms to EntityType flow definition', () => { assertOk(Q56222548); });
+  it('Q652 conforms to EntityType flow definition', () => { assertOk(Q652); });
+  it('Q752285 conforms to EntityType flow definition', () => { assertOk(Q752285); });
 });

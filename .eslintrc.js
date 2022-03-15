@@ -23,7 +23,6 @@ module.exports = {
 
     '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/ban-ts-comment': 0,
-    '@typescript-eslint/no-confusing-void-expression': 0,
     '@typescript-eslint/no-floating-promises': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-misused-promises': 0,
