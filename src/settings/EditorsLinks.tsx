@@ -31,10 +31,10 @@ export default class EditorLinks extends PureComponent<PropsType, StateType> {
 
   override componentDidMount () {
     if (mw.config.get('wgArticleId')) {
-      getEntityIdDeferred().then((entityId: null | string) => {
+      void getEntityIdDeferred().then((entityId: null | string) => {
         this.setState({entityId});
         if (entityId) {
-          this.queryClassHierarchy(entityId);
+          void this.queryClassHierarchy(entityId);
         }
       });
     }
@@ -60,7 +60,7 @@ export default class EditorLinks extends PureComponent<PropsType, StateType> {
   }
 
   handleEditorLinkClick (editorTemplate: EditorDefType) {
-    return () => { onEditorLinkClick(editorTemplate, this.state.entityId); };
+    return () => onEditorLinkClick(editorTemplate, this.state.entityId);
   }
 
   override render () {

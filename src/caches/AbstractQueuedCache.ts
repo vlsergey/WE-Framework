@@ -150,7 +150,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
 
     if (this.requestQueue.size > 0) {
       this.changeState('SCHEDULED', 'REQUEST');
-      this.queueNextBatch();
+      void this.queueNextBatch();
       return;
     }
 
@@ -174,7 +174,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
           this.dbQueue.clear();
 
           this.changeState('SCAN', 'REQUEST');
-          this.queueNextBatch();
+          void this.queueNextBatch();
         }
       });
   }
@@ -278,7 +278,7 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
       this.changeState('REQUEST', 'SCHEDULED');
       setTimeout(this.checkIfDatabaseScanRequired, PAUSE_BEFORE_REQUEUE);
     } else {
-      this.queueNextBatch();
+      void this.queueNextBatch();
     }
   }
 

@@ -5,7 +5,7 @@ import i18n from '../../core.i18n';
 
 interface PropsType {
   disabled?: boolean;
-  entityId: null | string;
+  entityId?: string;
 }
 
 const WIKIDATA_LINK_URL = '//www.wikidata.org/wiki/';

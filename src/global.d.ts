@@ -140,7 +140,7 @@ export type AliasesType = Record<string, LabelalikeType[]>;
 
   interface WikibaseEntityIdDataValue extends BaseDataValue {
     type: 'wikibase-entityid';
-    value: WikibaseEntityIdValueType;
+    value: null | WikibaseEntityIdValueType;
   }
 
   interface WikibaseEntityIdValueType {

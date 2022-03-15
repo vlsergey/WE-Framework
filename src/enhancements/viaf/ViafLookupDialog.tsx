@@ -37,7 +37,7 @@ export default class ViafLookupDialog extends PureComponent<PropsType, StateType
     };
   }
 
-  doLookup = (query: string) => {
+  doLookup = async (query: string) => {
     const {queryScheduled} = this.state;
     if (query === queryScheduled) return;
     this.setState({queryScheduled: query});
@@ -49,35 +49,33 @@ export default class ViafLookupDialog extends PureComponent<PropsType, StateType
 
     this.setState({queryState: 'SCHEDULED'});
     const url = '//viaf.org/viaf/AutoSuggest?query=' + encodeURIComponent(query);
-    fetchJsonp(url, {
+    const response = await fetchJsonp(url, {
       jsonpCallback: 'callback',
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (this.state.queryScheduled !== query) return;
+    });
+    const data = await response.json();
+    if (this.state.queryScheduled !== query) return;
 
-        const grouped = (data.result || [])
-          .filter((entity: any) => typeof entity.viafid === 'string')
-          .filter((entity: any) => entity.viafid.trim() !== '')
-          .reduce((acc: any, cur: any) => ({
-            ...acc,
-            [cur.viafid]: acc[cur.viafid]
-              ? [...acc[cur.viafid], cur]
-              : [cur],
-          }), {});
+    const grouped = (data.result || [])
+      .filter((entity: any) => typeof entity.viafid === 'string')
+      .filter((entity: any) => entity.viafid.trim() !== '')
+      .reduce((acc: any, cur: any) => ({
+        ...acc,
+        [cur.viafid]: acc[cur.viafid]
+          ? [...acc[cur.viafid], cur]
+          : [cur],
+      }), {});
 
-        this.setState({
-          autoSuggestResult: grouped,
-          queryState: 'WAITING',
-        });
-      });
+    this.setState({
+      autoSuggestResult: grouped,
+      queryState: 'WAITING',
+    });
   };
 
   handleChange = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
     const newQuery = value || '';
     this.setState({query: newQuery});
 
-    setTimeout(() => { this.doLookup(newQuery.trim()); }, 0.5);
+    setTimeout(() => this.doLookup(newQuery.trim()), 0.5);
   };
 
   handleSelect = () => {

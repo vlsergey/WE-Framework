@@ -31,7 +31,7 @@ interface PropsType {
   datavalue: DataValueType | null;
   entity: EntityType;
   newEntityGenderEntityId: ((entity: EntityType) => string | null) | string;
-  onDataValueChange: (dataValue: DataValueType | null) => any;
+  onDataValueChange: (dataValue: WikibaseEntityIdDataValue | null) => any;
   propertiesMapping: Map< string, string >; // current entity property to new entity property mapping
   propertyDescription: PropertyDescription;
   propertyIdSelfInto: string;
@@ -39,7 +39,7 @@ interface PropsType {
 
 class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
 
-  handleCreateFamilyMember = () => {
+  handleCreateFamilyMember = async () => {
     const {entity, propertiesMapping, propertyIdSelfInto} = this.props;
     const {newEntityGenderEntityId} = this.props;
 
@@ -141,11 +141,11 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
     });
 
     const oldEntity: EntityType = {type: 'item'};
-    openEditor(PersonEditorTemplate, oldEntity, newEntity)
-      .then(entityId => this.props.onDataValueChange({
-        value: toWikibaseEntityIdValue(entityId),
-        type: 'wikibase-entityid',
-      } as DataValueType));
+    const newEntityId = await openEditor(PersonEditorTemplate, oldEntity, newEntity);
+    this.props.onDataValueChange({
+      value: toWikibaseEntityIdValue(newEntityId),
+      type: 'wikibase-entityid',
+    } as WikibaseEntityIdDataValue);
   };
 
   override render () {

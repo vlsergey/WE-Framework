@@ -90,7 +90,7 @@ export function onNewElementClick (
   return openEditor(editorDescription, oldEntity, newEntity);
 }
 
-export function onEditorLinkClick (
+export async function onEditorLinkClick (
     editorDescription: EditorDefType,
     entityId?: string | null) {
 
@@ -134,28 +134,26 @@ export function onEditorLinkClick (
       };
     }
 
-    openEditor(editorDescription, oldEntity, newEntity)
-      .then(purge);
+    await openEditor(editorDescription, oldEntity, newEntity);
+    purge();
 
   } else {
     mw.notify('Get Wikidata entity content for ' + entityId + '...');
-    getWikidataApi().getPromise({
+    const result = await getWikidataApi().getPromise({
       action: 'wbgetentities',
       ids: entityId,
       format: 'json',
-    }).then((result: any) => {
-      if (typeof result === 'undefined'
+    });
+    if (typeof result === 'undefined'
       || typeof result.entities === 'undefined'
       || typeof result.entities[entityId] === 'undefined'
       || typeof result.entities[entityId].claims === 'undefined'
-      ) {
-        mw.notify('Wikidata answer format is not expected one');
-        throw new Error('Wikidata answer format is not expected one');
-      }
-      return result.entities[entityId];
-    })
-      .then((entity: EntityType) => openEditor(editorDescription, entity, entity))
-      .then(purge);
-
+    ) {
+      mw.notify('Wikidata answer format is not expected one');
+      throw new Error('Wikidata answer format is not expected one');
+    }
+    const entity: EntityType = result.entities[entityId];
+    await openEditor(editorDescription, entity, entity);
+    purge();
   }
 }

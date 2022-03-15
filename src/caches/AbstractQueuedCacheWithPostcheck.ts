@@ -37,7 +37,7 @@ export default abstract class AbstractQueuedCacheWithPostcheck<DatabaseValue ext
     });
 
     if (this.useIndexedDb) {
-      lastRevisionCache.queueAll(pageIdsToCheck)
+      void lastRevisionCache.queueAll(pageIdsToCheck)
         .then((revisionIds: (number | null)[]) => {
           this.onLastRevisionsFetched(cacheKeysToCheck, pageIdsToCheck, revisionIds);
         });
@@ -45,10 +45,10 @@ export default abstract class AbstractQueuedCacheWithPostcheck<DatabaseValue ext
 
     if (this.requestQueue.size !== 0 && this.queueState === 'WAITING') {
       this.queueState = 'REQUEST';
-      this.queueNextBatch();
+      void this.queueNextBatch();
     }
 
-    lastRevisionCache.queueAll(pageIdsToCheck);
+    void lastRevisionCache.queueAll(pageIdsToCheck);
   }
 
   onLastRevisionsFetched (
@@ -76,7 +76,7 @@ export default abstract class AbstractQueuedCacheWithPostcheck<DatabaseValue ext
     const transaction = this.dbConnection.transaction(['CACHE']);
     const objectStore = transaction.objectStore('CACHE');
 
-    findByKeysInObjectStore(objectStore, cacheKeysToCheck)
+    void findByKeysInObjectStore(objectStore, cacheKeysToCheck)
       .then(result => {
         Object.entries(result).forEach(([cacheKey, dbEntity]) => {
           const dbpageid = dbEntity.pageid;
@@ -88,7 +88,7 @@ export default abstract class AbstractQueuedCacheWithPostcheck<DatabaseValue ext
 
         if (this.requestQueue.size !== 0 && this.queueState === 'WAITING') {
           this.queueState = 'REQUEST';
-          this.queueNextBatch();
+          void this.queueNextBatch();
         }
       });
   }

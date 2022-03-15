@@ -31,10 +31,10 @@ export default class SourceLookupTab
   handleChangeTerm = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
     const newSearchTerm = value || '';
     this.setState({searchTerm: newSearchTerm});
-    setTimeout(() => { this.search(newSearchTerm.trim()); }, 0.5);
+    setTimeout(() => void this.search(newSearchTerm.trim()), 0.5);
   };
 
-  search (searchTerm: string) {
+  search = async (searchTerm: string) => {
     const {searchTermScheduled} = this.state;
     if (searchTerm === searchTermScheduled) return;
     this.setState({
@@ -70,12 +70,11 @@ export default class SourceLookupTab
       this.setState({searchResult: result});
     }));
 
-    Promise.all(allPromises).then(
-      () => { this.setState({
-        searchInProgress: false,
-      }); }
-    );
-  }
+    await Promise.all(allPromises);
+    this.setState({
+      searchInProgress: false,
+    });
+  };
 
   handleClickF (entityId: string) {
     return () => this.props.onInsert(entityId);

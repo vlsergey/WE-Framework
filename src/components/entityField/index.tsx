@@ -38,7 +38,7 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
     };
 
     if (!this.props.oneOf?.length && this.props.lruKey) {
-      findLastRecentlyUsed(this.props.lruKey).then(arr => {
+      void findLastRecentlyUsed(this.props.lruKey).then(arr => {
         if (Array.isArray(arr) && arr.length !== 0) {
           this.setState({lruFromCache: arr, selectMode: true});
         }
@@ -73,7 +73,7 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
     onChange(entityId);
 
     if (!!lruKey && !!entityId && entityId.trim() !== '')
-      addLastRecentlyUsed(lruKey, entityId);
+      void addLastRecentlyUsed(lruKey, entityId);
   };
 
   override render () {

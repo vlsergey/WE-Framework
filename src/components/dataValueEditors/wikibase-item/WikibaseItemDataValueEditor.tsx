@@ -12,7 +12,7 @@ import styles from './WikibaseItem.css';
 interface PropsType extends Omit<React.ComponentProps<typeof EntityField>, 'lruKey' | 'onChange' | 'oneOf' | 'value'> {
   buttonCells?: any[];
   datavalue?: DataValueType | null;
-  onDataValueChange: (datavalue: DataValueType | null) => any;
+  onDataValueChange: (datavalue: WikibaseEntityIdDataValue | null) => any;
   propertyDescription: PropertyDescription;
   readOnly: boolean;
 }
@@ -35,7 +35,7 @@ export default class WikibaseItemDataValueEditor
     onDataValueChange({
       ...datavalue,
       value: toWikibaseEntityIdValue(entityId),
-      type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
+      type: 'wikibase-entityid',
     });
   };
 
@@ -45,13 +45,13 @@ export default class WikibaseItemDataValueEditor
       onDataValueChange({
         ...datavalue,
         value: null,
-        type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
+        type: 'wikibase-entityid',
       });
     } else {
       onDataValueChange({
         ...datavalue,
         value: toWikibaseEntityIdValue(entityId),
-        type: WikibaseItemDataValueEditor.DATAVALUE_TYPE,
+        type: 'wikibase-entityid',
       });
     }
   };

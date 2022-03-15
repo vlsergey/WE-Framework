@@ -1,63 +1,55 @@
-import React, {PureComponent} from 'react';
+import React, {PureComponent, useCallback} from 'react';
 
 import {onNewElementClick} from '../core/edit';
-import ArticleEditorTemplate from '../editors/ArticleEditorTemplate';
-import BookEditorTemplate from '../editors/BookEditorTemplate';
+import Article from '../editors/ArticleEditorTemplate';
+import Book from '../editors/BookEditorTemplate';
 import {EditorDefType} from '../editors/EditorDefModel';
-import FrbrEditionEditorTemplate from '../editors/FrbrEditionEditorTemplate';
-import FrbrWorkEditorTemplate from '../editors/FrbrWorkEditorTemplate';
+import FrbrEdition from '../editors/FrbrEditionEditorTemplate';
+import FrbrWork from '../editors/FrbrWorkEditorTemplate';
 import styles from './styles.css';
 
 interface PropsType {
-  onInsert: (entityId: string) => any;
+  onInsert: (entityId: string) => unknown;
 }
 
 export default class NewSourceTab extends PureComponent<PropsType> {
 
-  handleClickF (editorDescription: EditorDefType, classEntityId: string) {
-    const onInsert = this.props.onInsert;
-    return () => {
-      onNewElementClick(editorDescription, classEntityId)
-        .then(entityId => onInsert(entityId));
-    };
-  }
-
   override render () {
-    const handleClickF = this.handleClickF.bind(this);
+    const {onInsert} = this.props;
 
     return <div className={styles.newSourceTab}>
       <table>
         <tbody>
           <tr>
-            <th>{FrbrWorkEditorTemplate.linkText}</th>
-            <th>{FrbrEditionEditorTemplate.linkText}</th>
+            <th>{FrbrWork.linkText}</th>
+            <th>{FrbrEdition.linkText}</th>
           </tr>
           <tr>
             <td>
-              <button onClick={handleClickF(FrbrWorkEditorTemplate, 'Q571')}>книга</button>
-              <button onClick={handleClickF(FrbrWorkEditorTemplate, 'Q13442814')}>научная статья</button>
-              <button onClick={handleClickF(FrbrWorkEditorTemplate, 'Q191067')}>статья</button>
-              <button onClick={handleClickF(FrbrWorkEditorTemplate, 'Q591041')}>научная публикация</button>
+              <EditorButton clsEntityId="Q571" editorDef={FrbrWork} onInsert={onInsert} title="книга" />
+              <EditorButton clsEntityId="Q13442814" editorDef={FrbrWork} onInsert={onInsert} title="научная статья" />
+              <EditorButton clsEntityId="Q191067" editorDef={FrbrWork} onInsert={onInsert} title="статья" />
+              <EditorButton clsEntityId="Q591041" editorDef={FrbrWork} onInsert={onInsert} title="научная публикация" />
             </td>
             <td>
-              <button onClick={handleClickF(FrbrEditionEditorTemplate, 'Q3331189')}>версия или издание</button>
+              <EditorButton clsEntityId="Q3331189" editorDef={FrbrEdition} onInsert={onInsert} title="версия или издание" />
             </td>
           </tr>
           <tr>
-            <th>{BookEditorTemplate.linkText}</th>
-            <th>{ArticleEditorTemplate.linkText}</th>
+            <th>{Book.linkText}</th>
+            <th>{Article.linkText}</th>
           </tr>
           <tr>
             <td>
-              <button onClick={handleClickF(BookEditorTemplate, 'Q737498')}>академический журнал</button>
-              <button onClick={handleClickF(BookEditorTemplate, 'Q11032')}>газета</button>
-              <button onClick={handleClickF(BookEditorTemplate, 'Q571')}>книга</button>
-              <button onClick={handleClickF(BookEditorTemplate, 'Q5633421')}>научный журнал</button>
+              <EditorButton clsEntityId="Q737498" editorDef={Book} onInsert={onInsert} title="академический журнал" />
+              <EditorButton clsEntityId="Q11032" editorDef={Book} onInsert={onInsert} title="газета" />
+              <EditorButton clsEntityId="Q571" editorDef={Book} onInsert={onInsert} title="книга" />
+              <EditorButton clsEntityId="Q5633421" editorDef={Book} onInsert={onInsert} title="научный журнал" />
             </td>
             <td>
-              <button onClick={handleClickF(ArticleEditorTemplate, 'Q591041')}>научная публикация</button>
-              <button onClick={handleClickF(ArticleEditorTemplate, 'Q13442814')}>научная статья</button>
-              <button onClick={handleClickF(ArticleEditorTemplate, 'Q191067')}>статья</button>
+              <EditorButton clsEntityId="Q591041" editorDef={Article} onInsert={onInsert} title="научная публикация" />
+              <EditorButton clsEntityId="Q13442814" editorDef={Article} onInsert={onInsert} title="научная статья" />
+              <EditorButton clsEntityId="Q191067" editorDef={Article} onInsert={onInsert} title="статья" />
             </td>
           </tr>
         </tbody>
@@ -66,3 +58,21 @@ export default class NewSourceTab extends PureComponent<PropsType> {
   }
 
 }
+
+const EditorButtonImpl = ({
+  editorDef, clsEntityId, onInsert, title,
+}: {
+  clsEntityId: string;
+  editorDef: EditorDefType;
+  onInsert: (entityId: string) => unknown;
+  title: string;
+}) => {
+
+  const onClick = useCallback(async () => {
+    onInsert(await onNewElementClick(editorDef, clsEntityId));
+  }, [clsEntityId, editorDef, onInsert]);
+
+  return <button onClick={onClick}>{title}</button>;
+};
+
+const EditorButton = React.memo(EditorButtonImpl);
