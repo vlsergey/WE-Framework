@@ -45,10 +45,10 @@ describe( 'PropertyDescription', () => {
     assert.equal( pd345.label, 'IMDb ID' );
   } );
 
-  it( 'oneOf is undefined if no consrain', () => {
-    assert.equal( pd345.oneOf, undefined );
-    assert.equal( pd1971.oneOf, undefined );
-    assert.equal( pd2044.oneOf, undefined );
+  it( 'oneOf is empty if no consrain', () => {
+    assert.isEmpty ( pd345.oneOf );
+    assert.isEmpty( pd1971.oneOf );
+    assert.isEmpty( pd2044.oneOf );
   } );
 
   it( 'oneOf is correctly parsed', () => {
@@ -81,7 +81,7 @@ describe( 'PropertyDescription', () => {
   } );
 
   it( 'quantityUnits is undefined if no constraints', () => {
-    assert.equal( pd345.quantityUnits, undefined );
+    assert.isEmpty( pd345.quantityUnits );
   } );
   it( 'quantityUnitEnabled is false if no constraints', () => {
     assert.equal( pd345.quantityUnitEnabled, false );

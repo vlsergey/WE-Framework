@@ -7,7 +7,6 @@ import Q1367759 from '../../entities/Q1367759';
 import Q752285 from '../../entities/Q752285';
 import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
-import Suggestion from '../../../src/components/entityField/Suggestion';
 import thunk from 'redux-thunk';
 import ValueHolder from '../../testUtils/ValueHolder';
 import WikibaseItemInput from '../../../src/components/entityField/WikibaseItemInput';
@@ -52,11 +51,7 @@ describe( 'components/dataValueEditors/wikibase-item', () => {
       ReactTestUtils.Simulate.change( input );
       assert.equal( valueHolder.getValue(), 'Q752285' );
 
-      // @ts-ignore
-      const suggestion = ReactTestUtils.findRenderedComponentWithType( rendered, Suggestion ) as Suggestion;
-      assert.equal( suggestion.props.entityId, 'Q752285' );
-
-      const suggestionTable = ReactTestUtils.findRenderedDOMComponentWithTag( suggestion, 'table' ) as HTMLTableElement;
+      const suggestionTable = ReactTestUtils.findRenderedDOMComponentWithTag( rendered, 'table' ) as HTMLTableElement;
       ReactTestUtils.Simulate.click( suggestionTable );
       assert.equal( valueHolder.getValue(), 'Q752285' );
 

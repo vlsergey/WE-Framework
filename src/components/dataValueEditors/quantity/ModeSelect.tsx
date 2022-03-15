@@ -13,7 +13,7 @@ interface PropsType {
 
 export default class ModeSelect extends PureComponent<PropsType> {
 
-  handleModeChange ({target: {value}}: ChangeEvent<HTMLSelectElement>) {
+  handleModeChange = ({target: {value}}: ChangeEvent<HTMLSelectElement>) => {
     this.props.onSelect(value as ModeType);
   }
 

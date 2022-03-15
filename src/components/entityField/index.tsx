@@ -33,7 +33,7 @@ export default class EntityField extends PureComponent<PropsType, StateType> {
 
     this.state = {
       lruFromCache: null,
-      selectMode: !!this.props.oneOf,
+      selectMode: !!this.props.oneOf?.length,
       selectOptions: [],
     };
 

@@ -40,7 +40,7 @@ export default class PropertyDescription {
   oneOf: string[];
   pageid?: number;
   quantityUnitEnabled: boolean;
-  quantityUnits?: string[];
+  quantityUnits: string[];
   regexp?: string;
   sourceWebsites: string[];
   sourceWebsitesLanguages: string[];

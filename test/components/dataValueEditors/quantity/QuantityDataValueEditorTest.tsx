@@ -146,7 +146,7 @@ describe( 'components/dataValueEditors/quantity', () => {
               propertyDescription={p1971Description} />
           </TableTBodyTr>
         }</ValueHolder>
-      </Provider>       ) as unknown as Provider;
+      </Provider>) as unknown as Provider;
       assert.ok( rendered );
       const valueHolder = ReactTestUtils.findRenderedComponentWithType( rendered, ValueHolder ) as ValueHolder<any>;
 
