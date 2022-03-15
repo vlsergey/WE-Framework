@@ -8,7 +8,7 @@ interface PropsType {
 
 export default class BoundariesValueEditor extends PureComponent<PropsType> {
 
-  static canBeUsedForValue (): boolean {
+  static canBeUsedForValue (this: void): boolean {
     return true;
   }
 

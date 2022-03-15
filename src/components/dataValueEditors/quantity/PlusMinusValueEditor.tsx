@@ -15,7 +15,7 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
     value: EMPTY_OBJECT,
   };
 
-  static canBeUsedForValue (value: QuantityValue): boolean {
+  static canBeUsedForValue (this: void, value: QuantityValue): boolean {
     const {amount, lowerBound, upperBound} = value || EMPTY_OBJECT;
 
     return !ok(lowerBound) && !ok(upperBound)

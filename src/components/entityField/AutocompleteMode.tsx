@@ -141,9 +141,7 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
       wikibaseItemInputRef={this.wikibaseItemInputRef} />;
   };
 
-  renderSuggestion (data: string) {
-    return <Suggestion entityId={data} />;
-  }
+  renderSuggestion = (data: string) => <Suggestion entityId={data} />;
 }
 
 const mapStateToProps = (state: any) => ({

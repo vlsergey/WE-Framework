@@ -25,7 +25,7 @@ class LastRevisionCache {
     this._batcher = new Batcher(this._batchFunction);
   }
 
-  async _batchFunction (pageIds: number[]): Promise< (null | number)[] > {
+  _batchFunction = async (pageIds: number[]): Promise< (null | number)[] > => {
     const json: ResultType = await getWikidataApi()
       .getPromise({
         action: 'query',
@@ -44,24 +44,21 @@ class LastRevisionCache {
       }
     });
 
-    const resultArray: (null | number)[] = pageIds.map(pageId => resultMap.get(pageId) || null);
-    return resultArray;
-  }
+    return pageIds.map(pageId => resultMap.get(pageId) || null);
+  };
 
-  queue (pageId: number): Promise< null | number > {
+  queue = async (pageId: number): Promise< null | number > => {
     const previous = this._cache.get(pageId);
     if (previous != undefined && previous != null) {
       return Promise.resolve(previous);
     }
 
-    return this._batcher.queue(pageId)
-      .then((revisionId: null | number) => {
-        if (revisionId != undefined && revisionId != null) {
-          this._cache.set(pageId, revisionId);
-        }
-        return revisionId;
-      });
-  }
+    const revisionId = await this._batcher.queue(pageId);
+    if (revisionId != undefined && revisionId != null) {
+      this._cache.set(pageId, revisionId);
+    }
+    return revisionId;
+  };
 
   queueAll (pageIds: number[]): Promise< (null | number)[] > {
     return Promise.all(pageIds.map(this.queue, this));
@@ -69,5 +66,4 @@ class LastRevisionCache {
 
 }
 
-const instance: LastRevisionCache = new LastRevisionCache();
-export default instance;
+export default new LastRevisionCache();

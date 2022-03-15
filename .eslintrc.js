@@ -37,7 +37,6 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 0,
     '@typescript-eslint/restrict-plus-operands': 0,
     '@typescript-eslint/restrict-template-expressions': 0,
-    '@typescript-eslint/unbound-method': 0,
 
     'react/no-unused-prop-types': 0,
 

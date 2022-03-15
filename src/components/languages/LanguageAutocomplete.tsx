@@ -17,6 +17,8 @@ interface StateType {
   value: string;
 }
 
+const getSuggestionValue = (data: string | null) => data || '';
+
 export default class LanguageAutocomplete
   extends PureComponent<PropsType, StateType> {
 
@@ -87,10 +89,6 @@ export default class LanguageAutocomplete
     this.setState({suggestions: result});
   };
 
-  getSuggestionValue (data: string | null) {
-    return data ? data : '';
-  }
-
   handleChange = (
     _: ChangeEvent< any >,
     {newValue}: {newValue: string | null}
@@ -109,7 +107,7 @@ export default class LanguageAutocomplete
     const inputProps = this.inputPropsF(this.state.value);
 
     return <Autosuggest
-      getSuggestionValue={this.getSuggestionValue}
+      getSuggestionValue={getSuggestionValue}
       inputProps={inputProps}
       onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
       onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}

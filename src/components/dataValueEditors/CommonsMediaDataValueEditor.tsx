@@ -19,6 +19,8 @@ interface StateType {
 
 const EMPTY_OBJECT: any = Object.freeze({});
 
+const getSuggestionValue = (data: string): string => data || '';
+
 export default class CommonsMediaDataValueEditor
   extends PureComponent<PropsType, StateType> {
 
@@ -47,10 +49,6 @@ export default class CommonsMediaDataValueEditor
       this.setState({suggestions});
     });
   };
-
-  getSuggestionValue (data: string): string {
-    return data ? data : '';
-  }
 
   handleChange = (
     _event: ChangeEvent< any >,
@@ -91,7 +89,7 @@ export default class CommonsMediaDataValueEditor
 
     return <td className={className} colSpan={12}>
       <Autosuggest
-        getSuggestionValue={this.getSuggestionValue}
+        getSuggestionValue={getSuggestionValue}
         inputProps={{
           type: 'text',
           pattern: propertyDescription.regexp || undefined,
@@ -106,7 +104,7 @@ export default class CommonsMediaDataValueEditor
     </td>;
   }
 
-  renderSuggestion (data: string): any {
+  renderSuggestion (this: void, data: string): any {
     return <div className={styles.suggestionContent}>
       <div className={styles.suggestionContentPreviewOuter}>
         <div className={styles.suggestionContentPreviewInner}>

@@ -15,7 +15,7 @@ export default class ExactValueEditor extends PureComponent<PropsType> {
     value: EMPTY_OBJECT,
   };
 
-  static canBeUsedForValue (value: QuantityValue): boolean {
+  static canBeUsedForValue (this: void, value: QuantityValue): boolean {
     const {amount, lowerBound, upperBound} = value;
 
     return !ok(lowerBound) && !ok(upperBound)

@@ -9,6 +9,8 @@ import PropertySuggestion from './PropertySuggestion';
 
 const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
 
+const getSuggestionValue = (data: string | null) => data || '';
+
 interface PropsType {
   onSelect: (value: string) => any;
 }
@@ -75,13 +77,9 @@ export default class NewQualifierAutosuggest
     });
   };
 
-  getSuggestionValue (data: string | null) {
-    return data || '';
-  }
-
   override render () {
     return <Autosuggest
-      getSuggestionValue={this.getSuggestionValue}
+      getSuggestionValue={getSuggestionValue}
       inputProps={{
         type: 'text',
         onChange: this.handleChange,

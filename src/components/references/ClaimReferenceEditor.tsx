@@ -42,11 +42,9 @@ export default class ClaimReferenceEditor extends PureComponent<PropsType> {
       snaks,
     });
 
-  removeButtonConfirmMessageF (snakPropertyDescription: PropertyDescription) {
-    return i18n.confirmRemoveSnakTemplate
-      .replace('{snakPropertyId}', snakPropertyDescription.id)
-      .replace('{snakPropertyLabel}', snakPropertyDescription.label || snakPropertyDescription.id);
-  }
+  removeButtonConfirmMessageF = (snakPropertyDescription: PropertyDescription) => i18n.confirmRemoveSnakTemplate
+    .replace('{snakPropertyId}', snakPropertyDescription.id)
+    .replace('{snakPropertyLabel}', snakPropertyDescription.label || snakPropertyDescription.id);
 
   override render () {
     const {reference} = this.props;
