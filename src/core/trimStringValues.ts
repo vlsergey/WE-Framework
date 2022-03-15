@@ -1,12 +1,11 @@
-type LabelalikeKey = 'labels' | 'descriptions' | 'draftAliases' | 'aliases';
 
-const ALL_POSSIBLE_LABELALIKE_KEYS: LabelalikeKey[] = ['labels', 'descriptions', 'draftAliases', 'aliases'];
+const KEYS_TO_CHECK: (string & keyof EntityType)[] = ['labels', 'descriptions', 'aliases', 'claims'];
 
 export default function trimStringValues (entity: EntityType): EntityType {
   const result = {...entity};
   let hasChanges = false;
 
-  for (const key of ALL_POSSIBLE_LABELALIKE_KEYS) {
+  for (const key of KEYS_TO_CHECK) {
     const oldValue = entity[key];
     if (!oldValue) continue;
 
