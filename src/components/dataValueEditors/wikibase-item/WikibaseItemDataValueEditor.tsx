@@ -9,7 +9,7 @@ import GoToLocalButtonCell from './GoToLocalButtonCell';
 import GoToWikidataButtonCell from './GoToWikidataButtonCell';
 import styles from './WikibaseItem.css';
 
-interface PropsType {
+interface PropsType extends Omit<React.ComponentProps<typeof EntityField>,'lruKey'|'onChange'|'oneOf'|'value'> {
   buttonCells?: any[];
   datavalue?: DataValueType | null;
   onDataValueChange: (datavalue: DataValueType | null) => any;

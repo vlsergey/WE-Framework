@@ -7,10 +7,10 @@ const ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';
 const NOOP = () => {};
 
 interface PropsType {
-  onValueChange: (value: QuantityValueType) => any;
+  onValueChange: (value: QuantityValue) => any;
   propertyDescription: PropertyDescription;
   readOnly?: boolean;
-  value: QuantityValueType;
+  value: QuantityValue;
 }
 
 export default class UnitSelect extends PureComponent<PropsType> {

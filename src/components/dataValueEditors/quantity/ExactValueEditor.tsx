@@ -4,9 +4,9 @@ const EMPTY_OBJECT = Object.freeze({});
 const ok = (x: any) => typeof x === 'string' && x.trim() !== '';
 
 interface PropsType {
-  onValueChange: (value: QuantityValueType) => any;
+  onValueChange: (value: QuantityValue) => any;
   readOnly?: boolean;
-  value: QuantityValueType;
+  value: QuantityValue;
 }
 
 export default class ExactValueEditor extends PureComponent<PropsType> {
@@ -15,7 +15,7 @@ export default class ExactValueEditor extends PureComponent<PropsType> {
     value: EMPTY_OBJECT,
   };
 
-  static canBeUsedForValue (value: QuantityValueType): boolean {
+  static canBeUsedForValue (value: QuantityValue): boolean {
     const {amount, lowerBound, upperBound} = value;
 
     return !ok(lowerBound) && !ok(upperBound)

@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,
     "declaration": true,
     "declarationMap": true,
     "downlevelIteration": true,
@@ -17,6 +18,7 @@
     "strict": true,
     "target": "es5"
   },
+  "files": [".eslintrc.js", "deploy-to-wikipedia.js", "karma.conf.js", "webpack.config.js"],
   "include": [".eslintrc.js", "deploy-to-wikipedia.js", "karma.conf.js", "webpack.config.js"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

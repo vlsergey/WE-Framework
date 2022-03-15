@@ -5,7 +5,8 @@ import AutocompleteMode from './AutocompleteMode';
 import {addLastRecentlyUsed, findLastRecentlyUsed} from './LruCache';
 import SelectMode from './SelectMode';
 
-interface PropsType {
+interface PropsType
+  extends Omit<React.ComponentPropsWithoutRef<typeof AutocompleteMode>,'value'|'onChange'|'lruKey'|'oneOf'|'onSelect'|'readOnly'|'value'>{
   lruKey?: string;
   onChange: (entityId: null | string) => any;
   oneOf?: string[];

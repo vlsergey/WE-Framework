@@ -1,5 +1,3 @@
-// @flow
-
 import {filterClaimsByRank, findClaimQualifiers, findEntityIdsFromClaims,
   findEntityIdsFromQualifiers, findStringsFromClaims,
   findStringsFromQualifiers, getStringFromSnak} from '../model/ModelUtils';

@@ -7,8 +7,8 @@ import MediawikiPreview from '../MediawikiPreview';
 import styles from './CommonsMediaDataValueEditor.css';
 
 interface PropsType {
-  datavalue?: DataValueType;
-  onDataValueChange: (dataValue: DataValueType | null) => any;
+  datavalue: CommonsMediaDataValue | null;
+  onDataValueChange: (dataValue: CommonsMediaDataValue | null) => any;
   propertyDescription: PropertyDescription;
   readOnly?: boolean;
 }
@@ -23,7 +23,6 @@ export default class CommonsMediaDataValueEditor
   extends PureComponent<PropsType, StateType> {
 
   static DATATYPE = 'commonsMedia';
-  static DATAVALUE_TYPE = 'string';
 
   commonsApi = ApiUtils.getCommonsApi();
 
@@ -64,7 +63,7 @@ export default class CommonsMediaDataValueEditor
     if (value) {
       onDataValueChange({
         ...datavalue,
-        type: CommonsMediaDataValueEditor.DATAVALUE_TYPE,
+        type: 'string',
         value,
       });
     } else {

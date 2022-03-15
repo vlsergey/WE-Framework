@@ -223,7 +223,7 @@ const entityReducerF = (unsavedEntity: EntityType) => (entity: EntityType = unsa
   return entity;
 };
 
-export default function buildReducers (originalEntity: EntityType, unsavedEntity: EntityType) {
+export default function buildReducers (originalEntity: EntityType, unsavedEntity?: EntityType) {
   return combineReducers({
     originalEntity: () => originalEntity,
     entity: entityReducerF(unsavedEntity || originalEntity),

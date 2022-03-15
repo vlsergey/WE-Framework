@@ -1,18 +1,12 @@
 import React, {ChangeEvent, PureComponent} from 'react';
 
-const EMPTY_OBJECT: any = Object.freeze({});
-
 interface PropsType {
-  onValueChange: (value: QuantityValueType) => any;
+  onValueChange: (value: null | QuantityValue) => unknown;
   readOnly?: boolean;
-  value: QuantityValueType;
+  value: null | QuantityValue;
 }
 
 export default class BoundariesValueEditor extends PureComponent<PropsType> {
-
-  static defaultProps = {
-    value: EMPTY_OBJECT,
-  };
 
   static canBeUsedForValue (): boolean {
     return true;
@@ -39,15 +33,15 @@ export default class BoundariesValueEditor extends PureComponent<PropsType> {
 
     return <>
       <td>
-        <input name="lowerBound" onChange={this.handleChange} value={value.lowerBound || ''} />
+        <input name="lowerBound" onChange={this.handleChange} value={value?.lowerBound || ''} />
       </td>
       <td>&nbsp;&lt;&nbsp;</td>
       <td>
-        <input name="amount" onChange={this.handleChange} value={value.amount || ''} />
+        <input name="amount" onChange={this.handleChange} value={value?.amount || ''} />
       </td>
       <td>&nbsp;&lt;&nbsp;</td>
       <td>
-        <input name="upperBound" onChange={this.handleChange} value={value.upperBound || ''} />
+        <input name="upperBound" onChange={this.handleChange} value={value?.upperBound || ''} />
       </td>
     </>;
   }

@@ -9,6 +9,8 @@ interface PropsType {
   entityId: string;
 }
 
+export const className = styles.suggestionContainer;
+
 const Suggestion = ({
   entityId
 }: PropsType) => {

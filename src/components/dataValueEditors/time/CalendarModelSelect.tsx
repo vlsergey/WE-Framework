@@ -8,7 +8,7 @@ const EMPTY_STRING = '';
 interface PropsType {
   onChange: (value: string) => any;
   readOnly?: boolean;
-  value: string;
+  value: null | string;
 }
 
 export default class CalendarModelSelect extends PureComponent<PropsType> {

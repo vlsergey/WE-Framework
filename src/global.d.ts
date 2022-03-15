@@ -12,6 +12,11 @@ export type AliasesType = Record<string, LabelalikeType[]>;
     type?: string;
   }
 
+  interface BaseDataValue {
+    type: string;
+    value?: any | null | undefined;
+  }
+
   interface ClaimType {
     id: string;
     mainsnak: SnakType;
@@ -24,9 +29,14 @@ export type AliasesType = Record<string, LabelalikeType[]>;
 
   type ClaimsType = Record<string, ClaimType[]>;
 
+  interface CommonsMediaDataValue extends BaseDataValue {
+    type: 'string',
+    value: string,
+  }
+
   interface DataValueType {
     type: string;
-    value?: any | null | undefined;
+    value?: any | null;
   }
 
   type DescriptionsType = Record<string, LabelalikeType>;
@@ -41,7 +51,8 @@ export type AliasesType = Record<string, LabelalikeType[]>;
     labels?: LabelsType;
     lastrevid?: number;
     missing?: '';
-    ns?: string;
+    modified?: string;
+    ns?: number;
     pageid?: number;
     sitelinks?: SiteLinksType;
     // may be missing for new item
@@ -51,10 +62,10 @@ export type AliasesType = Record<string, LabelalikeType[]>;
 
   type EntityTypeEnum = 'item' | 'property';
 
-  type ItemType = EntityType & {
+  interface ItemType extends EntityType {
     id?: string;
     type: 'item';
-  };
+  }
 
   export interface LabelalikeType {
     language: string;
@@ -63,16 +74,32 @@ export type AliasesType = Record<string, LabelalikeType[]>;
 
   type LabelsType = Record<string, LabelalikeType>;
 
+  interface MonolingualTextDataValue extends BaseDataValue {
+    type: 'monolingualtext',
+    value: MonolingualTextValue,
+  }
+
+  interface MonolingualTextValue {
+    language: string,
+    text?:string,
+  }
+
   interface PropertyType extends EntityType {
     datatype: string;
     type: 'property';
+    id: string;
   }
 
   type QualifierType = SnakType;
 
   type QualifiersType = Record<string, QualifierType[]>;
 
-  interface QuantityValueType {
+  interface QuantityDataValue extends DataValueType {
+    type: 'quantity',
+    value? : QuantityValue,
+  }
+
+  interface QuantityValue {
     amount?: string;
     lowerBound?: string;
     unit?: string;
@@ -110,6 +137,11 @@ export type AliasesType = Record<string, LabelalikeType[]>;
   }
 
   type SnaksType = Record<string, SnakType[]>;
+
+  interface WikibaseEntityIdDataValue extends BaseDataValue {
+    type: 'wikibase-entityid',
+    value: WikibaseEntityIdValueType,
+  }
 
   interface WikibaseEntityIdValueType {
     'entity-type': EntityTypeEnum;

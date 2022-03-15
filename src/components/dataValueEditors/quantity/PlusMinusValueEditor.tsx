@@ -4,9 +4,9 @@ const EMPTY_OBJECT = Object.freeze({});
 const ok = (x: any) => typeof x === 'string' && x.trim() !== '';
 
 interface PropsType {
-  onValueChange: (value: null | QuantityValueType) => any;
+  onValueChange: (value: null | QuantityValue) => any;
   readOnly?: boolean;
-  value: null | QuantityValueType;
+  value: null | QuantityValue;
 }
 
 export default class PlusMinusValueEditor extends PureComponent<PropsType> {
@@ -15,7 +15,7 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
     value: EMPTY_OBJECT,
   };
 
-  static canBeUsedForValue (value: QuantityValueType): boolean {
+  static canBeUsedForValue (value: QuantityValue): boolean {
     const {amount, lowerBound, upperBound} = value || EMPTY_OBJECT;
 
     return !ok(lowerBound) && !ok(upperBound)
@@ -63,7 +63,7 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
     const oldAmount = Number(oldValue.amount) || 0;
 
     if (!value) {
-      const newValue: QuantityValueType = {...this.props.value};
+      const newValue: QuantityValue = {...this.props.value};
       delete newValue.lowerBound;
       delete newValue.upperBound;
       this.props.onValueChange(newValue);

@@ -8,7 +8,7 @@ import {MODES} from './QuantityDataValueEditor';
 interface PropsType {
   mode: ModeType;
   onSelect: (mode: ModeType) => any;
-  value: null | QuantityValueType;
+  value: null | QuantityValue;
 }
 
 export default class ModeSelect extends PureComponent<PropsType> {

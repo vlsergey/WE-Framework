@@ -4,8 +4,8 @@ import LanguageAutocomplete from '../languages/LanguageAutocomplete';
 import styles from './MonolingualText.css';
 
 interface PropsType {
-  datavalue?: DataValueType;
-  onDataValueChange: (dataValue: DataValueType | null) => any;
+  datavalue: DataValueType | null;
+  onDataValueChange: (dataValue: MonolingualTextDataValue | null) => any;
   readOnly?: boolean;
 }
 

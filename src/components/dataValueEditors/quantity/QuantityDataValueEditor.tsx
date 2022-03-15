@@ -11,7 +11,7 @@ import styles from './Quantity.css';
 import UnitSelect from './UnitSelect';
 
 interface Mode {
-  canBeUsedForValue: (value: QuantityValueType) => boolean;
+  canBeUsedForValue: (value: QuantityValue) => boolean;
   component: ComponentType< any >;
 }
 
@@ -29,7 +29,7 @@ function detectAppropriateMode (datavalue: DataValueType | null): ModeType {
     return DEFAULT_MODE;
   }
 
-  const value: QuantityValueType = datavalue.value;
+  const value: QuantityValue = datavalue.value;
   return Object.entries(MODES)
     .find(([_key, mode]) => mode.canBeUsedForValue(value))?.[0] as ModeType || DEFAULT_MODE;
 }
@@ -63,7 +63,7 @@ export default class QuantityDataValueEditor extends PureComponent<PropsType, St
 
   handleModeChange = (mode: ModeType) => { this.setState({mode}); };
 
-  handleValueChange = (value: QuantityValueType) => {
+  handleValueChange = (value: QuantityValue) => {
     this.props.onDataValueChange({
       ...this.props.datavalue,
       type: 'quantity',

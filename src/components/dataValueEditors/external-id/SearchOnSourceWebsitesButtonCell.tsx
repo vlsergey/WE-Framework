@@ -13,15 +13,15 @@ const NOOP = () => {};
 interface PropsType {
   disabled?: boolean;
   labels: LabelsType | null;
-  languageCodes: string[];
-  sourceWebsites: string[];
+  languageCodes?: string[];
+  sourceWebsites?: string[];
 }
 
 class SearchOnSourceWebsitesButtonCell extends PureComponent<PropsType> {
 
-  memoizeUrl = defaultMemoize((labels: LabelsType | null, languageCodes: string[], sourceWebsites: string[]) => {
+  memoizeUrl = defaultMemoize((labels: LabelsType | null, languageCodes?: string[], sourceWebsites?: string[]) => {
     if (!labels) return null;
-    const languageSet: Set< string > = new Set(languageCodes);
+    const languageSet: Set< string > = new Set(languageCodes || []);
 
     let qLabels: string[] = Object.values(labels).filter(ok)
       .filter(label => languageSet.has(label.language))
@@ -36,7 +36,7 @@ class SearchOnSourceWebsitesButtonCell extends PureComponent<PropsType> {
     }
     qLabels = Array.from(new Set(qLabels));
 
-    const qSites: string[] = sourceWebsites.filter(ok)
+    const qSites: string[] = !sourceWebsites ? [] : sourceWebsites.filter(ok)
       .filter(value => value !== undefined && value !== null && value.trim() !== '')
       .map(site => site.trim())
       .map(site => site.startsWith('http://') ? site.substr('http://'.length) : site)
