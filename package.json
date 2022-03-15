@@ -4,6 +4,17 @@
   "description": "Wikidata edit gadgets for using from Wikipedia projects",
   "main": "src/app.js",
   "browserslist": ">0.1%, safari >= 10, ie >= 11",
+  "scripts": {
+    "eslint:check": "eslint --ignore-pattern \"!.eslintrc.js\" .eslintrc.js deploy-to-wikipedia.js karma.conf.js webpack.config.js src/**/*.ts* test/.eslintrc.js test/**/*.ts*",
+    "eslint:fix": "eslint --ignore-pattern \"!.eslintrc.js\" --fix .eslintrc.js deploy-to-wikipedia.js karma.conf.js webpack.config.js src/**/*.ts* test/.eslintrc.js test/**/*.ts*",
+    "serve": "cross-env NODE_ENV=development webpack-dev-server",
+    "build": "cross-env NODE_ENV=production webpack && eslint ./deploy-to-wikipedia.js --fix",
+    "deploy": "npm run build && node ./deploy-to-wikipedia.js",
+    "test": "npm run eslint:check && npm run flow:check && npm run test:karma",
+    "test:karma": "cross-env NODE_ENV=development karma start karma.conf.js --single-run",
+    "test:watch": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run",
+    "test:watch:chrome": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run --browsers Chrome"
+  },
   "devDependencies": {
     "@teamsupercell/typings-for-css-modules-loader": "^2.5.1",
     "@types/chai": "^4.3.0",
@@ -55,17 +66,6 @@
     "style-loader": "^3.3.1",
     "tslib": "^2.3.1",
     "wikitext-dom": "^0.1.5"
-  },
-  "scripts": {
-    "eslint:check": "eslint --ignore-pattern \"!.eslintrc.js\" .eslintrc.js deploy-to-wikipedia.js karma.conf.js webpack.config.js src/**/*.ts* test/**/*.ts*",
-    "eslint:fix": "eslint --ignore-pattern \"!.eslintrc.js\" --fix .eslintrc.js deploy-to-wikipedia.js karma.conf.js webpack.config.js src/**/*.ts* test/**/*.ts*",
-    "serve": "cross-env NODE_ENV=development webpack-dev-server",
-    "build": "cross-env NODE_ENV=production webpack && eslint ./deploy-to-wikipedia.js --fix",
-    "deploy": "npm run build && node ./deploy-to-wikipedia.js",
-    "test": "npm run eslint:check && npm run flow:check && npm run test:karma",
-    "test:karma": "cross-env NODE_ENV=development karma start karma.conf.js --single-run",
-    "test:watch": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run",
-    "test:watch:chrome": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run --browsers Chrome"
   },
   "repository": {
     "type": "git",

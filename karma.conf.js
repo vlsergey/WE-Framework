@@ -33,8 +33,8 @@ module.exports = function (config) {
           },
           {
             test: /\.css$/,
-            exclude: /(src|test)/,
             exclude: /node_modules/,
+            include: /(src|test)/,
             use: [
               'style-loader',
               {
