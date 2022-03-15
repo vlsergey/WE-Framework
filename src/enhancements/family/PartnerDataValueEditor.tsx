@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React from 'react';
 
 import PropertyDescription from '../../core/PropertyDescription';
 import FamilyMemberDataValueEditor, {oppositeGender} from './FamilyMemberDataValueEditor';
@@ -6,18 +6,16 @@ import FamilyMemberDataValueEditor, {oppositeGender} from './FamilyMemberDataVal
 const EMPTY_MAP: Map< string, string > = Object.freeze(new Map());
 
 interface PropsType {
-  datavalue: DataValueType | null;
-  onDataValueChange: (dataValue: DataValueType | null) => any;
+  datavalue: WikibaseEntityIdDataValue | null;
+  onDataValueChange: (dataValue: WikibaseEntityIdDataValue | null) => unknown;
   propertyDescription: PropertyDescription;
 }
 
-export default class PartnerDataValueEditor extends PureComponent<PropsType> {
+const PartnerDataValueEditor = (props: PropsType) =>
+  <FamilyMemberDataValueEditor
+    {...props}
+    newEntityGenderEntityId={oppositeGender}
+    propertiesMapping={EMPTY_MAP}
+    propertyIdSelfInto="P451" />;
 
-  override render () {
-    return <FamilyMemberDataValueEditor
-      {...this.props}
-      newEntityGenderEntityId={oppositeGender}
-      propertiesMapping={EMPTY_MAP}
-      propertyIdSelfInto="P451" />;
-  }
-}
+export default React.memo(PartnerDataValueEditor);

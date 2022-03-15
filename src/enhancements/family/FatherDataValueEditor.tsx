@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React from 'react';
 
 import PropertyDescription from '../../core/PropertyDescription';
 import FamilyMemberDataValueEditor from './FamilyMemberDataValueEditor';
@@ -7,24 +7,22 @@ const GENDER_MALE = 'Q6581097';
 
 const PROPERTY_MOTHER = 'P25';
 const PROPERTY_SPOUSE = 'P26';
-const PROPERTIES_MAPPING: Map< string, string > = Object.freeze(new Map([
+const PROPERTIES_MAPPING = Object.freeze(new Map([
   // by default mother of current entity will be spouse of new entity
   [PROPERTY_MOTHER, PROPERTY_SPOUSE]
 ]));
 
 interface PropsType {
-  datavalue: DataValueType | null;
-  onDataValueChange: (dataValue: DataValueType | null) => any;
+  datavalue: WikibaseEntityIdDataValue | null;
+  onDataValueChange: (dataValue: WikibaseEntityIdDataValue | null) => unknown;
   propertyDescription: PropertyDescription;
 }
 
-export default class FatherDataValueEditor extends PureComponent<PropsType> {
+const MotherDataValueEditor = (props: PropsType) =>
+  <FamilyMemberDataValueEditor
+    {...props}
+    newEntityGenderEntityId={GENDER_MALE}
+    propertiesMapping={PROPERTIES_MAPPING}
+    propertyIdSelfInto="P40" />;
 
-  override render () {
-    return <FamilyMemberDataValueEditor
-      {...this.props}
-      newEntityGenderEntityId={GENDER_MALE}
-      propertiesMapping={PROPERTIES_MAPPING}
-      propertyIdSelfInto="P40" />;
-  }
-}
+export default React.memo(MotherDataValueEditor);
