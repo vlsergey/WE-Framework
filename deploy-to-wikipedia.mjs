@@ -5,13 +5,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 
-
-const fetchOriginal = require('node-fetch');
-const fs = require('fs');
-const HttpsProxyAgent = require('https-proxy-agent');
+import fs from 'fs';
+import HttpsProxyAgent from 'https-proxy-agent';
+import fetchOriginal from 'node-fetch';
 
 const cookieStorage = {fake: 'fake'};
 
@@ -113,7 +111,7 @@ const csrfTokenPromise = loginPromise.then(() => {
     .then(json => json.query.tokens.csrftoken);
 });
 
-csrfTokenPromise.then(csrftoken => {
+void csrfTokenPromise.then(csrftoken => {
   const articleName = 'User:Vlsergey/wef.js';
   console.log('Uploading app.bundle.js as ' + articleName + '...');
 

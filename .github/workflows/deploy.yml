@@ -15,8 +15,7 @@ jobs:
       - run: npx webpack
         env:
           NODE_ENV: production
-      - run: npx babel ./deploy-to-wikipedia.js > ./dist/deploy-to-wikipedia.out.js
-      - run: node ./dist/deploy-to-wikipedia.out.js
+      - run: node ./deploy-to-wikipedia.out.mjs
         env:
           WIKIPEDIA_LGNAME: ${{secrets.DEPLOY_LOGIN}}
           WIKIPEDIA_LGPASSWORD: ${{secrets.DEPLOY_PASSWORD}}
