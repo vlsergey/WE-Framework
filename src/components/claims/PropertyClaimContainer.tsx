@@ -1,11 +1,11 @@
-import React, {PureComponent} from 'react';
+import React, {useMemo} from 'react';
 import {connect} from 'react-redux';
 
 import PropertyDescription from '../../core/PropertyDescription';
 import {COLUMNS_FOR_CLAIMS_EDITOR} from '../TableColSpanConstants';
 import ClaimsTableBody from './ClaimsTableBody';
 import ClaimsWithQualifiersTable from './ClaimsWithQualifiersTable';
-import {claimColumnsF} from './selectors';
+import {getClaimsColumns, sortColumns} from './getClaimsColumns';
 
 interface ExternalProps {
   displayLabel?: boolean;
@@ -21,32 +21,24 @@ type InternalPropsType = ExternalProps & {
   onClaimUpdate: (claim: ClaimType) => any;
 };
 
-class PropertyClaimContainer extends PureComponent<InternalPropsType> {
+const PropertyClaimContainer = ({ claims, ...etc} : InternalPropsType) => {
 
-  static defaultProps = {
-    displayLabel: true,
-  };
+  const unsortedColumns = useMemo( () => getClaimsColumns(claims), [claims] );
+  const sortedColumns = useMemo( () => sortColumns(unsortedColumns), [unsortedColumns] );
 
-  columnsMemoization : ((claims?: ClaimType[]) => readonly string[]) = claimColumnsF();
-
-  override render () {
-    const {claims} = this.props;
-    const columns = this.columnsMemoization(claims);
-
-    if (columns.length !== 0) {
-      return <tr>
-        <td colSpan={COLUMNS_FOR_CLAIMS_EDITOR}>
-          <ClaimsWithQualifiersTable {...this.props} columns={columns} />
-        </td>
-      </tr>;
-    }
-
-    return <ClaimsTableBody {...this.props} />;
+  if (sortedColumns.length !== 0) {
+    return <tr>
+      <td colSpan={COLUMNS_FOR_CLAIMS_EDITOR}>
+        <ClaimsWithQualifiersTable {...etc} claims={claims} columns={sortedColumns} />
+      </td>
+    </tr>;
   }
+
+  return <ClaimsTableBody claims={claims} {...etc} />;
 }
 
-const mapStateToProps = (state: any, ownProps: ExternalProps) => ({
-  claims: (state.entity as EntityType).claims?.[ownProps.propertyDescription.id],
+const mapStateToProps = (state: ReduxState, ownProps: ExternalProps) => ({
+  claims: state.entity.claims?.[ownProps.propertyDescription.id],
 });
 
 const mapDispatchToProps = (dispatch: any, ownProps: ExternalProps) => ({
@@ -60,5 +52,4 @@ const mapDispatchToProps = (dispatch: any, ownProps: ExternalProps) => ({
   onClaimsReorder: (claimIds: string[]) => dispatch({type: 'CLAIMS_REORDER', propertyId: ownProps.propertyDescription.id, claimIds}),
 });
 
-const PropertyClaimContainerConnected = connect(mapStateToProps, mapDispatchToProps)(PropertyClaimContainer);
-export default PropertyClaimContainerConnected;
+export default connect(mapStateToProps, mapDispatchToProps)(PropertyClaimContainer);
