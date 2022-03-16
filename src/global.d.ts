@@ -30,6 +30,7 @@ declare global {
   type ClaimsType = Record<string, ClaimType[]>;
 
   type DataValueType =
+    | GlobeCoordinateDataValue
     | MonolingualTextDataValue
     | QuantityDataValue
     | StringDataValue
@@ -62,6 +63,19 @@ declare global {
   interface ItemType extends EntityType {
     id?: string;
     type: 'item';
+  }
+
+  interface GlobeCoordinateDataValue extends BaseDataValue {
+    type: 'globecoordinate';
+    value: GlobeCoordinateValue;
+  }
+
+  interface GlobeCoordinateValue {
+    latitude: null | number;
+    longitude: null | number;
+    altitude: null | number;
+    precision: null | number;
+    globe: null | string;
   }
 
   export interface LabelalikeType {

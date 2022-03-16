@@ -11,7 +11,7 @@ import styles from './Quantity.css';
 import UnitSelect from './UnitSelect';
 
 interface Mode {
-  canBeUsedForValue: (value: QuantityValue) => boolean;
+  canBeUsedForValue: (value: null | QuantityValue) => boolean;
   component: ComponentType< any >;
 }
 
@@ -35,11 +35,11 @@ function detectAppropriateMode (datavalue: QuantityDataValue | null): ModeType {
 }
 
 interface PropsType {
-  buttonCells: any[];
+  buttonCells?: JSX.Element[];
   datavalue: QuantityDataValue | null;
   onDataValueChange: (datavalue: QuantityDataValue | null) => any;
   propertyDescription: PropertyDescription;
-  readOnly: boolean;
+  readOnly?: boolean;
 }
 
 interface StateType {
@@ -47,11 +47,6 @@ interface StateType {
 }
 
 export default class QuantityDataValueEditor extends PureComponent<PropsType, StateType> {
-
-  static defaultProps = {
-    readOnly: false,
-    buttonCells: [],
-  };
 
   constructor (props: PropsType) {
     super(props);
@@ -63,16 +58,14 @@ export default class QuantityDataValueEditor extends PureComponent<PropsType, St
 
   handleModeChange = (mode: ModeType) => { this.setState({mode}); };
 
-  handleValueChange = (value: QuantityValue) => {
-    this.props.onDataValueChange({
-      ...this.props.datavalue,
-      type: 'quantity',
-      value: {
-        ...value,
-        unit: value && value.unit ? value.unit : '1',
-      },
-    });
-  };
+  handleValueChange = (value: QuantityValue) => this.props.onDataValueChange({
+    ...this.props.datavalue,
+    type: 'quantity',
+    value: {
+      ...value,
+      unit: value?.unit || '1',
+    },
+  });
 
   override render () {
     const {datavalue, propertyDescription, readOnly, buttonCells} = this.props;
@@ -107,7 +100,7 @@ export default class QuantityDataValueEditor extends PureComponent<PropsType, St
     }
 
     return <React.Fragment>
-      <td className={classNames.join(' ')} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - buttonCells.length}>
+      <td className={classNames.join(' ')} colSpan={COLUMNS_FOR_DATA_VALUE_EDITOR - (buttonCells?.length || 0)}>
         <table>
           <tbody>
             <tr>

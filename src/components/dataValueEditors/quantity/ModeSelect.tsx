@@ -22,7 +22,7 @@ export default class ModeSelect extends PureComponent<PropsType> {
 
     return <select onChange={this.handleModeChange} value={mode}>
       {Object.entries(MODES).map(([m, modeDef]) => {
-        const compatible = !!value && modeDef.canBeUsedForValue(value);
+        const compatible = modeDef.canBeUsedForValue(value || null);
         return <option
           className={compatible ? styles.compatible : styles.incompatible}
           disabled={!compatible}

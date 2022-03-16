@@ -34,7 +34,7 @@ describe('components/dataValueEditors', () => {
 
     it('can be changed via keyboard', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <ValueHolder<CommonsMediaDataValue | null> initialValue={{value: 'Image.jpg', type: 'string'}}>{ (value, onChange) =>
+        <ValueHolder<StringDataValue | null> initialValue={{value: 'Image.jpg', type: 'string'}}>{ (value, onChange) =>
           <TableTBodyTr>
             <CommonsMediaDataValueEditor
               datavalue={value}
@@ -42,7 +42,7 @@ describe('components/dataValueEditors', () => {
               propertyDescription={p18Description} />
           </TableTBodyTr>
         }</ValueHolder>
-      ) as unknown as ValueHolder<CommonsMediaDataValue>;
+      ) as unknown as ValueHolder<StringDataValue>;
       assert.ok(rendered);
       const valueHolder = ReactTestUtils.findRenderedComponentWithType(rendered, ValueHolder) as ValueHolder<any>;
 

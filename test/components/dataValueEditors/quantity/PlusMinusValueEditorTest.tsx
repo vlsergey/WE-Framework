@@ -11,10 +11,10 @@ const NOOP = () => {};
 describe('components/dataValueEditors/quantity', () => {
   describe('PlusMinusValueEditor', () => {
 
-    it('can be rendered read-only with undefined value', () => {
+    it('can be rendered read-only with null value', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
         <TableTBodyTr>
-          <PlusMinusValueEditor onValueChange={NOOP} readOnly value={undefined} />
+          <PlusMinusValueEditor onValueChange={NOOP} readOnly value={null} />
         </TableTBodyTr>
       );
       assert.ok(rendered);

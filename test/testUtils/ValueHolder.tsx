@@ -20,7 +20,11 @@ export default class ValueHolder<V> extends PureComponent<PropsType<V>, StateTyp
   }
 
   handleChange = (newValue: V) => {
-    console.log('ValueHolder::handleChange( «' + this.state.value + '» => «' + newValue + '» )');
+    try {
+      console.log('ValueHolder::handleChange( «' + JSON.stringify(this.state.value) + '» => «' + JSON.stringify(newValue) + '» )');
+    } catch (_err: unknown) {
+      console.log('ValueHolder::handleChange( «' + this.state.value + '» => «' + newValue + '» )');
+    }
     this.setState({
       value: newValue,
     });

@@ -1,6 +1,5 @@
 import React, {ChangeEvent, PureComponent} from 'react';
 
-const EMPTY_OBJECT = Object.freeze({});
 const ok = (x: any) => typeof x === 'string' && x.trim() !== '';
 
 interface PropsType {
@@ -11,12 +10,8 @@ interface PropsType {
 
 export default class PlusMinusValueEditor extends PureComponent<PropsType> {
 
-  static defaultProps = {
-    value: EMPTY_OBJECT,
-  };
-
-  static canBeUsedForValue (this: void, value: QuantityValue): boolean {
-    const {amount, lowerBound, upperBound} = value || EMPTY_OBJECT;
+  static canBeUsedForValue (this: void, value: null | QuantityValue): boolean {
+    const {amount, lowerBound, upperBound} = value || {};
 
     return !ok(lowerBound) && !ok(upperBound)
       || Number(amount) - Number(lowerBound) === Number(upperBound) - Number(amount);
@@ -82,12 +77,12 @@ export default class PlusMinusValueEditor extends PureComponent<PropsType> {
   override render () {
     const {readOnly, value} = this.props;
 
-    const strAmount = (value || {}).amount || '';
+    const strAmount = value?.amount || '';
     const numAmount: number = Number.parseFloat(strAmount) || 0;
     const numLowerBound: number = Number.parseFloat((value || {}).lowerBound || '') || 0;
 
     if (readOnly) {
-      if (!value || !value.amount)
+      if (!value?.amount)
         return null;
 
       if (numLowerBound)

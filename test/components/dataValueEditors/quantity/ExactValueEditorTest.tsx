@@ -20,7 +20,7 @@ describe('components/dataValueEditors/quantity', () => {
 
     it('correctly updates equal boundaries', () => {
       const rendered = ReactTestUtils.renderIntoDocument(
-        <ValueHolder<QuantityValue> initialValue={{lowerBound: '1.0', amount: '1.00', upperBound: '1.000'}}>{ (value, onChange) =>
+        <ValueHolder<null | QuantityValue> initialValue={{lowerBound: '1.0', amount: '1.00', upperBound: '1.000'}}>{ (value, onChange) =>
           <TableTBodyTr>
             <ExactValueEditor onValueChange={onChange} value={value} />
           </TableTBodyTr>

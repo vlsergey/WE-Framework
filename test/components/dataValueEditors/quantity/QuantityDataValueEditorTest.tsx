@@ -65,13 +65,13 @@ describe('components/dataValueEditors/quantity', () => {
       // all models shall be enabled
       const modeSelect = ReactTestUtils.findRenderedComponentWithType(rendered, ModeSelect);
       const modeOptions = ReactTestUtils.scryRenderedDOMComponentsWithTag(modeSelect, 'option') as HTMLOptionElement[];
-      assert.equal(modeOptions.length, Object.keys(MODES).length);
-      assert.equal(modeOptions.filter(modeOptions => !modeOptions.disabled).length, Object.keys(MODES).length);
+      assert.equal(modeOptions.length, Object.keys(MODES).length, 'Incorrect number of rendered MODE options');
+      assert.equal(modeOptions.filter(modeOptions => !modeOptions.disabled).length, Object.keys(MODES).length, 'Incorrect number of rendered non-disabled MODE options');
     });
 
 
     it('can be rendered with plus-minus value provided', () => {
-      const datavalue = {
+      const datavalue: QuantityDataValue = {
         value: {
           amount: '+311582600',
           unit: '1',

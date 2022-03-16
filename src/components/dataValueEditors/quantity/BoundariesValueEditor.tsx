@@ -23,7 +23,7 @@ export default class BoundariesValueEditor extends PureComponent<PropsType> {
     const {readOnly, value} = this.props;
 
     if (readOnly) {
-      if (!value || !value.amount)
+      if (!value?.amount)
         return null;
 
       return (value.lowerBound || '?')

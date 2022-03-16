@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 
-import * as selectors from '../../../src/components/claims/selectors';
+import {getClaimsColumns, sortColumns} from '../../../src/components/claims/getClaimsColumns';
 import Q30 from '../../entities/Q30';
 
 describe('components/claims', () => {
@@ -10,11 +10,10 @@ describe('components/claims', () => {
     describe('claimColumnsF', () => {
 
       describe('correctly calculates columns for USA entity', () => {
-        const claimColumns = selectors.claimColumnsF();
 
         const check = (propertyId: string, expectedColumns: string[]) =>
           it('correctly calculates columns for property ' + propertyId + ' of USA entity', () => {
-            assert.deepEqual(claimColumns(Q30.claims[propertyId]), expectedColumns);
+            assert.deepEqual(sortColumns(getClaimsColumns(Q30.claims[propertyId])), expectedColumns);
           });
 
         check('P6', ['P580', 'P582']);

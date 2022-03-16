@@ -132,7 +132,7 @@ describe('components/dataValueEditors', () => {
     });
 
     it('click; type; select; clear', () => {
-      const datavalue: DataValueType = {
+      const datavalue: WikibaseEntityIdDataValue = {
         value: {
           'entity-type': 'item',
           'numeric-id': 35120,
@@ -140,9 +140,8 @@ describe('components/dataValueEditors', () => {
         },
         type: 'wikibase-entityid',
       };
-      const onDataValueChange = (newDataValue: null | DataValueType) => {
-        Object.keys(datavalue).forEach(key => datavalue[key as keyof DataValueType] = newDataValue![key as keyof DataValueType]);
-        Object.keys(newDataValue!).forEach(key => datavalue[key as keyof DataValueType] = newDataValue![key as keyof DataValueType]);
+      const onDataValueChange = (newDataValue: null | WikibaseEntityIdDataValue) => {
+        datavalue.value = newDataValue?.value || null;
       };
 
       function testSuggestionsProvider (value: string) {

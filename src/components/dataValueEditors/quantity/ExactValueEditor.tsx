@@ -4,9 +4,9 @@ const EMPTY_OBJECT = Object.freeze({});
 const ok = (x: any) => typeof x === 'string' && x.trim() !== '';
 
 interface PropsType {
-  onValueChange: (value: QuantityValue) => any;
+  onValueChange: (value: null | QuantityValue) => any;
   readOnly?: boolean;
-  value: QuantityValue;
+  value: null | QuantityValue;
 }
 
 export default class ExactValueEditor extends PureComponent<PropsType> {
@@ -15,14 +15,20 @@ export default class ExactValueEditor extends PureComponent<PropsType> {
     value: EMPTY_OBJECT,
   };
 
-  static canBeUsedForValue (this: void, value: QuantityValue): boolean {
-    const {amount, lowerBound, upperBound} = value;
+  static canBeUsedForValue (this: void, value: null | QuantityValue): boolean {
+    const {amount, lowerBound, upperBound} = value || {};
 
     return !ok(lowerBound) && !ok(upperBound)
       || Number(lowerBound) === Number(amount) && Number(upperBound) === Number(amount);
   }
 
   handleChange = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
+    if (this.props.value === null) {
+      return this.props.onValueChange({
+        amount: value || '',
+      });
+    }
+
     const {lowerBound, amount, upperBound, ...etc} = this.props.value;
     this.props.onValueChange({
       ...etc,
@@ -41,7 +47,7 @@ export default class ExactValueEditor extends PureComponent<PropsType> {
     }
 
     return <td>
-      <input onChange={this.handleChange} value={value.amount || ''} />
+      <input onChange={this.handleChange} value={value?.amount || ''} />
     </td>;
   }
 
