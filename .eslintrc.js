@@ -18,7 +18,6 @@ module.exports = {
     // Temporary disable strict checks for this project and uncomment them slowly
 
     'no-unused-vars': 0,
-    'no-useless-escape': 0,
 
     '@typescript-eslint/ban-types': 0,
     '@typescript-eslint/ban-ts-comment': 0,

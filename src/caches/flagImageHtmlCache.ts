@@ -5,7 +5,7 @@ import AbstractQueuedCache from './AbstractQueuedCache';
 
 const TYPE = 'FLAGIMAGEHTMLS';
 
-const openTagF : ((fileName: string) => string) = fileName => '<div data-filename=\"' + md5(fileName) + '\">';
+const openTagF : ((fileName: string) => string) = fileName => `<div data-filename="${md5(fileName)}">`;
 const closeTagF : ((fileName: string) => string) = () => '</div>';
 
 class FlagImageHtmlCache extends AbstractQueuedCache<string, any, string> {
