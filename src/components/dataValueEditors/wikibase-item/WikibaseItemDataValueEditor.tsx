@@ -11,7 +11,7 @@ import styles from './WikibaseItem.css';
 
 interface PropsType extends Omit<React.ComponentProps<typeof EntityField>, 'lruKey' | 'onChange' | 'oneOf' | 'value'> {
   buttonCells?: any[];
-  datavalue?: DataValueType | null;
+  datavalue?: WikibaseEntityIdDataValue | null;
   onDataValueChange: (datavalue: WikibaseEntityIdDataValue | null) => any;
   propertyDescription: PropertyDescription;
   readOnly: boolean;
@@ -59,7 +59,7 @@ export default class WikibaseItemDataValueEditor
   override render () {
     const {datavalue, onDataValueChange, propertyDescription, readOnly, ...etc} = this.props;
 
-    const currentValue = ((datavalue || {}).value || {}).id || '';
+    const currentValue = datavalue?.value?.id || '';
     const className = styles['wef_datavalue_wikibase-item'];
 
     if (readOnly) {

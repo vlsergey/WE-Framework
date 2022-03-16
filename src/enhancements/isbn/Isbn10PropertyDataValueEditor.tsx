@@ -9,9 +9,9 @@ import HyphenateIsbnButtonCell from './HyphenateIsbnButtonCell';
 type NormalizeFunction = (str: null | string) => null | string;
 
 interface PropsType {
-  datavalue?: DataValueType;
+  datavalue?: null | StringDataValue;
   onClaimsFill: (normalizeF: NormalizeFunction, value: string) => any;
-  onDataValueChange: (datavalue: DataValueType | null) => any;
+  onDataValueChange: (datavalue: null | StringDataValue) => any;
   propertyDescription: PropertyDescription;
   readOnly?: boolean;
 }

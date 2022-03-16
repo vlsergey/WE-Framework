@@ -5,8 +5,8 @@ import PropertyDescription from '../../core/PropertyDescription';
 /* eslint react/no-unused-prop-types : 0 */
 interface PropsType {
   buttons?: any[];
-  datavalue?: DataValueType;
-  onDataValueChange: (dataValue: DataValueType | null) => any;
+  datavalue?: StringDataValue | null;
+  onDataValueChange: (dataValue: StringDataValue | null) => any;
   propertyDescription: PropertyDescription;
   readOnly?: boolean;
 }
@@ -14,19 +14,13 @@ interface PropsType {
 export default class AbstractStringBasedDataValueEditor
   extends PureComponent<PropsType> {
 
-  static DATAVALUE_TYPE = 'string';
-
-  static defaultProps = {
-    readOnly: false,
-  };
-
   handleValueChange = (value: string | null) => {
     const {datavalue, onDataValueChange} = this.props;
 
     if (value) {
       onDataValueChange({
         ...datavalue,
-        type: AbstractStringBasedDataValueEditor.DATAVALUE_TYPE,
+        type: 'string',
         value,
       });
     } else {

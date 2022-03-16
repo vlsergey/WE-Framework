@@ -65,9 +65,9 @@ export function parseJustLinks (
 }
 
 interface PropsType {
-  datavalue?: DataValueType;
+  datavalue?: null | StringDataValue;
   onClaimsFill: (propertyId: string, normalizeF: NormalizeFunction, value: string) => any;
-  onDataValueChange: (datavalue: DataValueType | null) => any;
+  onDataValueChange: (datavalue: null | StringDataValue) => any;
   propertyDescription: PropertyDescription;
   readOnly?: boolean;
 }

@@ -8,14 +8,14 @@ import i18n from './i18n';
 import PopulationLookupDialog from './PopulationLookupDialog';
 
 interface ExternalProps {
-  datavalue: null | DataValueType;
-  onDataValueChange: (datavalue: null | DataValueType) => any;
+  datavalue: null | QuantityDataValue;
+  onDataValueChange: (datavalue: null | QuantityDataValue) => unknown;
   propertyDescription: PropertyDescription;
   readOnly?: boolean;
 }
 
 interface PropsType extends ExternalProps {
-  onClaimAdd: (claimData: ClaimType) => any;
+  onClaimAdd: (claimData: ClaimType) => unknown;
 }
 
 interface StateType {

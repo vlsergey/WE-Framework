@@ -109,12 +109,12 @@ export default function filterEmptyEntityStructures (entity: EntityType) {
   };
 }
 
-function isStringBlank (str: null | string) {
+function isStringBlank (str: null | string | undefined) {
   if (!str) return true;
   return str.trim() === '';
 }
 
-function isNumberDefined (number: number | null) {
+function isNumberDefined (number: number | null | undefined) {
   return typeof number !== 'undefined' && number !== null;
 }
 
@@ -131,13 +131,13 @@ function isSnakEmtpy (snak?: SnakType | null) {
 
   switch (datavalue.type) {
   case 'monolingualtext':
-    return isStringBlank(value.text) || isStringBlank(value.language);
+    return isStringBlank(datavalue?.value?.text) || isStringBlank(datavalue?.value?.language);
   case 'string':
-    return isStringBlank(value);
+    return isStringBlank(datavalue.value);
   case 'time':
-    return isStringBlank(value.time) || isStringBlank(value.calendarmodel);
+    return isStringBlank(datavalue?.value?.time) || isStringBlank(datavalue?.value?.calendarmodel);
   case 'wikibase-entityid':
-    return !isNumberDefined(value['numeric-id']) || isStringBlank(value['entity-type']);
+    return !isNumberDefined(datavalue?.value?.['numeric-id']) || isStringBlank(datavalue?.value?.['entity-type']);
   default:
     return false;
   }

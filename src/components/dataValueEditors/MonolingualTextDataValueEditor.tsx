@@ -4,7 +4,7 @@ import LanguageAutocomplete from '../languages/LanguageAutocomplete';
 import styles from './MonolingualText.css';
 
 interface PropsType {
-  datavalue: DataValueType | null;
+  datavalue: MonolingualTextDataValue | null;
   onDataValueChange: (dataValue: MonolingualTextDataValue | null) => any;
   readOnly?: boolean;
 }
@@ -18,7 +18,8 @@ export default class MonolingualTextDataValueEditor
     return onDataValueChange({
       ...datavalue,
       value: {
-        ...datavalue ? datavalue.value : undefined,
+        text: null,
+        ...datavalue?.value,
         language: value,
       },
       type: 'monolingualtext',
@@ -52,7 +53,6 @@ export default class MonolingualTextDataValueEditor
         </td>;
       }
       return null;
-
     }
 
     return <td className={styles.wef_monolingualtext} colSpan={12}>

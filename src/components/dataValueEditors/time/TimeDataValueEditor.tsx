@@ -8,8 +8,8 @@ import styles from './Time.css';
 const POPUP_ON_CLICK_FOCUS: ComponentProps<typeof Popup>['on'] = ['click', 'focus'];
 
 interface PropsType {
-  datavalue: DataValueType | null;
-  onDataValueChange: (datavalue: DataValueType | null) => any;
+  datavalue: TimeDataValue | null;
+  onDataValueChange: (datavalue: TimeDataValue | null) => any;
   readOnly?: boolean;
 }
 
@@ -70,7 +70,7 @@ export default class TimeDataValueEditor
   handleToggleManualPrecision = () => {
     const valuePrecision = ((this.props.datavalue || {}).value || {}).precision;
     if (this.state.precision === null && valuePrecision !== null) {
-      this.setState({precision: valuePrecision});
+      this.setState({precision: valuePrecision || null});
     } else {
       this.setState({precision: null});
     }
@@ -166,7 +166,7 @@ export default class TimeDataValueEditor
     const {calendarModel,
       // focused,
       parsing, rendering, error, precision, renderedAsHtml, text} = this.state;
-    const value = (datavalue || {}).value || {};
+    const value = datavalue?.value;
 
     if (readOnly) {
       if (rendering) {
@@ -187,8 +187,8 @@ export default class TimeDataValueEditor
       onManualCalendarModelToggle={this.handleToggleManualCalendarModel}
       onManualPrecisionChange={this.handleChangeManualPrecision}
       onManualPrecisionToggle={this.handleToggleManualPrecision}
-      parsedCalendarModel={value.calendarmodel}
-      parsedPrecision={value.precision}
+      parsedCalendarModel={value?.calendarmodel}
+      parsedPrecision={value?.precision}
       preview={renderedAsHtml}
       spinner={parsing || rendering} />;
 

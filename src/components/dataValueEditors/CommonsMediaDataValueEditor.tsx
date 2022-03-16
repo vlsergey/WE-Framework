@@ -7,8 +7,8 @@ import MediawikiPreview from '../MediawikiPreview';
 import styles from './CommonsMediaDataValueEditor.css';
 
 interface PropsType {
-  datavalue: CommonsMediaDataValue | null;
-  onDataValueChange: (dataValue: CommonsMediaDataValue | null) => any;
+  datavalue: StringDataValue | null;
+  onDataValueChange: (dataValue: StringDataValue | null) => any;
   propertyDescription: PropertyDescription;
   readOnly?: boolean;
 }

@@ -14,7 +14,7 @@ export default class UrlDataValueEditor extends AbstractStringBasedDataValueEdit
 
   override render () {
     const {datavalue, readOnly} = this.props;
-    const href = datavalue && datavalue.value ? datavalue.value : null;
+    const href = datavalue?.value || undefined;
 
     if (readOnly) {
       if (datavalue && datavalue.value) {
@@ -25,7 +25,6 @@ export default class UrlDataValueEditor extends AbstractStringBasedDataValueEdit
         </td>;
       }
       return null;
-
     }
 
     return <React.Fragment>

@@ -19,7 +19,7 @@ function findSingleStatementByEntityIdValue (
       statement.mainsnak
         && statement.mainsnak.datavalue
         && statement.mainsnak.datavalue.value
-        && statement.mainsnak.datavalue.value.id === entityId);
+        && (statement.mainsnak.datavalue.value as WikibaseEntityIdValue ).id === entityId);
 
   if (candidates.length === 1) {
     return candidates[0] || null;
@@ -38,16 +38,17 @@ function getWikibaseItemRestrictions (
   return findEntityIdsFromQualifiers(statement, valuePropertyId);
 }
 
-function getStringRestriction (propertyEntity: PropertyType, restrictionId: string, valuePropertyId: string) {
+function getStringRestriction (propertyEntity: PropertyType, restrictionId: string, valuePropertyId: string) : string | undefined {
   const statement = findSingleStatementByEntityIdValue(propertyEntity, 'P2302', restrictionId);
   if (!statement)
-    return null;
+    return undefined;
 
-  if (statement?.qualifiers?.[valuePropertyId]?.length !== 1
-      || !statement?.qualifiers?.[valuePropertyId]?.[0]?.datavalue?.value)
-    return null;
+  const restricionQualifiers = statement?.qualifiers?.[valuePropertyId];
+  if (restricionQualifiers?.length !== 1 || !restricionQualifiers[0]?.datavalue?.value)
+    return undefined;
 
-  return statement?.qualifiers?.[valuePropertyId]?.[0]?.datavalue?.value || null;
+  const dataValue = restricionQualifiers[0]!.datavalue as StringDataValue;
+  return dataValue?.value || undefined;
 }
 
 export interface FormatterUrlData {

@@ -83,7 +83,7 @@ export function getEntityIdFromDatavalue (datavalue: DataValueType | null): stri
   if (!datavalue || !datavalue.value) return null;
   if (datavalue.type !== 'wikibase-entityid') return null;
 
-  const value: WikibaseEntityIdValueType = datavalue.value;
+  const value: WikibaseEntityIdValue = datavalue.value;
   if (value.id) return value.id;
 
   if (!datavalue.value['entity-type'] || !datavalue.value['numeric-id'])
@@ -107,7 +107,7 @@ export function getEntityIdFromSnak (snak: SnakType | null): string | null {
 }
 
 export function getStringFromSnak (snak: SnakType | null): string | null {
-  return getValueFromSnak(snak, x => x.value);
+  return getValueFromSnak(snak, x => (x as StringDataValue).value);
 }
 
 function getValueFromSnak<T> (
@@ -128,7 +128,7 @@ const ENTITY_TYPES = {
 
 export function toWikibaseEntityIdValue (
     entityId: string
-): WikibaseEntityIdValueType {
+): WikibaseEntityIdValue {
   const entityType = ENTITY_TYPES[entityId[0] as string];
   if (!entityType) throw new Error('Unknown entity type: ' + entityId);
 

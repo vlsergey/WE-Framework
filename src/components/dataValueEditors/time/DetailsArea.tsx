@@ -15,8 +15,8 @@ interface PropsType {
   onManualCalendarModelToggle: () => any;
   onManualPrecisionChange: (value: number | null) => any;
   onManualPrecisionToggle: () => any;
-  parsedCalendarModel: string | null;
-  parsedPrecision: number | null;
+  parsedCalendarModel?: string;
+  parsedPrecision?: number;
   preview: string | null;
   spinner: boolean;
 }

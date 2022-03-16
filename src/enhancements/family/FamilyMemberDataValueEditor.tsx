@@ -8,15 +8,13 @@ import WikibaseItemDataValueEditor from '../../components/dataValueEditors/wikib
 import {openEditor} from '../../core/edit';
 import PropertyDescription from '../../core/PropertyDescription';
 import PersonEditorTemplate from '../../editors/PersonEditorTemplate';
-import {toWikibaseEntityIdValue} from '../../model/ModelUtils';
+import {findEntityIdsFromClaims, toWikibaseEntityIdValue} from '../../model/ModelUtils';
 import generateRandomString from '../../utils/generateRandomString';
 import isOkay from '../../utils/isOkay';
 import i18n from './i18n';
 
 export function oppositeGender (entity: EntityType) {
-  return (entity.claims?.P21 || [])
-    .filter(claim => claim.rank === 'normal' || claim.rank === 'preferred')
-    .map(claim => claim.mainsnak?.datavalue?.value?.id).filter(isOkay)
+  return findEntityIdsFromClaims(entity, 'P21')
     .map(id => {
       switch (id) {
       case 'Q6581097': return 'Q6581072';
@@ -119,10 +117,8 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
 
     [...propertiesMapping.entries()].forEach(([sourcePropertyId, targetPropertyId]: [string, string]) => {
 
-      newEntityClaims[targetPropertyId] = (entity.claims?.[sourcePropertyId] || [])
-        .filter(claim => claim.rank === 'normal' || claim.rank === 'preferred')
-        .map(claim => claim.mainsnak?.datavalue?.value?.id).filter(isOkay)
-        .map(entityId => ({
+      newEntityClaims[targetPropertyId] = findEntityIdsFromClaims(entity, sourcePropertyId)
+        .map<ClaimType>(entityId => ({
           mainsnak: {
             snaktype: 'value',
             property: targetPropertyId,

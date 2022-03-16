@@ -14,7 +14,7 @@ declare global {
 
   interface BaseDataValue {
     type: string;
-    value?: any | null | undefined;
+    value: unknown;
   }
 
   interface ClaimType {
@@ -29,15 +29,12 @@ declare global {
 
   type ClaimsType = Record<string, ClaimType[]>;
 
-  interface CommonsMediaDataValue extends BaseDataValue {
-    type: 'string';
-    value: string;
-  }
-
-  interface DataValueType {
-    type: string;
-    value?: any | null;
-  }
+  type DataValueType =
+    | MonolingualTextDataValue
+    | QuantityDataValue
+    | StringDataValue
+    | TimeDataValue
+    | WikibaseEntityIdDataValue
 
   type DescriptionsType = Record<string, LabelalikeType>;
 
@@ -81,7 +78,7 @@ declare global {
 
   interface MonolingualTextValue {
     language: string;
-    text?: string;
+    text: null | string;
   }
 
   interface PropertyType extends EntityType {
@@ -94,9 +91,9 @@ declare global {
 
   type QualifiersType = Record<string, QualifierType[]>;
 
-  interface QuantityDataValue extends DataValueType {
+  interface QuantityDataValue extends BaseDataValue {
     type: 'quantity';
-    value?: QuantityValue;
+    value: QuantityValue;
   }
 
   interface QuantityValue {
@@ -143,12 +140,31 @@ declare global {
 
   type SnaksType = Record<string, SnakType[]>;
 
-  interface WikibaseEntityIdDataValue extends BaseDataValue {
-    type: 'wikibase-entityid';
-    value: null | WikibaseEntityIdValueType;
+  interface StringDataValue extends BaseDataValue {
+    type: 'string';
+    value: string;
   }
 
-  interface WikibaseEntityIdValueType {
+  interface TimeDataValue extends BaseDataValue {
+    type: 'time';
+    value: TimeValue;
+  }
+
+  interface TimeValue {
+    time : string,
+    timezone: number,
+    before: number,
+    after: number,
+    precision: number,
+    calendarmodel: string,
+  }
+
+  interface WikibaseEntityIdDataValue extends BaseDataValue {
+    type: 'wikibase-entityid';
+    value: null | WikibaseEntityIdValue;
+  }
+
+  interface WikibaseEntityIdValue {
     'entity-type': EntityTypeEnum;
     'numeric-id': number;
     id?: string | null | undefined;

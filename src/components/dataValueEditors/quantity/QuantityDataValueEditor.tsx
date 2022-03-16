@@ -23,7 +23,7 @@ export const MODES: Record<ModeType, Mode> = {
   boundaries: {component: BoundariesValueEditor, canBeUsedForValue: BoundariesValueEditor.canBeUsedForValue},
 };
 
-function detectAppropriateMode (datavalue: DataValueType | null): ModeType {
+function detectAppropriateMode (datavalue: QuantityDataValue | null): ModeType {
   if (datavalue === undefined || datavalue === null
     || datavalue.value === undefined || datavalue.value === null) {
     return DEFAULT_MODE;
@@ -36,8 +36,8 @@ function detectAppropriateMode (datavalue: DataValueType | null): ModeType {
 
 interface PropsType {
   buttonCells: any[];
-  datavalue: DataValueType | null;
-  onDataValueChange: (datavalue: DataValueType | null) => any;
+  datavalue: QuantityDataValue | null;
+  onDataValueChange: (datavalue: QuantityDataValue | null) => any;
   propertyDescription: PropertyDescription;
   readOnly: boolean;
 }
@@ -80,8 +80,8 @@ export default class QuantityDataValueEditor extends PureComponent<PropsType, St
 
     const editor = MODES[mode].component;
 
-    const value = (datavalue || {}).value || {};
-    const unit = value.unit || '1';
+    const value = datavalue?.value || null;
+    const unit = value?.unit || '1';
 
     const classNames = [styles.wef_datavalue_quantity];
 
