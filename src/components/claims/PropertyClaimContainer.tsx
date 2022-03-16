@@ -21,10 +21,10 @@ type InternalPropsType = ExternalProps & {
   onClaimUpdate: (claim: ClaimType) => any;
 };
 
-const PropertyClaimContainer = ({ claims, ...etc} : InternalPropsType) => {
+const PropertyClaimContainer = ({claims, ...etc}: InternalPropsType) => {
 
-  const unsortedColumns = useMemo( () => getClaimsColumns(claims), [claims] );
-  const sortedColumns = useMemo( () => sortColumns(unsortedColumns), [unsortedColumns] );
+  const unsortedColumns = useMemo(() => getClaimsColumns(claims), [claims]);
+  const sortedColumns = useMemo(() => sortColumns(unsortedColumns), [unsortedColumns]);
 
   if (sortedColumns.length !== 0) {
     return <tr>
@@ -35,7 +35,7 @@ const PropertyClaimContainer = ({ claims, ...etc} : InternalPropsType) => {
   }
 
   return <ClaimsTableBody claims={claims} {...etc} />;
-}
+};
 
 const mapStateToProps = (state: ReduxState, ownProps: ExternalProps) => ({
   claims: state.entity.claims?.[ownProps.propertyDescription.id],

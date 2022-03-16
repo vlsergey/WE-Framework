@@ -3,11 +3,11 @@ import {toWikibaseEntityIdValue} from '../../model/ModelUtils';
 export default function (dispatch: any) {
   const identityF = <T>(x: T) => x;
 
-  const doFillClaim = <T>(property: string, datatype: string, datavalue: DataValueType, normalizeF: (value: T ) => T | null) =>
+  const doFillClaim = <T>(property: string, datatype: string, datavalue: DataValueType, normalizeF: (value: T) => T | null) =>
     dispatch({type: 'CLAIMS_FILL', property, datatype, datavalue, normalizeF});
 
   const doFillItemClaim = (property: string, entityId: string, normilizeF: ((value: WikibaseEntityIdValue) => WikibaseEntityIdValue) | null) =>
-    doFillClaim(property, 'wikibase-item', {type: 'wikibase-entityid', value: toWikibaseEntityIdValue(entityId)}, normilizeF || ((x : WikibaseEntityIdValue) => x));
+    doFillClaim(property, 'wikibase-item', {type: 'wikibase-entityid', value: toWikibaseEntityIdValue(entityId)}, normilizeF || ((x: WikibaseEntityIdValue) => x));
   const doFillMonolingualTextClaim = (property: string, language: string, text: string) =>
     doFillClaim(property, 'monolingualtext', {type: 'monolingualtext', value: {language, text}}, identityF);
   const doFillTimeClaim = (property: string, time: string) =>

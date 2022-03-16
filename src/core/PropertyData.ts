@@ -19,7 +19,7 @@ function findSingleStatementByEntityIdValue (
       statement.mainsnak
         && statement.mainsnak.datavalue
         && statement.mainsnak.datavalue.value
-        && (statement.mainsnak.datavalue.value as WikibaseEntityIdValue ).id === entityId);
+        && (statement.mainsnak.datavalue.value as WikibaseEntityIdValue).id === entityId);
 
   if (candidates.length === 1) {
     return candidates[0] || null;
@@ -38,7 +38,7 @@ function getWikibaseItemRestrictions (
   return findEntityIdsFromQualifiers(statement, valuePropertyId);
 }
 
-function getStringRestriction (propertyEntity: PropertyType, restrictionId: string, valuePropertyId: string) : string | undefined {
+function getStringRestriction (propertyEntity: PropertyType, restrictionId: string, valuePropertyId: string): string | undefined {
   const statement = findSingleStatementByEntityIdValue(propertyEntity, 'P2302', restrictionId);
   if (!statement)
     return undefined;

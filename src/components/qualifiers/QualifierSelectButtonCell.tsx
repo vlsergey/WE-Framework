@@ -5,7 +5,7 @@ import i18n from './i18n';
 
 interface PropsType {
   disabled: boolean;
-  onClick: () => any;
+  onClick: () => unknown;
 }
 
 export default class QualifierSelectButtonCell extends PureComponent<PropsType> {

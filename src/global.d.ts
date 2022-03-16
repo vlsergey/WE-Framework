@@ -34,7 +34,7 @@ declare global {
     | QuantityDataValue
     | StringDataValue
     | TimeDataValue
-    | WikibaseEntityIdDataValue
+    | WikibaseEntityIdDataValue;
 
   type DescriptionsType = Record<string, LabelalikeType>;
 
@@ -151,12 +151,12 @@ declare global {
   }
 
   interface TimeValue {
-    time : string,
-    timezone: number,
-    before: number,
-    after: number,
-    precision: number,
-    calendarmodel: string,
+    time: string;
+    timezone: number;
+    before: number;
+    after: number;
+    precision: number;
+    calendarmodel: string;
   }
 
   interface WikibaseEntityIdDataValue extends BaseDataValue {

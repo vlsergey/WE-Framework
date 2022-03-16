@@ -5,7 +5,7 @@ const EMPTY_ARRAY = Object.freeze([]);
 
 const MAX_COLUMNS = 2;
 
-export function getClaimsColumns(claims?: ClaimType[]) : readonly string[] {
+export function getClaimsColumns (claims?: ClaimType[]): readonly string[] {
   if (!claims) return EMPTY_ARRAY;
 
   if (claims.length < 5) {
@@ -49,7 +49,7 @@ const PREDEFINED_SORT = [
   'P582', // end time
 ];
 
-export function sortColumns(propertyIds: readonly string[]) {
+export function sortColumns (propertyIds: readonly string[]) {
   const result = [...propertyIds];
   stableSort<string>(result, (c1: string, c2: string) => {
     let o1 = PREDEFINED_SORT.indexOf(c1);

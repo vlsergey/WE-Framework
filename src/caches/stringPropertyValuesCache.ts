@@ -42,7 +42,7 @@ export const buildStringCacheValuesFromEntity = (entity: EntityType) => {
       .map(datavalue => {
         switch (datavalue.type) {
         case 'string':
-          return datavalue.value as string;
+          return datavalue.value;
         case 'wikibase-entityid':
           return datavalue.value?.id as string;
         default:

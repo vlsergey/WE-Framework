@@ -6,7 +6,7 @@ interface PropsType {
   confirmMessage: string;
   disabled: boolean;
   label: string;
-  onClick: () => any;
+  onClick: () => unknown;
 }
 
 export default class SnakRemoveButtonCell extends PureComponent<PropsType> {
