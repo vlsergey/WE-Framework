@@ -60,8 +60,8 @@ mw.loader.using(['jquery.ui', 'jquery.uls', 'jquery.uls.data', 'mediawiki.Foreig
   // only for ru-wiki: add source insert to edit toolbar
   wikieditorIntegration();
 
-}, function () {
+}, (...args: unknown[]) => {
   /* eslint no-console: 0*/
   console.log('[WE-F] unable to load WE-F: ');
-  console.log(arguments);
+  console.log(args);
 });

@@ -17,7 +17,6 @@ module.exports = {
 
     // Temporary disable strict checks for this project and uncomment them slowly
 
-    'prefer-rest-params': 0,
     'no-unused-vars': 0,
     'no-useless-escape': 0,
 

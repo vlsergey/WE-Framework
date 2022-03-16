@@ -116,8 +116,8 @@ export default function registerTool (tool: ToolType) {
     }
 
     // Create and register a tool
-    function ToolF (this: any) {
-      (ToolF as any).parent.apply(this, arguments);
+    function ToolF (this: any, ...args: unknown[]) {
+      (ToolF as any).parent.apply(this, args);
     }
     const Tool: any = ToolF;
     OO.inheritClass(Tool, ve.ui.Tool);
@@ -130,8 +130,8 @@ export default function registerTool (tool: ToolType) {
     Tool.static.autoAddToCatchall = false;
     Tool.static.deactivateOnSelect = false;
 
-    Tool.prototype.onUpdateState = function () {
-      Tool.parent.prototype.onUpdateState.apply(this, arguments);
+    Tool.prototype.onUpdateState = function (...args: unknown[]) {
+      Tool.parent.prototype.onUpdateState.apply(this, args);
       this.setActive(false);
     };
 

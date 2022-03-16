@@ -10,16 +10,12 @@ const WG_TITLE = mw.config.get('wgTitle');
 const WG_WIKIBASE_ITEM_ID = mw.config.get('wgWikibaseItemId');
 
 function addPromises (api: any) {
-  function toPromise<T> (originMethod: Function): () => Promise<T> {
-    return function () {
-      const args = arguments;
-      return new Promise<T>((resolve, reject) => {
-        originMethod.apply(api, args)
-          .then(resolve)
-          .catch(reject);
-      });
-    };
-  }
+  const toPromise = <T> (originMethod: Function) =>
+    (...args: unknown[]) => new Promise<T>((resolve, reject) => {
+      originMethod.apply(api, args)
+        .then(resolve)
+        .catch(reject);
+    });
 
   api.getPromise = toPromise(api.get);
   api.postPromise = toPromise(api.post);
