@@ -155,7 +155,7 @@ export function collectEntityUpdates (
 }
 
 export function closeWithoutSave (reject : ((reason: string) => any)) {
-  return (_dispatch: any, getState: any) => {
+  return (_dispatch: any, getState: () => ReduxState) => {
     notify('Analyzing changes...');
     const state = getState();
     const data = collectEntityUpdates(state.originalEntity, state.entity);
@@ -173,10 +173,10 @@ export function saveAndClose (
     resolve : ((entityId: string) => any),
     reject : ((reason: string) => any)
 ) {
-  return (_dispatch: any, getState: any) => {
+  return (_dispatch: unknown, getState: () => ReduxState) => {
     notify('Analyzing changes...');
     const state = getState();
-    const dirtyEntity: ItemType = state.entity;
+    const dirtyEntity = state.entity;
     const data = collectEntityUpdates(state.originalEntity, dirtyEntity);
 
     if (Object.keys(data).length === 0) {
@@ -200,7 +200,7 @@ export function saveAndClose (
       params.id = dirtyEntity.id;
     }
 
-    getWikidataApi()
+    return getWikidataApi()
       .postWithEditToken(params)
       .catch((_code: string, {error}: any) => {
         mw.log.error(i18n.errorUpdateEntity);

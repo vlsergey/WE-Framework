@@ -174,9 +174,5 @@ class FamilyMemberDataValueEditor extends PureComponent<PropsType, any> {
 
 }
 
-const mapStateToProps = (state: any) => ({
-  entity: state.entity,
-});
-
-const FamilyMemberDataValueEditorConnected = connect(mapStateToProps)(FamilyMemberDataValueEditor);
-export default FamilyMemberDataValueEditorConnected;
+const mapStateToProps = ({entity}: ReduxState) => ({entity});
+export default connect(mapStateToProps)(FamilyMemberDataValueEditor);

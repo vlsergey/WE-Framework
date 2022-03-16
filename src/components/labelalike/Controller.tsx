@@ -70,7 +70,7 @@ class Controller extends PureComponent<PropsType> {
 const EMPTY_ARRAY: never[] = [];
 const EMPTY_OBJECT: any = Object.freeze({});
 
-const mapStateToProps = (state: any, ownProps: ExternalProps) => {
+const mapStateToProps = (state: ReduxState, ownProps: ExternalProps) => {
   const entity = state.entity || EMPTY_OBJECT;
   return {
     language: ownProps.language,

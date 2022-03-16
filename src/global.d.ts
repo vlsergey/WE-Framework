@@ -1,6 +1,6 @@
 declare global {
 
-export type AliasesType = Record<string, LabelalikeType[]>;
+  export type AliasesType = Record<string, LabelalikeType[]>;
 
   interface EditClaimType {
     id?: string;
@@ -107,6 +107,11 @@ export type AliasesType = Record<string, LabelalikeType[]>;
   }
 
   export type RankType = string & ('preferred' | 'normal' | 'deprecated');
+
+  export interface ReduxState {
+    entity: EntityType;
+    originalEntity: EntityType;
+  }
 
   export interface ReferenceType {
     hash?: string;

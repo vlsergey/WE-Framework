@@ -47,8 +47,8 @@ class LanguageSelect extends PureComponent<PropsType> {
   }
 }
 
-const mapStateToProps = (state: any) => ({
-  provided: listLabelalikeLanguages(state.entity),
+const mapStateToProps = ({entity}: ReduxState) => ({
+  provided: listLabelalikeLanguages(entity),
 });
 
 const LanguageSelectConnected = connect(mapStateToProps)(LanguageSelect);
