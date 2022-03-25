@@ -5,7 +5,6 @@ import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
 
 import SortClaimsDialog from '../../../../src/components/claims/sort/SortClaimsDialog';
-import TimeComparator from '../../../../src/components/claims/sort/TimeComparator';
 import buildReducers from '../../../../src/core/reducers';
 import Q30 from '../../../entities/Q30';
 import Provider from '../../../testUtils/ProviderWrapper';
@@ -18,8 +17,8 @@ describe('components/claims/sort/SortClaimsDialog', () => {
     const reducers = buildReducers(Q30);
     const store = createStore(reducers, applyMiddleware(thunk));
 
-    const comparators = new Map();
-    comparators.set('P580', [new TimeComparator()]);
+    const comparators : React.ComponentProps<typeof SortClaimsDialog>['propertyIdToComparators']= new Map();
+    comparators.set('P580', ['time']);
 
     const rendered = ReactTestUtils.renderIntoDocument(
       <Provider store={store}>
