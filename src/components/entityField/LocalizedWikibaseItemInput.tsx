@@ -7,9 +7,9 @@ import WikibaseItemInput from './WikibaseItemInput';
 interface ExternalProps {
   entityId: null | string;
   inputRef?: any;
-  onBlur: () => any;
-  onChange: () => any;
-  onFocus: () => any;
+  onBlur: () => unknown;
+  onChange: () => unknown;
+  onFocus: () => unknown;
   value?: string;
   wikibaseItemInputRef: any;
 }
@@ -58,7 +58,7 @@ class LocalizedWikibaseItemInput extends PureComponent<PropsType> {
   }
 }
 
-const mapStateToProps = (state: any, _ownProps: ExternalProps) => ({
+const mapStateToProps = (state: ReduxState, _ownProps: ExternalProps) => ({
   cache: state.LABELDESCRIPTIONS.cache,
 });
 

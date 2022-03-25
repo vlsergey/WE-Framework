@@ -101,24 +101,24 @@ export default class TimeDataValueEditor
         precision: this.state.precision || undefined,
         calendar: this.state.calendarModel || undefined,
       }),
-    }).catch((_code: string, {error}: any) => {
+    }).catch((_code: string, {error}: {error: {info: string}}) => {
       // are still in sync?
       if (value !== this.state.text) return;
       this.setState({parsing: false, error: error.info});
       throw new Error(error.info);
-    }).then((response: any) => {
+    }).then((response: WbParseValueActionResult<TimeValue>) => {
       // are still in sync?
       if (value !== this.state.text) return;
 
       this.setState({parsing: false, error: null});
       onDataValueChange({
         ...datavalue,
-        value: response.results.length !== 0 ? response.results[0].value : null,
+        value: response.results.length !== 0 ? response.results[0]!.value : null,
         type: 'time',
       });
       this.requestRender(false);
     }).catch((error: any) => {
-      mw.warn('Unable to parse time value: ' + error);
+      mw.log.warn('Unable to parse time value: ' + error);
     });
   }
 

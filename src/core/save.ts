@@ -187,7 +187,7 @@ export function saveAndClose (
 
     notify('Saving changes...');
 
-    const params: any = {
+    const params: ApiCallParams = {
       action: 'wbeditentity',
       data: JSON.stringify(data),
       summary: 'via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get('wgDBname'),
@@ -208,7 +208,7 @@ export function saveAndClose (
         notify(i18n.actionUpdateEntityFail);
         alert(i18n.errorUpdateEntity + ': ' + error.info);
       })
-      .then((result: any) => {
+      .then((result: WbEditEntityActionResult) => {
         notify(i18n.actionUpdateEntityDone);
         const entityId = result.entity.id;
         resolve(entityId);

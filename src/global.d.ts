@@ -14,7 +14,7 @@ declare global {
 
   interface BaseDataValue {
     type: string;
-    value: unknown;
+    value: null | unknown;
   }
 
   interface ClaimType {
@@ -67,7 +67,7 @@ declare global {
 
   interface GlobeCoordinateDataValue extends BaseDataValue {
     type: 'globecoordinate';
-    value: GlobeCoordinateValue;
+    value: null | GlobeCoordinateValue;
   }
 
   interface GlobeCoordinateValue {
@@ -91,7 +91,7 @@ declare global {
   }
 
   interface MonolingualTextValue {
-    language: string;
+    language: null | string;
     text: null | string;
   }
 
@@ -107,7 +107,7 @@ declare global {
 
   interface QuantityDataValue extends BaseDataValue {
     type: 'quantity';
-    value: QuantityValue;
+    value: null | QuantityValue;
   }
 
   interface QuantityValue {
@@ -156,12 +156,12 @@ declare global {
 
   interface StringDataValue extends BaseDataValue {
     type: 'string';
-    value: string;
+    value: null | string;
   }
 
   interface TimeDataValue extends BaseDataValue {
     type: 'time';
-    value: TimeValue;
+    value: null | TimeValue;
   }
 
   interface TimeValue {
@@ -183,11 +183,6 @@ declare global {
     'numeric-id': number;
     id?: string | null | undefined;
   }
-
-  const jQuery: any;
-  const mw: any;
-  const OO: any;
-  const ve: any;
 }
 
 export {};

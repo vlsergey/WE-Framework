@@ -1,13 +1,13 @@
 import {getWikidataApi} from '../core/ApiUtils';
 
-export default function createTalkPageWithPlaceholder (entityId: string) {
+export default async function createTalkPageWithPlaceholder (entityId: string): Promise<void> {
   const notifyOptions = {
     autoHide: true,
     tag: 'WEF-Sources Talkpage',
   };
 
   mw.notify('Отправка запроса на обновление страницы обсуждения...', notifyOptions);
-  getWikidataApi().postWithEditToken({
+  await getWikidataApi().postWithEditTokenPromise({
     action: 'edit',
     title: 'Talk:' + entityId,
     createonly: true,
@@ -15,7 +15,6 @@ export default function createTalkPageWithPlaceholder (entityId: string) {
     tags: 'WE-Framework gadget',
     text: '{' + '{source talkpage placeholder}}',
     summary: 'Add source talkpage placehoder {' + '{source talkpage placeholder}} via [[:w:ru:ВП:WE-F|WE-Framework gadget]] from ' + mw.config.get('wgDBname'),
-  }).then(() => {
-    mw.notify('Запрос на создание страницы обсуждения отправлен', notifyOptions);
   });
+  mw.notify('Запрос на создание страницы обсуждения отправлен', notifyOptions);
 }

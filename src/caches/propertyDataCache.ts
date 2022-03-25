@@ -5,15 +5,17 @@ import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck
 
 export const TYPE = 'PROPERTYDATA';
 
+export type CacheType = Record<string, PropertyData>;
+
 class PropertyDataCache extends AbstractQueuedCacheWithPostcheck<PropertyData, any, PropertyData> {
 
   constructor () {
     super(TYPE, true, 50);
   }
 
-  override enchanceIndexedDbResult (cachedValue: any) {
+  override enchanceIndexedDbResult (cachedValue: unknown): PropertyData {
     Object.setPrototypeOf(cachedValue, PropertyData.prototype);
-    return cachedValue;
+    return cachedValue as PropertyData;
   }
 
   override isKeyValid (cacheKey: string): boolean {
@@ -35,20 +37,16 @@ class PropertyDataCache extends AbstractQueuedCacheWithPostcheck<PropertyData, a
       });
   }
 
-  override convertResultToEntities (result: any) {
-    const cacheUpdate: Record<string, PropertyData> = {};
+  override convertResultToEntities (result: Record<string, PropertyType>): CacheType {
+    const cacheUpdate: CacheType = {};
 
-    const propertyTypes: PropertyType[] = Object.values(result.entities);
-    propertyTypes
-      .filter((entity: PropertyType) => typeof entity.missing === 'undefined')
-      .forEach((entity: PropertyType) => {
-        const propertyData = new PropertyData(entity);
-        cacheUpdate[propertyData.id] = Object.freeze(propertyData);
-      });
+    for (const [propertyId, property] of Object.entries(result)) {
+      if (property.missing) continue;
+      const propertyData = new PropertyData(property);
+      cacheUpdate[propertyId] = Object.freeze(propertyData);
+    }
     return cacheUpdate;
   }
-
 }
 
-const instance = new PropertyDataCache();
-export default instance;
+export default new PropertyDataCache();

@@ -1,15 +1,13 @@
-// import * as WEF_Utils from './utils';
-//
 const MW_SCRIPT_PATH = mw.config.get('wgScriptPath');
 
-const WG_ARTICLE_ID = mw.config.get('wgArticleId');
-const WG_PAGE_NAME = mw.config.get('wgPageName');
-const WG_SERVER = mw.config.get('wgServer');
-const WG_SITE_NAME = mw.config.get('wgSiteName');
-const WG_TITLE = mw.config.get('wgTitle');
-const WG_WIKIBASE_ITEM_ID = mw.config.get('wgWikibaseItemId');
+const WG_ARTICLE_ID = mw.config.get('wgArticleId') as number;
+const WG_PAGE_NAME = mw.config.get('wgPageName')as string;
+const WG_SERVER = mw.config.get('wgServer')as string;
+const WG_SITE_NAME = mw.config.get('wgSiteName')as string;
+const WG_TITLE = mw.config.get('wgTitle') as string;
+const WG_WIKIBASE_ITEM_ID = mw.config.get('wgWikibaseItemId')as string;
 
-function addPromises (api: any) {
+function addPromises (api: Api): Api {
   const toPromise = <T> (originMethod: Function) =>
     (...args: unknown[]) => new Promise<T>((resolve, reject) => {
       originMethod.apply(api, args)
@@ -26,66 +24,53 @@ function addPromises (api: any) {
 }
 
 let deferredEntityIdPromise: Promise<string | null > | null = null;
+
 export function getEntityIdDeferred (): Promise<string | null> {
-  if (deferredEntityIdPromise) {
-    return deferredEntityIdPromise;
+  return deferredEntityIdPromise || (deferredEntityIdPromise = deferredEntityIdPromiseImpl());
+}
+
+async function deferredEntityIdPromiseImpl (): Promise<string | null> {
+  if (!WG_ARTICLE_ID) {
+    throw 'wgArticleId configuration variable is not set';
   }
 
-  deferredEntityIdPromise = new Promise<string | null >((resolve, reject) => {
-    if (!WG_ARTICLE_ID) {
-      reject('wgArticleId configuration variable is not set');
-      return;
-    }
+  if (WG_WIKIBASE_ITEM_ID) {
+    return WG_WIKIBASE_ITEM_ID;
+  }
 
-    if (WG_WIKIBASE_ITEM_ID) {
-      resolve(WG_WIKIBASE_ITEM_ID);
-      return;
-    }
+  if (isWikidata()) {
+    return WG_TITLE;
+  }
 
-    if (isWikidata()) {
-      resolve(WG_TITLE);
-      return;
-    }
-
-    // more complicated case, need API call
-    new mw.Api().get({
-      action: 'query',
-      prop: 'pageprops',
-      pageids: WG_ARTICLE_ID,
-    }).then((data: any) => {
-      try {
-        let resolved = false;
-        if (data.query && data.query.pages) {
-          jQuery.each(data.query.pages, (_: any, page: any) => {
-            if (page.pageid && page.pageprops && page.pageprops.wikibase_item && page.pageid === WG_ARTICLE_ID) {
-              resolve(page.pageprops.wikibase_item);
-              resolved = true;
-            }
-          });
-        }
-        if (!resolved) {
-          resolve(null);
-        }
-      } catch (error) {
-        reject(error);
-      }
-    });
-
+  // more complicated case, need API call
+  const data: QueryPagePropsActionReslt = await new mw.Api().getPromise({
+    action: 'query',
+    prop: 'pageprops',
+    pageids: WG_ARTICLE_ID,
   });
-  return deferredEntityIdPromise;
+
+  if (data.query && data.query.pages) {
+    for (const page of Object.values(data.query.pages)) {
+      if (page?.pageid === WG_ARTICLE_ID && page?.pageprops?.wikibase_item) {
+        return page.pageprops.wikibase_item;
+      }
+    }
+  }
+
+  return null;
 }
 
 function getServerApiImpl () {
   const api = new mw.Api();
   if (typeof api.postWithEditToken === 'undefined') {
-    api.postWithEditToken = function (params: any, ajaxOptions: any) {
+    api.postWithEditToken = function (params: ApiCallParams, ajaxOptions?: AjaxOptions) {
       return this.postWithToken('edit', params, ajaxOptions);
     };
   }
   return addPromises(api);
 }
-let serverApi: any = null;
-export const getServerApi = () => serverApi === null ? serverApi = getServerApiImpl() : serverApi;
+let serverApi: Api;
+export const getServerApi = () => serverApi || (serverApi = getServerApiImpl());
 
 function getCommonsApiImpl () {
   let api;
@@ -95,14 +80,14 @@ function getCommonsApiImpl () {
     api = new mw.Api();
   }
   if (typeof api.postWithEditToken === 'undefined') {
-    api.postWithEditToken = function (params: any, ajaxOptions: any) {
+    api.postWithEditToken = function (params: ApiCallParams, ajaxOptions?: AjaxOptions) {
       return this.postWithToken('edit', params, ajaxOptions);
     };
   }
   return addPromises(api);
 }
-let commonsApi: any = null;
-export const getCommonsApi = () => commonsApi === null ? commonsApi = getCommonsApiImpl() : commonsApi;
+let commonsApi: Api;
+export const getCommonsApi = () => commonsApi || (commonsApi = getCommonsApiImpl());
 
 export function isCommons () {
   return WG_SITE_NAME === 'Wikimedia Commons';
@@ -118,28 +103,27 @@ function getWikidataApiImpl () {
     api = new mw.Api();
   }
   if (typeof api.postWithEditToken === 'undefined') {
-    api.postWithEditToken = function (params: any, ajaxOptions: any) {
+    api.postWithEditToken = function (params: ApiCallParams, ajaxOptions?: AjaxOptions) {
       return this.postWithToken('edit', params, ajaxOptions);
     };
   }
   return addPromises(api);
 }
-let wikidataApi: any = null;
+let wikidataApi: null | Api = null;
 export const getWikidataApi = () => wikidataApi === null ? wikidataApi = getWikidataApiImpl() : wikidataApi;
 
 export function isWikidata () {
   return WG_SITE_NAME === 'Wikidata';
 }
 
-export function purge () {
-  purgeAsync().then(() => {
-    const url = WG_SERVER + MW_SCRIPT_PATH + '/index.php?title=' + encodeURIComponent(WG_PAGE_NAME) + '&r=' + Math.random();
-    window.location.replace(url);
-  });
+export async function purge () {
+  await purgeAsync();
+  const url = WG_SERVER + MW_SCRIPT_PATH + '/index.php?title=' + encodeURIComponent(WG_PAGE_NAME) + '&r=' + Math.random();
+  window.location.replace(url);
 }
 
-export function purgeAsync () {
-  return new mw.Api().post({
+export async function purgeAsync () {
+  await new mw.Api().postPromise({
     action: 'purge',
     titles: WG_PAGE_NAME,
   });

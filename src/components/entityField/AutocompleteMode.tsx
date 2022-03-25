@@ -2,6 +2,7 @@ import React, {ChangeEvent, PureComponent} from 'react';
 import Autosuggest from 'react-autosuggest';
 import {connect} from 'react-redux';
 
+import {CacheType} from '../../caches/labelDescriptionCache';
 import * as ApiUtils from '../../core/ApiUtils';
 import {DEFAULT_LANGUAGES} from '../../utils/I18nUtils';
 import LocalizedWikibaseItemInput from './LocalizedWikibaseItemInput';
@@ -12,7 +13,7 @@ import WikibaseItemInput from './WikibaseItemInput';
 const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
 
 interface PropsType {
-  cache: any;
+  cache: CacheType;
   onSelect: (value: null | string) => any;
   readOnly: boolean;
   testSuggestionsProvider?: (_: string) => string[];
@@ -56,21 +57,21 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
 
     const resultSet: Set<string> = new Set();
     this.requestedValue = value;
-    DEFAULT_LANGUAGES.forEach(language => {
-      this.wikidataApi.get({
+    DEFAULT_LANGUAGES.forEach(async language => {
+      const result = await this.wikidataApi.getPromise<WbSearchEntitiesActionResult>({
         action: 'wbsearchentities',
         language,
         limit: NUMBER_OF_SUGGESTIONS_PER_LANGUAGE,
         search: value,
         type: 'item',
-      }).then((result: any) => {
-        // may be out of sync, another string already required
-        if (this.requestedValue !== value) return;
+      });
 
-        result.search.forEach((item: any) => resultSet.add(item.id));
-        this.setState({
-          suggestions: [...resultSet],
-        });
+      // may be out of sync, another string already required
+      if (this.requestedValue !== value) return;
+
+      result.search.forEach(item => resultSet.add(item.id));
+      this.setState({
+        suggestions: [...resultSet],
       });
     });
   };
@@ -99,7 +100,7 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
     }
     default: {
       onSelect(newValue);
-      const newTextValue = cache[newValue] && cache[newValue].label ? cache[newValue].label : newValue;
+      const newTextValue = cache[newValue]?.label || newValue;
       this.setState({
         textValue: newTextValue || '',
       });
@@ -145,7 +146,7 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
 }
 
 const mapStateToProps = (state: any) => ({
-  cache: state.LABELDESCRIPTIONS.cache,
+  cache: state.LABELDESCRIPTIONS.cache as CacheType,
 });
 
 const AutocompleteModeConnected = connect(mapStateToProps)(AutocompleteMode);

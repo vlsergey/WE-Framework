@@ -35,5 +35,5 @@ const ru = {
 };
 
 const translations = {en, ru};
-const result = I18nUtils.localize({}, translations);
+const result = I18nUtils.localize({}, translations) as (typeof en & typeof ru);
 export default result;

@@ -51,24 +51,26 @@ export default class SourceLookupTab
     const resultSet = new Set();
 
     const wikidataApi = getWikidataApi();
-    const allPromises = DEFAULT_LANGUAGES.map(languageCode => wikidataApi.getPromise({
-      action: 'wbsearchentities',
-      language: languageCode,
-      strictlanguage: false,
-      type: 'item',
-      limit: MAX_ITEMS,
-      search: searchTerm,
-    }).then(({search}: any) => {
-      search.forEach(({id}: any) => {
+    const allPromises = DEFAULT_LANGUAGES.map(async (languageCode: string) => {
+      const actionResult = await wikidataApi.getPromise<WbSearchEntitiesActionResult>({
+        action: 'wbsearchentities',
+        language: languageCode,
+        strictlanguage: false,
+        type: 'item',
+        limit: MAX_ITEMS,
+        search: searchTerm,
+      });
+      const {search} = actionResult;
+      search.forEach(({id}) => {
         if (!resultSet.has(id)) {
           result.push(id);
           resultSet.add(id);
         }
       });
-
-      if (this.state.searchTermScheduled !== searchTerm) return;
+      if (this.state.searchTermScheduled !== searchTerm)
+        return;
       this.setState({searchResult: result});
-    }));
+    });
 
     await Promise.all(allPromises);
     this.setState({

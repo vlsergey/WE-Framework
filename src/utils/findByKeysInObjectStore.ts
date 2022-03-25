@@ -1,7 +1,7 @@
 // @ts-expect-error
 const indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
 
-export default function findByKeysInObjectStore (objectStore: IDBObjectStore, unsortedKeys: string[]): Promise< Record<string, any> > {
+export default function findByKeysInObjectStore<Value> (objectStore: IDBObjectStore, unsortedKeys: string[]): Promise< Record<string, Value> > {
   const compare = indexedDB.cmp.bind(indexedDB);
 
   if (unsortedKeys.length === 0) {
@@ -12,7 +12,7 @@ export default function findByKeysInObjectStore (objectStore: IDBObjectStore, un
     const sortedKeys = [...unsortedKeys].sort(compare);
     let index = 0;
 
-    const result = {} as Record<string, any>;
+    const result: Record<string, Value> = {};
     const keyRange = IDBKeyRange.bound(sortedKeys[0], sortedKeys[sortedKeys.length - 1]);
 
     const request = objectStore.openCursor(keyRange);

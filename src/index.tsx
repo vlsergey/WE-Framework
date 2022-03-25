@@ -39,8 +39,8 @@ mw.loader.using(['jquery.ui', 'jquery.uls', 'jquery.uls.data', 'mediawiki.Foreig
     registerEditor(editorTemplate);
   });
 
-  const [toolsGroup] = jQuery('#p-tb');
-  const wefGroup = toolsGroup.cloneNode(true);
+  const toolsGroup = (jQuery('#p-tb') as HTMLElement[])[0]!;
+  const wefGroup = toolsGroup.cloneNode(true) as HTMLElement;
   deepRenameId(wefGroup, 'p-tb', 'p-wef');
   wefGroup.setAttribute('aria-labelledby', 'p-wef-label');
 
@@ -51,9 +51,9 @@ mw.loader.using(['jquery.ui', 'jquery.uls', 'jquery.uls.data', 'mediawiki.Foreig
   }
   h3Title.textContent = i18n.portalLabel;
 
-  toolsGroup.parentElement.insertBefore(wefGroup, toolsGroup);
+  toolsGroup.parentElement!.insertBefore(wefGroup, toolsGroup);
 
-  const [ul] = jQuery(wefGroup).find('ul');
+  const ul = jQuery(wefGroup).find('ul')[0] as HTMLUListElement;
   while (ul.firstChild) ul.removeChild(ul.firstChild);
   ReactDOM.render(<EditorsLinks editorTemplates={getEnabledEditors()} />, ul);
 

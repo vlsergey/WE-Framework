@@ -5,6 +5,8 @@ import LabelDescription from './LabelDescription';
 
 const TYPE = 'LABELDESCRIPTIONS';
 
+export type CacheType = Record<string, LabelDescription>;
+
 class LabelDescriptionCache
   extends AbstractQueuedCache<LabelDescription, any, LabelDescription> {
 
@@ -20,7 +22,7 @@ class LabelDescriptionCache
     return 'Fetching ' + cacheKeys.length + ' item(s) labels and descriptions from Wikidata';
   }
 
-  override buildRequestPromice (cacheKeys: string[]) {
+  override buildRequestPromice (cacheKeys: string[]): Promise<WbGetEntitiesActionResult> {
     return getWikidataApi()
       .getPromise({
         action: 'wbgetentities',
@@ -31,10 +33,10 @@ class LabelDescriptionCache
       });
   }
 
-  override convertResultToEntities (result: any) {
-    const cacheUpdate: Record<string, LabelDescription> = {};
+  override convertResultToEntities (result: WbGetEntitiesActionResult) {
+    const cacheUpdate: CacheType = {};
     for (const [entityId, entity] of Object.entries(result.entities)) {
-      const labelDescription = new LabelDescription(entity as EntityType);
+      const labelDescription = new LabelDescription(entity);
       cacheUpdate[entityId] = labelDescription;
     }
     return cacheUpdate;

@@ -5,17 +5,17 @@ export const DEFAULT_LANGUAGES = [] as string[];
 
 export const API_PARAMETER_LANGUAGES = DEFAULT_LANGUAGES.join('|');
 
-function getTitleFromOptions (allLanguagesData: any, languageCode: string): string {
+function getTitleFromOptions (allLanguagesData: UlsDataLanguages, languageCode: string): string {
   const languageOptions = allLanguagesData[languageCode];
 
-  if (languageOptions.length === 1) {
+  if (languageOptions!.length === 1) {
     // it's alias
-    const [actualLanguageCode] = languageOptions;
+    const actualLanguageCode = languageOptions![0];
     return getTitleFromOptions(allLanguagesData, actualLanguageCode);
   }
 
-  if (languageOptions.length === 3) {
-    return languageOptions[2];
+  if (languageOptions!.length === 3) {
+    return languageOptions![2]!;
   }
 
   throw new Error('Unable to get language title for code \'' + languageCode + '\': '
@@ -24,10 +24,12 @@ function getTitleFromOptions (allLanguagesData: any, languageCode: string): stri
 
 let languageTitlesCache: Map< string, string > | null = null;
 
+type UlsDataLanguages = Record<string, [string, (string[])?, string?]>;
+
 export function getLanguageTitles (): Map< string, string > {
   if (languageTitlesCache != null) return languageTitlesCache;
 
-  const ulsDataLanguages = jQuery.uls.data.languages;
+  const ulsDataLanguages = jQuery.uls.data.languages as UlsDataLanguages;
   languageTitlesCache = new Map(
     Object.keys(ulsDataLanguages)
       .map(languageCode => [languageCode, getTitleFromOptions(ulsDataLanguages, languageCode)])
@@ -35,7 +37,10 @@ export function getLanguageTitles (): Map< string, string > {
   return languageTitlesCache;
 }
 
-export function localize (prototypeDictionaty: any, translations: any) {
+export function localize (
+    prototypeDictionaty: Record<string, string>,
+    translations: Record<string, Record<string, string>>
+): Record<string, string> {
   let result = {...prototypeDictionaty};
   DEFAULT_LANGUAGES.forEach(languageCode => {
     if (translations[languageCode]) {

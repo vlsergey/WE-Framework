@@ -5,7 +5,7 @@ import {createSelector} from 'reselect';
 import {DEFAULT_LANGUAGES} from '../../utils/I18nUtils';
 import LanguageAutocomplete from '../languages/LanguageAutocomplete';
 
-const EMPTY_OBJECT: any = Object.freeze({});
+const EMPTY_OBJECT = Object.freeze({});
 
 const listLabelalikeLanguages = createSelector(
   (entity: EntityType) => Object.keys(entity.labels || EMPTY_OBJECT),

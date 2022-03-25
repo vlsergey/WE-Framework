@@ -30,7 +30,7 @@ export default class ClaimReferencesEditorContent
     lru: getLastRecentlyUsedReferences(),
   };
 
-  bindLruClick (item: any) {
+  bindLruClick (item: LruItem) {
     return () => {
       this.setState(state => ({
         lru: state.lru.filter(i => i.key !== item.key),

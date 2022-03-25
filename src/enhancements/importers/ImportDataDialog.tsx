@@ -34,33 +34,31 @@ class ImportDataDialog extends PureComponent<PropsType, StateType> {
     queryState: 'LOADING',
   };
 
-  override componentDidMount () {
+  override async componentDidMount () {
     this.setState({queryState: 'LOADING'});
-    return getServerApi().getPromise({
-      action: 'parse',
-      pageid: mw.config.get('wgRelevantArticleId'),
-      prop: 'parsetree',
-      disablelimitreport: true,
-      disableeditsection: true,
-      disablestylededuplication: true,
-    })
-      .then((json: any) => {
-        const xmlContent = json.parse.parsetree['*'];
-        const wikidoc = new DOMParser().parseFromString(xmlContent, 'application/xml');
-        return new Parser().parseDocument(wikidoc);
-      })
-      .then((dom: any) => {
-        const importers = allImporters.filter(candidate => candidate.canImport(dom));
-        this.setState({
-          articleDom: dom,
-          importers,
-          queryState: importers.length === 0 ? 'NO_SUPPORTED_IMPORTERS' : 'HAS_SUPPORTED_IMPORTERS',
-        });
-      })
-      .catch((error: any) => {
-        this.setState({articleDom: null, importers: [], queryState: 'ERROR'});
-        console.log(error);
+    try {
+      const actionResult = await getServerApi().getPromise<ParseActionResult>({
+        action: 'parse',
+        pageid: mw.config.get('wgRelevantArticleId'),
+        prop: 'parsetree',
+        disablelimitreport: true,
+        disableeditsection: true,
+        disablestylededuplication: true,
       });
+
+      const xmlContent = actionResult.parse.parsetree!['*'];
+      const wikidoc = new DOMParser().parseFromString(xmlContent, 'application/xml');
+      const dom = new Parser().parseDocument(wikidoc);
+      const importers = allImporters.filter(candidate => candidate.canImport(dom));
+      this.setState({
+        articleDom: dom,
+        importers,
+        queryState: importers.length === 0 ? 'NO_SUPPORTED_IMPORTERS' : 'HAS_SUPPORTED_IMPORTERS',
+      });
+    } catch (error) {
+      this.setState({articleDom: null, importers: [], queryState: 'ERROR'});
+      console.log(error);
+    }
   }
 
   handleImporterSelect (importer: ImporterType) {

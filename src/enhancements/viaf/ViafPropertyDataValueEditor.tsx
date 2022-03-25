@@ -94,7 +94,7 @@ class ViafPropertyDataValueEditor
 
     viafIds.forEach(async (viafid: string) => {
       onClaimsFill('P214', x => x, viafid);
-      const onValue = (propertyId: string, value: any) => onClaimsFill(propertyId, x => x.trim(), value);
+      const onValue = (propertyId: string, value: string) => onClaimsFill(propertyId, x => x.trim(), value);
 
       const viaf2Property = await queryViafProperties();
       const allLinksResponse = await fetch('https://viaf.org/viaf/' + viafid + '/justlinks.json', {

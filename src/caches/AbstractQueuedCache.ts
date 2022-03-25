@@ -183,11 +183,11 @@ export default abstract class AbstractQueuedCache<DatabaseValue, RequestResult, 
     this.assertState('SCAN');
     if (!this.dbConnection) throw new Error('DB not open');
 
-    const transaction: IDBTransaction = this.dbConnection.transaction(['CACHE'], 'readonly');
-    const objectStore: IDBObjectStore = transaction.objectStore('CACHE');
+    const transaction = this.dbConnection.transaction(['CACHE'], 'readonly');
+    const objectStore = transaction.objectStore('CACHE');
 
     try {
-      const result = await findByKeysInObjectStore(objectStore, cacheKeys);
+      const result = await findByKeysInObjectStore<DatabaseValue>(objectStore, cacheKeys);
       const cache = this.getCache();
       const cacheUpdate: Record<string, any> = {};
       let hasUpdates = false;

@@ -28,32 +28,31 @@ export default class UnsupportedDataValueEditor
     };
 
     // initial loading
-    this.loadHtml();
+    void this.loadHtml();
   }
 
   override componentDidUpdate (prevProps: PropsType) {
     if (prevProps.datavalue !== this.props.datavalue) {
       this.setState({html: null});
-      this.loadHtml();
+      void this.loadHtml();
     }
   }
 
-  loadHtml = () => {
+  loadHtml = async () => {
     const {datavalue, propertyDescription} = this.props;
     if (!datavalue || !propertyDescription)
       return;
 
-    this.wikidataApi.postPromise({
+    const result = await this.wikidataApi.postPromise<WbFormatValueActionResult>({
       action: 'wbformatvalue',
       datavalue: JSON.stringify(datavalue),
       datatype: propertyDescription.datatype,
       format: 'json',
       generate: 'text/html',
-    }).then((result: any) => {
-      let html = result.result;
-      html = html.replace('href="/', 'href="' + this.WIKIDATA_ROOT);
-      this.setState({html});
     });
+    let html = result.result;
+    html = html.replace('href="/', 'href="' + this.WIKIDATA_ROOT);
+    this.setState({html});
   };
 
   override render () {

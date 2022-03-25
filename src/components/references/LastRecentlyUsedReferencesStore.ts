@@ -11,7 +11,7 @@ const MAX_ITEMS = 10;
 
 export interface LruItem {
   key: string;
-  value: any;
+  value: ReferenceType;
 }
 
 function get (): LruItem[] {

@@ -8,7 +8,7 @@
     "build": "cross-env NODE_ENV=production webpack",
     "build:watch": "cross-env NODE_ENV=development tsc -w -p ./src",
     "check": "npm run eslint:fix && npm run build && npm run test",
-    "deploy": "npm run build && node ./deploy-to-wikipedia.jsm",
+    "deploy": "npm run build && node ./deploy-to-wikipedia.mjs",
     "eslint:check": "eslint --ignore-pattern \"!.eslintrc.js\" .eslintrc.js deploy-to-wikipedia.mjs karma.conf.js webpack.config.js src/**/*.ts* test/.eslintrc.js test/**/*.ts*",
     "eslint:fix": "eslint --ignore-pattern \"!.eslintrc.js\" --fix .eslintrc.js deploy-to-wikipedia.mjs karma.conf.js webpack.config.js src/**/*.ts* test/.eslintrc.js test/**/*.ts*",
     "serve": "cross-env NODE_ENV=development webpack-dev-server",

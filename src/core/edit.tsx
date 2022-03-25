@@ -95,18 +95,23 @@ export async function onEditorLinkClick (
     entityId?: string | null) {
 
   if (!entityId) {
+    const wgContentLanguage = mw.config.get('wgContentLanguage') as string;
+    const wgDBname = mw.config.get('wgDBname') as string;
+    const wgTitle = mw.config.get('wgTitle') as string;
+    const wgPageName = mw.config.get('wgPageName') as string;
+
     const oldEntity = {};
-    const newEntity: any = {
+    const newEntity: EntityType = {
       labels: {
-        [mw.config.get('wgContentLanguage')]: {
-          language: mw.config.get('wgContentLanguage'),
-          value: mw.config.get('wgTitle'),
+        [wgContentLanguage]: {
+          language: wgContentLanguage,
+          value: wgTitle,
         },
       },
       sitelinks: {
-        [mw.config.get('wgDBname')]: {
-          site: mw.config.get('wgDBname'),
-          title: mw.config.get('wgPageName'),
+        [wgDBname]: {
+          site: wgDBname,
+          title: wgPageName,
           badges: [],
         },
       },
@@ -135,25 +140,22 @@ export async function onEditorLinkClick (
     }
 
     await openEditor(editorDescription, oldEntity, newEntity);
-    purge();
+    await purge();
 
   } else {
     mw.notify('Get Wikidata entity content for ' + entityId + '...');
-    const result = await getWikidataApi().getPromise({
+    const result = await getWikidataApi().getPromise<WbGetEntitiesActionResult>({
       action: 'wbgetentities',
       ids: entityId,
       format: 'json',
     });
-    if (typeof result === 'undefined'
-      || typeof result.entities === 'undefined'
-      || typeof result.entities[entityId] === 'undefined'
-      || typeof result.entities[entityId].claims === 'undefined'
-    ) {
+
+    const entity = result?.entities[entityId];
+    if (!entity?.claims) {
       mw.notify('Wikidata answer format is not expected one');
       throw new Error('Wikidata answer format is not expected one');
     }
-    const entity: EntityType = result.entities[entityId];
     await openEditor(editorDescription, entity, entity);
-    purge();
+    await purge();
   }
 }

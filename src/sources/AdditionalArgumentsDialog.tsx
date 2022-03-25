@@ -1,6 +1,5 @@
 import React, {ChangeEvent, PureComponent} from 'react';
 
-import {getServerApi} from '../core/ApiUtils';
 import DialogWrapper from '../wrappers/DialogWrapper';
 import createTalkPageWithPlaceholder from './createTalkPageWithPlaceholder';
 import styles from './styles.css';
@@ -13,19 +12,17 @@ interface PropsType {
   onInsert: (enittyId: string) => any;
 }
 
-interface StateType {
+type StringFieldKey = 'part' | 'partUrl' | 'pages' | 'volume' | 'issue';
+const stringFields: StringFieldKey[] = ['part', 'partUrl', 'pages', 'volume', 'issue'];
+
+interface StateType extends Record<StringFieldKey, string> {
   addRefAuthor: boolean;
   addRefComment: boolean;
   addRefYear: boolean;
   insertAsRef: boolean;
-  issue: string;
-  pages: string;
-  part: string;
-  partUrl: string;
   refAuthor: string;
   refComment: string;
   refYear: string;
-  volume: string;
 }
 
 export default class AdditionalArgumentsDialog
@@ -44,27 +41,6 @@ export default class AdditionalArgumentsDialog
     addRefComment: true, refComment: '',
   };
 
-  override componentDidMount () {
-    const {entityId} = this.props;
-
-    this.expandtemplates('Sources-authors', 'renderSourceAuthors', entityId, 'refAuthor');
-    this.expandtemplates('Sources-year', 'renderSourceYear', entityId, 'refYear');
-    this.expandtemplates('Sources-title', 'renderSourceTitle', entityId, 'refComment');
-  }
-
-  expandtemplates (renderModule: string, renderFunction: string, entityId: string, stateKey: 'refAuthor' | 'refYear' | 'refComment') {
-    getServerApi()
-      .postPromise({
-        action: 'expandtemplates',
-        format: 'json',
-        prop: 'wikitext',
-        text: '{' + '{#invoke:' + renderModule + ' | ' + renderFunction + ' | ' + entityId + '}}',
-      })
-      .then((result: any) => result.expandtemplates.wikitext)
-      // @ts-expect-error
-      .then((text: string) => { this.setState({[stateKey]: text}); });
-  }
-
   handleChange = ({currentTarget: {name, value}}: ChangeEvent< HTMLInputElement >) =>
   // @ts-expect-error
   { this.setState({[name]: value}); };
@@ -79,13 +55,11 @@ export default class AdditionalArgumentsDialog
 
     textToInsert += this.props.entityId;
 
-    ['part', 'partUrl', 'pages', 'volume', 'issue'].forEach(key => {
-      // @ts-expect-error
+    for (const key of stringFields) {
       if (!isBlank(this.state[key])) {
-        // @ts-expect-error
         textToInsert += '|' + key + '=' + this.state[key];
       }
-    });
+    }
 
     if (this.state.addRefAuthor && !isBlank(this.state.refAuthor))
       textToInsert += '|ref=' + this.state.refAuthor;
@@ -101,7 +75,7 @@ export default class AdditionalArgumentsDialog
     this.props.onInsert(textToInsert);
 
     // TODO: WEF_LatestUsedSources.add( entityId );
-    createTalkPageWithPlaceholder(this.props.entityId);
+    void createTalkPageWithPlaceholder(this.props.entityId);
   };
 
   override render () {

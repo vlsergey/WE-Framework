@@ -93,7 +93,7 @@ export default function registerTool (tool: ToolType) {
 
   function addVeTool (tool: ToolType) {
     // Create and register a command
-    function Command (this: any) {
+    function Command (this: typeof Command) {
       (Command as any).parent.call(this, tool.name);
     }
     OO.inheritClass(Command, ve.ui.Command);
@@ -102,7 +102,11 @@ export default function registerTool (tool: ToolType) {
     Command.prototype.isExecutable = function () {
       const surface = ve.init.target.getSurface();
       const mode = (surface || {}).getMode();
-      return surface && tool.modes && (tool.modes === mode || tool.modes.includes(mode));
+      if (Array.isArray(mode)) {
+        return surface && tool.modes && tool.modes === mode;
+      }
+      return surface && tool.modes && tool.modes.includes(mode);
+
     };
 
     Command.prototype.execute = function () {
@@ -137,7 +141,7 @@ export default function registerTool (tool: ToolType) {
 
     ve.ui.toolFactory.register(Tool);
 
-    ve.init.mw.DesktopArticleTarget.static.actionGroups[1].include.push(tool.name);
+    ve.init.mw.DesktopArticleTarget.static.actionGroups[1]!.include.push(tool.name);
 
     if (tool.icon) {
       mw.util.addCSS(`.oo-ui-icon-${tool.name} { background-image: url(${tool.icon}) ); }`);

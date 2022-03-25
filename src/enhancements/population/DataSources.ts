@@ -2,20 +2,19 @@ import {Parser, Root, Template, Timeline} from 'wikitext-dom';
 
 import {getServerApi} from '../../core/ApiUtils';
 
-async function getArticleDom () {
-  return await getServerApi().getPromise({
+async function getArticleDom (): Promise<Root> {
+  const json = await getServerApi().getPromise<ParseActionResult>({
     action: 'parse',
     pageid: mw.config.get('wgRelevantArticleId'),
     prop: 'parsetree',
     disablelimitreport: true,
     disableeditsection: true,
     disablestylededuplication: true,
-  })
-    .then((json: any) => {
-      const xmlContent = json.parse.parsetree['*'];
-      const wikidoc = new DOMParser().parseFromString(xmlContent, 'application/xml');
-      return new Parser().parseDocument(wikidoc);
-    }) as Promise<Root>;
+  });
+
+  const xmlContent = json.parse.parsetree!['*'];
+  const wikidoc = new DOMParser().parseFromString(xmlContent, 'application/xml');
+  return new Parser().parseDocument(wikidoc);
 }
 
 const fromArticleTimelines: () => Promise<ResultItem[]> = async () => {
