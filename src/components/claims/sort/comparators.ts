@@ -1,11 +1,10 @@
 import AlphabeticalComparator from './AlphabeticalComparator';
-import {DatavalueComparator} from './DatavalueComparator';
+import {ComparatorCode, DatavalueComparator} from './DatavalueComparator';
 import NaturalSortComparator from './NaturalSortComparator';
 import TimeComparator from './TimeComparator';
 
-const comparators: readonly DatavalueComparator[] = Object.freeze([
-  new AlphabeticalComparator(),
-  new NaturalSortComparator(),
-  new TimeComparator(),
-]);
-export default comparators;
+export default Object.freeze({
+  alphabetical: new AlphabeticalComparator(),
+  naturalSort: new NaturalSortComparator(),
+  time: new TimeComparator(),
+}) as Readonly<Record<ComparatorCode, DatavalueComparator>>;

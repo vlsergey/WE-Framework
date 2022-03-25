@@ -38,5 +38,5 @@ const ru = {
   sourceButtonLabel_Численность_населенияTemplate: 'Данные из шаблона «Численность населения»',
 };
 
-const result = localize({}, {en, ru});
+const result = localize({}, {en, ru}) as typeof en & typeof ru;
 export default result;

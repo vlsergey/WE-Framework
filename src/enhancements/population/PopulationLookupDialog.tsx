@@ -145,7 +145,7 @@ export default class PopulationLookupDialog
       { Object.entries(dataSources).map(([dataSourceKey, dataSource]) =>
         <JQueryButton
           key={dataSourceKey}
-          label={i18n['sourceButtonLabel_' + dataSourceKey]}
+          label={i18n[('sourceButtonLabel_' + dataSourceKey) as keyof typeof i18n] as string}
           onClick={this.handleLoadFromSource(dataSourceKey, dataSource)}
           text />
       ) }

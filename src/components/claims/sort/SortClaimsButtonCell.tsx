@@ -3,7 +3,7 @@ import {defaultMemoize} from 'reselect';
 
 import ButtonCell from '../../ButtonCell';
 import comparators from './comparators';
-import {DatavalueComparator} from './DatavalueComparator';
+import {ComparatorCode, DatavalueComparator} from './DatavalueComparator';
 import i18n from './i18n';
 import SortClaimsDialog from './SortClaimsDialog';
 
@@ -28,9 +28,9 @@ export default class SortClaimsButtonCell
 
   propertyIdToComparatorsMemoize = defaultMemoize((claims: ClaimType[]) => {
     // propertyId to array of comparators
-    const result: Map< string, DatavalueComparator[] > = new Map();
+    const result: Map< string, ComparatorCode[] > = new Map();
 
-    comparators.forEach((comparator: DatavalueComparator) => {
+    for (const [code, comparator] of Object.entries(comparators) as [ComparatorCode, DatavalueComparator][]) {
       const checkedTrue: Set<string> = new Set();
       const checkedFalse: Set<string> = new Set();
 
@@ -52,9 +52,9 @@ export default class SortClaimsButtonCell
       });
 
       checkedTrue.forEach(propertyId => {
-        result.set(propertyId, [...result.get(propertyId) || [], comparator]);
+        result.set(propertyId, [...result.get(propertyId) || [], code]);
       });
-    });
+    };
 
     return result;
   });

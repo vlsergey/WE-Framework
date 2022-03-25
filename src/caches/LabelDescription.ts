@@ -6,7 +6,10 @@ export default class LabelDescription {
   label?: string = undefined;
 
   constructor (entity: EntityType) {
-    const translations: Record<string, any> = {};
+    const translations: Record<string, {
+      label?:string,
+      description?:string,
+    }> = {};
 
     if (entity.labels) {
       Object.values(entity.labels).forEach(label => {

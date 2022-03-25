@@ -28,7 +28,7 @@ export default class CalendarModelSelect extends PureComponent<PropsType> {
       value={value || EMPTY_STRING}>
       { CALENDAR_MODELS.map(calendarModel =>
         <option key={calendarModel} value={calendarModel}>
-          {i18n.calendarModel[calendarModel]}
+          {i18n.calendarModel[calendarModel] as string}
         </option>) }
     </select>;
   }

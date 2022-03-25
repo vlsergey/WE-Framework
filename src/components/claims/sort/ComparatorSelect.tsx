@@ -1,25 +1,22 @@
 import React, {ChangeEvent, useCallback} from 'react';
 
-import {DatavalueComparator} from './DatavalueComparator';
+import {ComparatorCode} from './DatavalueComparator';
 import i18n from './i18n';
 
 interface PropsType {
-  onChange: (value: DatavalueComparator | null) => any;
-  options: DatavalueComparator[];
-  value: DatavalueComparator | null;
+  onChange: (value: ComparatorCode | null) => any;
+  options: readonly ComparatorCode[];
+  value: ComparatorCode | null;
 }
 
 const ComparatorSelect = ({onChange, options, value}: PropsType) => {
   const handleChange = useCallback(({currentTarget: {value}}: ChangeEvent< HTMLSelectElement >) => {
-    const newComparator = options.find(c => c.code === value);
-    if (newComparator) {
-      onChange(newComparator);
-    }
+    onChange(value as ComparatorCode);
   }, [onChange, options]);
 
-  return <select onChange={handleChange} value={value?.code || ''}>
-    {options.map(({code}) => <option key={code} value={code}>
-      { i18n.comparators?.[code] || code }
+  return <select onChange={handleChange} value={value || ''}>
+    {options.map(code => <option key={code} value={code}>
+      { i18n.comparators[code as ComparatorCode] || code }
     </option>) }
   </select>;
 };

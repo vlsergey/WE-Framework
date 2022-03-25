@@ -5,8 +5,6 @@ const EMPTY_STRING = '';
 
 export default class AlphabeticalComparator implements DatavalueComparator {
 
-  code = 'alphabetical';
-
   compare (
     dataValue1: DataValueType | null | undefined,
     dataValue2: DataValueType | null | undefined,

@@ -4,7 +4,9 @@ export const DEFAULT_CALENDAR_MODEL = 'http://www.wikidata.org/entity/Q1985727';
 export const CALENDAR_MODELS = [
   'http://www.wikidata.org/entity/Q1985786', // Юлианский
   'http://www.wikidata.org/entity/Q1985727', // Грегорианский
-];
+] as const;
+
+export type CalendarModel = typeof CALENDAR_MODELS[number];
 
 export const DEFAULT_PRECISION = 11;
 

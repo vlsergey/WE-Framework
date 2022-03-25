@@ -4,7 +4,8 @@ import PropertyDescriptionsProvider from '../../../caches/PropertyDescriptionsPr
 import stableSort from '../../../utils/stableSort';
 import DialogWrapper from '../../../wrappers/DialogWrapper';
 import ComparatorSelect from './ComparatorSelect';
-import {DatavalueComparator} from './DatavalueComparator';
+import comparators from './comparators';
+import {ComparatorCode} from './DatavalueComparator';
 import i18n from './i18n';
 import styles from './SortClaimsDialog.css';
 
@@ -12,11 +13,11 @@ interface PropsType {
   claims: ClaimType[];
   onClaimsReorder: (claimIds: string[]) => any;
   onCloseClick: () => any;
-  propertyIdToComparators: Map< string, DatavalueComparator[] >;
+  propertyIdToComparators: Map< string, ComparatorCode[] >;
 }
 
 interface StateType {
-  comparator: DatavalueComparator | null;
+  comparatorCode: ComparatorCode | null;
   emptyAs: 'asLast' | 'asFirst';
   order: 'asc' | 'desc';
   propertyId: string | null;
@@ -46,22 +47,22 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
   constructor (props: PropsType) {
     super(props);
 
-    const firstPropertyEntry: [string, DatavalueComparator[]] | null = this.props.propertyIdToComparators.entries().next().value;
+    const firstPropertyEntry: [string, ComparatorCode[]] | null = this.props.propertyIdToComparators.entries().next().value;
     if (!firstPropertyEntry) {
       this.state = {
         emptyAs: 'asLast',
-        comparator: null,
+        comparatorCode: null,
         order: 'asc',
         propertyId: null,
       };
     } else {
       const propertyId: string = firstPropertyEntry[0];
-      const comparator: DatavalueComparator | null = firstPropertyEntry[1][0] || null;
-      if (!comparator) throw new Error('Assertion error: non-empty map keys iterator returned empty first key value');
+      const comparatorCode = firstPropertyEntry[1][0] || null;
+      if (!comparatorCode) throw new Error('Assertion error: non-empty map keys iterator returned empty first key value');
 
       this.state = {
         emptyAs: 'asLast',
-        comparator,
+        comparatorCode,
         order: 'asc',
         propertyId,
       };
@@ -73,25 +74,24 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
     this.setState({[name]: value});
   };
 
-  handleComparatorChange = (comparator: DatavalueComparator | null) =>
-  { this.setState({comparator}); };
+  handleComparatorChange = (comparatorCode: ComparatorCode | null) => this.setState({comparatorCode});
 
   handleSortClick = () => {
     this.props.onCloseClick();
 
     const {claims, onClaimsReorder} = this.props;
-    const {comparator, emptyAs, order, propertyId} = this.state;
+    const {comparatorCode, emptyAs, order, propertyId} = this.state;
     const sortEmptyCompareConstant: number = emptyAs === 'asLast' ? +1 : -1;
     const sortOrderCompareConstant: number = order === 'asc' ? +1 : -1;
     const claimIds: string[] = claims.map(claim => claim.id);
-    if (!propertyId || !comparator) return;
+    if (!propertyId || !comparatorCode) return;
 
     stableSort(claimIds, (claimId1: string, claimId2: string) => {
       const dataValue1: DataValueType | null = findFirstQuailifierDataValue(claims, claimId1, propertyId);
       const dataValue2: DataValueType | null = findFirstQuailifierDataValue(claims, claimId2, propertyId);
 
       if (!dataValue1 && !dataValue2) return 0;
-      return comparator.compare(dataValue1, dataValue2, sortEmptyCompareConstant, sortOrderCompareConstant);
+      return comparators[comparatorCode].compare(dataValue1, dataValue2, sortEmptyCompareConstant, sortOrderCompareConstant);
     });
     onClaimsReorder(claimIds);
   };
@@ -99,9 +99,8 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
   override render () {
     const {propertyIdToComparators} = this.props;
     const propertyIds = [...propertyIdToComparators.keys()];
-    const {comparator, propertyId} = this.state;
-    const comparatorOptions: DatavalueComparator[] =
-      (propertyId ? propertyIdToComparators.get(propertyId) : []) || [];
+    const {comparatorCode, propertyId} = this.state;
+    const comparatorOptions = (propertyId ? propertyIdToComparators.get(propertyId) : []) || [];
 
     return <DialogWrapper
       buttons={[
@@ -143,7 +142,7 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
               <ComparatorSelect
                 onChange={this.handleComparatorChange}
                 options={comparatorOptions}
-                value={comparator} />
+                value={comparatorCode} />
             </td>
           </tr>
           <tr>

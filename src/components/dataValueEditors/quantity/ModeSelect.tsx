@@ -29,7 +29,7 @@ export default class ModeSelect extends PureComponent<PropsType> {
           key={m}
           title={!compatible ? 'not compatble with current values' : ''}
           value={m}>
-          {i18n.modes[m]}
+          {i18n.modes[m as ModeType]}
         </option>;
       })}
     </select>;

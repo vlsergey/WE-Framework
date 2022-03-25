@@ -4,7 +4,7 @@ import LocalTitleProvider from '../../../caches/LocalTitleProvider';
 import ButtonCell from '../../ButtonCell';
 import i18n from './i18n';
 
-const wgArticlePath = mw.config.get('wgArticlePath');
+const wgArticlePath = mw.config.get('wgArticlePath') as string;
 
 interface PropsType {
   entityId?: string;

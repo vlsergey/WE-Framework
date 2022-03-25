@@ -61,14 +61,17 @@ export default class PropertyDescription {
     this.pageid = data.pageid;
     this.lastrevid = data.lastrevid;
 
-    const translations = {} as Record<string, any>;
+    const translations = {} as Record<string, {
+      label?:string;
+      description?:string;
+    }>;
     Object.entries(data.labels).forEach(([languageCode, label]) => {
       translations[languageCode] = translations[languageCode] || {};
-      translations[languageCode].label = label;
+      translations[languageCode]!.label = label;
     });
     Object.entries(data.descriptions).forEach(([languageCode, description]) => {
       translations[languageCode] = translations[languageCode] || {};
-      translations[languageCode].description = description;
+      translations[languageCode]!.description = description;
     });
 
     const translated = I18nUtils.localize({}, translations);

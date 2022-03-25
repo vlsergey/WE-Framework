@@ -32,5 +32,5 @@ const ru = {
   },
 };
 
-const result = localize({}, {en, fr, ru});
+const result = localize({}, {en, fr, ru}) as ((typeof en) & (typeof fr) & (typeof ru));
 export default result;

@@ -6,14 +6,14 @@ import Controller from './Controller';
 import LanguageSelect from './LanguageSelect';
 
 interface StateType {
-  language: string | null;
+  language: string;
 }
 
 export default class LanguageSelectContainer
   extends PureComponent<any, StateType> {
 
-  override state = {
-    language: mw.config.get('wgContentLanguage'),
+  override state : StateType = {
+    language: mw.config.get('wgContentLanguage') as string,
   };
 
   handleLanguageChange = (langCode: string) => {

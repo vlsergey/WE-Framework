@@ -1,6 +1,9 @@
-export interface DatavalueComparator {
+export type ComparatorCode =
+  | 'alphabetical'
+  | 'time'
+  | 'naturalSort'
 
-  code: string;
+export interface DatavalueComparator {
 
   compare: (
     dv1: DataValueType | null | undefined,

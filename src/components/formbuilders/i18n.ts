@@ -15,5 +15,5 @@ const ru = {
 };
 
 const translations = {en, ru};
-const result = localize({}, translations);
+const result = localize({}, translations) as typeof en;
 export default result;

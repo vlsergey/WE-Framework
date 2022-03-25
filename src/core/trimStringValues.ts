@@ -1,34 +1,25 @@
 
-const KEYS_TO_CHECK: (string & keyof EntityType)[] = ['labels', 'descriptions', 'aliases', 'claims'];
+const KEYS_TO_CHECK = ['labels', 'descriptions', 'aliases', 'claims'] as const;
 
 export default function trimStringValues (entity: EntityType): EntityType {
   const result = {...entity};
   let hasChanges = false;
 
   for (const key of KEYS_TO_CHECK) {
-    const didChange = trimStringValuesImpl<typeof key, unknown, EntityType>(key, entity, result);
-    hasChanges = hasChanges || didChange;
+    const oldValue = entity[key];
+    if (!oldValue) continue;
+
+    const newValue = trimStringValuesImpl(oldValue);
+    if (newValue !== oldValue) {
+      hasChanges = true;
+      result[key] = newValue;
+    }
   }
 
   return hasChanges ? result : entity;
 }
 
-function trimStringValuesImpl<K extends (string & keyof EntityType), V, R extends {[key in K]?: V}> (
-    key: K,
-    entity: R,
-    result: R
-): boolean {
-  const oldValue = entity[key];
-  if (!oldValue) return false;
-
-  const newValue = trimStringValuesImpl2(oldValue);
-  if (newValue === oldValue) return false;
-
-  result[key] = newValue;
-  return true;
-}
-
-function trimStringValuesImpl2<T> (obj: T): T {
+function trimStringValuesImpl (obj: any): any {
   const result: any = Array.isArray(obj) ? [...obj] : {...obj};
   let hasChanges = false;
 

@@ -17,6 +17,8 @@ const en = {
 
   dialogLabelAddRecentlyUsed: 'Quick add recently used sources',
 
+  optionSuffixUnsupported: ' (unsupported)',
+
   placehoderSelect: 'Select property to add to reference',
 };
 
@@ -37,10 +39,12 @@ const ru = {
 
   dialogLabelAddRecentlyUsed: 'Быстрое добавление недавно использованных источников',
 
+  optionSuffixUnsupported: ' (не поддерживается)',
+
   placehoderSelect: 'Выберите свойство для добавления к ссылке',
 
 };
 
 const translations = {en, ru};
-const result = I18nUtils.localize({}, translations);
+const result = I18nUtils.localize({}, translations) as typeof en;
 export default result;

@@ -11,11 +11,13 @@ interface PropsType {
   onClose?: ComponentProps<typeof DialogWrapper>['onClose'];
 }
 
+type QueryState = 'WAITING' | 'SCHEDULED'
+
 interface StateType {
   autoSuggestResult: any;
   query: string | null;
   queryScheduled: string;
-  queryState: 'WAITING' | 'SCHEDULED';
+  queryState: QueryState;
   selected: any[];
 }
 

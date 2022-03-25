@@ -76,7 +76,7 @@ export default abstract class AbstractQueuedCacheWithPostcheck<DatabaseValue ext
     const transaction = this.dbConnection.transaction(['CACHE']);
     const objectStore = transaction.objectStore('CACHE');
 
-    void findByKeysInObjectStore(objectStore, cacheKeysToCheck)
+    void findByKeysInObjectStore<DatabaseValue>(objectStore, cacheKeysToCheck)
       .then(result => {
         Object.entries(result).forEach(([cacheKey, dbEntity]) => {
           const dbpageid = dbEntity.pageid;

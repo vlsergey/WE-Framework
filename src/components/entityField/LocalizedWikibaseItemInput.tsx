@@ -59,6 +59,7 @@ class LocalizedWikibaseItemInput extends PureComponent<PropsType> {
 }
 
 const mapStateToProps = (state: ReduxState, _ownProps: ExternalProps) => ({
+  // @ts-ignore
   cache: state.LABELDESCRIPTIONS.cache,
 });
 

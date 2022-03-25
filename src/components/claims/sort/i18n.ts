@@ -56,5 +56,5 @@ const ru = {
   optionSortOrderDesc: 'нисходящий',
 };
 
-const result = localize({}, {en, ru});
+const result = localize({}, {en, ru}) as typeof en;
 export default result;
