@@ -178,7 +178,7 @@ export default function registerTool (tool: ToolType) {
   toolsToAdd['' + tool.position] = tool;
 
   if (tool.classic
-    && (['edit', 'submit'].includes(mw.config.get('wgAction') as string)
+    && (['edit', 'submit'].includes(mw.config.get('wgAction'))
       && mw.user.options.get('visualeditor-newwikitext') != 1
       && mw.user.options.get('usebetatoolbar') == 1
     )

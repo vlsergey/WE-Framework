@@ -95,10 +95,10 @@ export async function onEditorLinkClick (
     entityId?: string | null) {
 
   if (!entityId) {
-    const wgContentLanguage = mw.config.get('wgContentLanguage') as string;
-    const wgDBname = mw.config.get('wgDBname') as string;
-    const wgTitle = mw.config.get('wgTitle') as string;
-    const wgPageName = mw.config.get('wgPageName') as string;
+    const wgContentLanguage = mw.config.get('wgContentLanguage');
+    const wgDBname = mw.config.get('wgDBname');
+    const wgTitle = mw.config.get('wgTitle');
+    const wgPageName = mw.config.get('wgPageName');
 
     const oldEntity = {};
     const newEntity: EntityType = {

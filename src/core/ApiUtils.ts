@@ -1,11 +1,11 @@
 const MW_SCRIPT_PATH = mw.config.get('wgScriptPath');
 
-const WG_ARTICLE_ID = mw.config.get('wgArticleId') as number;
-const WG_PAGE_NAME = mw.config.get('wgPageName')as string;
-const WG_SERVER = mw.config.get('wgServer')as string;
-const WG_SITE_NAME = mw.config.get('wgSiteName')as string;
-const WG_TITLE = mw.config.get('wgTitle') as string;
-const WG_WIKIBASE_ITEM_ID = mw.config.get('wgWikibaseItemId')as string;
+const WG_ARTICLE_ID = mw.config.get('wgArticleId');
+const WG_PAGE_NAME = mw.config.get('wgPageName');
+const WG_SERVER = mw.config.get('wgServer');
+const WG_SITE_NAME = mw.config.get('wgSiteName');
+const WG_TITLE = mw.config.get('wgTitle');
+const WG_WIKIBASE_ITEM_ID = mw.config.get('wgWikibaseItemId');
 
 function addPromises (api: Api): Api {
   const toPromise = <T> (originMethod: Function) =>

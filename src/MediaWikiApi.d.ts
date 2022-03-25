@@ -28,12 +28,16 @@ declare global {
     postWithEditTokenPromise: <T>(params: ApiCallParams, ajaxOptions?: AjaxOptions) => Promise<T>;
   }
 
+  type MW_NUMBER_PARAMETER =
+    | 'wgArticleId'
+    | 'wgRelevantArticleId';
+
   const jQuery: any;
   const mw: {
     Api: new () => Api;
     ForeignApi: new (url: string) => Api;
     config: {
-      get: (key: string) => number | string;
+      get: <T extends MW_NUMBER_PARAMETER | string>(key: T) => T extends MW_NUMBER_PARAMETER ? number : string
     };
     hook: (hookKey: string) => Hook;
     hooks: Record<string, Hook>;

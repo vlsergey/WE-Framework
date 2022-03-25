@@ -33,7 +33,7 @@ export default class MonolingualTextDataValueEditor
       ...datavalue,
       value: {
         // set language of current content language if no specified yet AND some text entered
-        language: value ? mw.config.get('wgContentLanguage') as string : null,
+        language: value ? mw.config.get('wgContentLanguage') : null,
         ...datavalue ? datavalue.value : undefined,
         text: value,
       },
