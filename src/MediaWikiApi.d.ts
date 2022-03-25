@@ -37,7 +37,7 @@ declare global {
     Api: new () => Api;
     ForeignApi: new (url: string) => Api;
     config: {
-      get: <T extends MW_NUMBER_PARAMETER | string>(key: T) => T extends MW_NUMBER_PARAMETER ? number : string
+      get: <T extends MW_NUMBER_PARAMETER | string>(key: T) => T extends MW_NUMBER_PARAMETER ? number : string;
     };
     hook: (hookKey: string) => Hook;
     hooks: Record<string, Hook>;

@@ -7,8 +7,8 @@ export default class LabelDescription {
 
   constructor (entity: EntityType) {
     const translations: Record<string, {
-      label?:string,
-      description?:string,
+      label?: string;
+      description?: string;
     }> = {};
 
     if (entity.labels) {

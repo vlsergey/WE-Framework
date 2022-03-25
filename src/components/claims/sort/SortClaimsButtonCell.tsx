@@ -54,7 +54,7 @@ export default class SortClaimsButtonCell
       checkedTrue.forEach(propertyId => {
         result.set(propertyId, [...result.get(propertyId) || [], code]);
       });
-    };
+    }
 
     return result;
   });

@@ -62,8 +62,8 @@ export default class PropertyDescription {
     this.lastrevid = data.lastrevid;
 
     const translations = {} as Record<string, {
-      label?:string;
-      description?:string;
+      label?: string;
+      description?: string;
     }>;
     Object.entries(data.labels).forEach(([languageCode, label]) => {
       translations[languageCode] = translations[languageCode] || {};

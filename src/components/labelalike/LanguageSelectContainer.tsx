@@ -12,7 +12,7 @@ interface StateType {
 export default class LanguageSelectContainer
   extends PureComponent<any, StateType> {
 
-  override state : StateType = {
+  override state: StateType = {
     language: mw.config.get('wgContentLanguage'),
   };
 

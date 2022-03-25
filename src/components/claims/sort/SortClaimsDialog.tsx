@@ -3,8 +3,8 @@ import React, {ChangeEvent, PureComponent} from 'react';
 import PropertyDescriptionsProvider from '../../../caches/PropertyDescriptionsProvider';
 import stableSort from '../../../utils/stableSort';
 import DialogWrapper from '../../../wrappers/DialogWrapper';
-import ComparatorSelect from './ComparatorSelect';
 import comparators from './comparators';
+import ComparatorSelect from './ComparatorSelect';
 import {ComparatorCode} from './DatavalueComparator';
 import i18n from './i18n';
 import styles from './SortClaimsDialog.css';
@@ -74,7 +74,7 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
     this.setState({[name]: value});
   };
 
-  handleComparatorChange = (comparatorCode: ComparatorCode | null) => this.setState({comparatorCode});
+  handleComparatorChange = (comparatorCode: ComparatorCode | null) => { this.setState({comparatorCode}); };
 
   handleSortClick = () => {
     this.props.onCloseClick();

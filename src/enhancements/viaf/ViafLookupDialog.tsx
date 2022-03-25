@@ -11,7 +11,7 @@ interface PropsType {
   onClose?: ComponentProps<typeof DialogWrapper>['onClose'];
 }
 
-type QueryState = 'WAITING' | 'SCHEDULED'
+type QueryState = 'WAITING' | 'SCHEDULED';
 
 interface StateType {
   autoSuggestResult: any;

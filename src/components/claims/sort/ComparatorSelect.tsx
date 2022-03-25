@@ -12,11 +12,11 @@ interface PropsType {
 const ComparatorSelect = ({onChange, options, value}: PropsType) => {
   const handleChange = useCallback(({currentTarget: {value}}: ChangeEvent< HTMLSelectElement >) => {
     onChange(value as ComparatorCode);
-  }, [onChange, options]);
+  }, [onChange]);
 
   return <select onChange={handleChange} value={value || ''}>
     {options.map(code => <option key={code} value={code}>
-      { i18n.comparators[code as ComparatorCode] || code }
+      { i18n.comparators[code] || code }
     </option>) }
   </select>;
 };

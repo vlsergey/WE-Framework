@@ -1,7 +1,7 @@
 export type ComparatorCode =
   | 'alphabetical'
   | 'time'
-  | 'naturalSort'
+  | 'naturalSort';
 
 export interface DatavalueComparator {
 
