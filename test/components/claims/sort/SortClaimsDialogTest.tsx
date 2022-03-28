@@ -17,7 +17,7 @@ describe('components/claims/sort/SortClaimsDialog', () => {
     const reducers = buildReducers(Q30);
     const store = createStore(reducers, applyMiddleware(thunk));
 
-    const comparators : React.ComponentProps<typeof SortClaimsDialog>['propertyIdToComparators']= new Map();
+    const comparators: React.ComponentProps<typeof SortClaimsDialog>['propertyIdToComparators'] = new Map();
     comparators.set('P580', ['time']);
 
     const rendered = ReactTestUtils.renderIntoDocument(
