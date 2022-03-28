@@ -28,7 +28,7 @@ class PropertyDataCache extends AbstractQueuedCacheWithPostcheck<PropertyData, a
 
   override buildRequestPromice (cacheKeys: string[]) {
     return getWikidataApi()
-      .getPromise({
+      .getPromise<WbGetEntitiesActionResult>({
         action: 'wbgetentities',
         languages: API_PARAMETER_LANGUAGES,
         languagefallback: true,
@@ -37,12 +37,12 @@ class PropertyDataCache extends AbstractQueuedCacheWithPostcheck<PropertyData, a
       });
   }
 
-  override convertResultToEntities (result: Record<string, PropertyType>): CacheType {
+  override convertResultToEntities (result: WbGetEntitiesActionResult): CacheType {
     const cacheUpdate: CacheType = {};
 
-    for (const [propertyId, property] of Object.entries(result)) {
+    for (const [propertyId, property] of Object.entries(result.entities)) {
       if (property.missing) continue;
-      const propertyData = new PropertyData(property);
+      const propertyData = new PropertyData(property as PropertyType);
       cacheUpdate[propertyId] = Object.freeze(propertyData);
     }
     return cacheUpdate;
