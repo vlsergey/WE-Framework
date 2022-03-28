@@ -1,47 +1,40 @@
+import Batcher from '@vlsergey/batcher';
+import {cacheValueHookFactory, cacheValueProviderFactory, cacheValuesHookFactory, cacheValuesProviderFactory,
+  MemoryOnlyCache} from '@vlsergey/react-indexdb-cache';
+
 import {getWikidataApi} from '../core/ApiUtils';
 import {API_PARAMETER_LANGUAGES} from '../utils/I18nUtils';
-import AbstractQueuedCache from './AbstractQueuedCache';
 import LabelDescription from './LabelDescription';
 
-const TYPE = 'LABELDESCRIPTIONS';
+const batchLoader = async (entityIds: string[]): Promise<LabelDescription[]> => {
+  console.debug('Load', entityIds.length, ' labels and descriptions from Wikidata', entityIds);
 
-export type CacheType = Record<string, LabelDescription>;
+  const apiResult = await getWikidataApi().getPromise<WbGetEntitiesActionResult>({
+    action: 'wbgetentities',
+    languages: API_PARAMETER_LANGUAGES,
+    languagefallback: true,
+    props: 'labels|descriptions',
+    ids: entityIds.join('|'),
+  });
 
-class LabelDescriptionCache
-  extends AbstractQueuedCache<LabelDescription, any, LabelDescription> {
+  const result: LabelDescription[] = [];
+  entityIds.forEach((entityId, index) => {
+    const entity = apiResult.entities[entityId];
+    if (!entity) return;
+    result[index] = new LabelDescription(entity);
+  });
+  return result;
+};
 
-  constructor () {
-    super(TYPE, false, 50);
-  }
+const batcher = new Batcher<string, LabelDescription>(batchLoader);
 
-  override isKeyValid (cacheKey: string): boolean {
-    return typeof cacheKey === 'string' && !!/^[PQ](\d+)$/i.exec(cacheKey);
-  }
+const cache = new MemoryOnlyCache({
+  loader: (entityId: string) => batcher.queue(entityId),
+  onError: (entityId: string, err: unknown) =>
+  { console.warn('Unable to load LabelDescription for', entityId, 'due to', err); },
+});
 
-  override notifyMessage (cacheKeys: string[]) {
-    return 'Fetching ' + cacheKeys.length + ' item(s) labels and descriptions from Wikidata';
-  }
-
-  override buildRequestPromice (cacheKeys: string[]): Promise<WbGetEntitiesActionResult> {
-    return getWikidataApi()
-      .getPromise({
-        action: 'wbgetentities',
-        languages: API_PARAMETER_LANGUAGES,
-        languagefallback: true,
-        props: 'labels|descriptions',
-        ids: cacheKeys.join('|'),
-      });
-  }
-
-  override convertResultToEntities (result: WbGetEntitiesActionResult) {
-    const cacheUpdate: CacheType = {};
-    for (const [entityId, entity] of Object.entries(result.entities)) {
-      const labelDescription = new LabelDescription(entity);
-      cacheUpdate[entityId] = labelDescription;
-    }
-    return cacheUpdate;
-  }
-
-}
-
-export default new LabelDescriptionCache();
+export const LabelDescriptionProvider = cacheValueProviderFactory(cache);
+export const LabelDescriptionsProvider = cacheValuesProviderFactory(cache);
+export const useLabelDescription = cacheValueHookFactory(cache);
+export const useLabelDescriptions = cacheValuesHookFactory(cache);

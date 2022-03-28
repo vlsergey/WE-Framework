@@ -1,8 +1,8 @@
 import React, {ChangeEventHandler, FocusEventHandler, PureComponent} from 'react';
 
 interface PropsType {
-  entityId: string | null;
-  entityLabel: string | null;
+  entityId?: string;
+  entityLabel?: string;
   inputRef?: any;
   onBlur: FocusEventHandler< HTMLInputElement >;
   onChange: ChangeEventHandler< HTMLInputElement >;

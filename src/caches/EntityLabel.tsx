@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 
 import LabelDescription from './LabelDescription';
-import LabelDescriptionProvider from './LabelDescriptionProvider';
+import {LabelDescriptionProvider} from './labelDescriptionCache';
 
 export function constructLabel (
     entityId: string,
@@ -34,7 +34,7 @@ export default class EntityLabel extends PureComponent<PropsType> {
     if (!entityId)
       return null;
 
-    return <LabelDescriptionProvider entityId={entityId}>
+    return <LabelDescriptionProvider cacheKey={entityId}>
       { labelDescription => constructLabel(entityId, labelDescription, appendEntityId)}
     </LabelDescriptionProvider>;
   }

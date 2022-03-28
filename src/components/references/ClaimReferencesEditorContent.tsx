@@ -1,9 +1,9 @@
 import React, {PureComponent} from 'react';
 import {defaultMemoize} from 'reselect';
 
-import {constructDescription} from '../../caches/EntityDescription';
+// import {constructDescription} from '../../caches/EntityDescription';
 import {constructLabel} from '../../caches/EntityLabel';
-import LabelDescriptionsProvider from '../../caches/LabelDescriptionsProvider';
+import {LabelDescriptionsProvider} from '../../caches/labelDescriptionCache';
 import generateRandomString from '../../utils/generateRandomString';
 import JQueryButton from '../../wrappers/JQueryButton';
 import AnimatedTr from '../AnimatedTr';
@@ -93,14 +93,14 @@ export default class ClaimReferencesEditorContent
       { this.state.lru.length !== 0 && <div>
         <p className={styles.lruLabel}>{i18n.dialogLabelAddRecentlyUsed}</p>
         <LabelDescriptionsProvider
-          entityIds={this.memoizeLruKeys(this.state.lru)}>
+          cacheKeys={this.memoizeLruKeys(this.state.lru)}>
           { cache => this.state.lru.map(item => <div key={item.key}>
             <JQueryButton
               className={styles.lruButton}
               label={constructLabel(item.key, cache[item.key], true)}
               onClick={this.bindLruClick(item)}
               text
-              title={constructDescription(cache[item.key]) || undefined} />
+              title={cache[item.key]?.description} />
           </div>) }
         </LabelDescriptionsProvider>
       </div> }

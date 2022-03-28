@@ -1,13 +1,14 @@
 import React, {ChangeEvent, PureComponent} from 'react';
 
-import LabelDescriptionsProvider from '../../caches/LabelDescriptionsProvider';
+import LabelDescription from '../../caches/LabelDescription';
+import {LabelDescriptionsProvider} from '../../caches/labelDescriptionCache';
 import stableSort from '../../utils/stableSort';
 import i18n from './i18n';
 
-function sort (cache: Record<string, any>, oneOf: string[]) {
+function sort (cache: Record<string, LabelDescription>, oneOf: string[]) {
   return stableSort([...oneOf], (o1: string, o2: string) => {
-    const v1: string = ((cache[o1] || {}).label || '').toLowerCase();
-    const v2: string = ((cache[o2] || {}).label || '').toLowerCase();
+    const v1 = cache[o1]?.label?.toLowerCase() || '';
+    const v2 = cache[o2]?.label?.toLowerCase() || '';
     return v1 === v2 ? 0 : v1 > v2 ? +1 : -1;
   });
 }
@@ -33,7 +34,7 @@ export default class SelectMode extends PureComponent<PropsType> {
     const {value, oneOf} = this.props;
 
     // include SELECT into LDP, becase rerendering only options leads to lost current option in SELECT
-    return <LabelDescriptionsProvider entityIds={oneOf}>
+    return <LabelDescriptionsProvider cacheKeys={oneOf}>
       { cache => <select onChange={this.handleChange} value={value || ''}>
         <option key="_empty" value="" />
         {sort(cache, oneOf).map((entityId: string) => {

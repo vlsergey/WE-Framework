@@ -1,6 +1,5 @@
 import AbstractQueuedCache from './AbstractQueuedCache';
 import flagImageHtmlCache from './flagImageHtmlCache';
-import labelDescriptionCache from './labelDescriptionCache';
 import localTitleCache from './localTitleCache';
 import parentTypesCache from './parentTypesCache';
 import propertiesBySparqlCache from './propertiesBySparqlCache';
@@ -13,7 +12,6 @@ const registerCache = (cache: AbstractQueuedCache<unknown, unknown, unknown>) =>
 };
 
 registerCache(flagImageHtmlCache);
-registerCache(labelDescriptionCache);
 registerCache(localTitleCache);
 registerCache(parentTypesCache);
 registerCache(propertiesBySparqlCache);

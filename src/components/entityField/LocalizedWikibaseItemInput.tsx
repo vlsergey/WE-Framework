@@ -1,71 +1,30 @@
-import React, {PureComponent} from 'react';
-import {connect} from 'react-redux';
+import React, {ChangeEventHandler, FocusEventHandler} from 'react';
 
-import labelDescriptionCache from '../../caches/labelDescriptionCache';
+import {useLabelDescription} from '../../caches/labelDescriptionCache';
 import WikibaseItemInput from './WikibaseItemInput';
 
-interface ExternalProps {
-  entityId: null | string;
+interface Props {
+  entityId?: string;
   inputRef?: any;
-  onBlur: () => unknown;
-  onChange: () => unknown;
-  onFocus: () => unknown;
+  onBlur: FocusEventHandler< HTMLInputElement >;
+  onChange: ChangeEventHandler< HTMLInputElement >;
+  onFocus: FocusEventHandler< HTMLInputElement >;
   value?: string;
   wikibaseItemInputRef: any;
 }
 
-interface PropsType extends ExternalProps {
-  cache: any;
-  queue: (entityId: string) => any;
-}
+const LocalizedWikibaseItemInput = ({
+  entityId,
+  wikibaseItemInputRef,
+  ...etc
+}: Props) => {
+  const labelDescription = useLabelDescription(entityId);
 
-class LocalizedWikibaseItemInput extends PureComponent<PropsType> {
+  return <WikibaseItemInput
+    {...etc}
+    entityId={entityId || undefined}
+    entityLabel={labelDescription?.label}
+    ref={wikibaseItemInputRef} />;
+};
 
-  override componentDidMount () {
-    const {cache, entityId, queue} = this.props;
-    if (!!entityId && typeof cache[entityId] === 'undefined') {
-      queue(entityId);
-    }
-  }
-
-  override componentDidUpdate (prevProps: PropsType) {
-    const {cache, entityId, queue} = this.props;
-
-    if (prevProps.entityId !== this.props.entityId
-        && !!entityId
-        && typeof cache[entityId] === 'undefined') {
-      queue(entityId);
-    }
-  }
-
-  override render () {
-    const {cache, entityId, queue, wikibaseItemInputRef, ...etc} = this.props;
-
-    if (!entityId) {
-      return <WikibaseItemInput
-        {...etc}
-        entityId={null}
-        entityLabel={null}
-        ref={wikibaseItemInputRef} />;
-    }
-    const labelDescription = cache[entityId];
-    const entityLabel = labelDescription ? labelDescription.label : null;
-    return <WikibaseItemInput
-      {...etc}
-      entityId={entityId}
-      entityLabel={entityLabel}
-      ref={wikibaseItemInputRef} />;
-  }
-}
-
-const mapStateToProps = (state: ReduxState, _ownProps: ExternalProps) => ({
-  // @ts-expect-error
-  cache: state.LABELDESCRIPTIONS.cache,
-});
-
-const mapDispatchToProps = (dispatch: any, _ownProps: ExternalProps) => ({
-  queue: (entityId: string) => dispatch(labelDescriptionCache.actionQueue([entityId])),
-});
-
-const LocalizedWikibaseItemInputConnected = connect(mapStateToProps, mapDispatchToProps)(LocalizedWikibaseItemInput);
-export default LocalizedWikibaseItemInputConnected;
+export default React.memo(LocalizedWikibaseItemInput) as typeof LocalizedWikibaseItemInput;

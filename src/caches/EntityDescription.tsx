@@ -1,25 +1,16 @@
-import React, {PureComponent} from 'react';
+import React from 'react';
 
-import LabelDescription from './LabelDescription';
-import LabelDescriptionProvider from './LabelDescriptionProvider';
-
-export function constructDescription (labelDescription: LabelDescription | undefined): string | null {
-  return labelDescription?.description || null;
-}
+import {useLabelDescription} from './labelDescriptionCache';
 
 interface PropsType {
   entityId?: string;
 }
 
-export default class EntityLabel extends PureComponent<PropsType> {
+const EntityLabel = ({
+  entityId
+}: PropsType): JSX.Element => {
+  const labelDescription = useLabelDescription(entityId);
+  return (labelDescription?.description || null) as unknown as JSX.Element;
+};
 
-  override render () {
-    const {entityId} = this.props;
-    if (!entityId) return null;
-
-    return <LabelDescriptionProvider entityId={entityId}>
-      {constructDescription}
-    </LabelDescriptionProvider>;
-  }
-
-}
+export default React.memo(EntityLabel);

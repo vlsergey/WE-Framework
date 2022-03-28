@@ -1,8 +1,7 @@
-import React, {ChangeEvent, PureComponent} from 'react';
+import React, {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import Autosuggest from 'react-autosuggest';
-import {connect} from 'react-redux';
 
-import {CacheType} from '../../caches/labelDescriptionCache';
+import {useLabelDescription} from '../../caches/labelDescriptionCache';
 import * as ApiUtils from '../../core/ApiUtils';
 import {DEFAULT_LANGUAGES} from '../../utils/I18nUtils';
 import LocalizedWikibaseItemInput from './LocalizedWikibaseItemInput';
@@ -13,52 +12,42 @@ import WikibaseItemInput from './WikibaseItemInput';
 const NUMBER_OF_SUGGESTIONS_PER_LANGUAGE = 5;
 
 interface PropsType {
-  cache: CacheType;
   onSelect: (value: null | string) => any;
-  readOnly: boolean;
+  readOnly?: boolean;
   testSuggestionsProvider?: (_: string) => string[];
   value: null | string;
 }
 
-interface StateType {
-  suggestions: string[];
-  textValue: string;
-}
+const wikidataApi = ApiUtils.getWikidataApi();
+const getSuggestionValue = (data: null | string) => data || '';
+const renderSuggestion = (data: string) => <Suggestion entityId={data} />;
 
-class AutocompleteMode extends PureComponent<PropsType, StateType> {
+const AutocompleteMode = ({
+  onSelect,
+  readOnly,
+  testSuggestionsProvider,
+  value
+}: PropsType) => {
 
-  static defaultProps = {
-    readOnly: false,
-  };
+  const wikibaseItemInputRef = useRef<WikibaseItemInput>();
 
-  requestedValue: null | string = null;
+  const [suggestions, setSuggestions] = useState<string[]>(value ? [value] : []);
+  const [textEntityId, setTextEntityId] = useState<string | undefined>(undefined);
+  const [textValue, setTextValue] = useState<string>(value || '');
 
-  wikibaseItemInputRef = React.createRef();
-  wikidataApi = ApiUtils.getWikidataApi();
+  const labelDescription = useLabelDescription(textEntityId);
 
-  constructor (props: PropsType) {
-    super(props);
-
-    const value = this.props.value || null;
-    this.state = {
-      suggestions: value ? [value] : [],
-      textValue: value || '',
-    };
-  }
-
-  handleSuggestionsClearRequested = () => { this.setState({suggestions: []}); };
-
-  handleSuggestionsFetchRequested = ({value}: {value: string}) => {
-    if (this.props.testSuggestionsProvider) {
-      this.setState({
-        suggestions: this.props.testSuggestionsProvider(value),
-      });
+  const handleSuggestionsClearRequested = useCallback(() => { setSuggestions([]); }, [setSuggestions]);
+  const handleSuggestionsFetchRequested = useCallback(({value}: {value: string}) => {
+    if (testSuggestionsProvider) {
+      setSuggestions(testSuggestionsProvider(value));
+      return;
     }
 
     const resultSet: Set<string> = new Set();
-    this.requestedValue = value;
+    const requestedValue = value;
     DEFAULT_LANGUAGES.forEach(async language => {
-      const result = await this.wikidataApi.getPromise<WbSearchEntitiesActionResult>({
+      const result = await wikidataApi.getPromise<WbSearchEntitiesActionResult>({
         action: 'wbsearchentities',
         language,
         limit: NUMBER_OF_SUGGESTIONS_PER_LANGUAGE,
@@ -67,32 +56,25 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
       });
 
       // may be out of sync, another string already required
-      if (this.requestedValue !== value) return;
+      if (requestedValue !== value) return;
 
       result.search.forEach(item => resultSet.add(item.id));
-      this.setState({
-        suggestions: [...resultSet],
-      });
+      setSuggestions([...resultSet]);
     });
-  };
+  }, [setSuggestions, testSuggestionsProvider]);
 
-  getSuggestionValue = (data: null | string) => data || '';
-
-  handleChange = (
-    _event: ChangeEvent< any >,
+  const handleChange = useCallback((
+    _event: ChangeEvent< HTMLElement >,
     {method, newValue}: {method: string; newValue: string}
   ) => {
-    const {cache, onSelect} = this.props;
-
     switch (method) {
     case 'type': {
       if (!newValue || newValue.trim() === '') {
         onSelect(null);
         break;
       }
-      this.setState({
-        textValue: newValue,
-      });
+      setTextEntityId(undefined);
+      setTextValue(newValue);
       if (/^Q\d+$/.test(newValue.trim())) {
         onSelect(newValue.trim());
       }
@@ -100,54 +82,47 @@ class AutocompleteMode extends PureComponent<PropsType, StateType> {
     }
     default: {
       onSelect(newValue);
-      const newTextValue = cache[newValue]?.label || newValue;
-      this.setState({
-        textValue: newTextValue || '',
-      });
-      if (this.wikibaseItemInputRef.current) {
-        (this.wikibaseItemInputRef.current as WikibaseItemInput).setValue(newTextValue);
-      }
+      setTextEntityId(newValue);
+      setTextValue(newValue);
       break;
     }
     }
-  };
+  }, [onSelect, setTextEntityId, setTextValue]);
 
-  override render () {
-    const inputProps = {
-      entityId: this.props.value || null,
-      onChange: this.handleChange,
-      type: 'text',
-      value: this.state.textValue,
-    };
+  useEffect(() => {
+    if (textEntityId && labelDescription?.label) {
+      wikibaseItemInputRef.current?.setValue(labelDescription?.label);
+    }
+  }, [textEntityId, labelDescription, wikibaseItemInputRef]);
 
-    return <Autosuggest
-      getSuggestionValue={this.getSuggestionValue}
-      inputProps={inputProps}
-      onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
-      onSuggestionsFetchRequested={this.handleSuggestionsFetchRequested}
-      renderInputComponent={this.renderInput}
-      renderSuggestion={this.renderSuggestion}
-      suggestions={this.state.suggestions}
-      theme={styles} />;
-  }
-
-  renderInput = (inputProps: any) => {
+  const renderInput = useCallback((inputProps: any) => {
     const {value, onChange, ref, ...etc} = inputProps;
 
     return <LocalizedWikibaseItemInput
       {...etc}
       inputRef={ref}
       onChange={onChange}
-      value={this.state.textValue}
-      wikibaseItemInputRef={this.wikibaseItemInputRef} />;
-  };
+      value={textValue}
+      wikibaseItemInputRef={wikibaseItemInputRef} />;
+  }, [textValue, wikibaseItemInputRef]);
 
-  renderSuggestion = (data: string) => <Suggestion entityId={data} />;
-}
+  const inputProps = useMemo(() => ({
+    entityId: value || undefined,
+    onChange: handleChange,
+    readOnly,
+    type: 'text',
+    value: labelDescription?.label || textValue,
+  }), [handleChange, labelDescription, readOnly, textValue, value]);
 
-const mapStateToProps = (state: any) => ({
-  cache: state.LABELDESCRIPTIONS.cache as CacheType,
-});
+  return <Autosuggest
+    getSuggestionValue={getSuggestionValue}
+    inputProps={inputProps as any}
+    onSuggestionsClearRequested={handleSuggestionsClearRequested}
+    onSuggestionsFetchRequested={handleSuggestionsFetchRequested}
+    renderInputComponent={renderInput}
+    renderSuggestion={renderSuggestion}
+    suggestions={suggestions}
+    theme={styles} />;
+};
 
-const AutocompleteModeConnected = connect(mapStateToProps)(AutocompleteMode);
-export default AutocompleteModeConnected;
+export default AutocompleteMode;
