@@ -28,13 +28,13 @@ const batchLoader = async (entityIds: string[]): Promise<LabelDescription[]> => 
 
 const batcher = new Batcher<string, LabelDescription>(batchLoader);
 
-const cache = new MemoryOnlyCache({
+export const labelDescriptionCache = new MemoryOnlyCache({
   loader: (entityId: string) => batcher.queue(entityId),
   onError: (entityId: string, err: unknown) =>
   { console.warn('Unable to load LabelDescription for', entityId, 'due to', err); },
 });
 
-export const LabelDescriptionProvider = cacheValueProviderFactory(cache);
-export const LabelDescriptionsProvider = cacheValuesProviderFactory(cache);
-export const useLabelDescription = cacheValueHookFactory(cache);
-export const useLabelDescriptions = cacheValuesHookFactory(cache);
+export const LabelDescriptionProvider = cacheValueProviderFactory(labelDescriptionCache);
+export const LabelDescriptionsProvider = cacheValuesProviderFactory(labelDescriptionCache);
+export const useLabelDescription = cacheValueHookFactory(labelDescriptionCache);
+export const useLabelDescriptions = cacheValuesHookFactory(labelDescriptionCache);

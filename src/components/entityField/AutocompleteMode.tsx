@@ -82,6 +82,8 @@ const AutocompleteMode = ({
     }
     default: {
       onSelect(newValue);
+      // until populated with useEffect below
+      wikibaseItemInputRef.current?.setValue(newValue);
       setTextEntityId(newValue);
       setTextValue(newValue);
       break;

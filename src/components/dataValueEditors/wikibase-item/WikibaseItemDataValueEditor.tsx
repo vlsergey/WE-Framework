@@ -14,7 +14,7 @@ interface PropsType extends Omit<React.ComponentProps<typeof EntityField>, 'lruK
   datavalue?: WikibaseEntityIdDataValue | null;
   onDataValueChange: (datavalue: WikibaseEntityIdDataValue | null) => any;
   propertyDescription: PropertyDescription;
-  readOnly: boolean;
+  readOnly?: boolean;
 }
 
 export default class WikibaseItemDataValueEditor
@@ -22,10 +22,6 @@ export default class WikibaseItemDataValueEditor
 
   static DATATYPE = 'wikibase-item';
   static DATAVALUE_TYPE = 'wikibase-entityid';
-
-  static defaultProps = {
-    readOnly: false,
-  };
 
   WIKIDATA_LINK_URL = 'https://www.wikidata.org/wiki/';
 

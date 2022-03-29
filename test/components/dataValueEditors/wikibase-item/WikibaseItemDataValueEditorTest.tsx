@@ -145,9 +145,12 @@ describe('components/dataValueEditors', () => {
       };
 
       function testSuggestionsProvider (value: string) {
+        console.debug('[testSuggestionsProvider]:', value);
         if (value == '222') {
+          console.debug('[testSuggestionsProvider] => ', ['Q222111', 'Q222222']);
           return ['Q222111', 'Q222222'];
         }
+        console.debug('[testSuggestionsProvider] => ', []);
         return [];
       }
 

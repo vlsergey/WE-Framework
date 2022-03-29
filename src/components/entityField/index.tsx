@@ -22,10 +22,6 @@ interface StateType {
 
 export default class EntityField extends PureComponent<PropsType, StateType> {
 
-  static defaultProps = {
-    readOnly: false,
-  };
-
   WIKIDATA_LINK_URL = 'https://www.wikidata.org/wiki/';
 
   constructor (props: PropsType) {
