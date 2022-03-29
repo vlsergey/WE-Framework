@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 
-import FlagImageHtmlProvider from '../../caches/FlagImageHtmlProvider';
+import {FlagImageHtmlProvider} from '../../caches/flagImageHtmlCache';
 import styles from './FlagCell.css';
 
 interface PropsType {
@@ -16,7 +16,7 @@ export default class FlagCell extends PureComponent<PropsType> {
     }
 
     return <td className={styles.wef_flag_cell}>
-      <FlagImageHtmlProvider fileName={flagImage}>
+      <FlagImageHtmlProvider cacheKey={flagImage}>
         {flagImageHtml => flagImageHtml
           ? <div dangerouslySetInnerHTML={{__html: flagImageHtml}} />
           : null }
