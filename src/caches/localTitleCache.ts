@@ -1,44 +1,37 @@
-import {getWikidataApi} from '../core/ApiUtils';
-import AbstractQueuedCache from './AbstractQueuedCache';
+import Batcher from '@vlsergey/batcher';
+import {cacheValueHookFactory, cacheValueProviderFactory, cacheValuesHookFactory, cacheValuesProviderFactory,
+  MemoryOnlyCache} from '@vlsergey/react-indexdb-cache';
 
-const EMPTY_OBJECT: any = Object.freeze({});
-const TYPE = 'LOCALTITLES';
+import {getWikidataApi} from '../core/ApiUtils';
+
 const wgDBname = mw.config.get('wgDBname');
 
-class LocalTitleCache extends AbstractQueuedCache<null | string, any, null | string> {
+const batchLoader = async (entityIds: string[]): Promise<(string | undefined)[]> => {
+  console.debug('Fetching', entityIds.length, ' item(s) local titles from Wikidata', entityIds);
 
-  constructor () {
-    super(TYPE, false, 50);
-  }
+  const apiResult = await getWikidataApi()
+    .getPromise<WbGetEntitiesActionResult>({
+      action: 'wbgetentities',
+      props: 'sitelinks',
+      sitefilter: wgDBname,
+      ids: entityIds.join('|'),
+    });
 
-  override isKeyValid (cacheKey: string): boolean {
-    return typeof cacheKey === 'string' && !!/^Q(\d+)$/i.exec(cacheKey);
-  }
+  return entityIds.map(entityId =>
+    apiResult.entities[entityId]?.sitelinks?.[wgDBname]?.title);
+};
 
-  override notifyMessage (cacheKeys: string[]) {
-    return 'Fetching ' + cacheKeys.length + ' item(s) local titles from Wikidata';
-  }
+const batcher = new Batcher<string, string | undefined>(batchLoader, {
+  maxBatchSize: 50
+});
 
-  override buildRequestPromice (cacheKeys: string[]) {
-    return getWikidataApi()
-      .getPromise({
-        action: 'wbgetentities',
-        props: 'sitelinks',
-        sitefilter: wgDBname,
-        ids: cacheKeys.join('|'),
-      });
-  }
+export const localTitleCache = new MemoryOnlyCache({
+  loader: (entityId: string) => batcher.queue(entityId),
+  onError: (entityId: string, err: unknown) =>
+  { console.warn('Unable to load local title for', entityId, 'due to', err); },
+});
 
-  override convertResultToEntities (result: any): Record<string, null | string> {
-    const cacheUpdate: Record<string, null | string> = {};
-    for (const [entityId, entity] of Object.entries(result.entities)) {
-      const sitelinks: SiteLinksType = (entity || EMPTY_OBJECT).sitelinks || EMPTY_OBJECT;
-      const sitelink: SiteLinkType = sitelinks[wgDBname] || EMPTY_OBJECT;
-      cacheUpdate[entityId] = sitelink.title || null;
-    }
-    return cacheUpdate;
-  }
-
-}
-
-export default new LocalTitleCache();
+export const LocalTitleProvider = cacheValueProviderFactory(localTitleCache);
+export const LocalTitlesProvider = cacheValuesProviderFactory(localTitleCache);
+export const useLocalTitle = cacheValueHookFactory(localTitleCache);
+export const useLocalTitles = cacheValuesHookFactory(localTitleCache);

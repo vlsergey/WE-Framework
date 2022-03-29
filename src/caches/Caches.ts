@@ -1,5 +1,4 @@
 import AbstractQueuedCache from './AbstractQueuedCache';
-import localTitleCache from './localTitleCache';
 import parentTypesCache from './parentTypesCache';
 import propertiesBySparqlCache from './propertiesBySparqlCache';
 import propertyDataCache from './propertyDataCache';
@@ -10,7 +9,6 @@ const registerCache = (cache: AbstractQueuedCache<unknown, unknown, unknown>) =>
   caches[cache.type] = cache;
 };
 
-registerCache(localTitleCache);
 registerCache(parentTypesCache);
 registerCache(propertiesBySparqlCache);
 registerCache(propertyDataCache);

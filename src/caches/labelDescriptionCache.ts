@@ -26,7 +26,9 @@ const batchLoader = async (entityIds: string[]): Promise<LabelDescription[]> => 
   return result;
 };
 
-const batcher = new Batcher<string, LabelDescription>(batchLoader);
+const batcher = new Batcher<string, LabelDescription>(batchLoader, {
+  maxBatchSize: 50
+});
 
 export const labelDescriptionCache = new MemoryOnlyCache({
   loader: (entityId: string) => batcher.queue(entityId),

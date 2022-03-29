@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react';
+import React from 'react';
 
-import LocalTitleProvider from '../../../caches/LocalTitleProvider';
+import {useLocalTitle} from '../../../caches/localTitleCache';
 import ButtonCell from '../../ButtonCell';
 import i18n from './i18n';
 
@@ -10,28 +10,29 @@ interface PropsType {
   entityId?: string;
 }
 
-export default class GoToLocalButtonCell extends PureComponent<PropsType> {
+const GoToLocalButtonCell = ({
+  entityId
+}: PropsType) => {
+  const localTitle = useLocalTitle(entityId);
 
-  override render () {
-    return <LocalTitleProvider entityId={this.props.entityId}>
-      { title => title
-        ? <ButtonCell
-          icon="ui-icon-extlink"
-          key="button"
-          label={i18n.buttonLabelGoToLocal}>
-          { (children: any) => <a href={wgArticlePath.replace('$1', title)}
-            rel="noopener noreferrer"
-            target="_blank">{children}</a> }
-        </ButtonCell>
-        : <ButtonCell
-          disabled
-          icon="ui-icon-extlink"
-          key="button"
-          label={i18n.buttonLabelGoToLocal}>
-          { (children: any) => <a href={'#'}>{children}</a> }
-        </ButtonCell>
-      }
-    </LocalTitleProvider>;
+  if (!localTitle) {
+    return <ButtonCell
+      disabled
+      icon="ui-icon-extlink"
+      key="button"
+      label={i18n.buttonLabelGoToLocal}>
+      { (children: any) => <a href={'#'}>{children}</a> }
+    </ButtonCell>;
   }
 
-}
+  return <ButtonCell
+    icon="ui-icon-extlink"
+    key="button"
+    label={i18n.buttonLabelGoToLocal}>
+    { (children: any) => <a href={wgArticlePath.replace('$1', localTitle)}
+      rel="noopener noreferrer"
+      target="_blank">{children}</a> }
+  </ButtonCell>;
+};
+
+export default React.memo(GoToLocalButtonCell);

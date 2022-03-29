@@ -44,7 +44,9 @@ const batchLoader = async (fileNames: string[]): Promise<(string | undefined)[]>
   });
 };
 
-const batcher = new Batcher<string, string | undefined>(batchLoader);
+const batcher = new Batcher<string, string | undefined>(batchLoader, {
+  maxBatchSize: 50
+});
 
 export const flagImageHtmlCache = new MemoryOnlyCache({
   loader: (fileName: string) => batcher.queue(fileName),
