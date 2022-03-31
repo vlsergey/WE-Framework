@@ -1,7 +1,7 @@
-import React, {PureComponent} from 'react';
+import React, {PureComponent, useMemo} from 'react';
 import Popup from 'semantic-ui-react/dist/commonjs/modules/Popup';
 
-import ParentTypesProvider from '../../../caches/ParentTypesProvider';
+import {useTypesParentTypes} from '../../../caches/parentTypesCache';
 import {onNewElementClick} from '../../../core/edit';
 import PropertyDescription from '../../../core/PropertyDescription';
 import allEditorTemplates from '../../../editors';
@@ -20,7 +20,7 @@ export default class CreateNewButtonCell extends PureComponent<PropsType> {
 
   override render () {
     const {disabled, propertyDescription} = this.props;
-    const instanceOf = (propertyDescription.valueTypeConstraint || {}).instanceOf || null;
+    const instanceOf = propertyDescription.valueTypeConstraint?.instanceOf;
 
     if (disabled) {
       return <ButtonCell
@@ -48,26 +48,29 @@ export default class CreateNewButtonCell extends PureComponent<PropsType> {
 }
 
 interface PopupContentPropsType {
-  instanceOf?: string[] | null;
+  instanceOf?: string[];
   onCreate: (entityId: string) => any;
 }
 
-class PopupContent extends PureComponent<PopupContentPropsType> {
+const EMPTY_ARRAY = [] as const;
 
-  override render () {
-    const {instanceOf} = this.props;
-    const editorTemplates = allEditorTemplates
-      .filter(template => !!template.newEntityInstanceOf);
+function PopupContent ({
+  instanceOf,
+  onCreate
+}: PopupContentPropsType) {
+  const editorTemplates = allEditorTemplates
+    .filter(template => !!template.newEntityInstanceOf);
 
-    return <>
-      {i18n.paragraphTextSelectEditorForCreate}
-      <ParentTypesProvider typeIds={instanceOf || []}>{ typeIds => <EditorButtons
-        editorTemplates={editorTemplates}
-        onCreate={this.props.onCreate}
-        typeIds={new Set(Object.values(typeIds || {}).flatMap(array => array))} />}
-      </ParentTypesProvider>
-    </>;
-  }
+  const typeIds = useTypesParentTypes(instanceOf || EMPTY_ARRAY);
+  const flatTypeIds = useMemo(() => new Set(Object.values(typeIds).flatMap(ids => ids)), [typeIds]);
+
+  return <>
+    {i18n.paragraphTextSelectEditorForCreate}
+    <EditorButtons
+      editorTemplates={editorTemplates}
+      onCreate={onCreate}
+      typeIds={flatTypeIds} />
+  </>;
 }
 
 interface EditorButtonsPropsType {

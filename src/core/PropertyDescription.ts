@@ -44,7 +44,10 @@ export default class PropertyDescription {
   regexp?: string;
   sourceWebsites: string[];
   sourceWebsitesLanguages: string[];
-  valueTypeConstraint?: {instanceOf?: string[] | null | undefined};
+  valueTypeConstraint?: {
+    instanceOf?: string[];
+  };
+
   version?: number;
   urlFormatters: UrlFormatter[];
 
