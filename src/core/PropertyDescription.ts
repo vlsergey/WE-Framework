@@ -25,27 +25,29 @@ class UrlFormatter {
 
 }
 
+const EMPTY_ARRAY = [] as const;
+
 export default class PropertyDescription {
 
-  allowedQualifiers: string[];
-  countries: string[];
-  countryFlags: string[];
+  allowedQualifiers: readonly string[];
+  countries: readonly string[];
+  countryFlags: readonly string[];
   datatype: string;
   description?: string;
   id: string;
   label?: string;
-  languageCodes: string[];
-  languageIds: string[];
+  languageCodes: readonly string[];
+  languageIds: readonly string[];
   lastrevid?: number;
-  oneOf: string[];
+  oneOf: readonly string[];
   pageid?: number;
   quantityUnitEnabled: boolean;
-  quantityUnits: string[];
+  quantityUnits: readonly string[];
   regexp?: string;
-  sourceWebsites: string[];
-  sourceWebsitesLanguages: string[];
+  sourceWebsites: readonly string[];
+  sourceWebsitesLanguages: readonly string[];
   valueTypeConstraint?: {
-    instanceOf?: string[];
+    instanceOf?: readonly string[];
   };
 
   version?: number;
@@ -53,9 +55,9 @@ export default class PropertyDescription {
 
   constructor (
     data: PropertyData,
-    countryFlags: string[] = [],
-    languageCodes: string[] = [],
-    languageIds: string[] = []
+    countryFlags: readonly string[] = EMPTY_ARRAY,
+    languageCodes: readonly string[] = EMPTY_ARRAY,
+    languageIds: readonly string[] = EMPTY_ARRAY
   ) {
     if (!data.id) throw new Error('Missing property id in PropertyData: ' + JSON.stringify(data));
 

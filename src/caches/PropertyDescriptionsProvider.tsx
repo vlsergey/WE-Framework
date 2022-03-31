@@ -6,22 +6,22 @@ import PropertyDescription from '../core/PropertyDescription';
 import deepEqual from '../utils/deepEqual';
 import CacheValuesProvider, {CacheType} from './CacheValuesProvider';
 import propertyDataCacheController from './propertyDataCache';
-import StringPropertyValuesProvider, {StringPropertyValuesCache} from './StringPropertyValuesProvider';
+import {CacheData as StringPropertyValuesCache, StringPropertyValuesProvider} from './stringPropertyValuesCache';
 
-const EMPTY_ARRAY = Object.freeze([]);
+const EMPTY_ARRAY = [] as const;
 
-const intern = (x: any) => Array.isArray(x) && x.length === 0 ? EMPTY_ARRAY : x;
+const intern = (x?: readonly string[]) => !!x && x.length !== 0 ? x : EMPTY_ARRAY;
 
 const calcCountryFlags = (
   countriesCacheData: any,
-  countries: string[]
+  countries: readonly string[]
 ) => intern(countries.flatMap<string>(
   (countryEntityId: string) => countriesCacheData[countryEntityId]?.P41 || EMPTY_ARRAY)
 );
 
 const calcCountryLanguageIds = (
   countriesCacheData: any,
-  countries: string[]
+  countries: readonly string[]
 ) => intern(countries.flatMap<string>(
   (countryEntityId: string) => countriesCacheData[countryEntityId]?.P37 || EMPTY_ARRAY)
 );
@@ -81,11 +81,11 @@ export default class PropertyDescriptionsProvider
     }
   );
 
-  memoizeAllLanguageIds = defaultMemoize((ids1: string[], ids2: string[]) =>
+  memoizeAllLanguageIds = defaultMemoize((ids1: readonly string[], ids2: readonly string[]) =>
     intern([...new Set([...ids1, ...ids2])])
   );
 
-  memoizeAllCountriesLanguageIds = defaultMemoize((countriesCacheData: any, countries: string[]) =>
+  memoizeAllCountriesLanguageIds = defaultMemoize((countriesCacheData: any, countries: readonly string[]) =>
     intern(calcCountryLanguageIds(countriesCacheData, countries))
   );
 
@@ -118,13 +118,13 @@ export default class PropertyDescriptionsProvider
           return children({});
 
         const countries = this.memoizeCountries(propertyIds, propertyDataCache);
-        return <StringPropertyValuesProvider entityIds={countries}>
+        return <StringPropertyValuesProvider cacheKeys={countries}>
           { countriesCacheData => {
-            const countriesOfficialLanguagesIds: any[] = this.memoizeAllCountriesLanguageIds(countriesCacheData, countries);
-            const sourceWebsitesLanguagesIds: any[] = this.memoizeSourceWebsitesLanguages(propertyIds, propertyDataCache);
-            const allLanguageIds: any[] = this.memoizeAllLanguageIds(countriesOfficialLanguagesIds, sourceWebsitesLanguagesIds);
+            const countriesOfficialLanguagesIds = this.memoizeAllCountriesLanguageIds(countriesCacheData, countries);
+            const sourceWebsitesLanguagesIds = this.memoizeSourceWebsitesLanguages(propertyIds, propertyDataCache);
+            const allLanguageIds = this.memoizeAllLanguageIds(countriesOfficialLanguagesIds, sourceWebsitesLanguagesIds);
 
-            return <StringPropertyValuesProvider entityIds={allLanguageIds}>
+            return <StringPropertyValuesProvider cacheKeys={allLanguageIds}>
               { languagesCacheData =>
                 children(this.memoize(propertyIds, propertyDataCache, countriesCacheData, languagesCacheData))
               }

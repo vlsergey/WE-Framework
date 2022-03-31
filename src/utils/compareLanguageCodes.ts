@@ -1,8 +1,8 @@
 import {DEFAULT_LANGUAGES} from '../utils/I18nUtils';
 
-export default function compareLanguageCodes (a: null | string[] | undefined, b: null | string[] | undefined) {
-  const empty = (x: null | string[] | undefined) => typeof x === 'undefined' || x === null || x.length === 0;
-  const has = (arr: null | string[] | undefined, item: string) => !empty(arr) && (arr as string[]).includes(item);
+export default function compareLanguageCodes (a: null | readonly string[] | undefined, b: null | readonly string[] | undefined) {
+  const empty = (x: null | readonly string[] | undefined) => typeof x === 'undefined' || x === null || x.length === 0;
+  const has = (arr: null | readonly string[] | undefined, item: string) => !empty(arr) && (arr as string[]).includes(item);
 
   if (empty(a) && empty(b)) return 0;
 

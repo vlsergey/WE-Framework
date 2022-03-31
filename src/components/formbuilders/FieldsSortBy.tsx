@@ -13,8 +13,8 @@ const compareByLanguageCodes = (a: TempItemToSort, b: TempItemToSort) =>
   compareLanguageCodes(a.languageCodes, b.languageCodes);
 
 interface TempItemToSort {
-  label?: string | null;
-  languageCodes: string[];
+  label?: string;
+  languageCodes: readonly string[];
   property: string;
 }
 

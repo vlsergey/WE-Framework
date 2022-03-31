@@ -8,8 +8,8 @@ import SelectMode from './SelectMode';
 interface PropsType
   extends Omit<React.ComponentPropsWithoutRef<typeof AutocompleteMode>, 'value' | 'onChange' | 'lruKey' | 'oneOf' | 'onSelect' | 'readOnly' | 'value'>{
   lruKey?: string;
-  onChange: (entityId: null | string) => any;
-  oneOf?: string[];
+  onChange: (entityId: null | string) => unknown;
+  oneOf?: readonly string[];
   readOnly?: boolean;
   value: null | string;
 }

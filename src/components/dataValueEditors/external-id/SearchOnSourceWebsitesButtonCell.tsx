@@ -12,13 +12,13 @@ const EMPTY_OBJECT = Object.freeze({});
 interface PropsType {
   disabled?: boolean;
   labels: LabelsType | null;
-  languageCodes?: string[];
-  sourceWebsites?: string[];
+  languageCodes?: readonly string[];
+  sourceWebsites?: readonly string[];
 }
 
 class SearchOnSourceWebsitesButtonCell extends PureComponent<PropsType> {
 
-  memoizeUrl = defaultMemoize((labels: LabelsType | null, languageCodes?: string[], sourceWebsites?: string[]) => {
+  memoizeUrl = defaultMemoize((labels: LabelsType | null, languageCodes?: readonly string[], sourceWebsites?: readonly string[]) => {
     if (!labels) return null;
     const languageSet: Set< string > = new Set(languageCodes || []);
 

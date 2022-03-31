@@ -1,28 +1,28 @@
+import Batcher from '@vlsergey/batcher';
+import {cacheValuesHookFactory, cacheValuesProviderFactory,
+  CacheWithIndexedDb} from '@vlsergey/react-indexdb-cache';
+
 import {getWikidataApi} from '../core/ApiUtils';
 import {filterClaimsByRank} from '../model/ModelUtils';
 import isNotNull from '../utils/isNotNull';
 import isOkay from '../utils/isOkay';
-import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
 
-const TYPE = 'STRINGPROPERTYVALUES';
-
-type SUPORTED_PROPERTY_ID = 'P17' | 'P37' | 'P41' | 'P424';
-
-const PROPERTIES_TO_CACHE: SUPORTED_PROPERTY_ID[] = [
+const PROPERTIES_TO_CACHE = [
   'P17', // country
   'P37', // official language
   'P41', // flag image
   'P424', // Wikimedia language code
-];
+] as const;
+type SUPORTED_PROPERTY_ID = typeof PROPERTIES_TO_CACHE[number];
 
-const EMPTY_ARRAY = Object.freeze([]);
+const EMPTY_ARRAY = [] as const;
 
-export type Item = Partial<Record<SUPORTED_PROPERTY_ID, string[]>> & {
+export type Item = Partial<Record<SUPORTED_PROPERTY_ID, readonly string[]>> & {
   lastrevid?: number;
   pageid?: number;
 };
 
-export const buildStringCacheValuesFromEntity = (entity: EntityType) => {
+export const buildStringCacheValuesFromEntity = (entity: EntityType): Item => {
 
   const entityResult: Item = {
     lastrevid: entity.lastrevid,
@@ -31,7 +31,6 @@ export const buildStringCacheValuesFromEntity = (entity: EntityType) => {
 
   PROPERTIES_TO_CACHE.forEach(propertyId => {
     if (!entity.claims) {
-      // @ts-expect-error
       entityResult[propertyId] = EMPTY_ARRAY;
       return;
     }
@@ -56,39 +55,32 @@ export const buildStringCacheValuesFromEntity = (entity: EntityType) => {
   return entityResult;
 };
 
-class StringPropertyValuesCache
-  extends AbstractQueuedCacheWithPostcheck<Item, any, Item> {
+const batchLoader = async (entityIds: string[]): Promise<(Item | undefined)[]> => {
+  console.debug('Fetching', entityIds.length, 'item(s) major properties from Wikidata');
 
-  constructor () {
-    super(TYPE, true, 10);
-  }
-
-  override isKeyValid (cacheKey: string): boolean {
-    return typeof cacheKey === 'string' && !!/^[PQ](\d+)$/i.exec(cacheKey);
-  }
-
-  override notifyMessage (cacheKeys: string[]): string {
-    return 'Fetching ' + cacheKeys.length + ' item(s) labels and descriptions from Wikidata';
-  }
-
-  override buildRequestPromice (cacheKeys: string[]) {
-    return getWikidataApi()
-      .getPromise({
-        action: 'wbgetentities',
-        props: 'claims|info',
-        ids: cacheKeys.join('|'),
-      });
-  }
-
-  override convertResultToEntities (result: {entities: Record<string, EntityType>}) {
-    const cacheUpdate: Record<string, Item> = {};
-    Object.entries(result.entities).forEach(([entityId, entity]) => {
-      cacheUpdate[entityId] = buildStringCacheValuesFromEntity(entity);
+  const apiResult = await getWikidataApi()
+    .getPromise<WbGetEntitiesActionResult>({
+      action: 'wbgetentities',
+      props: 'claims|info',
+      ids: entityIds.join('|'),
     });
-    return cacheUpdate;
-  }
 
-}
+  return entityIds
+    .map(entityId => apiResult.entities[entityId])
+    .map(entity => entity === undefined ? undefined : buildStringCacheValuesFromEntity(entity));
+};
 
-const instance = new StringPropertyValuesCache();
-export default instance;
+const batcher = new Batcher<string, Item | undefined>(batchLoader, {
+  maxBatchSize: 10
+});
+
+export const stringPropertyValuesCache = new CacheWithIndexedDb<string, Item, Item>({
+  databaseName: 'WEF_CACHE_STRINGPROPERTYVALUES',
+  loader: (entityId: string) => batcher.queue(entityId),
+  onError: (entityId: string, err: unknown) =>
+  { console.warn('Unable to load string values for', entityId, 'due to', err); },
+});
+
+export type CacheData = Readonly<Record<string, Item>>;
+export const StringPropertyValuesProvider = cacheValuesProviderFactory(stringPropertyValuesCache);
+export const useStringPropertyValues = cacheValuesHookFactory(stringPropertyValuesCache);

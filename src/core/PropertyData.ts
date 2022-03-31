@@ -77,8 +77,8 @@ export default class PropertyData {
   quantityUnitEnabled: boolean;
   quantityUnits: string[];
   regexp?: string;
-  sourceWebsites: string[];
-  sourceWebsitesLanguages: string[];
+  sourceWebsites: readonly string[];
+  sourceWebsitesLanguages: readonly string[];
   valueTypeConstraint?: {
     instanceOf?: string[];
   };

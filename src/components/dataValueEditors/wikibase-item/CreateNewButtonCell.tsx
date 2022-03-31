@@ -48,7 +48,7 @@ export default class CreateNewButtonCell extends PureComponent<PropsType> {
 }
 
 interface PopupContentPropsType {
-  instanceOf?: string[];
+  instanceOf?: readonly string[];
   onCreate: (entityId: string) => any;
 }
 
