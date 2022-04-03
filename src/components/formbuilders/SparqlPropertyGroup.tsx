@@ -1,39 +1,30 @@
-import React, {PureComponent} from 'react';
-
-import PropertiesBySparqlProvider from '../../caches/PropertiesBySparqlProvider';
+import React from 'react';
+import { usePropertiesBySparql } from '../../caches/propertiesBySparqlCache';
 import Spinner from '../../components/Spinner';
 import ChildrenBuilder from './ChildrenBuilder';
 import styles from './SparqlPropertyGroup.css';
 
 interface PropsType {
-  sortBy: string;
+  sortBy?: string;
   sparql: string;
 }
 
-export default class SparqlPropertyGroup extends PureComponent<PropsType> {
+const SparqlPropertyGroup = ({
+  sortBy = 'language, label',
+  sparql,
+} :PropsType) => {
+  const propertyIds = usePropertiesBySparql(sparql);
 
-  static defaultProps = {
-    sortBy: 'language, label',
-  };
-
-  override render () {
-    const {sortBy, sparql} = this.props;
-
-    return <PropertiesBySparqlProvider sparql={sparql}>
-      { propertyIds => {
-
-        if (!propertyIds) {
-          return <Spinner />;
-        }
-
-        return <div className={styles.sparql_property_group}>
-          <ChildrenBuilder
-            fields={propertyIds.map(propertyId => ({property: propertyId}))}
-            quickSearch
-            sortBy={sortBy.split(/[ ;,\t]/)} />
-        </div>;
-      } }
-    </PropertiesBySparqlProvider>;
+  if (!propertyIds) {
+    return <Spinner />;
   }
 
+  return <div className={styles.sparql_property_group}>
+    <ChildrenBuilder
+      fields={propertyIds.map(propertyId => ({property: propertyId}))}
+      quickSearch
+      sortBy={sortBy.split(/[ ;,\t]/)} />
+  </div>;
 }
+
+export default React.memo(SparqlPropertyGroup);

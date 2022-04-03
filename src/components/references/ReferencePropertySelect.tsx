@@ -1,6 +1,6 @@
 import React, {ChangeEvent, PureComponent} from 'react';
+import { PropertiesBySparqlProvider } from '../../caches/propertiesBySparqlCache';
 
-import PropertiesBySparqlProvider from '../../caches/PropertiesBySparqlProvider';
 import PropertyDescriptionsProvider from '../../caches/PropertyDescriptionsProvider';
 import {SUPPORTED_DATATYPES} from '../SnakValueEditorFactory';
 import i18n from './i18n';
@@ -27,7 +27,7 @@ export default class ReferencePropertySelect extends PureComponent<PropsType> {
 
     // see https://www.wikidata.org/wiki/Q18608359
     return <PropertiesBySparqlProvider
-      sparql={`SELECT DISTINCT ?property WHERE { ?property ${INSTANCE_OF} ${SOURCE_TYPE} . }`}>
+      cacheKey={`SELECT DISTINCT ?property WHERE { ?property ${INSTANCE_OF} ${SOURCE_TYPE} . }`}>
       { propertyIds => {
         if (!propertyIds) return <i>Loading possible reference properties...</i>;
 
