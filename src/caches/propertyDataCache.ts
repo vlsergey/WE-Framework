@@ -1,52 +1,56 @@
+import Batcher from '@vlsergey/batcher';
+import {cacheValueHookFactory, cacheValuesHookFactory, cacheValuesProviderFactory, CacheWithIndexedDb} from '@vlsergey/react-indexdb-cache';
+
 import {getWikidataApi} from '../core/ApiUtils';
 import PropertyData from '../core/PropertyData';
 import {API_PARAMETER_LANGUAGES} from '../utils/I18nUtils';
-import AbstractQueuedCacheWithPostcheck from './AbstractQueuedCacheWithPostcheck';
-
-export const TYPE = 'PROPERTYDATA';
+import lastRevisionCache from './LastRevisionCache';
 
 export type CacheType = Record<string, PropertyData>;
 
-class PropertyDataCache extends AbstractQueuedCacheWithPostcheck<PropertyData, any, PropertyData> {
+const batchLoader = async (cacheKeys: string[]): Promise<(Readonly<PropertyData> | undefined)[]> => {
+  console.debug('Fetching', cacheKeys.length, 'property descriptions from Wikidata');
 
-  constructor () {
-    super(TYPE, true, 50);
-  }
+  const apiResult = await getWikidataApi()
+    .getPromise<WbGetEntitiesActionResult>({
+      action: 'wbgetentities',
+      languages: API_PARAMETER_LANGUAGES,
+      languagefallback: true,
+      props: 'claims|datatype|labels|descriptions|info',
+      ids: cacheKeys.join('|'),
+    });
 
-  override enchanceIndexedDbResult (cachedValue: unknown): PropertyData {
-    Object.setPrototypeOf(cachedValue, PropertyData.prototype);
-    return cachedValue as PropertyData;
-  }
+  return cacheKeys
+    .map(propertyId => apiResult?.entities?.[propertyId])
+    .map(entity => !entity ? undefined : Object.freeze(new PropertyData(entity as PropertyType)));
+};
 
-  override isKeyValid (cacheKey: string): boolean {
-    return typeof cacheKey === 'string' && !!/^P(\d+)$/i.exec(cacheKey);
-  }
+const batcher = new Batcher<string, Readonly<PropertyData> | undefined>(batchLoader, {
+  maxBatchSize: 50
+});
 
-  override notifyMessage (cacheKeys: string[]): string {
-    return 'Fetching ' + cacheKeys.length + ' property descriptions from Wikidata';
-  }
+async function postCheck (propertyId: string, value: Readonly<PropertyData> | undefined) {
+  if (!value?.pageid) return;
 
-  override buildRequestPromice (cacheKeys: string[]) {
-    return getWikidataApi()
-      .getPromise<WbGetEntitiesActionResult>({
-        action: 'wbgetentities',
-        languages: API_PARAMETER_LANGUAGES,
-        languagefallback: true,
-        props: 'claims|datatype|labels|descriptions|info',
-        ids: cacheKeys.join('|'),
-      });
-  }
-
-  override convertResultToEntities (result: WbGetEntitiesActionResult): CacheType {
-    const cacheUpdate: CacheType = {};
-
-    for (const [propertyId, property] of Object.entries(result.entities)) {
-      if (property.missing) continue;
-      const propertyData = new PropertyData(property as PropertyType);
-      cacheUpdate[propertyId] = Object.freeze(propertyData);
-    }
-    return cacheUpdate;
-  }
+  if (await lastRevisionCache.queue(value.pageid) != value.lastrevid)
+    void propertiesDataCache.requeue(propertyId);
 }
 
-export default new PropertyDataCache();
+export const propertiesDataCache = new CacheWithIndexedDb<string, PropertyData, Readonly<PropertyData>>({
+  databaseName: 'WEF_CACHE_PROPERTYDATA',
+  restoreAfterDb: dbValue => {
+    Object.setPrototypeOf(dbValue, PropertyData.prototype);
+    return dbValue;
+  },
+  onDbLoad: postCheck,
+  loader: (entityId: string) => batcher.queue(entityId),
+  onError: (entityId: string, err: unknown) =>
+  { console.warn('Unable to load string values for', entityId, 'due to', err); },
+});
+
+export type CacheData = Readonly<Record<string, Readonly<PropertyData>>>;
+export const PropertiesDataProvider = cacheValuesProviderFactory(propertiesDataCache);
+export const usePropertyData = cacheValueHookFactory(propertiesDataCache);
+export const usePropertiesData = cacheValuesHookFactory(propertiesDataCache);
+
+export default propertiesDataCache;

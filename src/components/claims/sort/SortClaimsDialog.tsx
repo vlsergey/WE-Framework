@@ -1,6 +1,6 @@
 import React, {ChangeEvent, PureComponent} from 'react';
 
-import PropertyDescriptionsProvider from '../../../caches/PropertyDescriptionsProvider';
+import usePropertyDescription from '../../../caches/usePropertyDescription';
 import stableSort from '../../../utils/stableSort';
 import DialogWrapper from '../../../wrappers/DialogWrapper';
 import comparators from './comparators';
@@ -122,18 +122,13 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
           <tr>
             <th>{i18n.fieldLabelSortBy}</th>
             <td>
-              <PropertyDescriptionsProvider propertyIds={propertyIds}>
-                { cache => <select name="propertyId" onChange={this.handleChange} value={propertyId || ''}>
-                  {propertyIds.map(propertyId =>
-                    <option
-                      key={propertyId}
-                      title={cache[propertyId]?.description}
-                      value={propertyId}>
-                      {cache[propertyId]?.label || ''}
-                    </option>
-                  ) }
-                </select> }
-              </PropertyDescriptionsProvider>
+              <select name="propertyId" onChange={this.handleChange} value={propertyId || ''}>
+                {propertyIds.map(propertyId =>
+                  <PropertyOption
+                    key={propertyId}
+                    propertyId={propertyId} />
+                ) }
+              </select>
             </td>
           </tr>
           <tr>
@@ -169,3 +164,18 @@ export default class SortClaimsDialog extends PureComponent<PropsType, StateType
   }
 
 }
+
+interface PropertyOptionsProps {
+  propertyId: string;
+}
+
+const PropertyOption = ({
+  propertyId
+}: PropertyOptionsProps) => {
+  const propertyDescription = usePropertyDescription(propertyId);
+  return <option
+    title={propertyDescription?.description}
+    value={propertyId}>
+    {propertyDescription?.label || ''}
+  </option>;
+};

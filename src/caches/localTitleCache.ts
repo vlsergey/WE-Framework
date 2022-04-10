@@ -18,7 +18,7 @@ const batchLoader = async (entityIds: string[]): Promise<(string | undefined)[]>
     });
 
   return entityIds.map(entityId =>
-    apiResult.entities[entityId]?.sitelinks?.[wgDBname]?.title);
+    apiResult.entities?.[entityId]?.sitelinks?.[wgDBname]?.title);
 };
 
 const batcher = new Batcher<string, string | undefined>(batchLoader, {

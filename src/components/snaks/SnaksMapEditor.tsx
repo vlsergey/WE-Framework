@@ -1,6 +1,6 @@
-import React, {PureComponent} from 'react';
+import React, {PureComponent, useCallback} from 'react';
 
-import PropertyDescriptionsProvider from '../../caches/PropertyDescriptionsProvider';
+import usePropertyDescription from '../../caches/usePropertyDescription';
 import PropertyDescription from '../../core/PropertyDescription';
 import {COLUMNS_FOR_SNAK_ROW} from '../TableColSpanConstants';
 import SnaksArrayEditor from './SnaksArrayEditor';
@@ -40,31 +40,68 @@ export default class SnaksMapEditor extends PureComponent<PropsType> {
 
     const propertyIds = ignorePropertyIds === undefined ? Object.keys(snaksMap) :
       Object.keys(snaksMap).filter(propertyId => !ignorePropertyIds.includes(propertyId));
-    return <PropertyDescriptionsProvider propertyIds={propertyIds}>
-      {cache => propertyIds.map(propertyId => {
-        const propertyDescription = cache[propertyId];
 
-        if (!propertyDescription) {
-          return <PropertyIsLoadingTBody
-            key={propertyId}
-            propertyId={propertyId} />;
-        }
-
-        const removeButtonConfirmMessage = removeButtonConfirmMessageF(propertyDescription);
-
-        return <SnaksArrayEditor
-          key={propertyId}
-          onSnaksArrayUpdate={this.handleSnaksArrayUpdateF(propertyDescription)}
-          propertyDescription={propertyDescription}
-          readOnly={readOnly}
-          removeButtonConfirmMessage={removeButtonConfirmMessage}
-          removeButtonLabel={removeButtonLabel}
-          snaksArray={snaksMap[propertyId]} />;
-      })}
-    </PropertyDescriptionsProvider>;
+    return propertyIds.map(propertyId =>
+      <PropertySnaksEditTBody
+        key={propertyId}
+        propertyId={propertyId}
+        readOnly={readOnly}
+        removeButtonConfirmMessageF={removeButtonConfirmMessageF}
+        removeButtonLabel={removeButtonLabel}
+        snaksMap={snaksMap} />
+    );
   }
 
 }
+
+interface PropertySnaksEditTBodyProps {
+  onSnaksMapUpdate?: (value: SnaksMap) => any;
+  propertyId: string;
+  readOnly?: boolean;
+  removeButtonConfirmMessageF: (pd: PropertyDescription) => string;
+  removeButtonLabel: string;
+  snaksMap?: SnaksMap;
+}
+
+const PropertySnaksEditTBody = ({
+  propertyId,
+  onSnaksMapUpdate,
+  readOnly,
+  removeButtonConfirmMessageF,
+  removeButtonLabel,
+  snaksMap
+}: PropertySnaksEditTBodyProps) => {
+  const propertyDescription = usePropertyDescription(propertyId);
+
+  const handleSnaksArrayUpdate = useCallback((snaksArray: null | SnakType[]) => {
+    if (!onSnaksMapUpdate) return;
+
+    if (snaksArray == null) {
+      const newMap = {...snaksMap};
+      delete newMap[propertyId];
+      onSnaksMapUpdate(newMap);
+    } else {
+      onSnaksMapUpdate({...snaksMap, [propertyId]: snaksArray});
+    }
+  }, [onSnaksMapUpdate, propertyId, snaksMap]);
+
+  if (!propertyDescription) {
+    return <PropertyIsLoadingTBody
+      key={propertyId}
+      propertyId={propertyId} />;
+  }
+
+  const removeButtonConfirmMessage = removeButtonConfirmMessageF(propertyDescription);
+
+  return <SnaksArrayEditor
+    key={propertyId}
+    onSnaksArrayUpdate={handleSnaksArrayUpdate}
+    propertyDescription={propertyDescription}
+    readOnly={readOnly}
+    removeButtonConfirmMessage={removeButtonConfirmMessage}
+    removeButtonLabel={removeButtonLabel}
+    snaksArray={snaksMap?.[propertyId]} />;
+};
 
 interface PropertyIsLoadingTBodyPropsType {
   propertyId: string;

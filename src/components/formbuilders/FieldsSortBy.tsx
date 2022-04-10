@@ -1,8 +1,7 @@
-import {PureComponent} from 'react';
+import React, {useMemo} from 'react';
 import {defaultMemoize} from 'reselect';
 
 import PropertyDescription from '../../core/PropertyDescription';
-import {FieldDefType} from '../../editors/EditorDefModel';
 import compare from '../../utils/compare';
 import compareLanguageCodes from '../../utils/compareLanguageCodes';
 import stableSort from '../../utils/stableSort';
@@ -15,18 +14,18 @@ const compareByLanguageCodes = (a: TempItemToSort, b: TempItemToSort) =>
 interface TempItemToSort {
   label?: string;
   languageCodes: readonly string[];
-  property: string;
+  propertyId: string;
 }
 
 const sort = defaultMemoize((
   cache: Record< string, PropertyDescription >,
-  fields: FieldDefType[],
-  sortBy: string[]
+  propertyIds: readonly string[],
+  sortBy: readonly string[]
 ) => {
-  const toSort = fields.map<TempItemToSort>(field => ({
-    property: field.property,
-    label: cache[field.property]?.label || '',
-    languageCodes: cache[field.property]?.languageCodes || [],
+  const toSort = propertyIds.map<TempItemToSort>(propertyId => ({
+    propertyId,
+    label: cache[propertyId]?.label || '',
+    languageCodes: cache[propertyId]?.languageCodes || [],
   }));
 
   for (let sortByIndex = sortBy.length - 1; sortByIndex >= 0; sortByIndex--) {
@@ -39,22 +38,24 @@ const sort = defaultMemoize((
     default: mw.log('Unknown sort method: ' + sortMethod); break;
     }
   }
-  const result: FieldDefType[] = toSort.map(item => ({property: item.property}));
-  return result;
+  return toSort.map(item => item.propertyId);
 });
 
 interface PropsType {
-  children: (fields: FieldDefType[]) => any;
-  fields: FieldDefType[];
+  children: (propertyIds: readonly string[]) => any;
+  propertyIds: readonly string[];
   propertyDescriptionCache: Record< string, PropertyDescription >;
   sortBy: string[];
 }
 
-export default class FieldsSortBy extends PureComponent<PropsType> {
+// TODO: replace with hook
+const FieldsSortBy = ({
+  children, propertyIds, propertyDescriptionCache, sortBy
+}: PropsType) => {
+  const sorted = useMemo(() =>
+    !!sortBy && sortBy.length > 0 ? sort(propertyDescriptionCache, propertyIds, sortBy) : propertyIds
+  , [sortBy, propertyDescriptionCache, propertyIds]);
+  return children(sorted);
+};
 
-  override render () {
-    const {children, fields, propertyDescriptionCache, sortBy} = this.props;
-    const sorted = !!sortBy && sortBy.length > 0 ? sort(propertyDescriptionCache, fields, sortBy) : fields;
-    return children(sorted);
-  }
-}
+export default React.memo(FieldsSortBy);

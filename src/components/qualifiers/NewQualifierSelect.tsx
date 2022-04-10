@@ -1,16 +1,23 @@
-import React, {ChangeEvent, PureComponent} from 'react';
+import React, {ChangeEvent, useCallback, useMemo} from 'react';
 
-import PropertyDescriptionsProvider from '../../caches/PropertyDescriptionsProvider';
-import PropertyDescription from '../../core/PropertyDescription';
+import {usePropertiesData} from '../../caches/propertyDataCache';
+import usePropertyDescription from '../../caches/usePropertyDescription';
+import getPropertyLocalTitleAndDescription from '../../core/getPropertyLocalTitleAndDescription';
+import PropertyData from '../../core/PropertyData';
 import {SUPPORTED_DATATYPES} from '../SnakValueEditorFactory';
 import i18n from './i18n';
 import styles from './NewQualifierSelect.css';
 
-function sort (cache: Record<string, PropertyDescription>, propertyIds: readonly string[]) {
+function sort (cache: Record<string, PropertyData>, propertyIds: readonly string[]) {
   const result = [...propertyIds];
+  const labels = Object.fromEntries(propertyIds
+    .map(propertyId => [propertyId, cache[propertyId]] as [string, PropertyData?])
+    .filter(([_, data]) => data !== undefined)
+    .map(([propertyId, data]) => [propertyId, getPropertyLocalTitleAndDescription(data!).label] as [string, string]));
+
   return result.sort((a: string, b: string) => {
-    const labelA = cache[a]?.label || a;
-    const labelB = cache[b]?.label || b;
+    const labelA = labels[a] || a;
+    const labelB = labels[b] || b;
 
     if (labelA < labelB) return -1;
     if (labelA > labelB) return +1;
@@ -24,68 +31,67 @@ interface PropsType {
   onSelect: (value: string) => any;
 }
 
-export default class NewQualifierSelect extends PureComponent<PropsType> {
+const NewQualifierSelect = ({
+  allowedQualifiers,
+  alreadyPresent,
+  onSelect
+}: PropsType) => {
+  const allowedQualifiersData = usePropertiesData(allowedQualifiers);
+  const sorted = useMemo(() => sort(allowedQualifiersData, allowedQualifiers), [allowedQualifiers, allowedQualifiersData]);
 
-  handleChange = ({currentTarget: {value}}: ChangeEvent< HTMLSelectElement >) => {
+  const handleChange = useCallback(({currentTarget: {value}}: ChangeEvent< HTMLSelectElement >) => {
     if (value) {
-      this.props.onSelect(value);
+      onSelect(value);
     }
-  };
+  }, [onSelect]);
 
-  override render () {
-    const {allowedQualifiers, alreadyPresent} = this.props;
+  // include SELECT into PDP, becase rerendering only options leads to lost current option in SELECT
+  return <select defaultValue="_placeholder" onChange={handleChange}>
+    <option disabled hidden key="_placeholder" value="_placeholder">{i18n.placehoderSelect}</option>
+    {sorted.map(propertyId =>
+      <NewQualifierSelectOption
+        alreadyPresent={alreadyPresent.includes(propertyId)}
+        key={propertyId}
+        propertyId={propertyId} />
+    )}
+    <option key="OTHER" value="OTHER">{i18n.optionOther}</option>
+  </select>;
+};
 
-    // include SELECT into PDP, becase rerendering only options leads to lost current option in SELECT
-    return <PropertyDescriptionsProvider propertyIds={allowedQualifiers}>
-      { cache => <select defaultValue="_placeholder" onChange={this.handleChange}>
-        <option disabled hidden key="_placeholder" value="_placeholder">{i18n.placehoderSelect}</option>
-        {sort(cache, allowedQualifiers).map(propertyId => {
-          const propertyDescription = cache[propertyId];
-          if (!propertyDescription || !propertyDescription.label) {
-            return <option key={propertyId} value={propertyId}>{propertyId}</option>;
-          }
+export default React.memo(NewQualifierSelect);
 
-          return <NewQualifierSelectOption
-            alreadyPresent={alreadyPresent.includes(propertyId)}
-            description={propertyDescription.description}
-            key={propertyId}
-            label={propertyDescription.label}
-            propertyId={propertyId}
-            unsupported={!SUPPORTED_DATATYPES.includes(propertyDescription.datatype)} />;
-        })}
-        <option key="OTHER" value="OTHER">{i18n.optionOther}</option>
-      </select>}
-    </PropertyDescriptionsProvider>;
-  }
-}
-
-interface NewQualifierSelectOptionPropsType {
+interface NewQualifierSelectOptionProps {
   alreadyPresent: boolean;
-  description?: string;
-  label?: string | null;
   propertyId: string;
-  unsupported: boolean;
 }
 
-class NewQualifierSelectOption extends PureComponent<NewQualifierSelectOptionPropsType> {
+const NewQualifierSelectOption = ({
+  alreadyPresent,
+  propertyId
+}: NewQualifierSelectOptionProps) => {
 
-  override render () {
-    const {alreadyPresent, unsupported, propertyId, description, label} = this.props;
+  const propertyDescription = usePropertyDescription(propertyId);
+  const label = propertyDescription?.label;
 
-    const classNames = [];
-    if (alreadyPresent) classNames.push(styles.alreadypresent);
-    if (unsupported) classNames.push(styles.unsupported);
-
-    const actualLabel = (label
-      ? label + ' (' + propertyId + ')'
-      : propertyId)
-      + (unsupported
-        ? i18n.optionSuffixUnsupported
-        : '');
-
-    return <option
-      className={classNames.join(' ')}
-      title={description}
-      value={propertyId}>{actualLabel}</option>;
+  if (!label) {
+    return <option key={propertyId} value={propertyId}>{propertyId}</option>;
   }
-}
+
+  const unsupported = !SUPPORTED_DATATYPES.includes(propertyDescription.datatype);
+
+  const classNames = [];
+  if (alreadyPresent) classNames.push(styles.alreadypresent);
+  if (unsupported) classNames.push(styles.unsupported);
+
+  const actualLabel = (label
+    ? label + ' (' + propertyId + ')'
+    : propertyId)
+    + (unsupported
+      ? i18n.optionSuffixUnsupported
+      : '');
+
+  return <option
+    className={classNames.join(' ')}
+    title={propertyDescription.description}
+    value={propertyId}>{actualLabel}</option>;
+};

@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 
-import PropertyDescriptionsProvider from '../../caches/PropertyDescriptionsProvider';
+import usePropertyDescription from '../../caches/usePropertyDescription';
 import PropertyDescription from '../../core/PropertyDescription';
 import AnimatedTr from '../AnimatedTr';
 import ClaimQualifiersTable from '../qualifiers/ClaimQualifiersTable';
@@ -83,25 +83,14 @@ export default class ClaimsWithQualifiersTableRows
           onClaimDelete={this.handleClaimDelete}
           propertyId={propertyDescription.id}
           propertyLabel={propertyDescription.label || propertyDescription.id} />
-        <PropertyDescriptionsProvider propertyIds={columns}>
-          { cache => columns.map(propertyId => {
-            const propertyDescription = cache[propertyId];
-            if (!propertyDescription) {
-              return <td key={propertyId}>
-                <i>Loading property description of {propertyId}...</i>
-              </td>;
-            }
-            return <td key={propertyId}>
-              <table className={styles.qualifier_table}>
-                <SingleQualifierEditor
-                  claim={claim}
-                  claimPropertyDescription={claimPropertyDescription}
-                  onClaimUpdate={this.props.onClaimUpdate}
-                  qualifierPropertyDescription={propertyDescription} />
-              </table>
-            </td>;
-          })}
-        </PropertyDescriptionsProvider>
+        {columns.map(propertyId =>
+          <QualifierCell
+            claim={claim}
+            claimPropertyDescription={claimPropertyDescription}
+            key={propertyId}
+            onClaimUpdate={this.props.onClaimUpdate}
+            propertyId={propertyId} />
+        )}
       </AnimatedTr>
       <AnimatedTr>
         <td colSpan={2} />
@@ -119,3 +108,34 @@ export default class ClaimsWithQualifiersTableRows
   }
 
 }
+
+interface QualifierCellPropsType {
+  claim: ClaimType;
+  claimPropertyDescription: PropertyDescription;
+  onClaimUpdate: (claim: ClaimType) => unknown;
+  propertyId: string;
+}
+
+const QualifierCell = ({
+  claim,
+  claimPropertyDescription,
+  onClaimUpdate,
+  propertyId,
+}: QualifierCellPropsType) => {
+  const propertyDescription = usePropertyDescription(propertyId);
+
+  if (!propertyDescription) {
+    return <td key={propertyId}>
+      <i>Loading property description of {propertyId}...</i>
+    </td>;
+  }
+  return <td key={propertyId}>
+    <table className={styles.qualifier_table}>
+      <SingleQualifierEditor
+        claim={claim}
+        claimPropertyDescription={claimPropertyDescription}
+        onClaimUpdate={onClaimUpdate}
+        qualifierPropertyDescription={propertyDescription} />
+    </table>
+  </td>;
+};

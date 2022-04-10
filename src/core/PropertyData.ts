@@ -67,20 +67,20 @@ export default class PropertyData {
   lastrevid?: number;
   pageid?: number;
 
-  labels: Record<string, string>;
-  descriptions: Record<string, string>;
+  labels: Readonly<Record<string, string>>;
+  descriptions: Readonly<Record<string, string>>;
 
-  allowedQualifiers: string[];
-  countries: string[];
-  formatterUrls: FormatterUrlData[];
-  oneOf: string[];
+  allowedQualifiers: readonly string[];
+  countries: readonly string[];
+  formatterUrls: readonly FormatterUrlData[];
+  oneOf: readonly string[];
   quantityUnitEnabled: boolean;
-  quantityUnits: string[];
+  quantityUnits: readonly string[];
   regexp?: string;
   sourceWebsites: readonly string[];
   sourceWebsitesLanguages: readonly string[];
   valueTypeConstraint?: {
-    instanceOf?: string[];
+    instanceOf?: readonly string[];
   };
 
   constructor (propertyEntity: PropertyType) {
@@ -91,41 +91,44 @@ export default class PropertyData {
     this.pageid = propertyEntity.pageid;
     this.lastrevid = propertyEntity.lastrevid;
 
-    this.labels = {};
+    const labels: Record<string, string> = {};
     const entityLabels = propertyEntity.labels;
     if (entityLabels) {
       DEFAULT_LANGUAGES.forEach(code => {
         const labelObject = entityLabels[code];
         if (labelObject?.value) {
-          this.labels[code] = labelObject.value;
+          labels[code] = labelObject.value;
         }
       });
     }
+    this.labels = Object.freeze(labels);
 
-    this.descriptions = {};
+    const descriptions: Record<string, string> = {};
     const entityDescriptions = propertyEntity.descriptions;
     if (entityDescriptions) {
       DEFAULT_LANGUAGES.forEach(code => {
         const labelObject = entityDescriptions[code];
         if (labelObject?.value) {
-          this.descriptions[code] = labelObject.value;
+          descriptions[code] = labelObject.value;
         }
       });
     }
+    this.descriptions = Object.freeze(descriptions);
 
     this.allowedQualifiers = getWikibaseItemRestrictions(propertyEntity, 'Q21510851', 'P2306');
     this.countries = findEntityIdsFromClaims(propertyEntity, 'P17');
 
-    this.formatterUrls = [];
+    const formatterUrls: FormatterUrlData[] = [];
     filterClaimsByRank((propertyEntity.claims || {}).P1630 || null).forEach(statement => {
       const urlTemplate = getStringFromSnak(statement.mainsnak || null) || null;
       const regexp = findStringsFromQualifiers(statement, 'P1793')[0] || null;
 
       if (urlTemplate) {
         const data: FormatterUrlData = {urlTemplate, regexp};
-        this.formatterUrls.push(data);
+        formatterUrls.push(data);
       }
     });
+    this.formatterUrls = Object.freeze(formatterUrls);
 
     findStringsFromClaims(propertyEntity, 'P1630');
 

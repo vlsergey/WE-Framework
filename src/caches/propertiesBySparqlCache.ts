@@ -1,5 +1,5 @@
 import Batcher from '@vlsergey/batcher';
-import { cacheValueHookFactory, cacheValueProviderFactory, cacheValuesHookFactory, CacheWithIndexedDb } from '@vlsergey/react-indexdb-cache';
+import {cacheValueHookFactory, cacheValueProviderFactory, cacheValuesHookFactory, CacheWithIndexedDb} from '@vlsergey/react-indexdb-cache';
 
 const SPARQL_ENDPOINT = 'https://query.wikidata.org/sparql';
 const ENTITY_URL_PREFIX = 'http://www.wikidata.org/entity/';

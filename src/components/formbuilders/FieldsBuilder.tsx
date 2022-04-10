@@ -1,140 +1,136 @@
-import React, {ChangeEvent, PureComponent} from 'react';
+import React, {ChangeEvent, useCallback, useMemo, useState} from 'react';
 import Pagination, {StrictPaginationProps} from 'semantic-ui-react/dist/commonjs/addons/Pagination';
 
 import PropertyDescriptionsProvider from '../../caches/PropertyDescriptionsProvider';
-import PropertyDescription from '../../core/PropertyDescription';
+import usePropertyDescription from '../../caches/usePropertyDescription';
 import {FieldDefType} from '../../editors/EditorDefModel';
 import PropertyClaimContainer from '../claims/PropertyClaimContainer';
 import ErrorBoundary from './ErrorBoundary';
-import FieldsFilterByClaimExistence from './FieldsFilterByClaimExistence';
-import FieldsFilterByTerm from './FieldsFilterByTerm';
 import FieldsSortBy from './FieldsSortBy';
 import styles from './form.css';
 import i18n from './i18n';
+import useFilterByClaimPresence from './useFilterByClaimPresence';
+import useFilterPropertiesByTerm from './useFilterPropertiesByTerm';
 
 const FIELDS_PER_PAGE = 20;
 
 interface PropsType {
-  fields?: FieldDefType[];
+  fields?: readonly FieldDefType[];
   // can be used to hide claim property label
   parentLabelEntityId?: string;
   quickSearch?: boolean;
   sortBy?: string[];
 }
 
-interface StateType {
-  activePage: number;
-  displayEmpty: boolean;
-  quickSearchTerm: string;
-}
+const EMPTY_ARRAY = Object.freeze([]);
 
-export default class FieldsBuilder extends PureComponent<PropsType, StateType> {
+const FieldsBuilder = ({
+  fields = EMPTY_ARRAY,
+  parentLabelEntityId,
+  quickSearch,
+  sortBy
+}: PropsType) => {
 
-  static defaultProps = {
-    parentLabelEntityId: null,
-    quickSearch: false,
-  };
+  const [activePage, setActivePage] = useState(1);
+  const [displayEmpty, setDisplayEmpty] = useState(true);
+  const [quickSearchTerm, setQuickSearchTerm] = useState('');
 
-  override state = {
-    activePage: 1,
-    displayEmpty: true,
-    quickSearchTerm: '',
-  };
+  const handleDisplayEmptyToggle = useCallback(() =>
+  { setDisplayEmpty(value => !value); }
+  , [setDisplayEmpty]);
 
-  handleDisplayEmptyToggle = () =>
-  { this.setState(({displayEmpty}) => ({displayEmpty: !displayEmpty})); };
+  const handlePageChange = useCallback((_event: React.MouseEvent<HTMLAnchorElement>, data: StrictPaginationProps) =>
+  { setActivePage(Number(data.activePage)); }
+  , [setActivePage]);
 
-  handlePageChange = (_event: React.MouseEvent<HTMLAnchorElement>, data: StrictPaginationProps) =>
-  { this.setState({activePage: Number(data.activePage)}); };
+  const handleQuickSearchTermChange = useCallback(({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
+    setQuickSearchTerm(value || '');
+  }, [setQuickSearchTerm]);
 
-  handleQuickSearchTermChange = ({currentTarget: {value}}: ChangeEvent< HTMLInputElement >) => {
-    this.setState({quickSearchTerm: value || ''});
-  };
+  const propertyIds = useMemo(() => fields.map(field => field.property), [fields]);
 
-  renderField (
-    field: FieldDefType,
-    propertyDescription?: PropertyDescription,
-    etc: any = {}
-  ) {
-    const propertyId = field.property;
+  const filteredByTerm = useFilterPropertiesByTerm(propertyIds, quickSearchTerm);
+  const filteredByClaimPresence = useFilterByClaimPresence(!displayEmpty, filteredByTerm);
 
-    if (!propertyDescription || !propertyDescription.label) {
-      return <tr><td colSpan={99}>
-        <i>Loading property description of {propertyId}...</i>
-      </td></tr>;
-    }
+  if (filteredByClaimPresence.length == 0)
+    return null;
 
-    return <PropertyClaimContainer
-      {...etc}
-      propertyDescription={propertyDescription} />;
+  return <PropertyDescriptionsProvider propertyIds={propertyIds}>{cache =>
+    <FieldsSortBy propertyDescriptionCache={cache} propertyIds={filteredByClaimPresence} sortBy={sortBy || []}>{sorted => {
+      const totalPages = Math.ceil(sorted.length * 1.0 / FIELDS_PER_PAGE);
+      const actualPage = Math.min(activePage, totalPages);
+      const paged = sorted.slice((actualPage - 1) * FIELDS_PER_PAGE, actualPage * FIELDS_PER_PAGE);
+
+      return <table className={styles.wef_table}>
+        { quickSearch && <thead key="quickSearch">
+          <tr>
+            <td colSpan={99}>
+              <table className={styles.quickSearchTable}>
+                <tbody>
+                  <tr>
+                    <td width="20%">
+                      <label>&nbsp;&nbsp;{i18n.labelQuickSearchTerm}&nbsp;&nbsp;&nbsp;<input
+                        onChange={handleQuickSearchTermChange}
+                        type="text"
+                        value={quickSearchTerm} />
+                      </label>
+                    </td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td width="20%">
+                      <label>&nbsp;&nbsp;{i18n.labelDisplayEmpty}&nbsp;&nbsp;&nbsp;<input
+                        checked={displayEmpty}
+                        onChange={handleDisplayEmptyToggle}
+                        type="checkbox" />
+                      </label>
+                    </td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                    <td className="shortPaginationCell" width="50%">
+                      <Pagination
+                        activePage={actualPage}
+                        boundaryRange={1}
+                        ellipsisItem="…"
+                        onPageChange={handlePageChange}
+                        siblingRange={1}
+                        totalPages={totalPages} />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </thead> }
+        <tbody>
+          {paged.map(propertyId =>
+            <ErrorBoundary description={'field: ' + JSON.stringify(propertyId)} key={propertyId}>
+              <RenderField
+                displayLabel={fields.length !== 1 || parentLabelEntityId !== propertyId}
+                propertyId={propertyId} />
+            </ErrorBoundary>
+          )}
+        </tbody>
+      </table>;
+    } }</FieldsSortBy>
+  }</PropertyDescriptionsProvider>;
+};
+
+export default React.memo(FieldsBuilder);
+
+const RenderField = ({
+  displayLabel,
+  propertyId,
+}: {
+  displayLabel?: boolean;
+  propertyId: string;
+}) => {
+  const propertyDescription = usePropertyDescription(propertyId);
+
+  if (!propertyDescription || !propertyDescription.label) {
+    return <tr><td colSpan={99}>
+      <i>Loading property description of {propertyId}...</i>
+    </td></tr>;
   }
 
-  override render () {
-    const {fields, parentLabelEntityId, quickSearch, sortBy} = this.props;
-    const {activePage, displayEmpty, quickSearchTerm} = this.state;
-
-    if (!fields || fields.length == 0)
-      return null;
-
-    return <PropertyDescriptionsProvider propertyIds={fields.map(field => field.property)}>{cache =>
-      <FieldsFilterByTerm fields={fields} propertyDescriptionCache={cache} term={quickSearchTerm}>{filteredByTerm =>
-        <FieldsFilterByClaimExistence enabled={!displayEmpty} fields={filteredByTerm}>{filtered =>
-          <FieldsSortBy fields={filtered || []} propertyDescriptionCache={cache} sortBy={sortBy || []}>{sorted => {
-            const totalPages = Math.ceil(sorted.length * 1.0 / FIELDS_PER_PAGE);
-            const actualPage = Math.min(activePage, totalPages);
-            const paged = sorted.slice((actualPage - 1) * FIELDS_PER_PAGE, actualPage * FIELDS_PER_PAGE);
-
-            return <table className={styles.wef_table}>
-              { quickSearch && <thead key="quickSearch">
-                <tr>
-                  <td colSpan={99}>
-                    <table className={styles.quickSearchTable}>
-                      <tbody>
-                        <tr>
-                          <td width="20%">
-                            <label>&nbsp;&nbsp;{i18n.labelQuickSearchTerm}&nbsp;&nbsp;&nbsp;<input
-                              onChange={this.handleQuickSearchTermChange}
-                              type="text"
-                              value={quickSearchTerm} />
-                            </label>
-                          </td>
-                          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                          <td width="20%">
-                            <label>&nbsp;&nbsp;{i18n.labelDisplayEmpty}&nbsp;&nbsp;&nbsp;<input
-                              checked={displayEmpty}
-                              onChange={this.handleDisplayEmptyToggle}
-                              type="checkbox" />
-                            </label>
-                          </td>
-                          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                          <td className="shortPaginationCell" width="50%">
-                            <Pagination
-                              activePage={actualPage}
-                              boundaryRange={1}
-                              ellipsisItem="…"
-                              onPageChange={this.handlePageChange}
-                              siblingRange={1}
-                              totalPages={totalPages} />
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </thead> }
-              <tbody>
-                {paged.map(field =>
-                  <ErrorBoundary description={'field: ' + JSON.stringify(field)} key={field.property}>
-                    {this.renderField(field, cache[field.property], {
-                      displayLabel: fields.length !== 1 || parentLabelEntityId !== field.property,
-                    })}
-                  </ErrorBoundary>
-                )}
-              </tbody>
-            </table>;
-          } }</FieldsSortBy>
-        }</FieldsFilterByClaimExistence>
-      }</FieldsFilterByTerm>
-    }</PropertyDescriptionsProvider>;
-  }
-}
+  return <PropertyClaimContainer
+    displayLabel={displayLabel}
+    propertyDescription={propertyDescription} />;
+};

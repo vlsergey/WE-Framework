@@ -6,7 +6,7 @@ import {getWikidataApi} from '../core/ApiUtils';
 import {filterClaimsByRank} from '../model/ModelUtils';
 import isNotNull from '../utils/isNotNull';
 import isOkay from '../utils/isOkay';
-import lastRevisionCache from "./LastRevisionCache";
+import lastRevisionCache from './LastRevisionCache';
 
 const PROPERTIES_TO_CACHE = [
   'P17', // country
@@ -75,7 +75,7 @@ const batcher = new Batcher<string, Item | undefined>(batchLoader, {
   maxBatchSize: 10
 });
 
-async function postCheck(entityId: string, value : Item | undefined) {
+async function postCheck (entityId: string, value: Item | undefined) {
   if (!value?.pageid) return;
 
   if (await lastRevisionCache.queue(value.pageid) != value.lastrevid)

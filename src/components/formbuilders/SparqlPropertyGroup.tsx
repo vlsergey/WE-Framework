@@ -1,5 +1,6 @@
 import React from 'react';
-import { usePropertiesBySparql } from '../../caches/propertiesBySparqlCache';
+
+import {usePropertiesBySparql} from '../../caches/propertiesBySparqlCache';
 import Spinner from '../../components/Spinner';
 import ChildrenBuilder from './ChildrenBuilder';
 import styles from './SparqlPropertyGroup.css';
@@ -12,7 +13,7 @@ interface PropsType {
 const SparqlPropertyGroup = ({
   sortBy = 'language, label',
   sparql,
-} :PropsType) => {
+}: PropsType) => {
   const propertyIds = usePropertiesBySparql(sparql);
 
   if (!propertyIds) {
@@ -25,6 +26,6 @@ const SparqlPropertyGroup = ({
       quickSearch
       sortBy={sortBy.split(/[ ;,\t]/)} />
   </div>;
-}
+};
 
 export default React.memo(SparqlPropertyGroup);

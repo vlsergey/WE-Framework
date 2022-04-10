@@ -1,6 +1,5 @@
 import {combineReducers} from 'redux';
 
-import cacheReducers from '../caches/reducers';
 import {newStatementClaim} from '../model/Shapes';
 import deepEqual from '../utils/deepEqual';
 import generateRandomString from '../utils/generateRandomString';
@@ -227,6 +226,5 @@ export default function buildReducers (originalEntity: EntityType, unsavedEntity
   return combineReducers({
     originalEntity: () => originalEntity,
     entity: entityReducerF(unsavedEntity || originalEntity),
-    ...cacheReducers,
   });
 }
