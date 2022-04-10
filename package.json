@@ -24,7 +24,7 @@
     "@types/react-tagsinput": "^3.19.9",
     "@vlsergey/batcher": "^1.0.0",
     "@vlsergey/js-config": "^11.1.0",
-    "@vlsergey/react-indexdb-cache": "^0.10.0",
+    "@vlsergey/react-indexdb-cache": "^0.12.0",
     "autoprefixer": "^10.4.4",
     "browserslist": "^4.20.2",
     "core-js": "^3.21.1",

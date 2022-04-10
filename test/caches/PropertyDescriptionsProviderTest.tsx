@@ -3,7 +3,8 @@ import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
-
+import propertyDataCache from '../../src/caches/propertyDataCache';
+import {stringPropertyValuesCache} from '../../src/caches/stringPropertyValuesCache';
 import PropertyDescriptionsProvider from '../../src/caches/PropertyDescriptionsProvider';
 import PropertyData from '../../src/core/PropertyData';
 import buildReducers from '../../src/core/reducers';
@@ -48,13 +49,7 @@ describe('PropertyDescriptionsProvider', () => {
     assert.equal(p345LangIds(), '');
     assert.equal(p345LangCodes(), '');
 
-    store.dispatch({
-      // @ts-expect-error
-      type: 'CACHE_PROPERTYDATA_PUT',
-      cacheUpdate: {
-        P345: new PropertyData(P345),
-      },
-    });
+    propertyDataCache.putToMemoryCache('P345', new PropertyData(P345))
 
     assert.equal(p345Label(), 'IMDb ID');
     assert.equal(p345Desc(),
@@ -64,15 +59,9 @@ describe('PropertyDescriptionsProvider', () => {
     assert.equal(p345LangIds(), 'Q1860');
     assert.equal(p345LangCodes(), '');
 
-    store.dispatch({
-      // @ts-expect-error
-      type: 'CACHE_STRINGPROPERTYVALUES_PUT',
-      cacheUpdate: {
-        Q30: {
-          P41: ['Flag of the United States.svg'],
-        },
-      },
-    });
+    stringPropertyValuesCache.putToMemoryCache('Q30', {
+      P41: ['Flag of the United States.svg'],
+    })
 
     assert.equal(p345Label(), 'IMDb ID');
     assert.equal(p345Desc(),
@@ -82,15 +71,9 @@ describe('PropertyDescriptionsProvider', () => {
     assert.equal(p345LangIds(), 'Q1860');
     assert.equal(p345LangCodes(), '');
 
-    store.dispatch({
-      // @ts-expect-error
-      type: 'CACHE_STRINGPROPERTYVALUES_PUT',
-      cacheUpdate: {
-        Q1860: {
-          P424: ['en'],
-        },
-      },
-    });
+    stringPropertyValuesCache.putToMemoryCache('Q1860', {
+      P424: ['en'],
+    })
 
     assert.equal(p345Label(), 'IMDb ID');
     assert.equal(p345Desc(),
