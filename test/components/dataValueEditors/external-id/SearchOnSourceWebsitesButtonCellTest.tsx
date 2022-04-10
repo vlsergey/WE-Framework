@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 
 import propertyDataCache from '../../../../src/caches/propertyDataCache';
 import PropertyDescriptionsProvider from '../../../../src/caches/PropertyDescriptionsProvider';
-import {stringPropertyValuesCache, buildStringCacheValuesFromEntity} from '../../../../src/caches/stringPropertyValuesCache';
+import {buildStringCacheValuesFromEntity, stringPropertyValuesCache} from '../../../../src/caches/stringPropertyValuesCache';
 import SearchOnSourceWebsitesButtonCell from '../../../../src/components/dataValueEditors/external-id/SearchOnSourceWebsitesButtonCell';
 import PropertyData from '../../../../src/core/PropertyData';
 import buildReducers from '../../../../src/core/reducers';

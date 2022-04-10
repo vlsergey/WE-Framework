@@ -22,9 +22,8 @@ describe('components/dataValueEditors/wikibase-item', () => {
         return [];
       }
 
-      console.debug('TEST: populate cache', labelDescriptionCache);
+      console.debug('TEST: populate cache', 'Q752285', new LabelDescription(Q752285));
       labelDescriptionCache.putToMemoryCache('Q752285', new LabelDescription(Q752285));
-      console.debug('TEST: populate cache... Done', labelDescriptionCache);
 
       const rendered = ReactTestUtils.renderIntoDocument(
         <ValueHolder<string | null> initialValue={null}>{ (value, onChange) =>
@@ -44,10 +43,12 @@ describe('components/dataValueEditors/wikibase-item', () => {
       ReactTestUtils.Simulate.focus(input);
 
       // manual enter
+      console.log('TEST: Entering Q-value into input');
       input.value = 'Q752285';
       ReactTestUtils.Simulate.change(input);
       assert.equal(valueHolder.getValue(), 'Q752285');
 
+      console.log('TEST: Clicking on first element in suggestion table');
       const suggestionTable = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'table') as HTMLTableElement;
       ReactTestUtils.Simulate.click(suggestionTable);
       assert.equal(valueHolder.getValue(), 'Q752285');
@@ -62,6 +63,7 @@ describe('components/dataValueEditors/wikibase-item', () => {
       console.log('TEST: leaving input: must be with label');
       input.blur();
       ReactTestUtils.Simulate.blur(input);
+
       assert.equal(wikibaseItemInput.state.focused, false);
       assert.equal(input.value, 'Laws (Q752285)');
 

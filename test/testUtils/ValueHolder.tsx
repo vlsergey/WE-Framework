@@ -21,13 +21,13 @@ export default class ValueHolder<V> extends PureComponent<PropsType<V>, StateTyp
 
   handleChange = (newValue: V) => {
     try {
-      console.log('ValueHolder::handleChange( «' + JSON.stringify(this.state.value) + '» => «' + JSON.stringify(newValue) + '» )');
+      console.debug('ValueHolder::handleChange(', this.state.value, '=>', newValue, ')');
+      this.setState({
+        value: newValue,
+      });
     } catch (_err: unknown) {
-      console.log('ValueHolder::handleChange( «' + this.state.value + '» => «' + newValue + '» )');
+      console.debug('ValueHolder::handleChange(', this.state.value, '=>', newValue, ')', _err);
     }
-    this.setState({
-      value: newValue,
-    });
   };
 
   getValue () {

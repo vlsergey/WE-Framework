@@ -15,6 +15,7 @@ const Suggestion = ({
   entityId
 }: PropsType) => {
   const wikitext = '{{#if:{{#property:P18|from=' + entityId + '}}|[[File:{{#property:P18|from=' + entityId + '}}|45x45px|frameless|link=]]}}';
+
   return <table className={styles.suggestionContainer}>
     <tbody>
       <tr>

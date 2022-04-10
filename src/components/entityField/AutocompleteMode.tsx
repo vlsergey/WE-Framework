@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useCallback, useEffect, useMemo, useRef, useState} from 'react';
+import React, {ChangeEvent, useCallback, useMemo, useRef, useState} from 'react';
 import Autosuggest from 'react-autosuggest';
 
 import {useLabelDescription} from '../../caches/labelDescriptionCache';
@@ -18,9 +18,15 @@ interface PropsType {
   value: null | string;
 }
 
+interface SuggestedValue {
+  entityId: string;
+}
+
+const PREFIX = 'SuggestedValue/';
+
 const wikidataApi = ApiUtils.getWikidataApi();
-const getSuggestionValue = (data: null | string) => data || '';
-const renderSuggestion = (data: string) => <Suggestion entityId={data} />;
+const getSuggestionValue = (data: SuggestedValue) => PREFIX + data.entityId;
+const renderSuggestion = (data: SuggestedValue) => <Suggestion entityId={data.entityId} />;
 
 const AutocompleteMode = ({
   onSelect,
@@ -28,10 +34,11 @@ const AutocompleteMode = ({
   testSuggestionsProvider,
   value
 }: PropsType) => {
+  console.debug('AutocompleteMode');
 
   const wikibaseItemInputRef = useRef<WikibaseItemInput>();
 
-  const [suggestions, setSuggestions] = useState<string[]>(value ? [value] : []);
+  const [suggestions, setSuggestions] = useState<SuggestedValue[]>(value ? [{entityId: value}] : []);
   const [textEntityId, setTextEntityId] = useState<string | undefined>(undefined);
   const [textValue, setTextValue] = useState<string>(value || '');
 
@@ -40,11 +47,11 @@ const AutocompleteMode = ({
   const handleSuggestionsClearRequested = useCallback(() => { setSuggestions([]); }, [setSuggestions]);
   const handleSuggestionsFetchRequested = useCallback(({value}: {value: string}) => {
     if (testSuggestionsProvider) {
-      setSuggestions(testSuggestionsProvider(value));
+      setSuggestions(testSuggestionsProvider(value).map(entityId => ({entityId})));
       return;
     }
 
-    const resultSet: Set<string> = new Set();
+    const resultMap: Map<string, SuggestedValue> = new Map();
     const requestedValue = value;
     DEFAULT_LANGUAGES.forEach(async language => {
       const result = await wikidataApi.getPromise<WbSearchEntitiesActionResult>({
@@ -58,15 +65,19 @@ const AutocompleteMode = ({
       // may be out of sync, another string already required
       if (requestedValue !== value) return;
 
-      result.search.forEach(item => resultSet.add(item.id));
-      setSuggestions([...resultSet]);
+      result.search.forEach(item => resultMap.set(item.id, {entityId: item.id}));
+      setSuggestions(Array.from(resultMap.values()));
     });
   }, [setSuggestions, testSuggestionsProvider]);
 
   const handleChange = useCallback((
     _event: ChangeEvent< HTMLElement >,
-    {method, newValue}: {method: string; newValue: string}
+    {method, newValue, ...etc}: {method: string; newValue: string}
   ) => {
+    console.debug('AutocompleteMode', 'handleChange', method, newValue, etc);
+    if (newValue.startsWith(PREFIX))
+      newValue = newValue.substring(PREFIX.length);
+
     switch (method) {
     case 'type': {
       if (!newValue || newValue.trim() === '') {
@@ -82,20 +93,12 @@ const AutocompleteMode = ({
     }
     default: {
       onSelect(newValue);
-      // until populated with useEffect below
-      wikibaseItemInputRef.current?.setValue(newValue);
       setTextEntityId(newValue);
       setTextValue(newValue);
       break;
     }
     }
   }, [onSelect, setTextEntityId, setTextValue]);
-
-  useEffect(() => {
-    if (textEntityId && labelDescription?.label) {
-      wikibaseItemInputRef.current?.setValue(labelDescription?.label);
-    }
-  }, [textEntityId, labelDescription, wikibaseItemInputRef]);
 
   const renderInput = useCallback((inputProps: any) => {
     const {value, onChange, ref, ...etc} = inputProps;
@@ -116,7 +119,7 @@ const AutocompleteMode = ({
     value: labelDescription?.label || textValue,
   }), [handleChange, labelDescription, readOnly, textValue, value]);
 
-  return <Autosuggest
+  return <Autosuggest<SuggestedValue>
     getSuggestionValue={getSuggestionValue}
     inputProps={inputProps as any}
     onSuggestionsClearRequested={handleSuggestionsClearRequested}

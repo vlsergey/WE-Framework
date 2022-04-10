@@ -39,7 +39,7 @@ describe('components/qualifiers/ClaimQualifiersTable', () => {
     const table = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'table');
     ReactTestUtils.Simulate.click(table);
 
-    propertyDataCache.putToMemoryCache('P51', new PropertyData(P51))
+    propertyDataCache.putToMemoryCache('P51', new PropertyData(P51));
 
     const dataValueEditor = ReactTestUtils.findRenderedComponentWithType(rendered, CommonsMediaDataValueEditor);
     const input = ReactTestUtils.findRenderedDOMComponentWithTag(dataValueEditor, 'input') as HTMLInputElement;
