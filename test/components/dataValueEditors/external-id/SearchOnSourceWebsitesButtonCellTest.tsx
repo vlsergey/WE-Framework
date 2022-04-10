@@ -6,7 +6,7 @@ import thunk from 'redux-thunk';
 
 import propertyDataCache from '../../../../src/caches/propertyDataCache';
 import PropertyDescriptionsProvider from '../../../../src/caches/PropertyDescriptionsProvider';
-import stringPropertyValuesCache, {buildStringCacheValuesFromEntity} from '../../../../src/caches/stringPropertyValuesCache';
+import {stringPropertyValuesCache, buildStringCacheValuesFromEntity} from '../../../../src/caches/stringPropertyValuesCache';
 import SearchOnSourceWebsitesButtonCell from '../../../../src/components/dataValueEditors/external-id/SearchOnSourceWebsitesButtonCell';
 import PropertyData from '../../../../src/core/PropertyData';
 import buildReducers from '../../../../src/core/reducers';
@@ -24,15 +24,8 @@ describe('components/dataValueEditors/SearchOnSourceWebsitesButtonCell', () => {
     const reducers = buildReducers(q, q);
     const store = createStore(reducers, applyMiddleware(thunk));
 
-    propertyDataCache.dispatch = store.dispatch;
-    propertyDataCache.putToCache({
-      [p.id]: pData,
-    });
-
-    stringPropertyValuesCache.dispatch = store.dispatch;
-    stringPropertyValuesCache.putToCache({
-      Q652: buildStringCacheValuesFromEntity(Q652),
-    });
+    propertyDataCache.putToMemoryCache(p.id, pData);
+    stringPropertyValuesCache.putToMemoryCache('Q652', buildStringCacheValuesFromEntity(Q652));
 
     const rendered = ReactTestUtils.renderIntoDocument(
       <Provider store={store}>
