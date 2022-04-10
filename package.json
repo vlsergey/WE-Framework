@@ -13,6 +13,7 @@
     "eslint:fix": "eslint --ignore-pattern \"!.eslintrc.js\" --fix .eslintrc.js deploy-to-wikipedia.mjs karma.conf.js webpack.config.js src/**/*.ts* test/.eslintrc.js test/**/*.ts*",
     "serve": "cross-env NODE_ENV=development webpack-dev-server",
     "test": "cross-env NODE_ENV=development karma start karma.conf.js --single-run",
+    "test:build:watch": "cross-env NODE_ENV=development tsc -w -p ./test",
     "test:watch": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run",
     "test:watch:chrome": "cross-env NODE_ENV=development karma start karma.conf.js --no-single-run --browsers Chrome"
   },

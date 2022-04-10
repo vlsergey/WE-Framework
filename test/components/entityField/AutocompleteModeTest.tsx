@@ -23,7 +23,7 @@ describe('components/dataValueEditors/wikibase-item', () => {
       }
 
       console.debug('TEST: populate cache', labelDescriptionCache);
-      labelDescriptionCache.put('Q752285', new LabelDescription(Q752285));
+      labelDescriptionCache.putToMemoryCache('Q752285', new LabelDescription(Q752285));
       console.debug('TEST: populate cache... Done', labelDescriptionCache);
 
       const rendered = ReactTestUtils.renderIntoDocument(

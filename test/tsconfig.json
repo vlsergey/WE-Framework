@@ -1,4 +1,8 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["../src/declarations.d.ts", "../src/global.d.ts", ".eslintrc.js", "./**/*.ts", "./**/*.tsx"],
+  "include": [
+    "../src/*.d.ts",
+    ".eslintrc.js",
+    "./**/*.ts",
+    "./**/*.tsx"],
 }

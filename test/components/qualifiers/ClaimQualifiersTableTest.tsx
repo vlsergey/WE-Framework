@@ -4,7 +4,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 import {applyMiddleware, createStore} from 'redux';
 import thunk from 'redux-thunk';
 
-import {TYPE} from '../../../src/caches/propertyDataCache';
+import propertyDataCache from '../../../src/caches/propertyDataCache';
 import CommonsMediaDataValueEditor from '../../../src/components/dataValueEditors/CommonsMediaDataValueEditor';
 import ClaimQualifiersTable from '../../../src/components/qualifiers/ClaimQualifiersTable';
 import PropertyData from '../../../src/core/PropertyData';
@@ -39,14 +39,7 @@ describe('components/qualifiers/ClaimQualifiersTable', () => {
     const table = ReactTestUtils.findRenderedDOMComponentWithTag(rendered, 'table');
     ReactTestUtils.Simulate.click(table);
 
-    // populate cache to see snak editors
-    store.dispatch({
-      // @ts-expect-error
-      type: 'CACHE_' + TYPE + '_PUT',
-      cacheUpdate: {
-        P51: new PropertyData(P51),
-      },
-    });
+    propertyDataCache.putToMemoryCache('P51', new PropertyData(P51))
 
     const dataValueEditor = ReactTestUtils.findRenderedComponentWithType(rendered, CommonsMediaDataValueEditor);
     const input = ReactTestUtils.findRenderedDOMComponentWithTag(dataValueEditor, 'input') as HTMLInputElement;
