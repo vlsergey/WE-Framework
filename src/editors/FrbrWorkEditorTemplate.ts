@@ -5,8 +5,8 @@ const editorDescription: EditorDefType = {
   id: 'FrbrWork',
   linkText: i18n.frbrWorkLinkText,
   dialogTitle: i18n.frbrWorkDialogTitle,
-  newEntityInstanceOf: 'Q386724',
-  recommendedClasses: ['Q386724'],
+  newEntityInstanceOf: 'Q7725634',
+  recommendedClasses: ['Q7725634'],
   tabs: [
     {
       label: i18n.tabGeneral,
