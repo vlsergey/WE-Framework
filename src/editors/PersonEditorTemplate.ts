@@ -19,6 +19,7 @@ const editorDescription: EditorDefType = {
             {property: 'P1559'} /* name in native language */,
             {property: 'P1477'} /* birth name */,
             {property: 'P742'} /* pseudonym */,
+            {property: 'P1449'} /* nickname */,
           ],
         },
         {
@@ -34,6 +35,7 @@ const editorDescription: EditorDefType = {
             {property: 'P21'} /* sex or gender */,
             {property: 'P91'} /* sexual orientation */,
             {property: 'P27'} /* country of citizenship */,
+            {property: 'P551'} /* residence */,
             {property: 'P103'} /* native language */,
             {property: 'P1412'} /* languages spoken */,
             {property: 'P856'} /* official website */,
